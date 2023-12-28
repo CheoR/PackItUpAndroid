@@ -1,3 +1,46 @@
 <resources>
     <string name="app_name">PackItUpAndroid</string>
+
+    <string name="app_title">track what you pack, app</string>
+    <string name="app_slogan">track what you pack, where you packed it, and its value</string>
+    <string name="app_copyright">%d @CheoR</string>
+    <string name="register">register</string>
+    <string name="login">login</string>
+
+    <string name="username">username</string>
+    <string name="first_name">first name</string>
+    <string name="last_name">last name</string>
+    <string name="email">email</string>
+    <string name="password">password</string>
+    <string name="password_confirm">confirm password</string>
+    <string name="already_registered">already registered?</string>
+    <string name="no_account">no account?</string>
+    <string name="summary">summary</string>
+    <string name="collections">collections</string>
+    <string name="boxes">boxes</string>
+    <string name="items">items</string>
+    <string name="total_value">total value</string>
+    <string name="value">$ %f</string>
+    <string name="fragile">fragile</string>
+    <string name="home">home</string>
+    <string name="more">more</string>
+    <string name="search">search</string>
+    <string name="add">add</string>
+    <string name="card_title">%s</string>
+    <string name="card_description">%s</string>
+    <string name="card_dropdown_title">%s</string>
+    <string name="minus">-</string>
+    <string name="plus">+</string>
+    <string name="edit">edit</string>
+    <string name="delete">delete</string>
+    <string name="camera">camera</string>
+    <string name="collection_boxes">%s\'s boxes</string>
+    <string name="box_items">%s\'s items</string>
+    <string name="edit_collection_box_item">edit %s</string>
+    <string name="button_confirm">confirm</string>
+    <string name="button_cancel">cancel</string>
+    <string name="confirm_delete">are you sure you want to delete %s?</string>
+
+
+
 </resources>
