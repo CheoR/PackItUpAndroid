@@ -115,14 +115,14 @@ class LocalDataSource() {
             Collection(
                 id = "0L",
                 name = "for home",
-                boxes = boxesAndTotalValue(0,3).first,
-                totalValue = boxesAndTotalValue(0,3).second,
+                boxes = boxesAndTotalValue(0,2).first,
+                totalValue = boxesAndTotalValue(0,2).second,
             ),
             Collection(
                 id = "1L",
                 name = "for donation",
-                boxes = boxesAndTotalValue(4,4).first,
-                totalValue = boxesAndTotalValue(4,4).second,
+                boxes = boxesAndTotalValue(3,3).first,
+                totalValue = boxesAndTotalValue(3,3).second,
             ),
             Collection(
                 id = "2L",
