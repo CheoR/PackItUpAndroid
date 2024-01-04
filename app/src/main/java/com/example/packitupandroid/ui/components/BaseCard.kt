@@ -1,5 +1,4 @@
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -14,12 +13,12 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.ArrowForward
 import androidx.compose.material.icons.filled.Home
-import androidx.compose.material.icons.outlined.CheckBox
+//import androidx.compose.material.icons.outlined.CheckBox
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.Checkbox
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -28,10 +27,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -55,7 +54,9 @@ fun BaseCard(
     buttonIcon: ImageVector,
     onButtonIconClick: () -> Unit,
     dropdownOptions: List<String>? = null,
-    value: Double = 0.00
+    value: Double = 0.00,
+    isFragile: Boolean = false,
+    onCheckedChange: () -> Unit,
 ) {
     Card(
         modifier = modifier
@@ -85,7 +86,7 @@ fun BaseCard(
                             contentDescription = null,
                             modifier = Modifier
                                 .size(48.dp)
-                                .clip(CircleShape)
+                                .clip(RoundedCornerShape(8.dp))
                         )
                     }
                     imageVector1 != null -> {
@@ -94,7 +95,7 @@ fun BaseCard(
                             contentDescription = null,
                             modifier = Modifier
                                 .size(48.dp)
-                                .clip(CircleShape)
+                                .clip(RoundedCornerShape(8.dp))
                         )
                     }
                 }
@@ -145,12 +146,16 @@ fun BaseCard(
                     modifier = Modifier
                         .fillMaxWidth(),
                 ) {
-                    Icon(
-                        imageVector = Icons.Outlined.CheckBox,
-                        contentDescription = null,
-                        modifier = Modifier.size(24.dp),
-                        // tint = if (isEditable) LocalContentColor.current.copy(alpha = ContentAlpha.disabled) else null
-                    )
+                    Checkbox(
+                        checked = isFragile,
+                        onCheckedChange = { onCheckedChange() },
+                        )
+//                    Icon(
+//                        imageVector = Icons.Outlined.CheckBox,
+//                        contentDescription = null,
+//                        modifier = Modifier.size(24.dp),
+//                        // tint = if (isEditable) LocalContentColor.current.copy(alpha = ContentAlpha.disabled) else null
+//                    )
                     Spacer(modifier = Modifier.width(4.dp))
                     Text("Fragile")
 
@@ -194,10 +199,12 @@ fun PreviewSummaryCollectionCard() {
         title = "PreviewSummaryCard",
         description = "Summary for Collections",
         onCardClick = {},
-        imageVector1 = Icons.Default.Home,
+        imageVector1 = ImageVector.vectorResource(R.drawable.baseline_category_24),
         buttonIcon = Icons.Default.ArrowForward,
         onButtonIconClick = { },
-        value = LocalDataSource().loadCollections().sumOf { it.totalValue }
+        value = LocalDataSource().loadCollections().sumOf { it.totalValue },
+        isFragile = true,
+        onCheckedChange = {},
     )
 }
 
@@ -208,11 +215,13 @@ fun PreviewCollectionCard() {
         title = "PreviewCollectionCard",
         description = "individusal descrition for this Collections",
         onCardClick = {},
-        imageVector1 = Icons.Default.Home,
-        imageVector2 = Icons.Default.Add,
-        buttonIcon = Icons.Default.ArrowForward,
+        imageVector1 = ImageVector.vectorResource(R.drawable.baseline_category_24),
+        imageVector2 = ImageVector.vectorResource(R.drawable.baseline_label_24),
+        buttonIcon = ImageVector.vectorResource(R.drawable.baseline_more_vert_24),
         onButtonIconClick = { },
         value = LocalDataSource().loadCollections().first().totalValue,
+    isFragile = true,
+        onCheckedChange = {},
     )
 }
 
@@ -224,10 +233,11 @@ fun PreviewBoxCard() {
         dropdownOptions = LocalDataSource().loadCollections().map { it.name },
         description = "individusal descrition for this box",
         onCardClick = {},
-        imageVector1 = Icons.Default.Add,
-        buttonIcon = Icons.Default.ArrowForward,
+        imageVector1 = ImageVector.vectorResource(R.drawable.baseline_label_24),
+        buttonIcon =  ImageVector.vectorResource(R.drawable.baseline_more_vert_24),
         onButtonIconClick = { },
         value = LocalDataSource().loadBoxes().first().totalValue,
+        onCheckedChange = {},
     )
 }
 
@@ -240,10 +250,12 @@ fun PreviewItemCard() {
         description = "descriptions optional",
         onCardClick = {},
         imageVector1 = Icons.Default.Home,
-        imageId = R.drawable.ic_broken_image,
-        buttonIcon = Icons.Default.ArrowForward,
+        imageId = R.drawable.pug , // R.drawable.ic_broken_image,
+        buttonIcon =  ImageVector.vectorResource(R.drawable.baseline_more_vert_24),
         onButtonIconClick = { },
         value = LocalDataSource().loadItems().first().value,
+        isFragile = true,
+        onCheckedChange = {},
     )
 }
 
@@ -254,11 +266,12 @@ fun PreviewCollectionEditCard() {
         title = "PreviewCollectionEditCard",
         description = "individusal descrition for this Collections",
         onCardClick = {},
-        imageVector1 = Icons.Default.Home,
-        imageVector2 = Icons.Default.Add,
-        buttonIcon = Icons.Default.ArrowForward,
+        imageVector1 = ImageVector.vectorResource(R.drawable.baseline_category_24),
+        imageVector2 = ImageVector.vectorResource(R.drawable.baseline_label_24),
+        buttonIcon =  ImageVector.vectorResource(R.drawable.baseline_more_vert_24),
         onButtonIconClick = { },
         value = LocalDataSource().loadCollections().first().totalValue,
+        onCheckedChange = {},
     )
 }
 
@@ -270,10 +283,11 @@ fun PreviewBoxEditCard() {
         dropdownOptions = LocalDataSource().loadCollections().map { it.name },
         description = "individusal descrition for this box individusal descrition for this box individusal descrition for this box",
         onCardClick = {},
-        imageVector1 = Icons.Default.Add,
-        buttonIcon = Icons.Default.ArrowForward,
+        imageVector1 = ImageVector.vectorResource(R.drawable.baseline_label_24),
+        buttonIcon =  ImageVector.vectorResource(R.drawable.baseline_more_vert_24),
         onButtonIconClick = { },
         value = LocalDataSource().loadBoxes().first().totalValue,
+        onCheckedChange = {},
     )
 }
 
@@ -286,9 +300,11 @@ fun PreviewItemEditCard() {
         description = "descriptions optional",
         onCardClick = {},
         imageVector1 = Icons.Default.Home,
-        imageId = R.drawable.ic_broken_image,
-        buttonIcon = Icons.Default.ArrowForward,
+        imageId = R.drawable.pug,
+        buttonIcon =  ImageVector.vectorResource(R.drawable.baseline_more_vert_24),
         onButtonIconClick = { },
         value = LocalDataSource().loadCollections().first().totalValue,
+        isFragile = true,
+        onCheckedChange = {},
     )
 }
