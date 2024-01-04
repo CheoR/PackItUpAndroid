@@ -1,36 +1,48 @@
 package com.example.packitupandroid.ui
 
-import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
+import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass
+import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
-import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
-import com.example.packitupandroid.ui.theme.PackItUpAndroidTheme
+import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.packitupandroid.ui.utils.PackItUpContentType
+import com.example.packitupandroid.ui.utils.PackItUpNavigationType
 
 @Composable
 fun PackItUpApp(
-    modifier: Modifier = Modifier
+    windowSize: WindowWidthSizeClass,
+    modifier: Modifier = Modifier,
 ) {
-    Box(modifier = modifier
-        .background(color = MaterialTheme.colorScheme.error)
-        .padding(4.dp)
-        .clip(MaterialTheme.shapes.medium),
-        contentAlignment = Alignment.Center
-    ){
-        Text(text = "PackItUpApp")
-    }
-}
+    val viewModel: PackItUpViewModel = viewModel()
+    val packItUpUiState = viewModel.uiState.collectAsState().value
 
-@Preview(showBackground = true)
-@Composable
-fun PreviewPackItUpApp() {
-    PackItUpAndroidTheme {
-        PackItUpApp()
+    /*
+        To implement navigation drawer, determine navigation type based on app's window size.
+     */
+    val navigationType: PackItUpNavigationType
+
+    /*
+        For various window sizes to help determine appropriate content type selection,
+        depending on screen size
+     */
+    val contentType: PackItUpContentType
+
+    when (windowSize) {
+        WindowWidthSizeClass.Compact -> {
+            navigationType = PackItUpNavigationType.BOTTOM_NAVIGATION
+            contentType = PackItUpContentType.LIST_ONLY
+        }
+        else -> {
+            navigationType = PackItUpNavigationType.BOTTOM_NAVIGATION
+            contentType = PackItUpContentType.LIST_ONLY
+        }
     }
+
+    PackItUpHomeScreen(
+        navigationType = navigationType,
+        contentType = contentType,
+        packItUpUiState = packItUpUiState,
+        onTabPressed = {},
+        modifier = modifier
+    )
 }

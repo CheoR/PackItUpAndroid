@@ -13,6 +13,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.packitupandroid.data.local.LocalDataSource
 import com.example.packitupandroid.model.Collection
+import androidx.compose.ui.res.stringResource
+import com.example.packitupandroid.R
 
 @Composable
 fun CollectionsScreen(
@@ -65,4 +67,9 @@ fun CollectionsScreen(
 @Composable
 fun PreviewCollectionsScreen() {
     CollectionsScreen()
+}
+
+@Composable
+fun Collection() {
+    Text(text = stringResource(id = R.string.collections))
 }

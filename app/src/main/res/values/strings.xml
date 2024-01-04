@@ -40,6 +40,7 @@
     <string name="button_confirm">confirm</string>
     <string name="button_cancel">cancel</string>
     <string name="confirm_delete">are you sure you want to delete %s?</string>
+    <string name="navigation_bottom">navigation bottom</string>
 
 
 

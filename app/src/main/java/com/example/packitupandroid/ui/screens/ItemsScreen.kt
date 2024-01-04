@@ -13,6 +13,9 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.packitupandroid.data.local.LocalDataSource
 import com.example.packitupandroid.model.Item
+import androidx.compose.ui.res.stringResource
+import com.example.packitupandroid.R
+
 
 @Composable
 fun ItemsScreen(
@@ -56,4 +59,9 @@ fun ItemsScreen(
 @Composable
 fun PreviewItemsScreen() {
     ItemsScreen()
+}
+
+@Composable
+fun Item() {
+    Text(text = stringResource(id = R.string.items))
 }
