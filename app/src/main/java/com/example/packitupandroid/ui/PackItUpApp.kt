@@ -41,7 +41,7 @@ fun PackItUpApp(
         }
     }
 
-    SummaryScreen(
+    PackItUpScreen(
         navigationType = navigationType,
         contentType = contentType,
         packItUpUiState = packItUpUiState,

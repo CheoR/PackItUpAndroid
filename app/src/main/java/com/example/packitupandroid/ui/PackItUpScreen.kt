@@ -32,7 +32,7 @@ import com.example.packitupandroid.ui.utils.PackItUpContentType
 import com.example.packitupandroid.ui.utils.PackItUpNavigationType
 
 @Composable
-fun SummaryScreen(
+fun PackItUpScreen(
     navigationType: PackItUpNavigationType,
     contentType: PackItUpContentType,
     packItUpUiState: PackItUpUiState,
@@ -89,7 +89,7 @@ private fun PackItUpAppContent(
                     .background(MaterialTheme.colorScheme.inverseOnSurface)
             ) {
 
-                ReplyListOnlyContent(
+                PackItUpListOnlyContent(
                     modifier = Modifier.weight(1f)
                         .padding(
                             horizontal = dimensionResource(R.dimen.padding_small)
@@ -147,7 +147,7 @@ fun PreviewSummaryScreen() {
     val viewModel: PackItUpViewModel = viewModel()
     val packItUpUiState = viewModel.uiState.collectAsState().value
 
-    SummaryScreen(
+    PackItUpScreen(
         navigationType = PackItUpNavigationType.BOTTOM_NAVIGATION,
         contentType = PackItUpContentType.LIST_ONLY,
         packItUpUiState = packItUpUiState,
