@@ -1,10 +1,13 @@
 package com.example.packitupandroid.ui
 
+import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.packitupandroid.ui.theme.PackItUpAndroidTheme
 import com.example.packitupandroid.ui.utils.PackItUpContentType
 import com.example.packitupandroid.ui.utils.PackItUpNavigationType
 
@@ -38,11 +41,24 @@ fun PackItUpApp(
         }
     }
 
-    PackItUpHomeScreen(
+    SummaryScreen(
         navigationType = navigationType,
         contentType = contentType,
         packItUpUiState = packItUpUiState,
         onTabPressed = {},
         modifier = modifier
     )
+}
+
+@Preview(showBackground = true)
+@Composable
+fun PreviewPackItUpApp() {
+    PackItUpAndroidTheme {
+        Surface {
+            PackItUpApp(
+                // windowSize = WindowSizeClass.calculateFromSize(DpSize(400.dp, 900.dp)),
+                windowSize = WindowWidthSizeClass.Compact,
+            )
+        }
+    }
 }

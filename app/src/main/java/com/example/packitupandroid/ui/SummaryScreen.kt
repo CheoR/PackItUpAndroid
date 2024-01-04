@@ -18,18 +18,21 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.tooling.preview.Preview
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.packitupandroid.R
 import com.example.packitupandroid.data.ScreenType
 import com.example.packitupandroid.ui.utils.PackItUpContentType
 import com.example.packitupandroid.ui.utils.PackItUpNavigationType
 
 @Composable
-fun PackItUpHomeScreen(
+fun SummaryScreen(
     navigationType: PackItUpNavigationType,
     contentType: PackItUpContentType,
     packItUpUiState: PackItUpUiState,
@@ -136,3 +139,19 @@ private data class NavigationItemContent(
     val icon: ImageVector,
     val text: String
 )
+
+
+@Preview
+@Composable
+fun PreviewSummaryScreen() {
+    val viewModel: PackItUpViewModel = viewModel()
+    val packItUpUiState = viewModel.uiState.collectAsState().value
+
+    SummaryScreen(
+        navigationType = PackItUpNavigationType.BOTTOM_NAVIGATION,
+        contentType = PackItUpContentType.LIST_ONLY,
+        packItUpUiState = packItUpUiState,
+        onTabPressed = {},
+        modifier = Modifier,
+    )
+}

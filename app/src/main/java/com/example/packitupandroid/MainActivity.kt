@@ -44,7 +44,7 @@ class MainActivity : ComponentActivity() {
 
 @Preview(showBackground = true)
 @Composable
-fun ReplyAppCompactPreview() {
+fun PreviewPackItUp() {
     PackItUpAndroidTheme {
         Surface {
             PackItUpApp(
