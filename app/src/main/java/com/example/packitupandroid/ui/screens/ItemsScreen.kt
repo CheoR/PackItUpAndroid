@@ -26,7 +26,10 @@ fun ItemsScreen(
             dimensionResource(R.dimen.padding_small)
         )
     ) {
-        items(cards) {
+        items(
+            items = cards,
+            key = { it.id }
+        ) {
             BaseCard(
                 title = it.name,
                 description = it.description,
