@@ -35,7 +35,7 @@ fun CollectionsScreen(
                 buttonIcon = ImageVector.vectorResource(R.drawable.baseline_more_vert_24),
                 onButtonIconClick = { },
                 value = it.totalValue,
-                isFragile = true,
+                isFragile = it.isFragile,
                 onCheckedChange = {},
             )
         }
