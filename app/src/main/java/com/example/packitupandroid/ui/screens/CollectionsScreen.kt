@@ -31,15 +31,17 @@ fun CollectionsScreen(
         ) {
             BaseCard(
                 title = it.name,
-                description = "",
+                description = it.description,
                 onCardClick = {},
-                imageVector1 = ImageVector.vectorResource(R.drawable.baseline_category_24),
+                imageVector1 = ImageVector.vectorResource(R.drawable.ic_launcher_foreground),
                 imageVector2 = ImageVector.vectorResource(R.drawable.baseline_label_24),
                 buttonIcon = ImageVector.vectorResource(R.drawable.baseline_more_vert_24),
                 onButtonIconClick = { },
                 value = it.totalValue,
                 isFragile = it.isFragile,
                 onCheckedChange = {},
+                firstBadgeCount = it.boxes.size,
+                secondBadgeCount = it.boxes.sumOf { box -> box.items.size }
             )
         }
     }

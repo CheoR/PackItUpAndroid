@@ -6,16 +6,17 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowForward
 import androidx.compose.material.icons.filled.Home
-//import androidx.compose.material.icons.outlined.CheckBox
+import androidx.compose.material3.Badge
+import androidx.compose.material3.BadgedBox
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Checkbox
@@ -57,14 +58,14 @@ fun BaseCard(
     value: Double = 0.00,
     isFragile: Boolean = false,
     onCheckedChange: () -> Unit,
+    firstBadgeCount: Int? = 0,
+    secondBadgeCount: Int? = 0,
 ) {
     Card(
         modifier = modifier
             .height(148.dp)
             .fillMaxWidth()
-            .clip(
-                RoundedCornerShape(8.dp)
-            )
+            .clip(RoundedCornerShape(8.dp))
 //            .padding(dimensionResource(R.dimen.padding_small))
             .clickable { onCardClick() },
         elevation = CardDefaults.cardElevation(defaultElevation = 8.dp),
@@ -76,6 +77,7 @@ fun BaseCard(
         ) {
             Column(
                 modifier = Modifier
+                    .padding(horizontal = 4.dp)
                     .fillMaxHeight(),
                 horizontalAlignment = Alignment.CenterHorizontally,
             ) {
@@ -89,26 +91,78 @@ fun BaseCard(
                                 .clip(RoundedCornerShape(8.dp))
                         )
                     }
+                    // Condition 'imageVector1 != null' is always 'true'
+                    // but can't just do imageVector1
                     imageVector1 != null -> {
-                        Icon(
-                            imageVector = imageVector1,
-                            contentDescription = null,
-                            modifier = Modifier
-                                .size(48.dp)
-                                .clip(RoundedCornerShape(8.dp))
-                        )
+//                        if(firstBadgeCount != 0) {
+                            BadgedBox(
+                                modifier = Modifier,
+                                badge = {
+                                    Badge(
+                                        modifier = Modifier
+                                            .offset(
+                                                dimensionResource(R.dimen.badge_x_offset),
+                                                dimensionResource(R.dimen.badge_y_offset)
+                                            ),
+                                    ) {
+                                        Text(firstBadgeCount.toString())
+                                    }
+                                }
+                            ) {
+                                Icon(
+                                    imageVector = imageVector1,
+                                    contentDescription = null,
+                                    modifier = Modifier
+                                        .size(48.dp)
+                                        .clip(RoundedCornerShape(8.dp))
+                                )
+                            }
+//                        } else {
+//                            Icon(
+//                                imageVector = imageVector1,
+//                                contentDescription = null,
+//                                modifier = Modifier
+//                                    .size(48.dp)
+//                                    .clip(RoundedCornerShape(8.dp))
+//                            )
+//                        }
                     }
                 }
 
                 // Optional Image or icon2
                 imageVector2?.let {
-                    Icon(
-                        imageVector = it,
-                        contentDescription = null,
-                        modifier = Modifier
-                            .size(48.dp)
-                            .clip(RoundedCornerShape(8.dp)),
-                    )
+//                    if(secondBadgeCount != 0) {
+                        BadgedBox(
+                            modifier = Modifier,
+                            badge = {
+                                Badge(
+                                    modifier = Modifier
+                                    .offset(
+                                        dimensionResource(R.dimen.badge_x_offset),
+                                        dimensionResource(R.dimen.badge_y_offset)
+                                    ),
+                                ) {
+                                    Text(secondBadgeCount.toString())
+                                }
+                            }
+                        ) {
+                            Icon(
+                                imageVector = it,
+                                contentDescription = null,
+                                modifier = Modifier
+                                    .size(48.dp)
+                                    .clip(RoundedCornerShape(8.dp)),
+                            )
+                        }
+//                    } else {
+//                        Icon(
+//                            imageVector = it,
+//                            contentDescription = null,
+//                            modifier = Modifier
+//                                .size(48.dp)
+//                                .clip(RoundedCornerShape(8.dp)),
+//                        )
+//                    }
                 }
             }
             Column(
@@ -138,7 +192,7 @@ fun BaseCard(
                     modifier = Modifier
                         .weight(1f)
                         .fillMaxWidth(),
-                    maxLines = 2,
+                    maxLines = 3,
                     overflow = TextOverflow.Ellipsis,
                 )
                 Row(
@@ -150,12 +204,6 @@ fun BaseCard(
                         checked = isFragile,
                         onCheckedChange = { onCheckedChange() },
                         )
-//                    Icon(
-//                        imageVector = Icons.Outlined.CheckBox,
-//                        contentDescription = null,
-//                        modifier = Modifier.size(24.dp),
-//                        // tint = if (isEditable) LocalContentColor.current.copy(alpha = ContentAlpha.disabled) else null
-//                    )
                     Spacer(modifier = Modifier.width(4.dp))
                     Text("Fragile")
 
@@ -205,6 +253,7 @@ fun PreviewSummaryCollectionCard() {
         value = LocalDataSource().loadCollections().sumOf { it.totalValue },
         isFragile = true,
         onCheckedChange = {},
+        firstBadgeCount = LocalDataSource().loadCollections().size,
     )
 }
 
@@ -215,13 +264,15 @@ fun PreviewCollectionCard() {
         title = "PreviewCollectionCard",
         description = "individusal descrition for this Collections",
         onCardClick = {},
-        imageVector1 = ImageVector.vectorResource(R.drawable.baseline_category_24),
+        imageVector1 = ImageVector.vectorResource(R.drawable.ic_launcher_foreground),
         imageVector2 = ImageVector.vectorResource(R.drawable.baseline_label_24),
         buttonIcon = ImageVector.vectorResource(R.drawable.baseline_more_vert_24),
         onButtonIconClick = { },
         value = LocalDataSource().loadCollections().first().totalValue,
-    isFragile = true,
+        isFragile = true,
         onCheckedChange = {},
+        firstBadgeCount = LocalDataSource().loadCollections().first().boxes.size,
+        secondBadgeCount = LocalDataSource().loadCollections().first().boxes.sumOf { it.items.size }
     )
 }
 
@@ -238,6 +289,7 @@ fun PreviewBoxCard() {
         onButtonIconClick = { },
         value = LocalDataSource().loadBoxes().first().totalValue,
         onCheckedChange = {},
+        firstBadgeCount = LocalDataSource().loadBoxes().first().items.size,
     )
 }
 
@@ -266,12 +318,14 @@ fun PreviewCollectionEditCard() {
         title = "PreviewCollectionEditCard",
         description = "individusal descrition for this Collections",
         onCardClick = {},
-        imageVector1 = ImageVector.vectorResource(R.drawable.baseline_category_24),
+        imageVector1 = ImageVector.vectorResource(R.drawable.ic_launcher_foreground),
         imageVector2 = ImageVector.vectorResource(R.drawable.baseline_label_24),
         buttonIcon =  ImageVector.vectorResource(R.drawable.baseline_more_vert_24),
         onButtonIconClick = { },
         value = LocalDataSource().loadCollections().first().totalValue,
         onCheckedChange = {},
+        firstBadgeCount = LocalDataSource().loadCollections().first().boxes.size,
+        secondBadgeCount = LocalDataSource().loadCollections().first().boxes.sumOf { it.items.size }
     )
 }
 
@@ -288,6 +342,7 @@ fun PreviewBoxEditCard() {
         onButtonIconClick = { },
         value = LocalDataSource().loadBoxes().first().totalValue,
         onCheckedChange = {},
+        firstBadgeCount = LocalDataSource().loadBoxes().first().items.size,
     )
 }
 

@@ -31,7 +31,7 @@ fun BoxesScreen(
         ) {
             BaseCard(
                 title = it.name,
-                description = "",
+                description = it.description,
                 onCardClick = {},
                 imageVector1 = ImageVector.vectorResource(R.drawable.baseline_label_24),
                 buttonIcon = ImageVector.vectorResource(R.drawable.baseline_more_vert_24),
@@ -39,6 +39,7 @@ fun BoxesScreen(
                 value = it.totalValue,
                 isFragile = it.isFragile,
                 onCheckedChange = {},
+                firstBadgeCount = it.items.size,
             )
         }
     }
