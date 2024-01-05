@@ -60,6 +60,7 @@ fun BaseCard(
     onCheckedChange: () -> Unit,
     firstBadgeCount: Int? = 0,
     secondBadgeCount: Int? = 0,
+    isShowFragileAndValue: Boolean = true,
 ) {
     Card(
         modifier = modifier
@@ -195,25 +196,28 @@ fun BaseCard(
                     maxLines = 3,
                     overflow = TextOverflow.Ellipsis,
                 )
-                Row(
-                    verticalAlignment = Alignment.CenterVertically,
-                    modifier = Modifier
-                        .fillMaxWidth(),
-                ) {
-                    Checkbox(
-                        checked = isFragile,
-                        onCheckedChange = { onCheckedChange() },
+
+                if(isShowFragileAndValue) {
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
+                        modifier = Modifier
+                            .fillMaxWidth(),
+                    ) {
+                        Checkbox(
+                            checked = isFragile,
+                            onCheckedChange = { onCheckedChange() },
                         )
-                    Spacer(modifier = Modifier.width(4.dp))
-                    Text("Fragile")
+                        Spacer(modifier = Modifier.width(4.dp))
+                        Text("Fragile")
 
-                    Spacer(modifier = Modifier.weight(1f))
+                        Spacer(modifier = Modifier.weight(1f))
 
-                    Text(
-                        text = value.formatValue(),
-                        style = MaterialTheme.typography.bodySmall,
-                        color = MaterialTheme.colorScheme.secondary
-                    )
+                        Text(
+                            text = value.formatValue(),
+                            style = MaterialTheme.typography.bodySmall,
+                            color = MaterialTheme.colorScheme.secondary
+                        )
+                    }
                 }
             }
             Column(
