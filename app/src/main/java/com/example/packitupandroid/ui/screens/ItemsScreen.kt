@@ -13,6 +13,7 @@ import com.example.packitupandroid.data.local.LocalDataSource
 import com.example.packitupandroid.model.Item
 import androidx.compose.ui.res.vectorResource
 import com.example.packitupandroid.R
+import kotlin.random.Random
 
 
 @Composable
@@ -34,6 +35,7 @@ fun ItemsScreen(
                 title = it.name,
                 description = it.description,
                 onCardClick = {},
+                imageId = if(Random.nextBoolean()) R.drawable.pug else null,
                 imageVector1 = ImageVector.vectorResource(R.drawable.baseline_label_24),
                 buttonIcon = ImageVector.vectorResource(R.drawable.baseline_more_vert_24),
                 onButtonIconClick = { },
