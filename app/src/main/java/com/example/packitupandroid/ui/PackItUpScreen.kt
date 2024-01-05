@@ -9,14 +9,14 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Collections
 import androidx.compose.material.icons.filled.Home
-import androidx.compose.material.icons.filled.Inventory2
-import androidx.compose.material.icons.filled.WebStories
+import androidx.compose.material3.Badge
+import androidx.compose.material3.BadgedBox
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
@@ -24,6 +24,7 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.packitupandroid.R
@@ -47,17 +48,17 @@ fun PackItUpScreen(
         ),
         NavigationItemContent(
             screenType = ScreenType.Collections,
-            icon = Icons.Default.Collections,
+            icon = ImageVector.vectorResource(R.drawable.baseline_category_24),
             text = stringResource(id = R.string.collections)
         ),
         NavigationItemContent(
             screenType = ScreenType.Boxes,
-            icon = Icons.Default.Inventory2,
+            icon = ImageVector.vectorResource(R.drawable.ic_launcher_foreground),
             text = stringResource(id = R.string.boxes)
         ),
         NavigationItemContent(
             screenType = ScreenType.Items,
-            icon = Icons.Default.WebStories,
+            icon = ImageVector.vectorResource(R.drawable.baseline_label_24),
             text = stringResource(id = R.string.items)
         ),
     )
@@ -125,10 +126,21 @@ private fun PackItUpBottomNavigationBar(
                 selected = currentTab == navItem.screenType,
                 onClick = { onTabPressed(navItem.screenType) },
                 icon = {
-                    Icon(
-                        imageVector = navItem.icon,
-                        contentDescription = navItem.text
-                    )
+                    BadgedBox(
+                        modifier = Modifier,
+                        badge = {
+                            Badge(
+                                modifier = Modifier
+                            ) {
+                                Text("0")
+                            }
+                        }
+                    ) {
+                        Icon(
+                            imageVector = navItem.icon,
+                            contentDescription = navItem.text
+                        )
+                    }
                 }
             )
         }
