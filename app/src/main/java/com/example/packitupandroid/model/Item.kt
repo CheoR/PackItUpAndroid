@@ -5,6 +5,6 @@ data class Item(
     val name: String,
     val description: String = "",
     val isFragile: Boolean = false,
-    val imageUri: String = "",
+    val imageUri: Int? = null,
     val value: Double = 0.00
 )
