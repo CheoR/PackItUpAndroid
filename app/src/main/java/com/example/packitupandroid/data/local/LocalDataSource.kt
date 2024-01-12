@@ -21,25 +21,25 @@ import com.example.packitupandroid.model.Collection
 //}
 
 class LocalDataSource() {
-    private fun itemsAndTotalValue(start: Int, stop: Int) : Pair<List<Item>, Double> {
+    private fun itemsAndValue(start: Int, stop: Int) : Pair<List<Item>, Double> {
         /**
          * Return sublist of [Item] and sublist total value.
          */
 
         val itemSublist = loadItems().slice( start .. stop )
-        val totalValue = itemSublist.sumOf { it.value }
-        return Pair(itemSublist, totalValue)
+        val value = itemSublist.sumOf { it.value }
+        return Pair(itemSublist, value)
     }
 
-    private fun boxesAndTotalValue(start: Int, stop: Int) : Pair<List<Box>, Double> {
+    private fun boxesAndValue(start: Int, stop: Int) : Pair<List<Box>, Double> {
         /**
          * Return sublist of [Box] and sublist total value.
          */
 
         val boxSublist = loadBoxes().slice( start .. stop )
-        val totalValue = boxSublist.sumOf { it.totalValue }
+        val value = boxSublist.sumOf { it.value}
 
-        return Pair(boxSublist, totalValue)
+        return Pair(boxSublist, value)
     }
 
     fun loadItems(): List<Item> {
@@ -111,31 +111,31 @@ class LocalDataSource() {
                 id = "0L",
                 name = "kitchen",
 //                items = loadItems().take(3),
-//                totalValue = loadItems().take(3).sumOf { it.value }
-                items = itemsAndTotalValue(0,3).first,
-//                totalValue = itemsAndTotalValue(0,3).second,
+//                value = loadItems().take(3).sumOf { it.value }
+                items = itemsAndValue(0,3).first,
+//                value = itemsAndValue(0,3).second,
                 description = "don't open until i get home",
-//                isFragile = itemsAndTotalValue(0,3).first.hasFragileItems(),
+//                isFragile = itemsAndValue(0,3).first.hasFragileItems(),
             ),
             Box(
                 id = "1L",
                 name = "bedroom1",
-                items = itemsAndTotalValue(3,5).first,
-//                totalValue = itemsAndTotalValue(3,5).second,
-//                isFragile = itemsAndTotalValue(3,5).first.hasFragileItems(),
+                items = itemsAndValue(3,5).first,
+//                value = itemsAndValue(3,5).second,
+//                isFragile = itemsAndValue(3,5).first.hasFragileItems(),
             ),
             Box(
                 id = "2L",
                 name = "bedroom2",
-                items = itemsAndTotalValue(6,9).first,
-//                totalValue = itemsAndTotalValue(6,9).second,
-//                isFragile = itemsAndTotalValue(6,9).first.hasFragileItems(),
+                items = itemsAndValue(6,9).first,
+//                value = itemsAndValue(6,9).second,
+//                isFragile = itemsAndValue(6,9).first.hasFragileItems(),
             ),
             Box(
                 id = "3L",
                 name = "garage",
                 items = listOf(),
-//                totalValue = 0.00,
+//                value = 0.00,
             ),
         )
     }
@@ -145,22 +145,22 @@ class LocalDataSource() {
             Collection(
                 id = "0L",
                 name = "for home",
-                boxes = boxesAndTotalValue(0,2).first,
-//                totalValue = boxesAndTotalValue(0,2).second,
-//                isFragile = boxesAndTotalValue(0,2).first.hasFragileBoxes(),
+                boxes = boxesAndValue(0,2).first,
+//                value = boxesAndValue(0,2).second,
+//                isFragile = boxesAndValue(0,2).first.hasFragileBoxes(),
             ),
             Collection(
                 id = "1L",
                 name = "for donation",
-                boxes = boxesAndTotalValue(3,3).first,
-//                totalValue = boxesAndTotalValue(3,3).second,
-//                isFragile = boxesAndTotalValue(3,3).first.hasFragileBoxes(),
+                boxes = boxesAndValue(3,3).first,
+//                value = boxesAndValue(3,3).second,
+//                isFragile = boxesAndValue(3,3).first.hasFragileBoxes(),
             ),
             Collection(
                 id = "2L",
                 name = "not sure yet",
                 boxes = listOf(),
-//                totalValue = 0.00,
+//                value = 0.00,
             ),
         )
     }
