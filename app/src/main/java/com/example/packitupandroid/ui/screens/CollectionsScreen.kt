@@ -1,23 +1,21 @@
 package com.example.packitupandroid.ui.screens
 
-import BaseCard
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.tooling.preview.Preview
 import com.example.packitupandroid.data.local.LocalDataSource
 import com.example.packitupandroid.model.Collection
-import androidx.compose.ui.res.vectorResource
 import com.example.packitupandroid.R
+import com.example.packitupandroid.ui.components.CollectionCard
 
 @Composable
 fun CollectionsScreen(
     modifier: Modifier = Modifier,
-    cards: List<Collection> = LocalDataSource().loadCollections(),
+    cards: List<Collection> = emptyList(),
     ) {
     LazyColumn(
         modifier = modifier,
@@ -29,19 +27,11 @@ fun CollectionsScreen(
             items = cards,
             key = { it.id }
         ) {
-            BaseCard(
-                title = it.name,
-                description = it.description,
+            CollectionCard(
+                collection = it,
+                onUpdate = {},
+                onDelete = {},
                 onCardClick = {},
-                imageVector1 = ImageVector.vectorResource(R.drawable.ic_launcher_foreground),
-                imageVector2 = ImageVector.vectorResource(R.drawable.baseline_label_24),
-                buttonIcon = ImageVector.vectorResource(R.drawable.baseline_more_vert_24),
-                onButtonIconClick = { },
-                value = it.totalValue,
-                isFragile = it.isFragile,
-                onCheckedChange = {},
-                firstBadgeCount = it.boxes.size,
-                secondBadgeCount = it.boxes.sumOf { box -> box.items.size }
             )
         }
     }
@@ -50,5 +40,7 @@ fun CollectionsScreen(
 @Preview(showBackground = true)
 @Composable
 fun PreviewCollectionsScreen() {
-    CollectionsScreen()
+    CollectionsScreen(
+        cards = LocalDataSource().loadCollections()
+    )
 }

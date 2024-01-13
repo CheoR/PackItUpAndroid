@@ -16,7 +16,7 @@ import com.example.packitupandroid.ui.components.ItemCard
 @Composable
 fun ItemsScreen(
     modifier: Modifier = Modifier,
-    cards: List<Item> = LocalDataSource().loadItems(),
+    cards: List<Item> = emptyList(),
 ) {
     LazyColumn(
         modifier = modifier,
@@ -41,5 +41,7 @@ fun ItemsScreen(
 @Preview(showBackground = true)
 @Composable
 fun PreviewItemsScreen() {
-    ItemsScreen()
+    ItemsScreen(
+        cards = LocalDataSource().loadItems(),
+    )
 }
