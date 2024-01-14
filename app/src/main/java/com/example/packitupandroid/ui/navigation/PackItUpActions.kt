@@ -1,11 +1,10 @@
 package com.example.packitupandroid.ui.navigation
 
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Article
-import androidx.compose.material.icons.filled.Inbox
-import androidx.compose.material.icons.filled.People
-import androidx.compose.material.icons.outlined.ChatBubbleOutline
-import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.material.icons.filled.Category
+import androidx.compose.material.icons.filled.Home
+import androidx.compose.material.icons.filled.Label
+import androidx.compose.material.icons.outlined.CheckBoxOutlineBlank
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
 import com.example.packitupandroid.R
@@ -19,9 +18,9 @@ object PackItUpRoute {
 
 data class PackItUpTopLevelDestination(
     val route: String,
-    val selectedIcon: ImageVector,
-    val unselectedIcon: ImageVector,
-    val iconTextId: Int
+    val selectedIcon: Any, // ImageVector
+    val unselectedIcon: Any, // ImageVector,
+    val iconTextId: Int,
 )
 
 class PackItUpNavigationActions(private val navController: NavHostController) {
@@ -46,26 +45,26 @@ class PackItUpNavigationActions(private val navController: NavHostController) {
 val TOP_LEVEL_DESTINATIONS = listOf(
     PackItUpTopLevelDestination(
         route = PackItUpRoute.SUMMARY,
-        selectedIcon = Icons.Default.Inbox,
-        unselectedIcon = Icons.Default.Inbox,
+        selectedIcon = Icons.Default.Home,
+        unselectedIcon = Icons.Default.Home,
         iconTextId = R.string.summary
     ),
     PackItUpTopLevelDestination(
         route = PackItUpRoute.COLLECTIONS,
-        selectedIcon = Icons.Default.Article,
-        unselectedIcon = Icons.Default.Article,
+        selectedIcon = Icons.Default.Category,
+        unselectedIcon = Icons.Default.Category,
         iconTextId = R.string.collections
     ),
     PackItUpTopLevelDestination(
         route = PackItUpRoute.BOXES,
-        selectedIcon = Icons.Outlined.ChatBubbleOutline,
-        unselectedIcon = Icons.Outlined.ChatBubbleOutline,
+        selectedIcon = R.drawable.ic_launcher_foreground,
+        unselectedIcon = Icons.Outlined.CheckBoxOutlineBlank,
         iconTextId = R.string.boxes
     ),
     PackItUpTopLevelDestination(
         route = PackItUpRoute.ITEMS,
-        selectedIcon = Icons.Default.People,
-        unselectedIcon = Icons.Default.People,
+        selectedIcon = Icons.Default.Label,
+        unselectedIcon = Icons.Default.Label,
         iconTextId = R.string.items
     )
 )

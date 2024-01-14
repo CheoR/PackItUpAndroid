@@ -1,13 +1,13 @@
 package com.example.packitupandroid.ui.components
 
-import com.example.packitupandroid.ui.components.card.BaseCard
-import com.example.packitupandroid.ui.components.card.EditMode
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.vectorResource
 import com.example.packitupandroid.R
 import com.example.packitupandroid.model.Collection
+import com.example.packitupandroid.ui.components.card.BaseCard
 import com.example.packitupandroid.ui.components.card.BaseCardData
+import com.example.packitupandroid.ui.components.card.EditMode
 import com.example.packitupandroid.ui.components.card.EditableFields
 
 @Composable
