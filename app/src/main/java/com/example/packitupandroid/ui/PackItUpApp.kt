@@ -6,18 +6,18 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.windowsizeclass.WindowSizeClass
-import androidx.compose.runtime.Composable
 import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass
+import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import com.example.packitupandroid.data.local.LocalDataSource
 import com.example.packitupandroid.ui.navigation.PackItUpBottomNavigationBar
 import com.example.packitupandroid.ui.navigation.PackItUpNavigationActions
 import com.example.packitupandroid.ui.navigation.PackItUpRoute
@@ -136,16 +136,26 @@ private fun PackItUpNavHost(
         startDestination = PackItUpRoute.SUMMARY
     ) {
         composable(PackItUpRoute.SUMMARY) {
-            SummaryScreen()
+            SummaryScreen(
+                collections = LocalDataSource().loadCollections(),
+                boxes = LocalDataSource().loadBoxes(),
+                items = LocalDataSource().loadItems(),
+            )
         }
         composable(PackItUpRoute.COLLECTIONS) {
-            CollectionsScreen()
+            CollectionsScreen(
+                cards = LocalDataSource().loadCollections(),
+            )
         }
         composable(PackItUpRoute.BOXES) {
-            BoxesScreen()
+            BoxesScreen(
+                cards = LocalDataSource().loadBoxes(),
+            )
         }
         composable(PackItUpRoute.ITEMS) {
-            ItemsScreen()
+            ItemsScreen(
+                cards = LocalDataSource().loadItems(),
+            )
         }
     }
 }
