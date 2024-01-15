@@ -7,8 +7,10 @@ interface CollectionsRepository {
     fun getCollections() : List<Collection>
 }
 
-class LocalCollectionRepository : CollectionsRepository {
+class LocalCollectionRepository(
+    private val localDataSource: LocalDataSource,
+) : CollectionsRepository {
     override fun getCollections(): List<Collection> {
-        return LocalDataSource().loadCollections()
+        return localDataSource.loadCollections()
     }
 }

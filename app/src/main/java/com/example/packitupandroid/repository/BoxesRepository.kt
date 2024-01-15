@@ -7,8 +7,10 @@ interface BoxesRepository {
     fun getBoxes() : List<Box>
 }
 
-class LocalBoxRepository() : BoxesRepository {
+class LocalBoxRepository(
+    private val localDataSource: LocalDataSource,
+) : BoxesRepository {
     override fun getBoxes(): List<Box> {
-        return LocalDataSource().loadBoxes()
+        return localDataSource.loadBoxes()
     }
 }

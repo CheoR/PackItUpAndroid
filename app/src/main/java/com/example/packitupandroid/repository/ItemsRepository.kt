@@ -7,8 +7,10 @@ interface ItemsRepository {
     fun loadItems() : List<Item>
 }
 
-class LocalItemsRepository() : ItemsRepository {
+class LocalItemsRepository(
+    private val localDataSource: LocalDataSource,
+) : ItemsRepository {
     override fun loadItems(): List<Item> {
-        return LocalDataSource().loadItems()
+        return localDataSource.loadItems()
     }
 }
