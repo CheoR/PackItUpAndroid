@@ -128,6 +128,8 @@ private fun PackItUpNavHost(
     modifier: Modifier,
 ) {
 
+    val localDataRepository: LocalDataSource = LocalDataSource()
+
     NavHost(
         modifier = modifier
             .fillMaxSize()
@@ -137,24 +139,24 @@ private fun PackItUpNavHost(
     ) {
         composable(PackItUpRoute.SUMMARY) {
             SummaryScreen(
-                collections = LocalDataSource().loadCollections(),
-                boxes = LocalDataSource().loadBoxes(),
-                items = LocalDataSource().loadItems(),
+                collections = localDataRepository.loadCollections(),
+                boxes = localDataRepository.loadBoxes(),
+                items = localDataRepository.loadItems(),
             )
         }
         composable(PackItUpRoute.COLLECTIONS) {
             CollectionsScreen(
-                cards = LocalDataSource().loadCollections(),
+                cards = localDataRepository.loadCollections(),
             )
         }
         composable(PackItUpRoute.BOXES) {
             BoxesScreen(
-                cards = LocalDataSource().loadBoxes(),
+                cards = localDataRepository.loadBoxes(),
             )
         }
         composable(PackItUpRoute.ITEMS) {
             ItemsScreen(
-                cards = LocalDataSource().loadItems(),
+                cards = localDataRepository.loadItems(),
             )
         }
     }
