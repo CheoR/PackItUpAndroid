@@ -1,27 +1,9 @@
 package com.example.packitupandroid.data.local
 
-import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.compose.ui.res.vectorResource
 import com.example.packitupandroid.R
 import com.example.packitupandroid.model.Box
-import com.example.packitupandroid.model.Item
 import com.example.packitupandroid.model.Collection
-//import com.example.packitupandroid.model.hasFragileItem
-
-
-//fun List<Item>.hasFragileItems() : Boolean {
-//    /**
-//     * Check if any [Item] in [Box]'s items list are marked as fragile.
-//     */
-//    return this.any{ it.isFragile }
-//}
-//
-//fun List<Box>.hasFragileBoxes() : Boolean {
-//    /**
-//     * Check if any [Box] in [Collection]'s box list are marked as fragile.
-//     */
-//    return this.any{ it.isFragile }
-//}
+import com.example.packitupandroid.model.Item
 
 class LocalDataSource() {
     private fun itemsAndValue(start: Int, stop: Int) : Pair<List<Item>, Double> {
