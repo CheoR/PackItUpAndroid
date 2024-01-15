@@ -16,10 +16,10 @@ import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.packitupandroid.R
-import com.example.packitupandroid.data.local.LocalDataSource
 import com.example.packitupandroid.model.Box
 import com.example.packitupandroid.model.Collection
 import com.example.packitupandroid.model.Item
+import com.example.packitupandroid.repository.LocalDataRepository
 import com.example.packitupandroid.ui.components.SummaryCard
 import com.example.packitupandroid.ui.components.formatValue
 
@@ -110,10 +110,12 @@ fun SummaryScreen(
 
 @Preview(showBackground = true)
 @Composable
-fun PreviewSummaryScreen() {
-    val collections = LocalDataSource().loadCollections()
-    val boxes = LocalDataSource().loadBoxes()
-    val items = LocalDataSource().loadItems()
+fun PreviewSummaryScreen(
+    localDataRepository: LocalDataRepository = LocalDataRepository()
+) {
+    val collections = localDataRepository.loadCollections()
+    val boxes = localDataRepository.loadBoxes()
+    val items = localDataRepository.loadItems()
     SummaryScreen(
         collections = collections,
         boxes = boxes,

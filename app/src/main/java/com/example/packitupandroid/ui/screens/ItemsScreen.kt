@@ -10,6 +10,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import com.example.packitupandroid.data.local.LocalDataSource
 import com.example.packitupandroid.model.Item
 import com.example.packitupandroid.R
+import com.example.packitupandroid.repository.LocalDataRepository
 import com.example.packitupandroid.ui.components.ItemCard
 
 
@@ -40,8 +41,10 @@ fun ItemsScreen(
 
 @Preview(showBackground = true)
 @Composable
-fun PreviewItemsScreen() {
+fun PreviewItemsScreen(
+    localDataRepository : LocalDataRepository = LocalDataRepository()
+) {
     ItemsScreen(
-        cards = LocalDataSource().loadItems(),
+        cards = localDataRepository.loadItems(),
     )
 }
