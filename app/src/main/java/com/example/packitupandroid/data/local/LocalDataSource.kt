@@ -1,5 +1,8 @@
 package com.example.packitupandroid.data.local
 
+import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.res.vectorResource
+import com.example.packitupandroid.R
 import com.example.packitupandroid.model.Box
 import com.example.packitupandroid.model.Item
 import com.example.packitupandroid.model.Collection
@@ -44,6 +47,14 @@ class LocalDataSource() {
 
     fun loadItems(): List<Item> {
         return listOf<Item> (
+            Item(
+                id = "100L",
+                name = "Peggy PUg",
+                description = "Cutest little pug in the world",
+                isFragile = true,
+                value = 100000000000000.00,
+                imageUri = R.drawable.pug,
+            ),
             Item(
                 id = "0L",
                 name = "pot",
