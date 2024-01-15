@@ -18,10 +18,10 @@ import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.packitupandroid.R
-import com.example.packitupandroid.data.local.LocalDataSource
 import com.example.packitupandroid.model.Box
 import com.example.packitupandroid.model.Collection
 import com.example.packitupandroid.model.Item
+import com.example.packitupandroid.repository.LocalDataRepository
 import com.example.packitupandroid.ui.screens.Summary
 
 sealed class BaseCardData {
@@ -226,8 +226,10 @@ fun PreviewItemBaseCardWithImage() {
     group = "Default",
 )
 @Composable
-fun PreviewItemBaseCardWithoutImage() {
-    val item = LocalDataSource().loadItems().first()
+fun PreviewItemBaseCardWithoutImage(
+    localDataRepository: LocalDataRepository = LocalDataRepository()
+) {
+    val item = localDataRepository.loadItems().first()
     val editableFields = setOf(
         EditableFields.Name,
         EditableFields.Description,
@@ -252,8 +254,10 @@ fun PreviewItemBaseCardWithoutImage() {
     group = "Default",
 )
 @Composable
-fun PreviewBoxBaseCard() {
-    val box = LocalDataSource().loadBoxes().first()
+fun PreviewBoxBaseCard(
+    localDataRepository: LocalDataRepository = LocalDataRepository()
+) {
+    val box = localDataRepository.loadBoxes().first()
     val editableFields = setOf(
         EditableFields.Name,
         EditableFields.Description,
@@ -276,8 +280,10 @@ fun PreviewBoxBaseCard() {
     group = "Default",
 )
 @Composable
-fun PreviewCollectionBaseCard() {
-    val collection = LocalDataSource().loadCollections().first()
+fun PreviewCollectionBaseCard(
+    localDataRepository: LocalDataRepository = LocalDataRepository()
+) {
+    val collection = localDataRepository.loadCollections().first()
     BaseCard(
         data = BaseCardData.CollectionData(
                 collection = collection,
@@ -338,8 +344,10 @@ fun PreviewSummaryItemBaseCardWithImage() {
     group = "Summary",
 )
 @Composable
-fun PreviewSummaryItemBaseCardWithoutImage() {
-    val item = LocalDataSource().loadItems().first()
+fun PreviewSummaryItemBaseCardWithoutImage(
+    localDataRepository: LocalDataRepository = LocalDataRepository()
+) {
+    val item = localDataRepository.loadItems().first()
     val editableFields = setOf(
         EditableFields.Name,
         EditableFields.Description,
@@ -365,8 +373,10 @@ fun PreviewSummaryItemBaseCardWithoutImage() {
     group = "Summary",
 )
 @Composable
-fun PreviewSummaryBoxBaseCard() {
-    val box = LocalDataSource().loadBoxes().first()
+fun PreviewSummaryBoxBaseCard(
+    localDataRepository: LocalDataRepository = LocalDataRepository()
+) {
+    val box = localDataRepository.loadBoxes().first()
     val editableFields = setOf(
         EditableFields.Name,
         EditableFields.Description,
@@ -390,8 +400,10 @@ fun PreviewSummaryBoxBaseCard() {
     group = "Summary",
 )
 @Composable
-fun PreviewSummaryCollectionBaseCard() {
-    val collection = LocalDataSource().loadCollections().first()
+fun PreviewSummaryCollectionBaseCard(
+    localDataRepository: LocalDataRepository = LocalDataRepository()
+) {
+    val collection = localDataRepository.loadCollections().first()
     val editableFields = setOf(
         EditableFields.Name,
         EditableFields.Description,
@@ -453,8 +465,10 @@ fun PreviewEditItemBaseCardWithImage() {
     group = "Edit",
 )
 @Composable
-fun PreviewEditItemBaseCardWithoutImage() {
-    val item = LocalDataSource().loadItems().first()
+fun PreviewEditItemBaseCardWithoutImage(
+    localDataRepository: LocalDataRepository = LocalDataRepository()
+) {
+    val item = localDataRepository.loadItems().first()
     val editableFields = setOf(
         EditableFields.Name,
         EditableFields.Description,
@@ -480,8 +494,10 @@ fun PreviewEditItemBaseCardWithoutImage() {
     group = "Edit",
 )
 @Composable
-fun PreviewEditBoxBaseCard() {
-    val box = LocalDataSource().loadBoxes().first()
+fun PreviewEditBoxBaseCard(
+    localDataRepository: LocalDataRepository = LocalDataRepository()
+) {
+    val box = localDataRepository.loadBoxes().first()
     val editableFields = setOf(
         EditableFields.Name,
         EditableFields.Description,
@@ -505,8 +521,10 @@ fun PreviewEditBoxBaseCard() {
     group = "Edit",
 )
 @Composable
-fun PreviewEditCollectionBaseCard() {
-    val collection = LocalDataSource().loadCollections().first()
+fun PreviewEditCollectionBaseCard(
+    localDataRepository: LocalDataRepository = LocalDataRepository()
+) {
+    val collection = localDataRepository.loadCollections().first()
     BaseCard(
         data = BaseCardData.CollectionData(
             collection = collection,

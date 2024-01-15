@@ -16,7 +16,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.example.packitupandroid.data.local.LocalDataSource
+import com.example.packitupandroid.repository.LocalDataRepository
 import com.example.packitupandroid.ui.components.formatValue
 
 @Composable
@@ -123,8 +123,10 @@ fun DataColumn(
     group = "Default",
 )
 @Composable
-fun PreviewItemViewCardDataColumn() {
-    val item = LocalDataSource().loadItems().first()
+fun PreviewItemViewCardDataColumn(
+    localDataRepository : LocalDataRepository = LocalDataRepository()
+) {
+    val item = localDataRepository.loadItems().first()
     DataColumn(
         data = BaseCardData.ItemData(
             item = item,
@@ -138,8 +140,10 @@ fun PreviewItemViewCardDataColumn() {
     group = "Default",
 )
 @Composable
-fun PreviewBoxViewCardDataColumn() {
-    val box = LocalDataSource().loadBoxes().first()
+fun PreviewBoxViewCardDataColumn(
+    localDataRepository : LocalDataRepository = LocalDataRepository()
+) {
+    val box = localDataRepository.loadBoxes().first()
     DataColumn(
         data = BaseCardData.BoxData(
             box = box,
@@ -152,8 +156,10 @@ fun PreviewBoxViewCardDataColumn() {
     group = "Default",
 )
 @Composable
-fun PreviewCollectionViewCardDataColumn() {
-    val collection = LocalDataSource().loadCollections().first()
+fun PreviewCollectionViewCardDataColumn(
+    localDataRepository : LocalDataRepository = LocalDataRepository()
+) {
+    val collection = localDataRepository.loadCollections().first()
     DataColumn(
         data = BaseCardData.CollectionData(
             collection = collection,
@@ -167,8 +173,10 @@ fun PreviewCollectionViewCardDataColumn() {
     group = "Summary",
 )
 @Composable
-fun PreviewItemSummaryCardDataColumn() {
-    val item = LocalDataSource().loadItems().first()
+fun PreviewItemSummaryCardDataColumn(
+    localDataRepository : LocalDataRepository = LocalDataRepository()
+) {
+    val item = localDataRepository.loadItems().first()
     DataColumn(
         data = BaseCardData.ItemData(
             item = item,
@@ -183,8 +191,10 @@ fun PreviewItemSummaryCardDataColumn() {
     group = "Summary",
 )
 @Composable
-fun PreviewBoxSummaryCardDataColumn() {
-    val box = LocalDataSource().loadBoxes().first()
+fun PreviewBoxSummaryCardDataColumn(
+    localDataRepository : LocalDataRepository = LocalDataRepository()
+) {
+    val box = localDataRepository.loadBoxes().first()
     DataColumn(
         data = BaseCardData.BoxData(
             box = box,
@@ -198,8 +208,10 @@ fun PreviewBoxSummaryCardDataColumn() {
     group = "Summary",
 )
 @Composable
-fun PreviewCollectionSummaryCardDataColumn() {
-    val collection = LocalDataSource().loadCollections().first()
+fun PreviewCollectionSummaryCardDataColumn(
+    localDataRepository : LocalDataRepository = LocalDataRepository()
+) {
+    val collection = localDataRepository.loadCollections().first()
     DataColumn(
         data = BaseCardData.CollectionData(
             collection = collection,
