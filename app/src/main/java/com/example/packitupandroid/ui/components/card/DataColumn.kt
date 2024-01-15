@@ -28,9 +28,9 @@ fun DataColumn(
     editableFields: Set<EditableFields> = emptySet(),
     viewMode: ViewMode = ViewMode.NotSummaryCard,
 ) {
-    var isFragile: Boolean = false
-    var value: Double = 0.00
-    var description: String = ""
+    var isFragile = false
+    var value = 0.00
+    var description = ""
     var name: String
 
     when (data) {

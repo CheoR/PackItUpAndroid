@@ -128,7 +128,7 @@ private fun PackItUpNavHost(
     modifier: Modifier,
 ) {
 
-    val localDataRepository: LocalDataSource = LocalDataSource()
+    val localDataRepository = LocalDataSource()
 
     NavHost(
         modifier = modifier
