@@ -6,23 +6,23 @@ import com.example.packitupandroid.model.Collection
 import com.example.packitupandroid.model.Item
 
 interface DataRepository {
-    fun getItems(): List<Item>
-    fun getBoxes() : List<Box>
-    fun getCollections() : List<Collection>
+    fun loadItems(): List<Item>
+    fun loadBoxes() : List<Box>
+    fun loadCollections() : List<Collection>
 }
 
-class LocalDataRepository(
-    private val localDataSource: LocalDataSource,
+class LocalDataRepository (
+    private val localDataSource: LocalDataSource = LocalDataSource(),
 ) : DataRepository {
 
-    override fun getItems(): List<Item> {
+    override fun loadItems(): List<Item> {
         return localDataSource.loadItems()
     }
-    override fun getBoxes(): List<Box> {
+    override fun loadBoxes(): List<Box> {
         return localDataSource.loadBoxes()
     }
 
-    override fun getCollections(): List<Collection> {
+    override fun loadCollections(): List<Collection> {
         return localDataSource.loadCollections()
     }
 }
