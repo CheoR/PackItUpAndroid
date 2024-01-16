@@ -1,7 +1,7 @@
 package com.example.packitupandroid.model
 
 data class Collection(
-    val id: String,
+    val id: Long,
     val name: String,
     val description: String = "",
     val boxes: List<Box>,
