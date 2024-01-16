@@ -95,6 +95,41 @@ class LocalDataSource() {
                 isFragile = true,
                 value = 100.00,
             ),
+            Item(
+                id = 10L,
+                name = "10L",
+                description = "not for breaking into homes",
+                isFragile = true,
+                value = 125.00,
+            ),
+            Item(
+                id = 11L,
+                name = "11L",
+                description = "not for breaking into homes",
+                isFragile = true,
+                value = 3.00,
+            ),
+            Item(
+                id = 12L,
+                name = "12L",
+                description = "not for breaking into homes",
+                isFragile = true,
+                value = 100.00,
+            ),
+            Item(
+                id = 13L,
+                name = "13L",
+                description = "not for breaking into homes",
+                isFragile = true,
+                value = 125.00,
+            ),
+            Item(
+                id = 14L,
+                name = "14L",
+                description = "not for breaking into homes",
+                isFragile = true,
+                value = 3.00,
+            ),
         )
     }
 
@@ -103,32 +138,33 @@ class LocalDataSource() {
             Box(
                 id = 0L,
                 name = "kitchen",
-//                items = loadItems().take(3),
-//                value = loadItems().take(3).sumOf { it.value }
                 items = itemsAndValue(0,3).first,
-//                value = itemsAndValue(0,3).second,
                 description = "don't open until i get home",
-//                isFragile = itemsAndValue(0,3).first.hasFragileItems(),
             ),
             Box(
                 id = 1L,
                 name = "bedroom1",
                 items = itemsAndValue(3,5).first,
-//                value = itemsAndValue(3,5).second,
-//                isFragile = itemsAndValue(3,5).first.hasFragileItems(),
             ),
             Box(
                 id = 2L,
                 name = "bedroom2",
                 items = itemsAndValue(6,9).first,
-//                value = itemsAndValue(6,9).second,
-//                isFragile = itemsAndValue(6,9).first.hasFragileItems(),
             ),
             Box(
                 id = 3L,
                 name = "garage",
+                items = itemsAndValue(10,12).first,
+            ),
+            Box(
+                id = 4L,
+                name = "garage",
                 items = listOf(),
-//                value = 0.00,
+            ),
+            Box(
+                id = 5L,
+                name = "garage",
+                items = itemsAndValue(12,15).first,
             ),
         )
     }
@@ -139,21 +175,26 @@ class LocalDataSource() {
                 id = 0L,
                 name = "for home",
                 boxes = boxesAndValue(0,2).first,
-//                value = boxesAndValue(0,2).second,
-//                isFragile = boxesAndValue(0,2).first.hasFragileBoxes(),
             ),
             Collection(
                 id = 1L,
                 name = "for donation",
                 boxes = boxesAndValue(3,3).first,
-//                value = boxesAndValue(3,3).second,
-//                isFragile = boxesAndValue(3,3).first.hasFragileBoxes(),
             ),
             Collection(
                 id = 2L,
                 name = "not sure yet",
+                boxes = boxesAndValue(4,4).first,
+            ),
+            Collection(
+                id = 3L,
+                name = "3L",
                 boxes = listOf(),
-//                value = 0.00,
+            ),
+            Collection(
+                id = 4L,
+                name = "4L not sure yet",
+                boxes = boxesAndValue(5,5).first,
             ),
         )
     }
