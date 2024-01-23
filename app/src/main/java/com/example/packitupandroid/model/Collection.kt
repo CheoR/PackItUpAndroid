@@ -6,6 +6,9 @@ data class Collection(
     val description: String = "",
     val boxes: List<Box>,
 ) {
-    val isFragile: Boolean = boxes.any { it.isFragile }
-    val value: Double = boxes.sumOf { it.value }
+    // TODO: FIX THIS
+    val isFragile: Boolean
+        get() = boxes.any { it.isFragile }
+    val value: Double
+        get() = boxes.sumOf { it.value }
 }

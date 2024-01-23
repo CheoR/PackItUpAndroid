@@ -8,6 +8,9 @@ data class Box(
 ) {
     // These properties are read-only and will be computed when the `Box` object is created.
     // If the `items` list changes, create a new `Box` object to update these properties.
-    val isFragile: Boolean = items.any { it.isFragile }
-    val value: Double = items.sumOf { it.value }
+    // TODO: FIX THIS
+    val isFragile: Boolean
+        get() = items.any { it.isFragile }
+    val value: Double
+        get() = items.sumOf { it.value }
 }
