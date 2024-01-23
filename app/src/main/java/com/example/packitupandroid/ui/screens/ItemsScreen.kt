@@ -3,20 +3,22 @@ package com.example.packitupandroid.ui.screens
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.tooling.preview.Preview
 import com.example.packitupandroid.R
-import com.example.packitupandroid.model.Item
-import com.example.packitupandroid.repository.LocalDataRepository
+import com.example.packitupandroid.data.ScreenType
+import com.example.packitupandroid.data.local.LocalDataSource
+import com.example.packitupandroid.ui.PackItUpUiState
 import com.example.packitupandroid.ui.components.ItemCard
 
 
 @Composable
 fun ItemsScreen(
     modifier: Modifier = Modifier,
-    cards: List<Item> = emptyList(),
+    uiState: PackItUpUiState,
 ) {
     LazyColumn(
         modifier = modifier,
@@ -25,7 +27,7 @@ fun ItemsScreen(
         )
     ) {
         items(
-            items = cards,
+            items = uiState.items,
             key = { it.id }
         ) {
             ItemCard(
@@ -34,6 +36,7 @@ fun ItemsScreen(
                 onDelete = {},
                 onCardClick = {},
             )
+            Text(text="Total items: ${uiState.items.size}")
         }
     }
 }
@@ -41,9 +44,21 @@ fun ItemsScreen(
 @Preview(showBackground = true)
 @Composable
 fun PreviewItemsScreen(
-    localDataRepository : LocalDataRepository = LocalDataRepository()
+    localDataSource: LocalDataSource = LocalDataSource(),
 ) {
+    val currentScreen = ScreenType.Summary
+    val items = localDataSource.loadItems()
+    val boxes = localDataSource.loadBoxes()
+    val collections = localDataSource.loadCollections()
+
+    val uiState = PackItUpUiState(
+        currentScreen = currentScreen,
+        items = items,
+        boxes = boxes,
+        collections = collections,
+    )
+
     ItemsScreen(
-        cards = localDataRepository.loadItems(),
+        uiState = uiState,
     )
 }
