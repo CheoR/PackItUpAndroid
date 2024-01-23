@@ -45,7 +45,7 @@ fun IconsColumn(
                     modifier = Modifier
                         .size(48.dp)
                         .clip(RoundedCornerShape(8.dp)),
-                    painter = painterResource(imageUri),
+                    painter = painterResource(imageUri ?: R.drawable.ic_broken_image),
                     contentDescription = null,
                 )
             }
@@ -154,7 +154,7 @@ fun PreviewBaseCardCollectionIconColumn() {
         imageVector1 = ImageVector.vectorResource(R.drawable.ic_launcher_foreground),
         imageVector2 = ImageVector.vectorResource(R.drawable.baseline_label_24),
         firstBadgeCount = 5,
-        secondBadgeCount= 2,
+        secondBadgeCount = 2,
     )
 }
 
@@ -194,7 +194,7 @@ fun PreviewBaseCardCollectionSummaryIconColumn() {
         imageVector1 = ImageVector.vectorResource(R.drawable.ic_launcher_foreground),
         imageVector2 = ImageVector.vectorResource(R.drawable.baseline_label_24),
         firstBadgeCount = 5,
-        secondBadgeCount= 2,
+        secondBadgeCount = 2,
         isShowBadgeCount = false,
     )
 }
