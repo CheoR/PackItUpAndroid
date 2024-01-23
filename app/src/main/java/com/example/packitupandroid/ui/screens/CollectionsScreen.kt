@@ -8,8 +8,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.tooling.preview.Preview
 import com.example.packitupandroid.R
+import com.example.packitupandroid.data.local.LocalDataSource
 import com.example.packitupandroid.model.Collection
-import com.example.packitupandroid.repository.LocalDataRepository
 import com.example.packitupandroid.ui.components.CollectionCard
 
 @Composable
@@ -40,9 +40,11 @@ fun CollectionsScreen(
 @Preview(showBackground = true)
 @Composable
 fun PreviewCollectionsScreen(
-    localDataRepository : LocalDataRepository = LocalDataRepository()
+    localDataSource: LocalDataSource = LocalDataSource(),
 ) {
+    val collections = localDataSource.loadCollections()
+
     CollectionsScreen(
-        cards = localDataRepository.loadCollections()
+        cards = collections
     )
 }

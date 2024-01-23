@@ -8,8 +8,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.tooling.preview.Preview
 import com.example.packitupandroid.R
+import com.example.packitupandroid.data.local.LocalDataSource
 import com.example.packitupandroid.model.Box
-import com.example.packitupandroid.repository.LocalDataRepository
 import com.example.packitupandroid.ui.components.BoxCard
 
 @Composable
@@ -40,9 +40,11 @@ fun BoxesScreen(
 @Preview(showBackground = true)
 @Composable
 fun PreviewBoxesScreen(
-    localDataRepository : LocalDataRepository = LocalDataRepository()
+    localDataSource: LocalDataSource = LocalDataSource(),
 ) {
+    val boxes = localDataSource.loadBoxes()
+
     BoxesScreen(
-        cards = localDataRepository.loadBoxes(),
+        cards = boxes,
     )
 }
