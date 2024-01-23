@@ -6,5 +6,5 @@ data class Item(
     val description: String = "",
     val isFragile: Boolean = false,
     val imageUri: Int? = null,
-    val value: Double = 0.00
+    val value: Double = 0.00,
 )
