@@ -17,10 +17,13 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.DpSize
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.example.packitupandroid.data.ScreenType
+import com.example.packitupandroid.data.local.LocalDataSource
 import com.example.packitupandroid.ui.PackItUpApp
+import com.example.packitupandroid.ui.PackItUpUiState
 import com.example.packitupandroid.ui.PackItUpViewModel
 import com.example.packitupandroid.ui.theme.PackItUpAndroidTheme
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
 
 class MainActivity : ComponentActivity() {
     private val viewModel: PackItUpViewModel by viewModels()
@@ -39,7 +42,7 @@ class MainActivity : ComponentActivity() {
                 ) {
                     PackItUpApp(
                         windowSize = windowSize,
-//                        packItUpUiState = uiState,
+                        uiState = uiState,
                     )
                 }
             }
@@ -50,12 +53,24 @@ class MainActivity : ComponentActivity() {
 @OptIn(ExperimentalMaterial3WindowSizeClassApi::class)
 @Preview(showBackground = true)
 @Composable
-fun PreviewPackItUp() {
+fun PreviewPackItUp(
+    localDataSource: LocalDataSource = LocalDataSource(),
+) {
+    val items = localDataSource.loadItems()
+    val boxes = localDataSource.loadBoxes()
+    val collections = localDataSource.loadCollections()
+    val currentScreen: ScreenType = ScreenType.Summary
+
     PackItUpAndroidTheme {
         Surface {
             PackItUpApp(
                 windowSize = WindowSizeClass.calculateFromSize(DpSize(412.dp, 732.dp)),
-//                packItUpUiState= PackItUpUiState()
+                uiState = PackItUpUiState(
+                    items = items,
+                    boxes = boxes,
+                    collections = collections,
+                    currentScreen = currentScreen,
+                ),
             )
         }
     }

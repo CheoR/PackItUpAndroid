@@ -12,12 +12,12 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
-import com.example.packitupandroid.data.local.LocalDataSource
 import com.example.packitupandroid.ui.navigation.PackItUpBottomNavigationBar
 import com.example.packitupandroid.ui.navigation.PackItUpNavigationActions
 import com.example.packitupandroid.ui.navigation.PackItUpRoute
@@ -32,7 +32,7 @@ import com.example.packitupandroid.ui.utils.PackItUpNavigationType
 @Composable
 fun PackItUpApp(
     windowSize: WindowSizeClass,
-//    packItUpUiState: PackItUpUiState,,
+    uiState: PackItUpUiState,
 ) {
 
     /*
@@ -60,7 +60,7 @@ fun PackItUpApp(
     PackItUpNavigationWrapper(
         navigationType = navigationType,
         contentType = contentType,
-//        packItUpUiState = packItUpUiState,
+        uiState = uiState,
     )
 }
 
@@ -68,7 +68,7 @@ fun PackItUpApp(
 private fun PackItUpNavigationWrapper(
     navigationType: PackItUpNavigationType,
     contentType: PackItUpContentType,
-//    packItUpUiState: PackItUpUiState,
+    uiState: PackItUpUiState,
 ) {
     val navController = rememberNavController()
     val navigationActions = remember(navController) {
@@ -80,7 +80,7 @@ private fun PackItUpNavigationWrapper(
     PackItUpContent(
         navigationType = navigationType,
         contentType = contentType,
-//        packItUpUiState = packItUpUiState,
+        uiState = uiState,
         navController = navController,
         selectedDestination = selectedDestination,
         navigateToTopLevelDestination = navigationActions::navigateTo,
@@ -92,44 +92,41 @@ fun PackItUpContent(
     modifier: Modifier = Modifier,
     navigationType: PackItUpNavigationType,
     contentType: PackItUpContentType,
-//    packItUpUiState: PackItUpUiState,
+    uiState: PackItUpUiState,
     navController: NavHostController,
     selectedDestination: String,
     navigateToTopLevelDestination: (PackItUpTopLevelDestination) -> Unit,
 //    navigateToDetail: (Long, PackItUpContentType) -> Unit,
 ) {
     Column(
-        modifier = Modifier
+        modifier = modifier
             .background(MaterialTheme.colorScheme.inverseOnSurface)
     ) {
         PackItUpNavHost(
             navController = navController,
             contentType = contentType,
-//            packItUpUiState = packItUpUiState,
+            uiState = uiState,
             navigationType = navigationType,
 //    navigateToDetail =  (Long, PackItUpNavigationType) -> Unit,
-            modifier = Modifier.weight(1f)
+            modifier = Modifier.weight(1f),
         )
         PackItUpBottomNavigationBar(
             selectedDestination = selectedDestination,
             navigateToTopLevelDestination = navigateToTopLevelDestination
         )
     }
-
 }
 
 @Composable
 private fun PackItUpNavHost(
     navController: NavHostController,
     contentType: PackItUpContentType,
-//    packItUpUiState: PackItUpUiState,
+    uiState: PackItUpUiState,
     navigationType: PackItUpNavigationType,
 //  navigateToDetail: (Long, PackItUpNavigationType) -> Unit,
     modifier: Modifier,
+    viewModel : PackItUpViewModel = viewModel(factory = PackItUpViewModel.Factory),
 ) {
-
-    val localDataRepository = LocalDataSource()
-
     NavHost(
         modifier = modifier
             .fillMaxSize()
@@ -139,24 +136,23 @@ private fun PackItUpNavHost(
     ) {
         composable(PackItUpRoute.SUMMARY) {
             SummaryScreen(
-                collections = localDataRepository.loadCollections(),
-                boxes = localDataRepository.loadBoxes(),
-                items = localDataRepository.loadItems(),
+                uiState = uiState,
+                onClick = viewModel::resetItemList
             )
         }
         composable(PackItUpRoute.COLLECTIONS) {
             CollectionsScreen(
-                cards = localDataRepository.loadCollections(),
+                cards = uiState.collections,
             )
         }
         composable(PackItUpRoute.BOXES) {
             BoxesScreen(
-                cards = localDataRepository.loadBoxes(),
+                cards = uiState.boxes,
             )
         }
         composable(PackItUpRoute.ITEMS) {
             ItemsScreen(
-                cards = localDataRepository.loadItems(),
+                uiState = uiState,
             )
         }
     }
