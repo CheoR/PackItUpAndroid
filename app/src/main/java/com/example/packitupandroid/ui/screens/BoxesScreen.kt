@@ -8,14 +8,15 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.tooling.preview.Preview
 import com.example.packitupandroid.R
+import com.example.packitupandroid.data.ScreenType
 import com.example.packitupandroid.data.local.LocalDataSource
-import com.example.packitupandroid.model.Box
+import com.example.packitupandroid.ui.PackItUpUiState
 import com.example.packitupandroid.ui.components.BoxCard
 
 @Composable
 fun BoxesScreen(
     modifier: Modifier = Modifier,
-    cards: List<Box> = emptyList(),
+    uiState: PackItUpUiState
 ) {
     LazyColumn(
         modifier = modifier,
@@ -24,7 +25,7 @@ fun BoxesScreen(
         )
     ) {
         items(
-            items = cards,
+            items = uiState.boxes,
             key = { it.id }
         ) {
             BoxCard(
@@ -42,9 +43,19 @@ fun BoxesScreen(
 fun PreviewBoxesScreen(
     localDataSource: LocalDataSource = LocalDataSource(),
 ) {
+    val currentScreen = ScreenType.Summary
+    val items = localDataSource.loadItems()
     val boxes = localDataSource.loadBoxes()
+    val collections = localDataSource.loadCollections()
+
+    val uiState = PackItUpUiState(
+        currentScreen = currentScreen,
+        items = items,
+        boxes = boxes,
+        collections = collections,
+    )
 
     BoxesScreen(
-        cards = boxes,
+        uiState = uiState,
     )
 }

@@ -147,7 +147,7 @@ private fun PackItUpNavHost(
         }
         composable(PackItUpRoute.BOXES) {
             BoxesScreen(
-                cards = uiState.boxes,
+                uiState = uiState,
             )
         }
         composable(PackItUpRoute.ITEMS) {
