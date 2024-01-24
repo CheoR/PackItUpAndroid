@@ -18,7 +18,6 @@ import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.testTag
@@ -26,9 +25,9 @@ import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.packitupandroid.R
 import com.example.packitupandroid.data.ScreenType
+import com.example.packitupandroid.data.local.LocalDataSource
 import com.example.packitupandroid.ui.utils.PackItUpContentType
 import com.example.packitupandroid.ui.utils.PackItUpNavigationType
 
@@ -36,7 +35,7 @@ import com.example.packitupandroid.ui.utils.PackItUpNavigationType
 fun PackItUpScreen(
     navigationType: PackItUpNavigationType,
     contentType: PackItUpContentType,
-    packItUpUiState: PackItUpUiState,
+    uiState: PackItUpUiState,
     onTabPressed: (ScreenType) -> Unit,
     modifier: Modifier = Modifier
 ) {
@@ -66,7 +65,7 @@ fun PackItUpScreen(
     PackItUpAppContent(
         navigationType = navigationType,
         contentType = contentType,
-        packItUpUiState = packItUpUiState,
+        uiState = uiState,
         onTabPressed = onTabPressed,
         navigationItemContentList = navigationItemContentList,
         modifier = modifier
@@ -77,7 +76,7 @@ fun PackItUpScreen(
 private fun PackItUpAppContent(
     navigationType: PackItUpNavigationType,
     contentType: PackItUpContentType,
-    packItUpUiState: PackItUpUiState,
+    uiState: PackItUpUiState,
     onTabPressed: ((ScreenType) -> Unit),
     navigationItemContentList: List<NavigationItemContent>,
     modifier: Modifier = Modifier,
@@ -94,13 +93,15 @@ private fun PackItUpAppContent(
                     modifier = Modifier.weight(1f)
                         .padding(
                             horizontal = dimensionResource(R.dimen.padding_small)
-                        )
+                        ),
+                    uiState =  uiState,
+                    onClick = {},
                 )
 
                 AnimatedVisibility(visible = navigationType == PackItUpNavigationType.BOTTOM_NAVIGATION) {
                     val bottomNavigationContentDescription = stringResource(R.string.navigation_bottom)
                     PackItUpBottomNavigationBar(
-                        currentTab = packItUpUiState.currentScreen,
+                        currentTab = uiState.currentScreen,
                         onTabPressed = onTabPressed,
                         navigationItemContentList = navigationItemContentList,
                         modifier = Modifier
@@ -155,14 +156,25 @@ private data class NavigationItemContent(
 
 @Preview
 @Composable
-fun PreviewSummaryScreen() {
-    val viewModel: PackItUpViewModel = viewModel()
-    val packItUpUiState = viewModel.uiState.collectAsState().value
+fun PreviewSummaryScreen(
+    localDataSource: LocalDataSource = LocalDataSource(),
+) {
+    val currentScreen = ScreenType.Summary
+    val items = localDataSource.loadItems()
+    val boxes = localDataSource.loadBoxes()
+    val collections = localDataSource.loadCollections()
+
+    val uiState = PackItUpUiState(
+        currentScreen = currentScreen,
+        items = items,
+        boxes = boxes,
+        collections = collections,
+    )
 
     PackItUpScreen(
         navigationType = PackItUpNavigationType.BOTTOM_NAVIGATION,
         contentType = PackItUpContentType.LIST_ONLY,
-        packItUpUiState = packItUpUiState,
+        uiState = uiState,
         onTabPressed = {},
         modifier = Modifier,
     )
