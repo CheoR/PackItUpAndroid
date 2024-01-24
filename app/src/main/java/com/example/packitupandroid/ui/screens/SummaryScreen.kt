@@ -1,11 +1,13 @@
 package com.example.packitupandroid.ui.screens
 
+import android.util.Log
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.width
+import androidx.compose.material3.Button
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -16,10 +18,12 @@ import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.packitupandroid.R
+import com.example.packitupandroid.data.ScreenType
+import com.example.packitupandroid.data.local.LocalDataSource
 import com.example.packitupandroid.model.Box
 import com.example.packitupandroid.model.Collection
 import com.example.packitupandroid.model.Item
-import com.example.packitupandroid.repository.LocalDataRepository
+import com.example.packitupandroid.ui.PackItUpUiState
 import com.example.packitupandroid.ui.components.SummaryCard
 import com.example.packitupandroid.ui.components.formatValue
 
@@ -38,22 +42,20 @@ data class Summary (
 @Composable
 fun SummaryScreen(
     modifier: Modifier = Modifier,
-    collections: List<Collection> = emptyList(),
-    boxes: List<Box> = emptyList(),
-    items: List<Item> = emptyList(),
+    uiState: PackItUpUiState,
+    onClick: () -> Unit,
 ) {
     Column(
         modifier = modifier,
         verticalArrangement = Arrangement
             .spacedBy(dimensionResource(R.dimen.padding_small))
     ) {
-
         SummaryCard(
             summary = Summary(
                 id = "collections",
                 name = "collections",
                 description = "number of collections",
-                collections = collections,
+                collections = uiState.collections,
             ),
             onUpdate = {},
             onDelete = {},
@@ -65,7 +67,7 @@ fun SummaryScreen(
                 id ="boxes",
                 name = "boxes",
                 description = "number of boxes",
-                boxes = boxes,
+                boxes = uiState.boxes,
             ),
             onUpdate = {},
             onDelete = {},
@@ -77,13 +79,18 @@ fun SummaryScreen(
                 id ="items",
                 name = "items",
                 description = "number of items",
-                items = items,
+                items = uiState.items,
             ),
             onUpdate = {},
             onDelete = {},
-            onCardClick = {}
+            onCardClick = onClick, // viewModel::resetItemList,
         )
-
+        Row() {
+            Button(onClick = onClick) { // viewModel::resetItemList) {
+                Text(text = "Reset")
+            }
+            Text(text="Items: ${uiState.items.size}")
+        }
 
         Row(
             verticalAlignment = Alignment.CenterVertically,
@@ -91,7 +98,7 @@ fun SummaryScreen(
                 .fillMaxWidth(),
         ) {
             Checkbox(
-                checked = items.any{ it.isFragile },
+                checked = uiState.items.any{ it.isFragile },
                 onCheckedChange = { },
             )
             Spacer(modifier = Modifier.width(4.dp))
@@ -100,25 +107,32 @@ fun SummaryScreen(
             Spacer(modifier = Modifier.weight(1f))
 
             Text(
-                text = "Total: ${items.sumOf { it.value }.formatValue()}",
+                text = "Total: ${uiState.items.sumOf { it.value }.formatValue()}",
                 style = MaterialTheme.typography.bodySmall,
                 color = MaterialTheme.colorScheme.secondary
             )
         }
     }
 }
-
 @Preview(showBackground = true)
 @Composable
 fun PreviewSummaryScreen(
-    localDataRepository: LocalDataRepository = LocalDataRepository()
+    localDataSource: LocalDataSource = LocalDataSource(),
 ) {
-    val collections = localDataRepository.loadCollections()
-    val boxes = localDataRepository.loadBoxes()
-    val items = localDataRepository.loadItems()
-    SummaryScreen(
-        collections = collections,
-        boxes = boxes,
+    val currentScreen = ScreenType.Summary
+    val items = localDataSource.loadItems()
+    val boxes = localDataSource.loadBoxes()
+    val collections = localDataSource.loadCollections()
+
+    val uiState = PackItUpUiState(
+        currentScreen = currentScreen,
         items = items,
+        boxes = boxes,
+        collections = collections,
+    )
+
+    SummaryScreen(
+        uiState = uiState,
+        onClick = {},
     )
 }
