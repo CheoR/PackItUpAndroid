@@ -1,13 +1,11 @@
 package com.example.packitupandroid.ui.screens
 
-import android.util.Log
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.width
-import androidx.compose.material3.Button
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -83,15 +81,8 @@ fun SummaryScreen(
             ),
             onUpdate = {},
             onDelete = {},
-            onCardClick = onClick, // viewModel::resetItemList,
+            onCardClick = onClick,
         )
-        Row() {
-            Button(onClick = onClick) { // viewModel::resetItemList) {
-                Text(text = "Reset")
-            }
-            Text(text="Items: ${uiState.items.size}")
-        }
-
         Row(
             verticalAlignment = Alignment.CenterVertically,
             modifier = Modifier
