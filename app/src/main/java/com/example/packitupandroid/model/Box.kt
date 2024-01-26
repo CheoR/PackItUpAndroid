@@ -1,10 +1,12 @@
 package com.example.packitupandroid.model
 
+import java.util.UUID
+
 data class Box(
-    val id: String,
+    val id: String = UUID.randomUUID().toString(),
     val name: String,
     val description: String = "",
-    val items: List<Item>,
+    val items: List<Item> = emptyList(),
 ) {
     // These properties are read-only and will be computed when the `Box` object is created.
     // If the `items` list changes, create a new `Box` object to update these properties.

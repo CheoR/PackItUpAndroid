@@ -1,10 +1,12 @@
 package com.example.packitupandroid.model
 
+import java.util.UUID
+
 data class Collection(
-    val id: String,
+    val id: String = UUID.randomUUID().toString(),
     val name: String,
     val description: String = "",
-    val boxes: List<Box>,
+    val boxes: List<Box> = emptyList(),
 ) {
     // TODO: FIX THIS
     val isFragile: Boolean
