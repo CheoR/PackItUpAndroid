@@ -1,7 +1,7 @@
 package com.example.packitupandroid.model
 
 data class Item(
-    val id: Long,
+    val id: String,
     val name: String,
     val description: String = "",
     val isFragile: Boolean = false,
