@@ -195,7 +195,7 @@ fun BaseCard(
 @Composable
 fun PreviewItemBaseCardWithImage() {
     val item = Item(
-        id = 10L,
+        id = "884e104a-f6f5-45e9-9f40-4a4cf8ea8c3a",
         name = "oin oink ",
         description = "hola cola",
         value = 123.45,
@@ -312,7 +312,7 @@ fun PreviewCollectionBaseCard(
 @Composable
 fun PreviewSummaryItemBaseCardWithImage() {
     val item = Item(
-        id = 10L,
+        id = "075b4463-c4cd-478a-8370-396712ad1ae7",
         name = "oin oink ",
         description = "hola cola",
         value = 123.45,
@@ -433,7 +433,7 @@ fun PreviewSummaryCollectionBaseCard(
 @Composable
 fun PreviewEditItemBaseCardWithImage() {
     val item = Item(
-        id = 10L,
+        id = "aaacb24d-8aae-4822-81bd-3600b2d127f1",
         name = "oin oink ",
         description = "hola cola",
         value = 123.45,
