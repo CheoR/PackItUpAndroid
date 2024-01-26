@@ -22,7 +22,8 @@ import com.example.packitupandroid.ui.components.counter.Counter
 fun ItemsScreen(
     modifier: Modifier = Modifier,
     uiState: PackItUpUiState,
-    onClick: (Int?) -> Unit,
+    onCreateClick: (Int?) -> Unit,
+    onDeleteClick: (String) -> Unit,
 ) {
     Column(
         modifier = Modifier,
@@ -41,13 +42,14 @@ fun ItemsScreen(
                 ItemCard(
                     item = it,
                     onUpdate = {},
-                    onDelete = {},
+                    onDelete = onDeleteClick,
                     onCardClick = {},
                 )
+                // TODO: remove this line when done with it
                 Text(text = "Total items: ${uiState.items.size}")
             }
         }
-        Counter(screen = ScreenType.Items, onClick = onClick)
+        Counter(screen = ScreenType.Items, onClick = onCreateClick)
     }
 }
 
@@ -70,6 +72,7 @@ fun PreviewItemsScreen(
 
     ItemsScreen(
         uiState = uiState,
-        onClick = { count -> Log.i("Items ", "Creating ${count} items")},
+        onCreateClick = { count -> Log.i("Items ", "Creating ${count} items")},
+        onDeleteClick = { Log.i("Items ", "Deleting ${items[0].id} items")}
     )
 }

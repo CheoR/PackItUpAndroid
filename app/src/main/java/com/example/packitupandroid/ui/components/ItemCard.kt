@@ -14,7 +14,7 @@ import com.example.packitupandroid.ui.components.card.BaseCardData
 fun ItemCard(
     item: Item,
     onUpdate: (Item) -> Unit,
-    onDelete: (Item) -> Unit,
+    onDelete: (String) -> Unit,
     onCardClick: () -> Unit,
     editMode: EditMode = EditMode.NonEditable,
     // TODO: add dropdown
@@ -34,9 +34,7 @@ fun ItemCard(
         onUpdate = { data ->
             if (data is BaseCardData.ItemData) onUpdate(data.item) else {}
         },
-        onDelete = { data ->
-            if (data is BaseCardData.ItemData) onDelete(data.item) else {}
-        },
+        onDelete = { onDelete(item.id) },
         actionIcon = ImageVector.vectorResource(R.drawable.baseline_more_vert_24),
         // TODO: make imgageVectors into enum?
         imageVector1 = ImageVector.vectorResource(R.drawable.baseline_label_24),

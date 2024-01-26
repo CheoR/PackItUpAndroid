@@ -20,7 +20,8 @@ import com.example.packitupandroid.ui.components.counter.Counter
 fun BoxesScreen(
     modifier: Modifier = Modifier,
     uiState: PackItUpUiState,
-    onClick: (Int?) -> Unit,
+    onCreateClick: (Int?) -> Unit,
+    onDeleteClick: (String) -> Unit,
 ) {
     Column(
         modifier = Modifier,
@@ -39,12 +40,12 @@ fun BoxesScreen(
                 BoxCard(
                     box = it,
                     onUpdate = {},
-                    onDelete = {},
+                    onDelete = onDeleteClick,
                     onCardClick = {},
                 )
             }
         }
-        Counter(screen = ScreenType.Boxes, onClick = onClick)
+        Counter(screen = ScreenType.Boxes, onClick = onCreateClick)
     }
 }
 
@@ -67,6 +68,6 @@ fun PreviewBoxesScreen(
 
     BoxesScreen(
         uiState = uiState,
-        onClick = { count -> Log.i("Boxes ", "Creating ${count} boxes")},
-    )
+        onCreateClick = { count -> Log.i("Boxes ", "Creating ${count} boxes")},
+        onDeleteClick = { Log.i("Boxes ", "Deleting ${boxes[0].id} boxes")}    )
 }

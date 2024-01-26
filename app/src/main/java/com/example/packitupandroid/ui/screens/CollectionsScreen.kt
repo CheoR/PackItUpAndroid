@@ -12,15 +12,16 @@ import androidx.compose.ui.tooling.preview.Preview
 import com.example.packitupandroid.R
 import com.example.packitupandroid.data.ScreenType
 import com.example.packitupandroid.data.local.LocalDataSource
-import com.example.packitupandroid.model.Collection
+import com.example.packitupandroid.ui.PackItUpUiState
 import com.example.packitupandroid.ui.components.CollectionCard
 import com.example.packitupandroid.ui.components.counter.Counter
 
 @Composable
 fun CollectionsScreen(
     modifier: Modifier = Modifier,
-    cards: List<Collection> = emptyList(),
-    onClick: (Int?) -> Unit,
+    uiState: PackItUpUiState,
+    onCreateClick: (Int?) -> Unit,
+    onDeleteClick: (String) -> Unit,
 ) {
     Column(
         modifier = Modifier,
@@ -33,18 +34,18 @@ fun CollectionsScreen(
             )
         ) {
             items(
-                items = cards,
+                items = uiState.collections,
                 key = { it.id }
             ) {
                 CollectionCard(
                     collection = it,
                     onUpdate = {},
-                    onDelete = {},
+                    onDelete = onDeleteClick,
                     onCardClick = {},
                 )
             }
         }
-        Counter(screen = ScreenType.Collections, onClick = onClick)
+        Counter(screen = ScreenType.Collections, onClick = onCreateClick)
     }
 }
 
@@ -53,10 +54,21 @@ fun CollectionsScreen(
 fun PreviewCollectionsScreen(
     localDataSource: LocalDataSource = LocalDataSource(),
 ) {
+    val currentScreen = ScreenType.Summary
+    val items = localDataSource.loadItems()
+    val boxes = localDataSource.loadBoxes()
     val collections = localDataSource.loadCollections()
 
+    val uiState = PackItUpUiState(
+        currentScreen = currentScreen,
+        items = items,
+        boxes = boxes,
+        collections = collections,
+    )
+
     CollectionsScreen(
-        cards = collections,
-        onClick = { count -> Log.i("Collections ", "Creating ${count} collections")},
+        uiState = uiState,
+        onCreateClick = { count -> Log.i("Collections ", "Creating ${count} collections")},
+        onDeleteClick = { Log.i("Collections ", "Deleting ${collections[0].id} collections")}
     )
 }

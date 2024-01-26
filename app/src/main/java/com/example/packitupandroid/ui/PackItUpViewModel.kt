@@ -36,8 +36,16 @@ class PackItUpViewModel(
         }
     }
 
-    fun getItem(id: String): Item? {
+    private fun getItem(id: String): Item? {
         return uiState.value.items.firstOrNull { it.id == id }
+    }
+
+    private fun getBox(id: String): Box? {
+        return uiState.value.boxes.firstOrNull { it.id == id }
+    }
+
+    private fun getCollection(id: String): Collection? {
+        return uiState.value.collections.firstOrNull { it.id == id }
     }
 
     private suspend fun loadItems() {
@@ -114,11 +122,30 @@ class PackItUpViewModel(
         }
     }
 
-    fun deleteItem(id: String) {
-        val itemToDelete = getItem(id)
-        if(itemToDelete != null) {
-            _uiState.value = _uiState.value.copy(items = uiState.value.items.filter { it.id != itemToDelete.id })
-            Log.i("MOOOOOOOOOOOO", "ITEMS ARE NOW: ${_uiState.value.items.map { it.name }}")
+    fun deleteItem(id: String?) {
+        if(id != null) {
+            val itemToDelete = getItem(id)
+            if(itemToDelete != null) {
+                _uiState.value = _uiState.value.copy(items = uiState.value.items.filter { it.id != itemToDelete.id })
+            }
+        }
+    }
+
+    fun deleteBox(id: String?) {
+        if(id != null) {
+            val boxToDelete = getBox(id)
+            if(boxToDelete != null) {
+                _uiState.value = _uiState.value.copy(boxes = uiState.value.boxes.filter { it.id != boxToDelete.id })
+            }
+        }
+    }
+
+    fun deleteCollection(id: String?) {
+        if(id != null) {
+            val collectionToDelete = getCollection(id)
+            if(collectionToDelete != null) {
+                _uiState.value = _uiState.value.copy(collections = uiState.value.collections.filter { it.id != collectionToDelete.id })
+            }
         }
     }
 

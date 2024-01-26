@@ -77,7 +77,7 @@ fun BaseCard(
     data: BaseCardData,
     onCardClick: () -> Unit,
     onUpdate: (BaseCardData) -> Unit,
-    onDelete: (BaseCardData) -> Unit,
+    onDelete: () -> Unit,
     editMode: EditMode = EditMode.NonEditable,
     editableFields: Set<EditableFields> = emptySet(),
     imageVector1: ImageVector? =  null,
@@ -91,7 +91,7 @@ fun BaseCard(
             .height(148.dp)
             .fillMaxWidth()
             .clip(RoundedCornerShape(8.dp))
-            .clickable { onCardClick() },
+            .clickable { onDelete() } , // onCardClick() },
         elevation = CardDefaults.cardElevation(defaultElevation = 8.dp),
     ) {
         Row(

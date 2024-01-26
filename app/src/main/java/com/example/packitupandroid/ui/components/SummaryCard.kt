@@ -16,7 +16,7 @@ import com.example.packitupandroid.ui.screens.Summary
 fun SummaryCard(
     summary: Summary,
     onUpdate: (Summary) -> Unit,
-    onDelete: (Summary) -> Unit,
+    onDelete: () -> Unit,
     onCardClick: () -> Unit,
     editMode: EditMode = EditMode.NonEditable,
 ) {
@@ -28,9 +28,7 @@ fun SummaryCard(
         onUpdate = { data ->
             if (data is BaseCardData.SummaryData) onUpdate(data.summary) else {}
         },
-        onDelete = { data ->
-            if (data is BaseCardData.SummaryData) onDelete(data.summary) else {}
-        },
+        onDelete = onDelete,
         actionIcon = Icons.Filled.ArrowForward,
         // TODO: make imgageVectors into enum?
         imageVector1 = when(summary.id) {

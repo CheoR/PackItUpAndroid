@@ -14,7 +14,7 @@ import com.example.packitupandroid.ui.components.card.EditableFields
 fun CollectionCard(
     collection: Collection,
     onUpdate: (Collection) -> Unit,
-    onDelete: (Collection) -> Unit,
+    onDelete: (String) -> Unit,
     onCardClick: () -> Unit,
     editMode: EditMode = EditMode.NonEditable,
 ) {
@@ -29,9 +29,7 @@ fun CollectionCard(
         onUpdate = { data ->
             if (data is BaseCardData.CollectionData) onUpdate(data.collection) else {}
         },
-        onDelete = { data ->
-            if (data is BaseCardData.CollectionData) onDelete(data.collection) else {}
-        },
+        onDelete = { onDelete(collection.id) },
         actionIcon = ImageVector.vectorResource(R.drawable.baseline_more_vert_24),
         // TODO: make imgageVectors into enum?
         imageVector1 = ImageVector.vectorResource(R.drawable.ic_launcher_foreground),

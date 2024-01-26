@@ -137,25 +137,28 @@ private fun PackItUpNavHost(
         composable(PackItUpRoute.SUMMARY) {
             SummaryScreen(
                 uiState = uiState,
-                onClick = viewModel::resetItemList
+                onClick = viewModel::resetItemList, // TODO: remove when no longer needed
             )
         }
         composable(PackItUpRoute.COLLECTIONS) {
             CollectionsScreen(
-                cards = uiState.collections,
-                onClick = viewModel::createCollection,
+                uiState = uiState,
+                onCreateClick = viewModel::createCollection,
+                onDeleteClick = viewModel::deleteCollection,
             )
         }
         composable(PackItUpRoute.BOXES) {
             BoxesScreen(
                 uiState = uiState,
-                onClick = viewModel::createBox,
+                onCreateClick = viewModel::createBox,
+                onDeleteClick = viewModel::deleteBox,
             )
         }
         composable(PackItUpRoute.ITEMS) {
             ItemsScreen(
                 uiState = uiState,
-                onClick = viewModel::createItem,
+                onCreateClick = viewModel::createItem,
+                onDeleteClick = viewModel::deleteItem,
             )
         }
     }

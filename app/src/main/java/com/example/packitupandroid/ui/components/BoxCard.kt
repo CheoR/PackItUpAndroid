@@ -14,7 +14,7 @@ import com.example.packitupandroid.ui.components.card.EditableFields
 fun BoxCard(
     box: Box,
     onUpdate: (Box) -> Unit,
-    onDelete: (Box) -> Unit,
+    onDelete: (String) -> Unit,
     onCardClick: () -> Unit,
     editMode: EditMode = EditMode.NonEditable,
     // TODO: add dropdown
@@ -32,9 +32,7 @@ fun BoxCard(
         onUpdate = { data ->
             if (data is BaseCardData.BoxData) onUpdate(data.box) else {}
         },
-        onDelete = { data ->
-            if (data is BaseCardData.BoxData) onDelete(data.box) else {}
-        },
+        onDelete = { onDelete(box.id) },
         actionIcon = ImageVector.vectorResource(R.drawable.baseline_more_vert_24),
         // TODO: make imgageVectors into enum?
         imageVector1 = ImageVector.vectorResource(R.drawable.baseline_label_24),
