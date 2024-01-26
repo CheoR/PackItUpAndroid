@@ -143,16 +143,19 @@ private fun PackItUpNavHost(
         composable(PackItUpRoute.COLLECTIONS) {
             CollectionsScreen(
                 cards = uiState.collections,
+                onClick = viewModel::createCollection,
             )
         }
         composable(PackItUpRoute.BOXES) {
             BoxesScreen(
                 uiState = uiState,
+                onClick = viewModel::createBox,
             )
         }
         composable(PackItUpRoute.ITEMS) {
             ItemsScreen(
                 uiState = uiState,
+                onClick = viewModel::createItem,
             )
         }
     }

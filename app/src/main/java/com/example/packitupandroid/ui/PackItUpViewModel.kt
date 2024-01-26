@@ -8,7 +8,9 @@ import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import com.example.packitupandroid.PackItUpApplication
+import com.example.packitupandroid.model.Box
 import com.example.packitupandroid.model.Item
+import com.example.packitupandroid.model.Collection
 import com.example.packitupandroid.repository.DataRepository
 import com.example.packitupandroid.repository.LocalDataRepository
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -16,6 +18,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import java.util.UUID
 
 class PackItUpViewModel(
     private val repository: DataRepository = LocalDataRepository(),
@@ -33,9 +36,7 @@ class PackItUpViewModel(
         }
     }
 
-    val items: List<Item> get() = uiState.value.items
-
-    fun getItem(id: Long): Item? {
+    fun getItem(id: String): Item? {
         return uiState.value.items.firstOrNull { it.id == id }
     }
 
@@ -67,14 +68,53 @@ class PackItUpViewModel(
     }
 
 
-//    fun addItem(item: Item) {
-//        val currentItems = repository.items.value.toMutableList()
-//        currentItems.add(item)
-//        repository.items.value = currentItems
-//    }
+    fun createItem(count: Int? = 0) {
+        val newItems: MutableList<Item> = mutableListOf()
+        if(count != null) {
+            for (i in 1 .. count) {
+                val id = UUID.randomUUID().toString()
+                val name = "New Item ${i}"
+                val newItem = Item(
+                    id = id,
+                    name = name,
+                    value = 1.25,
+                )
+                newItems.add(newItem)
+            }
+            _uiState.value = _uiState.value.copy(items = uiState.value.items + newItems)
+        }
+    }
 
-    fun deleteItem(id: Long) {
-        Log.i("MOOOOOOOOOOOO", "CALLING delete ITEM")
+    fun createBox(count: Int? = 0) {
+        val newBoxes: MutableList<Box> = mutableListOf()
+        if(count != null) {
+            for (i in 1 .. count) {
+                val name = "New Box ${i}"
+                val newBox = Box(
+                    name = name,
+                )
+                newBoxes.add(newBox)
+            }
+            _uiState.value = _uiState.value.copy(boxes = uiState.value.boxes + newBoxes)
+        }
+    }
+
+    fun createCollection(count: Int? = 0) {
+        val newCollections: MutableList<Collection> = mutableListOf()
+        if (count != null) {
+            for (i in 1..count) {
+                val name = "New Collection ${i}"
+                val newCollection = Collection(
+                    name = name,
+                )
+                newCollections.add(newCollection)
+            }
+            _uiState.value =
+                _uiState.value.copy(collections = uiState.value.collections + newCollections)
+        }
+    }
+
+    fun deleteItem(id: String) {
         val itemToDelete = getItem(id)
         if(itemToDelete != null) {
             _uiState.value = _uiState.value.copy(items = uiState.value.items.filter { it.id != itemToDelete.id })
@@ -82,11 +122,6 @@ class PackItUpViewModel(
         }
     }
 
-//    fun addBox(box: Box) {
-//        val currentBoxes = repository.boxes.value.toMutableList()
-//        currentBoxes.add(box)
-//        repository.boxes.value = currentBoxes
-//    }
 //
 //    fun removeBox(box: Box) {
 //        val currentBoxes = repository.boxes.value.toMutableList()
@@ -102,7 +137,7 @@ class PackItUpViewModel(
                 name = item.name,
                 description = item.description,
                 value = item.value,
-                imageUri = item?.imageUri,
+                imageUri = item.imageUri,
                 isFragile = item.isFragile,
             )
 //            _uiState.value = _uiState.value.copy(items = uiState.value.items)
