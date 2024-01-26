@@ -385,7 +385,7 @@ fun PreviewSummaryBoxBaseCard(
 
     BaseCard(
         data = BaseCardData.BoxData(
-            box = box!!
+            box = box
         ),
         editableFields = editableFields,
         onCardClick = {},
