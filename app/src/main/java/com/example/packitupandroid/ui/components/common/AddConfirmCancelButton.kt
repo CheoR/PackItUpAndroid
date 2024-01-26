@@ -55,6 +55,7 @@ fun AddConfirmCancelButton(
     count: Int? = 0,
     button: ButtonType,
     onClick: (Int?) -> Unit,
+    resetCount: (() -> Unit)? = null,
 ) {
     val (label, icon, color) = when(button) {
         is ButtonType.Add -> Triple("add", Icons.Default.Add, MaterialTheme.colorScheme.onPrimaryContainer)
@@ -74,11 +75,19 @@ fun AddConfirmCancelButton(
             modifier = modifier
                 .fillMaxWidth()
                 .background(color = color),
+            enabled = (button != ButtonType.Add) || (count ?: 0) > 0,
+            onClick = {
+                onClick(count)
+                resetCount?.let {
+                    resetCount()
+                }
+                      },
             shape = RoundedCornerShape(4.dp),
-            onClick = { onClick(count) },
             colors = ButtonDefaults.buttonColors(
                 containerColor = color,
                 contentColor = MaterialTheme.colorScheme.primary,
+                disabledContainerColor = MaterialTheme.colorScheme.primary,
+                disabledContentColor = color,
             ),
         ) {
             Icon(
@@ -100,8 +109,31 @@ fun AddConfirmCancelButton(
 fun PreviewAddConfirmCancelButtonAdd() {
     AddConfirmCancelButton(
         button = ButtonType.Add,
-        onClick = { },
+        onClick = {},
         count = 5,
+        resetCount = {},
+    )
+}
+
+@Preview(showBackground = true)
+@Composable
+fun PreviewAddConfirmCancelButtonZero() {
+    AddConfirmCancelButton(
+        button = ButtonType.Add,
+        onClick = {},
+        count = 0,
+        resetCount = {},
+    )
+}
+
+@Preview(showBackground = true)
+@Composable
+fun PreviewAddConfirmCancelButtonAddDisabled() {
+    AddConfirmCancelButton(
+        button = ButtonType.Add,
+        onClick = {},
+        count = null,
+        resetCount = {},
     )
 }
 
@@ -110,7 +142,8 @@ fun PreviewAddConfirmCancelButtonAdd() {
 fun PreviewAddConfirmCancelButtonConfirm() {
     AddConfirmCancelButton(
         button = ButtonType.Confirm,
-        onClick = { },
+        onClick = {},
+        resetCount = {},
     )
 }
 
@@ -119,6 +152,7 @@ fun PreviewAddConfirmCancelButtonConfirm() {
 fun PreviewAddConfirmCancelButtonCancel() {
     AddConfirmCancelButton(
         button = ButtonType.Cancel,
-        onClick = { },
+        onClick = {},
+        resetCount = {},
     )
 }
