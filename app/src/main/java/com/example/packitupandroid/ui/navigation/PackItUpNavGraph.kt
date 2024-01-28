@@ -24,7 +24,6 @@ fun PackItUpNavHost(
     contentType: PackItUpContentType,
     uiState: PackItUpUiState,
     navigationType: PackItUpNavigationType,
-//  navigateToDetail: (Long, PackItUpNavigationType) -> Unit,
     modifier: Modifier,
     viewModel : PackItUpViewModel = viewModel(factory = PackItUpViewModel.Factory),
 ) {
@@ -35,31 +34,40 @@ fun PackItUpNavHost(
         navController = navController,
         startDestination = PackItUpRoute.SUMMARY
     ) {
-        composable(PackItUpRoute.SUMMARY) {
+        composable(route = PackItUpRoute.SUMMARY) {
             SummaryScreen(
                 uiState = uiState,
                 onClick = viewModel::resetItemList, // TODO: remove when no longer needed
+                navigateBack = { navController.popBackStack() },
+                onNavigateUp = { navController.navigateUp() },
+                canNavigateBack = false,
             )
         }
-        composable(PackItUpRoute.COLLECTIONS) {
+        composable(route = PackItUpRoute.COLLECTIONS) {
             CollectionsScreen(
                 uiState = uiState,
                 onCreateClick = viewModel::createCollection,
                 onDeleteClick = viewModel::deleteCollection,
+                navigateBack = { navController.popBackStack() },
+                onNavigateUp = { navController.navigateUp() },
             )
         }
-        composable(PackItUpRoute.BOXES) {
+        composable(route = PackItUpRoute.BOXES) {
             BoxesScreen(
                 uiState = uiState,
                 onCreateClick = viewModel::createBox,
                 onDeleteClick = viewModel::deleteBox,
+                navigateBack = { navController.popBackStack() },
+                onNavigateUp = { navController.navigateUp() },
             )
         }
-        composable(PackItUpRoute.ITEMS) {
+        composable(route = PackItUpRoute.ITEMS) {
             ItemsScreen(
                 uiState = uiState,
                 onCreateClick = viewModel::createItem,
                 onDeleteClick = viewModel::deleteItem,
+                navigateBack = { navController.popBackStack() },
+                onNavigateUp = { navController.navigateUp() },
             )
         }
     }

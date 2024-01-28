@@ -87,7 +87,6 @@ fun PackItUpContent(
     navController: NavHostController,
     selectedDestination: String,
     navigateToTopLevelDestination: (PackItUpTopLevelDestination) -> Unit,
-//    navigateToDetail: (Long, PackItUpContentType) -> Unit,
 ) {
     Column(
         modifier = modifier
@@ -98,7 +97,6 @@ fun PackItUpContent(
             contentType = contentType,
             uiState = uiState,
             navigationType = navigationType,
-//    navigateToDetail =  (Long, PackItUpNavigationType) -> Unit,
             modifier = Modifier.weight(1f),
         )
         PackItUpBottomNavigationBar(
