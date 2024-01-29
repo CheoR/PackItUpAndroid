@@ -7,12 +7,12 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import com.example.packitupandroid.R
 import com.example.packitupandroid.data.ScreenType
 import com.example.packitupandroid.data.local.LocalDataSource
@@ -43,7 +43,8 @@ fun ItemsScreen(
     ) { innerPadding ->
         Column(
             modifier = modifier
-                .padding(innerPadding),
+                .padding(innerPadding)
+                .padding(bottom = 0.dp),
         ) {
             LazyColumn(
                 modifier = modifier
@@ -62,8 +63,6 @@ fun ItemsScreen(
                         onDelete = onDeleteClick,
                         onCardClick = {},
                     )
-                    // TODO: remove this line when done with it
-                    Text(text = "Total items: ${uiState.items.size}")
                 }
             }
             Counter(screen = ScreenType.Items, onClick = onCreateClick)

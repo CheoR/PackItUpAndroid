@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
@@ -30,9 +31,9 @@ import com.example.packitupandroid.ui.components.common.ButtonType
 
 @Composable
 fun Counter(
-    modifier: Modifier = Modifier,
     screen: ScreenType,
     onClick: (Int?) -> Unit,
+    modifier: Modifier = Modifier,
 ) {
     val action = when(screen) {
         ScreenType.Items,
@@ -43,6 +44,7 @@ fun Counter(
 
     var count by remember { mutableIntStateOf(0) }
     val buttonModifier = Modifier
+        .size(40.dp)
         .clip(RoundedCornerShape(8.dp))
         .background(Color.Gray)
 
@@ -50,9 +52,7 @@ fun Counter(
         count = 0
     }
 
-    Column(
-        verticalArrangement = Arrangement.spacedBy(8.dp)
-    ) {
+    Column {
         Row(
             modifier = modifier
                 .fillMaxWidth(),

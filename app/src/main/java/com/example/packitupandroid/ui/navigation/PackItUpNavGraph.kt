@@ -1,14 +1,14 @@
 package com.example.packitupandroid.ui.navigation
 
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.unit.dp
+import androidx.compose.ui.res.dimensionResource
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import com.example.packitupandroid.R
 import com.example.packitupandroid.ui.PackItUpUiState
 import com.example.packitupandroid.ui.PackItUpViewModel
 import com.example.packitupandroid.ui.screens.BoxesScreen
@@ -29,8 +29,10 @@ fun PackItUpNavHost(
 ) {
     NavHost(
         modifier = modifier
-            .fillMaxSize()
-            .padding(8.dp),
+            .padding(
+                start = dimensionResource(R.dimen.padding_small),
+                end = dimensionResource(R.dimen.padding_small),
+            ),
         navController = navController,
         startDestination = PackItUpRoute.SUMMARY
     ) {

@@ -1,8 +1,6 @@
 package com.example.packitupandroid.ui
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.windowsizeclass.WindowSizeClass
 import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass
 import androidx.compose.runtime.Composable
@@ -25,7 +23,6 @@ fun PackItUpApp(
     windowSize: WindowSizeClass,
     uiState: PackItUpUiState,
 ) {
-
     /*
         To implement navigation drawer, determine navigation type based on app's window size.
      */
@@ -80,7 +77,6 @@ private fun PackItUpNavigationWrapper(
 
 @Composable
 fun PackItUpContent(
-    modifier: Modifier = Modifier,
     navigationType: PackItUpNavigationType,
     contentType: PackItUpContentType,
     uiState: PackItUpUiState,
@@ -88,10 +84,8 @@ fun PackItUpContent(
     selectedDestination: String,
     navigateToTopLevelDestination: (PackItUpTopLevelDestination) -> Unit,
 ) {
-    Column(
-        modifier = modifier
-            .background(MaterialTheme.colorScheme.inverseOnSurface)
-    ) {
+    // TODO: move scaffold here
+    Column {
         PackItUpNavHost(
             navController = navController,
             contentType = contentType,

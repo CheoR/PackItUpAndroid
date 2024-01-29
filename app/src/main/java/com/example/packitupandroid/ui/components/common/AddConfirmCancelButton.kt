@@ -18,7 +18,6 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 
@@ -65,9 +64,7 @@ fun AddConfirmCancelButton(
 
     Row(
         modifier = modifier
-            .height(32.dp)
-            .fillMaxWidth()
-            .background(color = Color.Blue),
+            .height(64.dp),
         horizontalArrangement = Arrangement.Center,
         verticalAlignment = Alignment.CenterVertically,
     ) {
@@ -81,7 +78,7 @@ fun AddConfirmCancelButton(
                 resetCount?.let {
                     resetCount()
                 }
-                      },
+            },
             shape = RoundedCornerShape(4.dp),
             colors = ButtonDefaults.buttonColors(
                 containerColor = color,
