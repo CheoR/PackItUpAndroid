@@ -13,6 +13,7 @@ import com.example.packitupandroid.model.Item
 import com.example.packitupandroid.model.Collection
 import com.example.packitupandroid.repository.DataRepository
 import com.example.packitupandroid.repository.LocalDataRepository
+import com.example.packitupandroid.ui.components.card.BaseCardData
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -156,6 +157,14 @@ class PackItUpViewModel(
 //        repository.boxes.value = currentBoxes
 //    }
 
+     fun updateElement(element: BaseCardData) {
+        when (element) {
+            is BaseCardData.ItemData -> updateItem(element.item)
+            is BaseCardData.BoxData -> updateBox(element.box)
+            is BaseCardData.CollectionData -> updateCollection(element.collection)
+            is BaseCardData.SummaryData -> {}
+        }
+    }
     fun updateItem(item: Item) {
         Log.i("MOOOOOOOOOOOO", "CALLING UPDATE ITEM")
         val itemToUpdate = getItem(item.id)

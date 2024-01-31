@@ -48,8 +48,8 @@ fun PackItUpNavHost(
         composable(route = PackItUpRoute.COLLECTIONS) {
             CollectionsScreen(
                 uiState = uiState,
-                onCreateClick = viewModel::createCollection,
-                onDeleteClick = viewModel::deleteCollection,
+                onCreate = viewModel::createCollection,
+                onDelete = viewModel::deleteCollection,
                 navigateBack = { navController.popBackStack() },
                 onNavigateUp = { navController.navigateUp() },
             )
@@ -57,8 +57,8 @@ fun PackItUpNavHost(
         composable(route = PackItUpRoute.BOXES) {
             BoxesScreen(
                 uiState = uiState,
-                onCreateClick = viewModel::createBox,
-                onDeleteClick = viewModel::deleteBox,
+                onCreate = viewModel::createBox,
+                onDelete = viewModel::deleteBox,
                 navigateBack = { navController.popBackStack() },
                 onNavigateUp = { navController.navigateUp() },
             )
@@ -66,8 +66,9 @@ fun PackItUpNavHost(
         composable(route = PackItUpRoute.ITEMS) {
             ItemsScreen(
                 uiState = uiState,
-                onCreateClick = viewModel::createItem,
-                onDeleteClick = viewModel::deleteItem,
+                onCreate = viewModel::createItem,
+                onDelete = viewModel::deleteItem,
+                onUpdate = viewModel::updateElement,
                 navigateBack = { navController.popBackStack() },
                 onNavigateUp = { navController.navigateUp() },
             )
