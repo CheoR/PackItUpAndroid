@@ -181,26 +181,22 @@ class PackItUpViewModel(
         }
     }
 
-    fun updateBox(box: Box){
-//        { TODO: initialize }
+    private fun updateBox(box: Box){
+        val boxToUpdate = getBox(box.id)
+        if(boxToUpdate != null) {
+            val updatedBox = boxToUpdate.copy(
+                name = box.name,
+                description = box.description
+            )
+            _uiState.value = _uiState.value.copy(boxes = uiState.value.boxes.map {
+                if (it.id == box.id) updatedBox else it
+            })
+        }
     }
 
     fun updateCollection(collection: Collection){
 //        { TODO: initialize }
     }
-
-//    fun updateBox(box: Box, newName: String, newDescription: String, newItems: List<Item>)  {
-//        val currentBoxes = repository.boxes.value.toMutableList()
-//        val index = currentBoxes.indexOfFirst { it.id == box.id }
-//        if (index != -1) {
-//            currentBoxes[index] = box.copy(
-//                name = newName,
-//                description = newDescription,
-//                items = newItems,
-//            )
-//            repository.boxes.value = currentBoxes
-//        }
-//    }
 
     fun resetItemList() {
         viewModelScope.launch {

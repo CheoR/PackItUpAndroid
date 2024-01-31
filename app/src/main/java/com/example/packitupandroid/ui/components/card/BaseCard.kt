@@ -78,7 +78,7 @@ fun BaseCard(
     onCardClick: () -> Unit,
     onUpdate: (BaseCardData) -> Unit,
     onDelete: () -> Unit,
-    editMode: EditMode = EditMode.NonEditable,
+    editMode: EditMode = EditMode.Editable, //  .NonEditable,
     editableFields: Set<EditableFields> = emptySet(),
     imageVector1: ImageVector? =  null,
     imageVector2: ImageVector? =  null,
@@ -97,7 +97,7 @@ fun BaseCard(
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(dimensionResource(R.dimen.padding_small))
+                .padding(dimensionResource(R.dimen.padding_small)),
         ) {
             when (data) {
                 is BaseCardData.ItemData -> {
@@ -134,7 +134,6 @@ fun BaseCard(
                 }
             }
 
-            // data column
             // Call DataColumn with Modifier.weight(2f).fillMaxHeight()
             DataColumn(
                 modifier = Modifier
@@ -143,42 +142,12 @@ fun BaseCard(
                     .padding(horizontal = 4.dp),
                 data = data,
                 onCheckedChange = {},
+                onUpdate = onUpdate,
+                editableFields = editableFields,
+                editMode = editMode,
                 viewMode = viewMode,
             )
-            // TODO: what's this for?
-//            when (data) {
-//                is BaseCardData.ItemData -> {
-//                    DataColumn(
-//                        modifier = Modifier
-//                            .weight(2f)
-//                            .fillMaxHeight(),
-//                        data = data ,
-//                        onCheckedChange = {},
-//                        editableFields = editableFields,
-//                    )
-//                }
-//                is BaseCardData.BoxData -> {
-//                    DataColumn(
-//                        modifier = Modifier
-//                            .weight(2f)
-//                            .fillMaxHeight(),
-//                        data = data ,
-//                        onCheckedChange = {},
-//                        editableFields = editableFields,
-//                    )
-//                }
-//                is BaseCardData.CollectionData -> {
-//                    DataColumn(
-//                        modifier = Modifier
-//                            .weight(2f)
-//                            .fillMaxHeight(),
-//                        data = data ,
-//                        onCheckedChange = {},
-//                        editableFields = editableFields,
-//                    )
-//                }
-//                else -> {}
-//            }
+
             ActionColumn(
                 onClick = {},
                 editMode = editMode,

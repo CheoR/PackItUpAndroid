@@ -100,10 +100,24 @@ fun DataColumn(
         modifier = modifier,
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
-        Text(
-            text = name,
-            style = MaterialTheme.typography.titleSmall,
-            color = MaterialTheme.colorScheme.primary
+        Button(onClick = {
+            onUpdate(BaseCardData.BoxData(
+                Box(
+                    id = id,
+                    name = name,
+                    description = description,
+                )
+            ))
+        }) {
+            Text(text="Update")
+        }
+        TextField(
+            value = name,
+            onValueChange = { name = it },
+            textStyle = MaterialTheme.typography.titleSmall,
+            enabled = isEditable(EditableFields.Name),
+            modifier = Modifier
+                .fillMaxWidth(),
         )
         dropdownOptions?.let {
             BasicTextField(

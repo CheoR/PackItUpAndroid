@@ -17,6 +17,7 @@ import com.example.packitupandroid.data.ScreenType
 import com.example.packitupandroid.data.local.LocalDataSource
 import com.example.packitupandroid.ui.PackItUpUiState
 import com.example.packitupandroid.ui.components.BoxCard
+import com.example.packitupandroid.ui.components.card.BaseCardData
 import com.example.packitupandroid.ui.components.common.PackItUpAppBar
 import com.example.packitupandroid.ui.components.counter.Counter
 
@@ -24,8 +25,9 @@ import com.example.packitupandroid.ui.components.counter.Counter
 fun BoxesScreen(
     modifier: Modifier = Modifier,
     uiState: PackItUpUiState,
-    onCreateClick: (Int?) -> Unit,
-    onDeleteClick: (String) -> Unit,
+    onCreate: (Int?) -> Unit,
+    onDelete: (String) -> Unit,
+    onUpdate: (BaseCardData) -> Unit,
     navigateBack: () -> Unit,
     onNavigateUp: () -> Unit,
     canNavigateBack: Boolean = true,
@@ -56,13 +58,13 @@ fun BoxesScreen(
                 ) {
                     BoxCard(
                         box = it,
-                        onUpdate = {},
-                        onDelete = onDeleteClick,
+                        onUpdate = onUpdate,
+                        onDelete = {},
                         onCardClick = {},
                     )
                 }
             }
-            Counter(screen = ScreenType.Boxes, onClick = onCreateClick)
+            Counter(screen = ScreenType.Boxes, onClick = onCreate)
         }
     }
 }
@@ -86,8 +88,9 @@ fun PreviewBoxesScreen(
 
     BoxesScreen(
         uiState = uiState,
-        onCreateClick = { count -> Log.i("Boxes ", "Creating ${count} boxes")},
-        onDeleteClick = { Log.i("Boxes ", "Deleting ${boxes[0].id} boxes")},
+        onCreate = { count -> Log.i("Boxes ", "Creating ${count} boxes")},
+        onDelete = { Log.i("Boxes ", "Deleting ${boxes[0].id} boxes")},
+        onUpdate = { Log.i("Boxes ", "Updating ${boxes[0].id}") },
         navigateBack = {},
         onNavigateUp = {},
         canNavigateBack = true,
