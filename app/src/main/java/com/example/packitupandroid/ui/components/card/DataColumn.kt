@@ -17,7 +17,8 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.packitupandroid.data.local.LocalDataSource
-import com.example.packitupandroid.ui.components.formatValue
+import com.example.packitupandroid.model.Item
+import com.example.packitupandroid.ui.components.asCurrencyString
 
 @Composable
 fun DataColumn(
@@ -99,20 +100,30 @@ fun DataColumn(
                 modifier = Modifier
                     .fillMaxWidth(),
             ) {
-                Checkbox(
-                    checked = isFragile,
-                    onCheckedChange = { onCheckedChange() },
-                )
-                Spacer(modifier = Modifier.width(4.dp))
-                Text("Fragile")
-
-                Spacer(modifier = Modifier.weight(1f))
-
-                Text(
-                    text = value.formatValue(),
-                    style = MaterialTheme.typography.bodySmall,
-                    color = MaterialTheme.colorScheme.secondary
-                )
+//                Checkbox(
+//                    checked = isFragile,
+//                    onCheckedChange = { isFragile = it }, // onCheckedChange() },
+//                    enabled = isEditable(EditableFields.IsFragile),
+//                )
+//                Spacer(modifier = Modifier.width(4.dp))
+//                Text("Fragile")
+//                Spacer(modifier = Modifier.weight(1f))
+                TextField(
+                    value = value.asCurrencyString().toString(), //  as String,
+//                    onValueChange = { value = it.toDouble() },
+                    onValueChange = {
+                        // Handle the case where the user enters an empty string
+                        Log.i("VALUE CHANGE", "VALUE: ${it}")
+                        value = if (it.isEmpty()) 0.0 else it.toDoubleOrNull() ?: value.parse // toDouble()
+                    },
+                    textStyle = MaterialTheme.typography.bodySmall,
+                    enabled = isEditable(EditableFields.Value),
+//                    keyboardActions = KeyboardType.Number,
+                    keyboardOptions = KeyboardOptions.Default.copy(
+                        keyboardType = KeyboardType.Number,
+                        imeAction = ImeAction.Done
+                    ),
+                    singleLine = true,                )
             }
         }
     }

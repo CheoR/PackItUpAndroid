@@ -27,7 +27,7 @@ import com.example.packitupandroid.model.Item
 import com.example.packitupandroid.ui.PackItUpUiState
 import com.example.packitupandroid.ui.components.SummaryCard
 import com.example.packitupandroid.ui.components.common.PackItUpAppBar
-import com.example.packitupandroid.ui.components.formatValue
+import com.example.packitupandroid.ui.components.asCurrencyString
 
 data class Summary (
     val id: String,
@@ -116,7 +116,7 @@ fun SummaryScreen(
                 Spacer(modifier = Modifier.weight(1f))
 
                 Text(
-                    text = "Total: ${uiState.items.sumOf { it.value }.formatValue()}",
+                    text = "Total: ${uiState.items.sumOf { it.value }.asCurrencyString()}",
                     style = MaterialTheme.typography.bodySmall,
                     color = MaterialTheme.colorScheme.secondary
                 )
