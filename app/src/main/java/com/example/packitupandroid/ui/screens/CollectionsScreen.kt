@@ -17,6 +17,7 @@ import com.example.packitupandroid.data.ScreenType
 import com.example.packitupandroid.data.local.LocalDataSource
 import com.example.packitupandroid.ui.PackItUpUiState
 import com.example.packitupandroid.ui.components.CollectionCard
+import com.example.packitupandroid.ui.components.card.BaseCardData
 import com.example.packitupandroid.ui.components.common.PackItUpAppBar
 import com.example.packitupandroid.ui.components.counter.Counter
 
@@ -24,8 +25,9 @@ import com.example.packitupandroid.ui.components.counter.Counter
 fun CollectionsScreen(
     modifier: Modifier = Modifier,
     uiState: PackItUpUiState,
-    onCreateClick: (Int?) -> Unit,
-    onDeleteClick: (String) -> Unit,
+    onCreate: (Int?) -> Unit,
+    onDelete: (String) -> Unit,
+    onUpdate: (BaseCardData) -> Unit,
     navigateBack: () -> Unit,
     onNavigateUp: () -> Unit,
     canNavigateBack: Boolean = true,
@@ -56,13 +58,13 @@ fun CollectionsScreen(
                 ) {
                     CollectionCard(
                         collection = it,
-                        onUpdate = {},
-                        onDelete = onDeleteClick,
+                        onUpdate = onUpdate,
+                        onDelete = {},
                         onCardClick = {},
                     )
                 }
             }
-            Counter(screen = ScreenType.Collections, onClick = onCreateClick)
+            Counter(screen = ScreenType.Collections, onClick = onCreate)
         }
     }
 }
@@ -86,8 +88,9 @@ fun PreviewCollectionsScreen(
 
     CollectionsScreen(
         uiState = uiState,
-        onCreateClick = { count -> Log.i("Collections ", "Creating ${count} collections")},
-        onDeleteClick = { Log.i("Collections ", "Deleting ${collections[0].id} collections")},
+        onCreate = { count -> Log.i("Collections ", "Creating ${count} collections")},
+        onDelete = { Log.i("Collections ", "Deleting ${collections[0].id} collections")},
+        onUpdate = { Log.i("Collections ", "Updating ${collections[0].id}") },
         navigateBack = {},
         onNavigateUp = {},
         canNavigateBack = true,

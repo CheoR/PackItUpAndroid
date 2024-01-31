@@ -50,6 +50,7 @@ fun PackItUpNavHost(
                 uiState = uiState,
                 onCreate = viewModel::createCollection,
                 onDelete = viewModel::deleteCollection,
+                onUpdate = viewModel::updateElement,
                 navigateBack = { navController.popBackStack() },
                 onNavigateUp = { navController.navigateUp() },
             )

@@ -27,7 +27,7 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.packitupandroid.data.local.LocalDataSource
-import com.example.packitupandroid.model.Item
+import com.example.packitupandroid.model.Collection
 import com.example.packitupandroid.ui.components.asCurrencyString
 import com.example.packitupandroid.ui.components.parseCurrencyToDouble
 
@@ -101,8 +101,8 @@ fun DataColumn(
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
         Button(onClick = {
-            onUpdate(BaseCardData.BoxData(
-                Box(
+            onUpdate(BaseCardData.CollectionData(
+                Collection(
                     id = id,
                     name = name,
                     description = description,

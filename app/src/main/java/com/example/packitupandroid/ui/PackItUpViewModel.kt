@@ -165,6 +165,7 @@ class PackItUpViewModel(
             is BaseCardData.SummaryData -> {}
         }
     }
+
     private fun updateItem(item: Item) {
         val itemToUpdate = getItem(item.id)
         if(itemToUpdate != null) {
@@ -194,8 +195,17 @@ class PackItUpViewModel(
         }
     }
 
-    fun updateCollection(collection: Collection){
-//        { TODO: initialize }
+    private fun updateCollection(collection: Collection){
+        val collectionToUpdate = getCollection(collection.id)
+        if(collectionToUpdate != null) {
+            val updatedCollection = collectionToUpdate.copy(
+                name = collection.name,
+                description = collection.description,
+            )
+            _uiState.value = _uiState.value.copy(collections = uiState.value.collections.map {
+                if (it.id == collection.id) updatedCollection else it
+            })
+        }
     }
 
     fun resetItemList() {
