@@ -1,6 +1,5 @@
 package com.example.packitupandroid.ui.components.card
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -21,7 +20,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
@@ -120,24 +118,25 @@ fun DataColumn(
                 .fillMaxWidth(),
         )
         dropdownOptions?.let {
-            BasicTextField(
+            TextField(
                 value = dropdownOptions.first(), // Todo: display selected value if available else first
-                onValueChange = { },
+                onValueChange = { description = it },
                 textStyle = MaterialTheme.typography.bodySmall,
+                enabled = isEditable(EditableFields.Dropdown),
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(4.dp)
             )
         }
-        Text(
-            text = description,
-            style = MaterialTheme.typography.bodySmall,
-            color = MaterialTheme.colorScheme.primary,
+        TextField(
+            value = description,
+            onValueChange = { description = it },
+            textStyle = MaterialTheme.typography.bodySmall,
+            enabled = isEditable(EditableFields.Description),
+            maxLines = 3,
             modifier = Modifier
                 .weight(1f)
                 .fillMaxWidth(),
-            maxLines = 3,
-            overflow = TextOverflow.Ellipsis,
         )
 
         if(viewMode == ViewMode.NotSummaryCard) {
@@ -146,30 +145,28 @@ fun DataColumn(
                 modifier = Modifier
                     .fillMaxWidth(),
             ) {
-//                Checkbox(
-//                    checked = isFragile,
-//                    onCheckedChange = { isFragile = it }, // onCheckedChange() },
-//                    enabled = isEditable(EditableFields.IsFragile),
-//                )
-//                Spacer(modifier = Modifier.width(4.dp))
-//                Text("Fragile")
-//                Spacer(modifier = Modifier.weight(1f))
+                Checkbox(
+                    checked = isFragile,
+                    onCheckedChange = { isFragile = it }, // onCheckedChange() },
+                    enabled = isEditable(EditableFields.IsFragile),
+                )
+                Spacer(modifier = Modifier.width(4.dp))
+                Text("Fragile")
+                Spacer(modifier = Modifier.weight(1f))
                 TextField(
-                    value = value.asCurrencyString().toString(), //  as String,
-//                    onValueChange = { value = it.toDouble() },
+                    value = value.asCurrencyString(),
                     onValueChange = {
                         // Handle the case where the user enters an empty string
-                        Log.i("VALUE CHANGE", "VALUE: ${it}")
-                        value = if (it.isEmpty()) 0.0 else it.toDoubleOrNull() ?: value.parse // toDouble()
+                        value = if (it.isEmpty()) 0.0 else it.parseCurrencyToDouble()
                     },
                     textStyle = MaterialTheme.typography.bodySmall,
                     enabled = isEditable(EditableFields.Value),
-//                    keyboardActions = KeyboardType.Number,
                     keyboardOptions = KeyboardOptions.Default.copy(
                         keyboardType = KeyboardType.Number,
                         imeAction = ImeAction.Done
                     ),
-                    singleLine = true,                )
+                    singleLine = true,
+                )
             }
         }
     }
@@ -189,6 +186,7 @@ fun PreviewItemViewCardDataColumn(
             item = item,
         ),
         onCheckedChange = {},
+        onUpdate = {},
     )
 }
 
@@ -205,7 +203,8 @@ fun PreviewBoxViewCardDataColumn(
         data = BaseCardData.BoxData(
             box = box,
         ),
-        onCheckedChange = {}
+        onCheckedChange = {},
+        onUpdate = {},
     )
 }
 @Preview(
@@ -222,6 +221,7 @@ fun PreviewCollectionViewCardDataColumn(
             collection = collection,
         ),
         onCheckedChange = {},
+        onUpdate = {},
     )
 }
 
@@ -239,6 +239,7 @@ fun PreviewItemSummaryCardDataColumn(
             item = item,
         ),
         onCheckedChange = {},
+        onUpdate = {},
         viewMode = ViewMode.SummaryCard,
     )
 }
@@ -257,6 +258,7 @@ fun PreviewBoxSummaryCardDataColumn(
             box = box,
         ),
         onCheckedChange = {},
+        onUpdate = {},
         viewMode = ViewMode.SummaryCard,
     )
 }
@@ -274,66 +276,79 @@ fun PreviewCollectionSummaryCardDataColumn(
             collection = collection,
         ),
         onCheckedChange = {},
+        onUpdate = {},
         viewMode = ViewMode.SummaryCard,
     )
 }
 
+@Preview(
+    showBackground = true,
+    group = "Editable",
+)
+@Composable
+fun PreviewEditableItemViewCardDataColumn(
+    localDataSource: LocalDataSource = LocalDataSource(),
+) {
+    val item = localDataSource.loadItems().first()
+    DataColumn(
+        data = BaseCardData.ItemData(
+            item = item,
+        ),
+        onCheckedChange = {},
+        onUpdate = {},
+        editMode = EditMode.Editable,
+        editableFields = setOf(
+            EditableFields.Name,
+            EditableFields.Description,
+            EditableFields.Dropdown,
+            EditableFields.IsFragile,
+            EditableFields.Value,
+        ),
+    )
+}
 
-
-
-
-
-//    when (data) {
-//        is BaseCardData.ItemData -> {
-//            // Handle Item-specific data
-//            // Access data.item for Item-specific properties
-//            // Call onUpdate, onDelete as needed
-//            if (editableFields.contains(EditableFields.Title)) {
-//                // Title is editable
-//                BasicTextField(
-//                    value = data.item.name,
-//                    onValueChange = {
-//                        // Update logic for title
-//                        onUpdate(data.copy(item = data.item.copy(name = it)))
-//                    }
-//                )
-//            } else {
-//                // Title is non-editable
-//                IconsColumn(
-//                    imageUri = data.item.imageUri,
-//                    imageVector1 = imageVector1,
-//                )
-//                Text(text = data.item.name, style = MaterialTheme.typography.titleLarge)
-//            }
-//        }
-//        is BaseCardData.BoxData -> {
-//            // Handle Box-specific data
-//            // Access data.box for Box-specific properties
-//            // Call onUpdate, onDelete as needed
-//        }
-//        is BaseCardData.CollectionData -> {
-//            // Handle Collection-specific data
-//            // Access data.collection for Collection-specific properties
-//            // Call onUpdate, onDelete as needed
-//            if (editableFields.contains(EditableFields.Title)) {
-//                // Title is editable
-//                BasicTextField(
-//                    value = data.collection.name,
-//                    onValueChange = {
-//                        // Update logic for title
-//                        onUpdate(data.copy(collection = data.collection.copy(name = it)))
-//                    }
-//                )
-//            } else {
-//                // Title is non-editable
-//                Text(text = data.collection.name, style = MaterialTheme.typography.titleLarge)
-//            }
-//        }
-//
-//        else -> {
-//            Row {
-//                Text(text="oopsies")
-//            }
-//        }
-//    }
-//}
+@Preview(
+    showBackground = true,
+    group = "Editable",
+)
+@Composable
+fun PreviewEditableBoxViewCardDataColumn(
+    localDataSource: LocalDataSource = LocalDataSource(),
+) {
+    val box = localDataSource.loadBoxes().first()
+    DataColumn(
+        data = BaseCardData.BoxData(
+            box = box,
+        ),
+        onCheckedChange = {},
+        onUpdate = {},
+        editMode = EditMode.Editable,
+        editableFields = setOf(
+            EditableFields.Name,
+            EditableFields.Description,
+            EditableFields.Dropdown,
+        ),
+    )
+}
+@Preview(
+    showBackground = true,
+    group = "Editable",
+)
+@Composable
+fun PreviewEditableCollectionViewCardDataColumn(
+    localDataSource: LocalDataSource = LocalDataSource(),
+) {
+    val collection = localDataSource.loadCollections().first()
+    DataColumn(
+        data = BaseCardData.CollectionData(
+            collection = collection,
+        ),
+        onCheckedChange = {},
+        onUpdate = {},
+        editMode = EditMode.Editable,
+        editableFields = setOf(
+            EditableFields.Name,
+            EditableFields.Description,
+        ),
+    )
+}
