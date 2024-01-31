@@ -12,12 +12,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
 import com.example.packitupandroid.R
 import com.example.packitupandroid.data.ScreenType
 import com.example.packitupandroid.data.local.LocalDataSource
 import com.example.packitupandroid.ui.PackItUpUiState
 import com.example.packitupandroid.ui.components.ItemCard
+import com.example.packitupandroid.ui.components.card.BaseCardData
 import com.example.packitupandroid.ui.components.common.PackItUpAppBar
 import com.example.packitupandroid.ui.components.counter.Counter
 
@@ -26,8 +26,9 @@ import com.example.packitupandroid.ui.components.counter.Counter
 fun ItemsScreen(
     modifier: Modifier = Modifier,
     uiState: PackItUpUiState,
-    onCreateClick: (Int?) -> Unit,
-    onDeleteClick: (String) -> Unit,
+    onCreate: (Int?) -> Unit,
+    onDelete: (String) -> Unit,
+    onUpdate: (BaseCardData) -> Unit,
     navigateBack: () -> Unit,
     onNavigateUp: () -> Unit,
     canNavigateBack: Boolean = true,
@@ -43,8 +44,7 @@ fun ItemsScreen(
     ) { innerPadding ->
         Column(
             modifier = modifier
-                .padding(innerPadding)
-                .padding(bottom = 0.dp),
+                .padding(innerPadding),
         ) {
             LazyColumn(
                 modifier = modifier
@@ -56,16 +56,16 @@ fun ItemsScreen(
                 items(
                     items = uiState.items,
                     key = { it.id }
-                ) {
+                ) { item ->
                     ItemCard(
-                        item = it,
-                        onUpdate = {},
-                        onDelete = onDeleteClick,
+                        item = item,
+                        onUpdate = onUpdate,
+                        onDelete = {},
                         onCardClick = {},
                     )
                 }
             }
-            Counter(screen = ScreenType.Items, onClick = onCreateClick)
+            Counter(screen = ScreenType.Items, onClick = onCreate)
         }
     }
 }
@@ -89,8 +89,9 @@ fun PreviewItemsScreen(
 
     ItemsScreen(
         uiState = uiState,
-        onCreateClick = { count -> Log.i("Items ", "Creating ${count} items")},
-        onDeleteClick = { Log.i("Items ", "Deleting ${items[0].id} items")},
+        onCreate = { count -> Log.i("Items ", "Creating ${count} items")},
+        onDelete = { Log.i("Items ", "Deleting ${items[0].id} items") },
+        onUpdate = { Log.i("Items ", "Updating ${items[0].id}") },
         navigateBack = {},
         onNavigateUp = {},
         canNavigateBack = true,

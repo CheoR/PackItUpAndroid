@@ -13,7 +13,7 @@ import com.example.packitupandroid.ui.components.card.BaseCardData
 @Composable
 fun ItemCard(
     item: Item,
-    onUpdate: (Item) -> Unit,
+    onUpdate: (BaseCardData) -> Unit,
     onDelete: (String) -> Unit,
     onCardClick: () -> Unit,
     editMode: EditMode = EditMode.NonEditable,
@@ -31,9 +31,7 @@ fun ItemCard(
             EditableFields.IsFragile,
             EditableFields.Value,
         ),
-        onUpdate = { data ->
-            if (data is BaseCardData.ItemData) onUpdate(data.item) else {}
-        },
+        onUpdate = onUpdate,
         onDelete = { onDelete(item.id) },
         actionIcon = ImageVector.vectorResource(R.drawable.baseline_more_vert_24),
         // TODO: make imgageVectors into enum?

@@ -86,7 +86,7 @@ class PackItUpViewModel(
                 val newItem = Item(
                     id = id,
                     name = name,
-                    value = 1.25,
+                    value = 0.00,
                 )
                 newItems.add(newItem)
             }
@@ -165,8 +165,7 @@ class PackItUpViewModel(
             is BaseCardData.SummaryData -> {}
         }
     }
-    fun updateItem(item: Item) {
-        Log.i("MOOOOOOOOOOOO", "CALLING UPDATE ITEM")
+    private fun updateItem(item: Item) {
         val itemToUpdate = getItem(item.id)
         if(itemToUpdate != null) {
             val updatedItem = itemToUpdate.copy(
@@ -176,12 +175,18 @@ class PackItUpViewModel(
                 imageUri = item.imageUri,
                 isFragile = item.isFragile,
             )
-//            _uiState.value = _uiState.value.copy(items = uiState.value.items)
             _uiState.value = _uiState.value.copy(items = uiState.value.items.map {
                 if (it.id == item.id) updatedItem else it
             })
-            Log.i("MOOOOOOOOOOOO", "ITEMS ARE NOW: ${uiState.value.items.map { it.name }}")
         }
+    }
+
+    fun updateBox(box: Box){
+//        { TODO: initialize }
+    }
+
+    fun updateCollection(collection: Collection){
+//        { TODO: initialize }
     }
 
 //    fun updateBox(box: Box, newName: String, newDescription: String, newItems: List<Item>)  {
