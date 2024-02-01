@@ -16,7 +16,7 @@ fun CollectionCard(
     onUpdate: (BaseCardData) -> Unit,
     onDelete: (String) -> Unit,
     onCardClick: () -> Unit,
-    editMode: EditMode = EditMode.Editable, // .NonEditable,
+    editMode: EditMode = EditMode.NonEditable,
 ) {
     BaseCard(
         data = BaseCardData.CollectionData(collection),

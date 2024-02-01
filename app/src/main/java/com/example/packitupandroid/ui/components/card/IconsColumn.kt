@@ -4,8 +4,8 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.offset
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Badge
 import androidx.compose.material3.BadgedBox
@@ -20,11 +20,11 @@ import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
 import com.example.packitupandroid.R
 
 @Composable
 fun IconsColumn(
+    modifier: Modifier = Modifier,
     imageUri: Int? = null,
     imageVector1: ImageVector? = null,
     imageVector2: ImageVector? = null,
@@ -32,19 +32,26 @@ fun IconsColumn(
     secondBadgeCount: Int? = 0,
     isShowBadgeCount: Boolean = true,
 ) {
+    val imageDimens: Modifier = Modifier
+        .size(dimensionResource(R.dimen.image_size_medium))
+        .clip(RoundedCornerShape(dimensionResource(R.dimen.roundness_small)))
+    val badgeOffsets = Modifier
+        .offset(
+            dimensionResource(R.dimen.badge_x_offset),
+            dimensionResource(R.dimen.badge_y_offset)
+        )
+
     Column(
-        modifier = Modifier
-            .padding(horizontal = 4.dp)
-            .fillMaxHeight(),
+        modifier = modifier
+            .fillMaxHeight()
+            .width(dimensionResource(R.dimen.image_size_medium)),
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
 
         when {
             imageUri != null -> {
                 Image(
-                    modifier = Modifier
-                        .size(48.dp)
-                        .clip(RoundedCornerShape(8.dp)),
+                    modifier = imageDimens,
                     painter = painterResource(imageUri ?: R.drawable.ic_broken_image),
                     contentDescription = null,
                 )
@@ -57,20 +64,14 @@ fun IconsColumn(
                     modifier = Modifier,
                     badge = {
                         if (isShowBadgeCount) Badge(
-                            modifier = Modifier
-                                .offset(
-                                    dimensionResource(R.dimen.badge_x_offset),
-                                    dimensionResource(R.dimen.badge_y_offset)
-                                ),
+                            modifier = badgeOffsets,
                         ) {
                             Text(firstBadgeCount.toString())
                         }
                     },
                 ) {
                     Icon(
-                        modifier = Modifier
-                            .size(48.dp)
-                            .clip(RoundedCornerShape(8.dp)),
+                        modifier = imageDimens,
                         imageVector = imageVector1,
                         contentDescription = null,
                     )
@@ -80,20 +81,14 @@ fun IconsColumn(
                         modifier = Modifier,
                         badge = {
                             if (isShowBadgeCount) Badge(
-                                modifier = Modifier
-                                    .offset(
-                                        dimensionResource(R.dimen.badge_x_offset),
-                                        dimensionResource(R.dimen.badge_y_offset)
-                                    ),
+                                modifier = badgeOffsets,
                             ) {
                                 if (isShowBadgeCount) Text(secondBadgeCount.toString())
                             }
                         },
                     ) {
                         Icon(
-                            modifier = Modifier
-                                .size(48.dp)
-                                .clip(RoundedCornerShape(8.dp)),
+                            modifier = imageDimens,
                             imageVector = it,
                             contentDescription = null,
                         )

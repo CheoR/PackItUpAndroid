@@ -78,7 +78,7 @@ fun BaseCard(
     onCardClick: () -> Unit,
     onUpdate: (BaseCardData) -> Unit,
     onDelete: () -> Unit,
-    editMode: EditMode = EditMode.Editable, //  .NonEditable,
+    editMode: EditMode = EditMode.NonEditable,
     editableFields: Set<EditableFields> = emptySet(),
     imageVector1: ImageVector? =  null,
     imageVector2: ImageVector? =  null,
@@ -88,11 +88,11 @@ fun BaseCard(
 ) {
     Card(
         modifier = modifier
-            .height(148.dp)
+            .height(dimensionResource(R.dimen.card_height))
             .fillMaxWidth()
-            .clip(RoundedCornerShape(8.dp))
+            .clip(RoundedCornerShape(dimensionResource(R.dimen.roundness_small)))
             .clickable { onDelete() } , // onCardClick() },
-        elevation = CardDefaults.cardElevation(defaultElevation = 8.dp),
+        elevation = CardDefaults.cardElevation(defaultElevation = dimensionResource(R.dimen.image_size_medium)),
     ) {
         Row(
             modifier = Modifier

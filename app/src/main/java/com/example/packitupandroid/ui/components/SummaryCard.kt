@@ -25,9 +25,7 @@ fun SummaryCard(
         editMode = editMode,
         onCardClick = onCardClick,
         editableFields = setOf(),
-        onUpdate = { data ->
-            if (data is BaseCardData.SummaryData) onUpdate(data.summary) else {}
-        },
+        onUpdate = {},
         onDelete = onDelete,
         actionIcon = Icons.Filled.ArrowForward,
         // TODO: make imgageVectors into enum?

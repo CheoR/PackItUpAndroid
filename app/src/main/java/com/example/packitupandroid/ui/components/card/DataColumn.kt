@@ -6,12 +6,11 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material3.Button
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableDoubleStateOf
@@ -25,7 +24,6 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.packitupandroid.data.local.LocalDataSource
-import com.example.packitupandroid.model.Collection
 import com.example.packitupandroid.ui.components.asCurrencyString
 import com.example.packitupandroid.ui.components.parseCurrencyToDouble
 
@@ -81,7 +79,7 @@ fun DataColumn(
     modifier: Modifier = Modifier,
     dropdownOptions: List<String>? = listOf(""),
     editableFields: Set<EditableFields> = emptySet(),
-    editMode: EditMode = EditMode.Editable,
+    editMode: EditMode = EditMode.NonEditable,
     viewMode: ViewMode = ViewMode.NotSummaryCard,
 ) {
     fun isEditable(field: EditableFields) = editMode == EditMode.Editable && editableFields.contains(field)
@@ -98,18 +96,18 @@ fun DataColumn(
         modifier = modifier,
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
-        Button(onClick = {
-            onUpdate(BaseCardData.CollectionData(
-                Collection(
-                    id = id,
-                    name = name,
-                    description = description,
-                )
-            ))
-        }) {
-            Text(text="Update")
-        }
-        TextField(
+//        Button(onClick = {
+//            onUpdate(BaseCardData.CollectionData(
+//                Collection(
+//                    id = id,
+//                    name = name,
+//                    description = description,
+//                )
+//            ))
+//        }) {
+//            Text(text="Update")
+//        }
+        BasicTextField(
             value = name,
             onValueChange = { name = it },
             textStyle = MaterialTheme.typography.titleSmall,
@@ -118,7 +116,7 @@ fun DataColumn(
                 .fillMaxWidth(),
         )
         dropdownOptions?.let {
-            TextField(
+            BasicTextField(
                 value = dropdownOptions.first(), // Todo: display selected value if available else first
                 onValueChange = { description = it },
                 textStyle = MaterialTheme.typography.bodySmall,
@@ -128,7 +126,7 @@ fun DataColumn(
                     .padding(4.dp)
             )
         }
-        TextField(
+        BasicTextField(
             value = description,
             onValueChange = { description = it },
             textStyle = MaterialTheme.typography.bodySmall,
@@ -147,13 +145,13 @@ fun DataColumn(
             ) {
                 Checkbox(
                     checked = isFragile,
-                    onCheckedChange = { isFragile = it }, // onCheckedChange() },
+                    onCheckedChange = { isFragile = it },
                     enabled = isEditable(EditableFields.IsFragile),
                 )
                 Spacer(modifier = Modifier.width(4.dp))
                 Text("Fragile")
                 Spacer(modifier = Modifier.weight(1f))
-                TextField(
+                BasicTextField(
                     value = value.asCurrencyString(),
                     onValueChange = {
                         // Handle the case where the user enters an empty string
