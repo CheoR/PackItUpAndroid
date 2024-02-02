@@ -84,7 +84,6 @@ fun PackItUpContent(
     selectedDestination: String,
     navigateToTopLevelDestination: (PackItUpTopLevelDestination) -> Unit,
 ) {
-    // TODO: move scaffold here
     Column {
         PackItUpNavHost(
             navController = navController,
