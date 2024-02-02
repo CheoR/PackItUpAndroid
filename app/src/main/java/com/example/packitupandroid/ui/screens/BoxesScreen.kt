@@ -73,6 +73,5 @@ fun PreviewBoxesScreen(
         onCreate = { count -> Log.i("Boxes ", "Creating ${count} boxes")},
         onDelete = { Log.i("Boxes ", "Deleting ${boxes[0].id} boxes")},
         onUpdate = { Log.i("Boxes ", "Updating ${boxes[0].id}") },
-        modifier = Modifier,
     )
 }

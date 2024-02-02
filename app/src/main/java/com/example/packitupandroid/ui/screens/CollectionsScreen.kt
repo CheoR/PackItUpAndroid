@@ -73,6 +73,5 @@ fun PreviewCollectionsScreen(
         onCreate = { count -> Log.i("Collections ", "Creating ${count} collections")},
         onDelete = { Log.i("Collections ", "Deleting ${collections[0].id} collections")},
         onUpdate = { Log.i("Collections ", "Updating ${collections[0].id}") },
-        modifier = Modifier,
     )
 }
