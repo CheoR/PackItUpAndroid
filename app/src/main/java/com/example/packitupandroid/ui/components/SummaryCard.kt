@@ -15,7 +15,7 @@ import com.example.packitupandroid.ui.screens.Summary
 @Composable
 fun SummaryCard(
     summary: Summary,
-    onUpdate: (Summary) -> Unit,
+    onUpdate: (BaseCardData) -> Unit,
     onDelete: () -> Unit,
     onCardClick: () -> Unit,
     editMode: EditMode = EditMode.NonEditable,

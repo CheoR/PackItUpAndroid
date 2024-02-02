@@ -59,7 +59,9 @@ fun PackItUpNavHost(
             composable(route = PackItUpRoute.SUMMARY) {
                 SummaryScreen(
                     uiState = uiState,
-                    onClick = viewModel::resetItemList, // TODO: remove when no longer needed
+                    onCreate = {},
+                    onDelete = {},
+                    onUpdate = {},
                 )
             }
             composable(route = PackItUpRoute.COLLECTIONS) {

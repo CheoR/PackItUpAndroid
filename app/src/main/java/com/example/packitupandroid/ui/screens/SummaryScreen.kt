@@ -1,5 +1,6 @@
 package com.example.packitupandroid.ui.screens
 
+import android.util.Log
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -25,6 +26,7 @@ import com.example.packitupandroid.model.Item
 import com.example.packitupandroid.ui.PackItUpUiState
 import com.example.packitupandroid.ui.components.SummaryCard
 import com.example.packitupandroid.ui.components.asCurrencyString
+import com.example.packitupandroid.ui.components.card.BaseCardData
 
 data class Summary (
     val id: String,
@@ -41,8 +43,10 @@ data class Summary (
 @Composable
 fun SummaryScreen(
     uiState: PackItUpUiState,
+    onCreate: (Int?) -> Unit,
+    onDelete: (String) -> Unit,
+    onUpdate: (BaseCardData) -> Unit,
     modifier: Modifier = Modifier,
-    onClick: () -> Unit,
 ) {
     Column(
         modifier = modifier,
@@ -56,8 +60,8 @@ fun SummaryScreen(
                 description = "number of collections",
                 collections = uiState.collections,
             ),
-            onUpdate = {},
-            onDelete = {},
+            onUpdate = onUpdate,
+            onDelete = { onDelete("collections") },
             onCardClick = {}
         )
 
@@ -68,8 +72,8 @@ fun SummaryScreen(
                 description = "number of boxes",
                 boxes = uiState.boxes,
             ),
-            onUpdate = {},
-            onDelete = {},
+            onUpdate = onUpdate,
+            onDelete = { onDelete("boxes") },
             onCardClick = {}
         )
 
@@ -80,9 +84,9 @@ fun SummaryScreen(
                 description = "number of items",
                 items = uiState.items,
             ),
-            onUpdate = {},
-            onDelete = {},
-            onCardClick = onClick,
+            onUpdate = onUpdate,
+            onDelete = { onDelete("items") },
+            onCardClick = {},
         )
 
         Spacer(modifier = Modifier.weight(1f))
@@ -126,7 +130,8 @@ fun PreviewSummaryScreen(
 
     SummaryScreen(
         uiState = uiState,
-        onClick = {},
-        modifier = Modifier,
+        onCreate = { count -> Log.i("Items ", "Creating ${count} items")},
+        onDelete = { Log.i("Items ", "Deleting ${items[0].id} items") },
+        onUpdate = { Log.i("Items ", "Updating ${items[0].id}") },
     )
 }
