@@ -16,7 +16,7 @@ fun BoxCard(
     onUpdate: (BaseCardData) -> Unit,
     onDelete: (String) -> Unit,
     onCardClick: () -> Unit,
-    editMode: EditMode = EditMode.Editable,
+    editMode: EditMode = EditMode.NonEditable,
     // TODO: add dropdown
 ) {
     BaseCard(
