@@ -4,7 +4,6 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Category
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Label
-import androidx.compose.material.icons.outlined.CheckBoxOutlineBlank
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
 import com.example.packitupandroid.R
@@ -58,7 +57,7 @@ val TOP_LEVEL_DESTINATIONS = listOf(
     PackItUpTopLevelDestination(
         route = PackItUpRoute.BOXES,
         selectedIcon = R.drawable.ic_launcher_foreground,
-        unselectedIcon = Icons.Outlined.CheckBoxOutlineBlank,
+        unselectedIcon = R.drawable.ic_launcher_foreground,
         iconTextId = R.string.boxes
     ),
     PackItUpTopLevelDestination(
