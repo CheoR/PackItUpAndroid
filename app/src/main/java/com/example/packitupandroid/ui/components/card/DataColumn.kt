@@ -80,7 +80,7 @@ fun DataColumn(
     dropdownOptions: List<String>? = listOf(""),
     editableFields: Set<EditableFields> = emptySet(),
     editMode: EditMode = EditMode.NonEditable,
-    viewMode: ViewMode = ViewMode.NotSummaryCard,
+    cardType: CardType = CardType.NotSummaryCard,
 ) {
     fun isEditable(field: EditableFields) = editMode == EditMode.Editable && editableFields.contains(field)
 
@@ -137,7 +137,7 @@ fun DataColumn(
                 .fillMaxWidth(),
         )
 
-        if(viewMode == ViewMode.NotSummaryCard) {
+        if(cardType == CardType.NotSummaryCard) {
             Row(
                 verticalAlignment = Alignment.CenterVertically,
                 modifier = Modifier
@@ -238,7 +238,7 @@ fun PreviewItemSummaryCardDataColumn(
         ),
         onCheckedChange = {},
         onUpdate = {},
-        viewMode = ViewMode.SummaryCard,
+        cardType = CardType.SummaryCard,
     )
 }
 
@@ -257,7 +257,7 @@ fun PreviewBoxSummaryCardDataColumn(
         ),
         onCheckedChange = {},
         onUpdate = {},
-        viewMode = ViewMode.SummaryCard,
+        cardType = CardType.SummaryCard,
     )
 }
 @Preview(
@@ -275,7 +275,7 @@ fun PreviewCollectionSummaryCardDataColumn(
         ),
         onCheckedChange = {},
         onUpdate = {},
-        viewMode = ViewMode.SummaryCard,
+        cardType = CardType.SummaryCard,
     )
 }
 

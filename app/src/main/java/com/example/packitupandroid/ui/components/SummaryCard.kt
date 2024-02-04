@@ -9,7 +9,7 @@ import com.example.packitupandroid.R
 import com.example.packitupandroid.ui.components.card.BaseCard
 import com.example.packitupandroid.ui.components.card.BaseCardData
 import com.example.packitupandroid.ui.components.card.EditMode
-import com.example.packitupandroid.ui.components.card.ViewMode
+import com.example.packitupandroid.ui.components.card.CardType
 import com.example.packitupandroid.ui.screens.Summary
 
 @Composable
@@ -34,6 +34,6 @@ fun SummaryCard(
             "boxes" -> ImageVector.vectorResource(R.drawable.ic_launcher_foreground)
             else -> ImageVector.vectorResource(R.drawable.baseline_label_24)
         },
-        viewMode = ViewMode.SummaryCard,
+        cardType = CardType.SummaryCard,
     )
 }

@@ -21,7 +21,7 @@ import com.example.packitupandroid.R
 fun ActionColumn(
     onClick: () -> Unit,
     editMode: EditMode = EditMode.NonEditable,
-    viewMode: ViewMode = ViewMode.NotSummaryCard,
+    cardType: CardType = CardType.NotSummaryCard,
 ) {
     val actionIcon = when(viewMode) {
         is ViewMode.NotSummaryCard -> ImageVector.vectorResource(R.drawable.baseline_more_vert_24)
@@ -78,7 +78,7 @@ fun PreviewActionColumnSummaryCard() {
     ActionColumn(
         onClick = { },
         editMode = EditMode.NonEditable,
-        viewMode = ViewMode.SummaryCard,
+        cardType = CardType.SummaryCard,
     )
 }
 
@@ -88,7 +88,7 @@ fun PreviewActionColumnViewCardIsNotEditable() {
     ActionColumn(
         onClick = { },
         editMode = EditMode.NonEditable,
-        viewMode = ViewMode.NotSummaryCard,
+        cardType = CardType.NotSummaryCard,
     )
 }
 
@@ -98,7 +98,7 @@ fun PreviewActionColumnEditCardIsEditable() {
     ActionColumn(
         onClick = { },
         editMode = EditMode.Editable,
-        viewMode = ViewMode.NotSummaryCard,
+        cardType = CardType.NotSummaryCard,
     )
 }
 

@@ -32,9 +32,9 @@ sealed class BaseCardData {
     data class SummaryData(val summary: Summary): BaseCardData()
 }
 
-sealed class ViewMode {
-    object SummaryCard : ViewMode()
-    object NotSummaryCard : ViewMode()
+sealed class CardType {
+    object SummaryCard : CardType()
+    object NotSummaryCard : CardType()
 }
 sealed class EditMode {
     object NonEditable : EditMode()
@@ -78,13 +78,14 @@ fun BaseCard(
     onCardClick: () -> Unit,
     onUpdate: (BaseCardData) -> Unit,
     onDelete: () -> Unit,
-    editMode: EditMode = EditMode.NonEditable,
-    editableFields: Set<EditableFields> = emptySet(),
+    modifier: Modifier = Modifier,
+    actionIcon: ImageVector,
+    isShowBadgeCount: Boolean = true,
     imageVector1: ImageVector? =  null,
     imageVector2: ImageVector? =  null,
-    actionIcon: ImageVector,
-    viewMode: ViewMode = ViewMode.NotSummaryCard,
-    isShowBadgeCount: Boolean = true,
+    editMode: EditMode = EditMode.NonEditable,
+    cardType: CardType = CardType.NotSummaryCard,
+    editableFields: Set<EditableFields> = emptySet(),
 ) {
     Card(
         modifier = modifier
@@ -145,13 +146,13 @@ fun BaseCard(
                 onUpdate = onUpdate,
                 editableFields = editableFields,
                 editMode = editMode,
-                viewMode = viewMode,
+                cardType = cardType,
             )
 
             ActionColumn(
                 onClick = {},
                 editMode = editMode,
-                viewMode = viewMode,
+                cardType = cardType,
             )
         }
     }
@@ -305,7 +306,7 @@ fun PreviewSummaryItemBaseCardWithImage() {
         onCardClick = {},
         onUpdate = {},
         onDelete = {},
-        viewMode = ViewMode.SummaryCard,
+        cardType = CardType.SummaryCard,
     )
 }
 
@@ -334,7 +335,7 @@ fun PreviewSummaryItemBaseCardWithoutImage(
         onCardClick = {},
         onUpdate = {},
         onDelete = {},
-        viewMode = ViewMode.SummaryCard,
+        cardType = CardType.SummaryCard,
     )
 }
 
@@ -362,7 +363,7 @@ fun PreviewSummaryBoxBaseCard(
         onDelete = {},
         actionIcon = ImageVector.vectorResource(R.drawable.baseline_more_vert_24),
         imageVector1 = ImageVector.vectorResource(R.drawable.baseline_label_24),
-        viewMode = ViewMode.SummaryCard,
+        cardType = CardType.SummaryCard,
     )
 }
 @Preview(
@@ -389,7 +390,7 @@ fun PreviewSummaryCollectionBaseCard(
         imageVector1 = ImageVector.vectorResource(R.drawable.ic_launcher_foreground),
         imageVector2 = ImageVector.vectorResource(R.drawable.baseline_label_24),
         actionIcon = ImageVector.vectorResource(R.drawable.baseline_more_vert_24),
-        viewMode = ViewMode.SummaryCard,
+        cardType = CardType.SummaryCard,
     )
 }
 
