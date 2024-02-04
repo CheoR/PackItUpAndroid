@@ -12,7 +12,6 @@ import androidx.navigation.compose.composable
 import com.example.packitupandroid.R
 import com.example.packitupandroid.ui.PackItUpUiState
 import com.example.packitupandroid.ui.PackItUpViewModel
-import com.example.packitupandroid.ui.components.common.PackItUpAppBar
 import com.example.packitupandroid.ui.screens.BoxesScreen
 import com.example.packitupandroid.ui.screens.CollectionsScreen
 import com.example.packitupandroid.ui.screens.ItemsScreen
