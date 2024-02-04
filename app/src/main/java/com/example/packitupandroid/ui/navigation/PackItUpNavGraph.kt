@@ -4,7 +4,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
@@ -23,19 +22,21 @@ import com.example.packitupandroid.ui.utils.PackItUpNavigationType
 
 @Composable
 fun PackItUpNavHost(
-    modifier: Modifier,
     uiState: PackItUpUiState,
+    selectedDestination: String,
     navController: NavHostController,
     contentType: PackItUpContentType,
     navigationType: PackItUpNavigationType,
-    viewModel : PackItUpViewModel = viewModel(factory = PackItUpViewModel.Factory),
+    navigateToTopLevelDestination: (PackItUpTopLevelDestination) -> Unit,
+    modifier: Modifier = Modifier,
+    viewModel: PackItUpViewModel = viewModel(factory = PackItUpViewModel.Factory),
 ) {
     Scaffold(
-        modifier = modifier
-            .padding(
-                start = dimensionResource(R.dimen.padding_small),
-                end = dimensionResource(R.dimen.padding_small),
-            ),
+        modifier = modifier,
+//            .padding(
+//                start = dimensionResource(R.dimen.padding_small),
+//                end = dimensionResource(R.dimen.padding_small),
+//            ),
         topBar = {
             PackItUpAppBar(
                 title = when (navController.currentBackStackEntry?.destination?.route) {
@@ -47,6 +48,12 @@ fun PackItUpNavHost(
                 },
                 canNavigateBack = navController.previousBackStackEntry != null,
                 navigateUp = { navController.navigateUp() },
+            )
+        },
+        bottomBar = {
+            PackItUpBottomNavigationBar(
+                selectedDestination = selectedDestination,
+                navigateToTopLevelDestination = navigateToTopLevelDestination
             )
         }
     ) { innerPadding ->

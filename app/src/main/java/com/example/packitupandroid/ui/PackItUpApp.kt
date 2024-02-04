@@ -1,16 +1,13 @@
 package com.example.packitupandroid.ui
 
-import androidx.compose.foundation.layout.Column
 import androidx.compose.material3.windowsizeclass.WindowSizeClass
 import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
-import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
-import com.example.packitupandroid.ui.navigation.PackItUpBottomNavigationBar
 import com.example.packitupandroid.ui.navigation.PackItUpNavHost
 import com.example.packitupandroid.ui.navigation.PackItUpNavigationActions
 import com.example.packitupandroid.ui.navigation.PackItUpRoute
@@ -84,17 +81,12 @@ fun PackItUpContent(
     selectedDestination: String,
     navigateToTopLevelDestination: (PackItUpTopLevelDestination) -> Unit,
 ) {
-    Column {
-        PackItUpNavHost(
-            navController = navController,
-            contentType = contentType,
-            uiState = uiState,
-            navigationType = navigationType,
-            modifier = Modifier.weight(1f),
-        )
-        PackItUpBottomNavigationBar(
-            selectedDestination = selectedDestination,
-            navigateToTopLevelDestination = navigateToTopLevelDestination
-        )
-    }
+    PackItUpNavHost(
+        navController = navController,
+        contentType = contentType,
+        uiState = uiState,
+        navigationType = navigationType,
+        selectedDestination = selectedDestination,
+        navigateToTopLevelDestination = navigateToTopLevelDestination,
+    )
 }
