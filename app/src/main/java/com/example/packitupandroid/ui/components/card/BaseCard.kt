@@ -49,6 +49,13 @@ sealed class EditableFields {
     object Dropdown: EditableFields()
 }
 
+sealed class ElementType {
+    object Summary : ElementType()
+    object Collection : ElementType()
+    object Box : ElementType()
+    object Item : ElementType()
+}
+
 //sealed class CombinedMode {
 //    object SummaryNonEditable : CombinedMode()
 //    object SummaryEditable : CombinedMode()
@@ -73,13 +80,12 @@ sealed class EditableFields {
 
 @Composable
 fun BaseCard(
-    modifier: Modifier = Modifier,
     data: BaseCardData,
+    actionIcon: ImageVector,
     onCardClick: () -> Unit,
     onUpdate: (BaseCardData) -> Unit,
     onDelete: () -> Unit,
     modifier: Modifier = Modifier,
-    actionIcon: ImageVector,
     isShowBadgeCount: Boolean = true,
     imageVector1: ImageVector? =  null,
     imageVector2: ImageVector? =  null,
@@ -130,7 +136,7 @@ fun BaseCard(
                     }
                     IconsColumn(
                         imageVector1 = imageVector1,
-                        firstBadgeCount = count
+                        firstBadgeCount = count,
                     )
                 }
             }
@@ -151,6 +157,12 @@ fun BaseCard(
 
             ActionColumn(
                 onClick = {},
+                elementType = when (data) {
+                    is BaseCardData.ItemData -> ElementType.Item
+                    is BaseCardData.BoxData -> ElementType.Box
+                    is BaseCardData.CollectionData -> ElementType.Collection
+                    else -> ElementType.Summary
+                },
                 editMode = editMode,
                 cardType = cardType,
             )
