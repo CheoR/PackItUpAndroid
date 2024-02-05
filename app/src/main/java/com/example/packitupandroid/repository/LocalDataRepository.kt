@@ -14,16 +14,31 @@ interface DataRepository {
 class LocalDataRepository (
     private val localDataSource: LocalDataSource = LocalDataSource(),
 ) : DataRepository {
+    private var collections : List<Collection>? = null
+    private var boxes : List<Box>? = null
+    private var items : List<Item>? = null
 
     override suspend fun loadItems(): List<Item> {
-        return localDataSource.loadItems()
+        if(items == null) {
+            items = localDataSource.loadItems()
+        }
+        return items as List<Item>
+//        return localDataSource.loadItems()
     }
 
     override suspend fun loadBoxes(): List<Box> {
-        return localDataSource.loadBoxes()
+        if (boxes == null) {
+            boxes = localDataSource.loadBoxes()
+        }
+        return boxes as List<Box>
+//        return localDataSource.loadBoxes()
     }
 
     override suspend fun loadCollections(): List<Collection> {
-        return localDataSource.loadCollections()
+//        return localDataSource.loadCollections()
+        if(collections ==  null) {
+            collections = localDataSource.loadCollections()
+        }
+        return collections as List<Collection>
     }
 }

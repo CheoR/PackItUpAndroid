@@ -31,9 +31,15 @@ class PackItUpViewModel(
         viewModelScope.launch {
             // TODO: only load items if it is mock data
             // TODO: replace with DB if available
-            loadItems()
-            loadBoxes()
-            loadCollections()
+            if(_uiState.value.items.isEmpty()) {
+                loadItems()
+            }
+            if(_uiState.value.boxes.isEmpty()) {
+                loadBoxes()
+            }
+            if(_uiState.value.collections.isEmpty()) {
+                loadCollections()
+            }
         }
     }
 
