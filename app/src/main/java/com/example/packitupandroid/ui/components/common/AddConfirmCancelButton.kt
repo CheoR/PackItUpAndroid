@@ -49,7 +49,6 @@ sealed class ButtonType {
     object Confirm : ButtonType()
 }
 
-
 @Composable
 fun AddConfirmCancelButton(
     modifier: Modifier = Modifier,
@@ -61,7 +60,7 @@ fun AddConfirmCancelButton(
     val (label, icon, color) = when(button) {
         is ButtonType.Add -> Triple("add", Icons.Default.Add, MaterialTheme.colorScheme.onPrimaryContainer)
         is ButtonType.Confirm ->  Triple("confirm", Icons.Default.Check, MaterialTheme.colorScheme.onSecondaryContainer)
-        is ButtonType.Cancel ->  Triple("cancel", Icons.Default.Cancel, MaterialTheme.colorScheme.error)
+        else ->  Triple("cancel", Icons.Default.Cancel, MaterialTheme.colorScheme.error) // is ButtonType.Cancel
     }
 
     Row(
