@@ -82,7 +82,6 @@ class PackItUpViewModel(
         }
     }
 
-
     fun createItem(count: Int? = 0) {
         val newItems: MutableList<Item> = mutableListOf()
         if(count != null) {
