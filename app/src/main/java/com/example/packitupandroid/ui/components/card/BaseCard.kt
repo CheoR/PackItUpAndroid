@@ -7,6 +7,12 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowForward
+import androidx.compose.material.icons.filled.Category
+import androidx.compose.material.icons.filled.CheckBoxOutlineBlank
+import androidx.compose.material.icons.filled.Label
+import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.runtime.Composable
@@ -20,33 +26,37 @@ import androidx.compose.ui.unit.dp
 import com.example.packitupandroid.R
 import com.example.packitupandroid.data.local.LocalDataSource
 import com.example.packitupandroid.model.Box
-import com.example.packitupandroid.model.Collection
 import com.example.packitupandroid.model.Item
+import com.example.packitupandroid.model.Collection
 import com.example.packitupandroid.ui.screens.Summary
 
 sealed class BaseCardData {
-    data class ItemData(val item: Item) : BaseCardData()
-    data class BoxData(val box: Box) : BaseCardData()
+    data class SummaryData(val summary: Summary) : BaseCardData()
     data class CollectionData(val collection: Collection) : BaseCardData()
-
-    data class SummaryData(val summary: Summary): BaseCardData()
+    data class BoxData(val box: Box) : BaseCardData()
+    data class ItemData(val item: Item) : BaseCardData()
 }
 
 sealed class CardType {
-    object SummaryCard : CardType()
-    object NotSummaryCard : CardType()
-}
-sealed class EditMode {
-    object NonEditable : EditMode()
-    object Editable : EditMode()
+    object Default : CardType()
+    object Summary : CardType()
+    object Collection : CardType()
+    object Box : CardType()
+    object Item : CardType()
 }
 
-sealed class EditableFields {
-    object Name : EditableFields()
-    object Description : EditableFields()
-    object IsFragile : EditableFields()
-    object Value : EditableFields()
-    object Dropdown: EditableFields()
+sealed class EditMode {
+    object NoEdit : EditMode()
+    object Edit : EditMode()
+}
+
+sealed class EditFields {
+    object None : EditFields()
+    object Name : EditFields()
+    object Description : EditFields()
+    object IsFragile : EditFields()
+    object Value : EditFields()
+    object Dropdown: EditFields()
 }
 
 sealed class ElementType {
@@ -55,6 +65,30 @@ sealed class ElementType {
     object Box : ElementType()
     object Item : ElementType()
 }
+
+sealed class ColumnIcon {
+    // since can’t have property be either String or ImageVector type because Kotlin's
+    // statically typed language, to know variable type at compile time.
+    data class VectorIcon(val imageVector: ImageVector) : ColumnIcon()
+    data class UriIcon(val uri: Int?) : ColumnIcon()
+}
+
+sealed class ActionColumnState(val icon: ImageVector) {
+    object RightArrow : ActionColumnState(Icons.Default.ArrowForward)
+    object ThreeDots : ActionColumnState(Icons.Default.MoreVert)
+    object None : ActionColumnState(Icons.Default.CheckBoxOutlineBlank)
+}
+
+//sealed class IconColumnState {
+//    data object Default : IconColumnState()
+//    data class OneIcon(val icon: ColumnIcon, val badgeCount: Int? = null) : IconColumnState()
+//    data class TwoIcons(
+//        val icon1: ColumnIcon,
+//        val badgeCount1: Int? = null,
+//        val icon2: ColumnIcon,
+//        val badgeCount2: Int? = null,
+//    ) : IconColumnState()
+//}
 
 //sealed class CombinedMode {
 //    object SummaryNonEditable : CombinedMode()
@@ -81,24 +115,19 @@ sealed class ElementType {
 @Composable
 fun BaseCard(
     data: BaseCardData,
-    actionIcon: ImageVector,
-    onCardClick: () -> Unit,
     onUpdate: (BaseCardData) -> Unit,
     onDelete: () -> Unit,
     modifier: Modifier = Modifier,
-    isShowBadgeCount: Boolean = true,
-    imageVector1: ImageVector? =  null,
-    imageVector2: ImageVector? =  null,
-    editMode: EditMode = EditMode.NonEditable,
-    cardType: CardType = CardType.NotSummaryCard,
-    editableFields: Set<EditableFields> = emptySet(),
+    editMode: EditMode = EditMode.NoEdit,
+    cardType: CardType = CardType.Default,
+    editFields: Set<EditFields> = emptySet(),
 ) {
     Card(
         modifier = modifier
             .height(dimensionResource(R.dimen.card_height))
             .fillMaxWidth()
             .clip(RoundedCornerShape(dimensionResource(R.dimen.roundness_small)))
-            .clickable { onDelete() } , // onCardClick() },
+            .clickable { onDelete() },
         elevation = CardDefaults.cardElevation(defaultElevation = dimensionResource(R.dimen.image_size_medium)),
     ) {
         Row(
@@ -106,37 +135,37 @@ fun BaseCard(
                 .fillMaxWidth()
                 .padding(dimensionResource(R.dimen.padding_small)),
         ) {
-            when (data) {
+            when(data) {
                 is BaseCardData.ItemData -> {
+                    val image = data.item.imageUri
                     IconsColumn(
-                        imageUri = data.item.imageUri,
-                        isShowBadgeCount = isShowBadgeCount,
+                        icon1 = if (image != null) ColumnIcon.UriIcon(image) else ColumnIcon.VectorIcon(Icons.Default.Label),
+                        isShowBadgeCount = cardType is CardType.Summary
                     )
                 }
                 is BaseCardData.BoxData -> {
                     IconsColumn(
-                        imageVector1 = imageVector1,
-                        firstBadgeCount = data.box.items.size,
+                        icon1 = ColumnIcon.VectorIcon(Icons.Default.Label),
+                        badgeCount1 = data.box.items.size,
                     )
                 }
                 is BaseCardData.CollectionData -> {
                     IconsColumn(
-                        imageVector1 = imageVector1,
-                        imageVector2 = imageVector2,
-                        firstBadgeCount = data.collection.boxes.size,
-                        secondBadgeCount = data.collection.boxes.sumOf { it.items.size }
+                        icon1 = ColumnIcon.VectorIcon(ImageVector.vectorResource(R.drawable.ic_launcher_foreground)),
+                        icon2 = ColumnIcon.VectorIcon(Icons.Default.Label),
+                        badgeCount1 = data.collection.boxes.size,
+                        badgeCount2 = data.collection.boxes.sumOf { it.items.size },
                     )
-
                 }
                 is BaseCardData.SummaryData -> {
-                    val count = when(data.summary.id) {
-                        "collections" -> data.summary.collections.size
-                        "boxes" -> data.summary.boxes.size
-                        else -> data.summary.items.size
+                    val (count, icon) = when(data.summary.id) {
+                        "collections" -> Pair(data.summary.collections.size, Icons.Default.Category)
+                        "boxes" -> Pair(data.summary.boxes.size, ImageVector.vectorResource(R.drawable.ic_launcher_foreground))
+                        else -> Pair(data.summary.items.size, Icons.Default.Label)
                     }
                     IconsColumn(
-                        imageVector1 = imageVector1,
-                        firstBadgeCount = count,
+                        icon1 = ColumnIcon.VectorIcon(icon),
+                        badgeCount1 = count,
                     )
                 }
             }
@@ -148,21 +177,14 @@ fun BaseCard(
                     .weight(2f)
                     .padding(horizontal = 4.dp),
                 data = data,
-                onCheckedChange = {},
                 onUpdate = onUpdate,
-                editableFields = editableFields,
+                editFields = editFields,
                 editMode = editMode,
                 cardType = cardType,
             )
 
             ActionColumn(
                 onClick = {},
-                elementType = when (data) {
-                    is BaseCardData.ItemData -> ElementType.Item
-                    is BaseCardData.BoxData -> ElementType.Box
-                    is BaseCardData.CollectionData -> ElementType.Collection
-                    else -> ElementType.Summary
-                },
                 editMode = editMode,
                 cardType = cardType,
             )
@@ -185,22 +207,20 @@ fun PreviewItemBaseCardWithImage() {
         imageUri = R.drawable.pug,
     )
 
-    val editableFields = setOf(
-        EditableFields.Name,
-        EditableFields.Description,
-        EditableFields.IsFragile,
-        EditableFields.Value,
+    val editFields = setOf(
+        EditFields.Name,
+        EditFields.Description,
+        EditFields.IsFragile,
+        EditFields.Value,
     )
 
     BaseCard(
         data = BaseCardData.ItemData(
             item = item,
         ),
-        actionIcon = ImageVector.vectorResource(R.drawable.baseline_more_vert_24),
-        editableFields = editableFields,
-        onCardClick = {},
         onUpdate = {},
-        onDelete = {}
+        onDelete = {},
+        editFields = editFields,
     )
 }
 
@@ -213,22 +233,20 @@ fun PreviewItemBaseCardWithoutImage(
     localDataSource: LocalDataSource = LocalDataSource(),
 ) {
     val item = localDataSource.loadItems().first()
-    val editableFields = setOf(
-        EditableFields.Name,
-        EditableFields.Description,
-        EditableFields.IsFragile,
-        EditableFields.Value,
+    val editFields = setOf(
+        EditFields.Name,
+        EditFields.Description,
+        EditFields.IsFragile,
+        EditFields.Value,
     )
 
     BaseCard(
         data = BaseCardData.ItemData(
             item = item,
         ),
-        actionIcon = ImageVector.vectorResource(R.drawable.baseline_more_vert_24),
-        editableFields = editableFields,
-        onCardClick = {},
         onUpdate = {},
-        onDelete = {}
+        onDelete = {},
+        editFields = editFields,
     )
 }
 
@@ -241,21 +259,18 @@ fun PreviewBoxBaseCard(
     localDataSource: LocalDataSource = LocalDataSource(),
 ) {
     val box = localDataSource.loadBoxes().first()
-    val editableFields = setOf(
-        EditableFields.Name,
-        EditableFields.Description,
+    val editFields = setOf(
+        EditFields.Name,
+        EditFields.Description,
     )
 
     BaseCard(
         data = BaseCardData.BoxData(
             box = box,
         ),
-        editableFields = editableFields,
-        onCardClick = {},
         onUpdate = {},
         onDelete = {},
-        actionIcon = ImageVector.vectorResource(R.drawable.baseline_more_vert_24),
-        imageVector1 = ImageVector.vectorResource(R.drawable.baseline_label_24),
+        editFields = editFields,
     )
 }
 @Preview(
@@ -271,20 +286,29 @@ fun PreviewCollectionBaseCard(
         data = BaseCardData.CollectionData(
                 collection = collection,
         ),
-        editableFields = setOf(
-            EditableFields.Name,
-            EditableFields.Description,
-            EditableFields.IsFragile,
-            EditableFields.Value,
-        ),
-        onCardClick = { },
         onUpdate = {},
         onDelete = {},
-        imageVector1 = ImageVector.vectorResource(R.drawable.ic_launcher_foreground),
-        imageVector2 = ImageVector.vectorResource(R.drawable.baseline_label_24),
-        actionIcon = ImageVector.vectorResource(R.drawable.baseline_more_vert_24)
+        editFields = setOf(
+            EditFields.Name,
+            EditFields.Description,
+            EditFields.IsFragile,
+            EditFields.Value,
+        ),
     )
 }
+
+// for preveiws
+val itemEditFields = setOf(
+    EditFields.Name,
+    EditFields.Description,
+    EditFields.IsFragile,
+    EditFields.Value,
+)
+
+val boxOrCollectionEditFields = setOf(
+    EditFields.Name,
+    EditFields.Description,
+)
 
 // Summary
 @Preview(
@@ -292,33 +316,19 @@ fun PreviewCollectionBaseCard(
     group = "Summary",
 )
 @Composable
-fun PreviewSummaryItemBaseCardWithImage() {
-    val item = Item(
-        id = "075b4463-c4cd-478a-8370-396712ad1ae7",
-        name = "oin oink ",
-        description = "hola cola",
-        value = 123.45,
-        isFragile = true,
-        imageUri = R.drawable.pug,
-    )
-
-    val editableFields = setOf(
-        EditableFields.Name,
-        EditableFields.Description,
-        EditableFields.IsFragile,
-        EditableFields.Value,
-    )
+fun PreviewSummaryItemBaseCardWithImage(
+    localDataSource: LocalDataSource = LocalDataSource(),
+) {
+    val item = localDataSource.loadItems().first()
 
     BaseCard(
         data = BaseCardData.ItemData(
             item = item,
         ),
-        actionIcon = ImageVector.vectorResource(R.drawable.baseline_more_vert_24),
-        editableFields = editableFields,
-        onCardClick = {},
+        cardType = CardType.Summary,
         onUpdate = {},
         onDelete = {},
-        cardType = CardType.SummaryCard,
+        editFields = itemEditFields,
     )
 }
 
@@ -331,23 +341,15 @@ fun PreviewSummaryItemBaseCardWithoutImage(
     localDataSource: LocalDataSource = LocalDataSource(),
 ) {
     val item = localDataSource.loadItems().first()
-    val editableFields = setOf(
-        EditableFields.Name,
-        EditableFields.Description,
-        EditableFields.IsFragile,
-        EditableFields.Value,
-    )
 
     BaseCard(
         data = BaseCardData.ItemData(
             item = item,
         ),
-        actionIcon = ImageVector.vectorResource(R.drawable.baseline_more_vert_24),
-        editableFields = editableFields,
-        onCardClick = {},
+        cardType = CardType.Summary,
         onUpdate = {},
         onDelete = {},
-        cardType = CardType.SummaryCard,
+        editFields = itemEditFields,
     )
 }
 
@@ -360,22 +362,15 @@ fun PreviewSummaryBoxBaseCard(
     localDataSource: LocalDataSource = LocalDataSource(),
 ) {
     val box = localDataSource.loadBoxes().first()
-    val editableFields = setOf(
-        EditableFields.Name,
-        EditableFields.Description,
-    )
 
     BaseCard(
         data = BaseCardData.BoxData(
             box = box
         ),
-        editableFields = editableFields,
-        onCardClick = {},
+        cardType = CardType.Summary,
         onUpdate = {},
         onDelete = {},
-        actionIcon = ImageVector.vectorResource(R.drawable.baseline_more_vert_24),
-        imageVector1 = ImageVector.vectorResource(R.drawable.baseline_label_24),
-        cardType = CardType.SummaryCard,
+        editFields = boxOrCollectionEditFields,
     )
 }
 @Preview(
@@ -387,22 +382,15 @@ fun PreviewSummaryCollectionBaseCard(
     localDataSource: LocalDataSource = LocalDataSource(),
 ) {
     val collection = localDataSource.loadCollections().first()
-    val editableFields = setOf(
-        EditableFields.Name,
-        EditableFields.Description,
-    )
+
     BaseCard(
         data = BaseCardData.CollectionData(
             collection = collection,
         ),
-        editableFields = editableFields,
-        onCardClick = { },
+        cardType = CardType.Summary,
         onUpdate = {},
         onDelete = {},
-        imageVector1 = ImageVector.vectorResource(R.drawable.ic_launcher_foreground),
-        imageVector2 = ImageVector.vectorResource(R.drawable.baseline_label_24),
-        actionIcon = ImageVector.vectorResource(R.drawable.baseline_more_vert_24),
-        cardType = CardType.SummaryCard,
+        editFields = boxOrCollectionEditFields,
     )
 }
 
@@ -413,33 +401,19 @@ fun PreviewSummaryCollectionBaseCard(
     group = "Edit",
 )
 @Composable
-fun PreviewEditItemBaseCardWithImage() {
-    val item = Item(
-        id = "aaacb24d-8aae-4822-81bd-3600b2d127f1",
-        name = "oin oink ",
-        description = "hola cola",
-        value = 123.45,
-        isFragile = true,
-        imageUri = R.drawable.pug,
-    )
-
-    val editableFields = setOf(
-        EditableFields.Name,
-        EditableFields.Description,
-        EditableFields.IsFragile,
-        EditableFields.Value,
-    )
+fun PreviewEditItemBaseCardWithImage(
+    localDataSource: LocalDataSource = LocalDataSource(),
+) {
+    val item = localDataSource.loadItems().first()
 
     BaseCard(
         data = BaseCardData.ItemData(
             item = item,
         ),
-        actionIcon = ImageVector.vectorResource(R.drawable.baseline_more_vert_24),
-        editableFields = editableFields,
-        onCardClick = {},
+        editMode = EditMode.Edit,
         onUpdate = {},
         onDelete = {},
-        editMode = EditMode.Editable,
+        editFields = itemEditFields,
     )
 }
 
@@ -452,23 +426,15 @@ fun PreviewEditItemBaseCardWithoutImage(
     localDataSource: LocalDataSource = LocalDataSource(),
 ) {
     val item = localDataSource.loadItems().first()
-    val editableFields = setOf(
-        EditableFields.Name,
-        EditableFields.Description,
-        EditableFields.IsFragile,
-        EditableFields.Value,
-    )
 
     BaseCard(
         data = BaseCardData.ItemData(
             item = item,
         ),
-        actionIcon = ImageVector.vectorResource(R.drawable.baseline_more_vert_24),
-        editableFields = editableFields,
-        onCardClick = {},
+        editMode = EditMode.Edit,
         onUpdate = {},
         onDelete = {},
-        editMode = EditMode.Editable,
+        editFields = itemEditFields,
     )
 }
 
@@ -481,22 +447,15 @@ fun PreviewEditBoxBaseCard(
     localDataSource: LocalDataSource = LocalDataSource(),
 ) {
     val box = localDataSource.loadBoxes().first()
-    val editableFields = setOf(
-        EditableFields.Name,
-        EditableFields.Description,
-    )
 
     BaseCard(
         data = BaseCardData.BoxData(
             box = box,
         ),
-        editableFields = editableFields,
-        onCardClick = {},
+        editMode = EditMode.Edit,
         onUpdate = {},
         onDelete = {},
-        actionIcon = ImageVector.vectorResource(R.drawable.baseline_more_vert_24),
-        imageVector1 = ImageVector.vectorResource(R.drawable.baseline_label_24),
-        editMode = EditMode.Editable,
+        editFields = boxOrCollectionEditFields,
     )
 }
 @Preview(
@@ -512,18 +471,9 @@ fun PreviewEditCollectionBaseCard(
         data = BaseCardData.CollectionData(
             collection = collection,
         ),
-        editableFields = setOf(
-            EditableFields.Name,
-            EditableFields.Description,
-            EditableFields.IsFragile,
-            EditableFields.Value,
-        ),
-        onCardClick = { },
+        editMode = EditMode.Edit,
         onUpdate = {},
         onDelete = {},
-        imageVector1 = ImageVector.vectorResource(R.drawable.ic_launcher_foreground),
-        imageVector2 = ImageVector.vectorResource(R.drawable.baseline_label_24),
-        actionIcon = ImageVector.vectorResource(R.drawable.baseline_more_vert_24),
-        editMode = EditMode.Editable,
+        editFields = boxOrCollectionEditFields,
     )
 }
