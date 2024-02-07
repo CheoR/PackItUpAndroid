@@ -74,15 +74,14 @@ private fun extractData(data: BaseCardData): List<Any> {
 @Composable
 fun DataColumn(
     data: BaseCardData,
-    onCheckedChange: () -> Unit,
     onUpdate: (BaseCardData) -> Unit,
     modifier: Modifier = Modifier,
     dropdownOptions: List<String>? = listOf(""),
-    editableFields: Set<EditableFields> = emptySet(),
-    editMode: EditMode = EditMode.NonEditable,
-    cardType: CardType = CardType.NotSummaryCard,
+    editFields: Set<EditFields> = emptySet(),
+    editMode: EditMode = EditMode.NoEdit,
+    cardType: CardType = CardType.Default,
 ) {
-    fun isEditable(field: EditableFields) = editMode == EditMode.Editable && editableFields.contains(field)
+    fun isEditable(field: EditFields) = editMode == EditMode.Edit && editFields.contains(field)
 
     val (_id, _name, _description, _isFragile, _value) = extractData(data)
 
@@ -111,7 +110,7 @@ fun DataColumn(
             value = name,
             onValueChange = { name = it },
             textStyle = MaterialTheme.typography.titleSmall,
-            enabled = isEditable(EditableFields.Name),
+            enabled = isEditable(EditFields.Name),
             modifier = Modifier
                 .fillMaxWidth(),
         )
@@ -120,7 +119,7 @@ fun DataColumn(
                 value = dropdownOptions.first(), // Todo: display selected value if available else first
                 onValueChange = { description = it },
                 textStyle = MaterialTheme.typography.bodySmall,
-                enabled = isEditable(EditableFields.Dropdown),
+                enabled = isEditable(EditFields.Dropdown),
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(4.dp)
@@ -130,14 +129,14 @@ fun DataColumn(
             value = description,
             onValueChange = { description = it },
             textStyle = MaterialTheme.typography.bodySmall,
-            enabled = isEditable(EditableFields.Description),
+            enabled = isEditable(EditFields.Description),
             maxLines = 3,
             modifier = Modifier
                 .weight(1f)
                 .fillMaxWidth(),
         )
 
-        if(cardType == CardType.NotSummaryCard) {
+        if(cardType != CardType.Summary) {
             Row(
                 verticalAlignment = Alignment.CenterVertically,
                 modifier = Modifier
@@ -146,7 +145,7 @@ fun DataColumn(
                 Checkbox(
                     checked = isFragile,
                     onCheckedChange = { isFragile = it },
-                    enabled = isEditable(EditableFields.IsFragile),
+                    enabled = isEditable(EditFields.IsFragile),
                 )
                 Spacer(modifier = Modifier.width(4.dp))
                 Text("Fragile")
@@ -158,7 +157,7 @@ fun DataColumn(
                         value = if (it.isEmpty()) 0.0 else it.parseCurrencyToDouble()
                     },
                     textStyle = MaterialTheme.typography.bodySmall,
-                    enabled = isEditable(EditableFields.Value),
+                    enabled = isEditable(EditFields.Value),
                     keyboardOptions = KeyboardOptions.Default.copy(
                         keyboardType = KeyboardType.Number,
                         imeAction = ImeAction.Done
@@ -183,7 +182,6 @@ fun PreviewItemViewCardDataColumn(
         data = BaseCardData.ItemData(
             item = item,
         ),
-        onCheckedChange = {},
         onUpdate = {},
     )
 }
@@ -201,7 +199,6 @@ fun PreviewBoxViewCardDataColumn(
         data = BaseCardData.BoxData(
             box = box,
         ),
-        onCheckedChange = {},
         onUpdate = {},
     )
 }
@@ -218,7 +215,6 @@ fun PreviewCollectionViewCardDataColumn(
         data = BaseCardData.CollectionData(
             collection = collection,
         ),
-        onCheckedChange = {},
         onUpdate = {},
     )
 }
@@ -236,9 +232,8 @@ fun PreviewItemSummaryCardDataColumn(
         data = BaseCardData.ItemData(
             item = item,
         ),
-        onCheckedChange = {},
         onUpdate = {},
-        cardType = CardType.SummaryCard,
+        cardType = CardType.Summary,
     )
 }
 
@@ -255,9 +250,8 @@ fun PreviewBoxSummaryCardDataColumn(
         data = BaseCardData.BoxData(
             box = box,
         ),
-        onCheckedChange = {},
         onUpdate = {},
-        cardType = CardType.SummaryCard,
+        cardType = CardType.Summary,
     )
 }
 @Preview(
@@ -273,15 +267,14 @@ fun PreviewCollectionSummaryCardDataColumn(
         data = BaseCardData.CollectionData(
             collection = collection,
         ),
-        onCheckedChange = {},
         onUpdate = {},
-        cardType = CardType.SummaryCard,
+        cardType = CardType.Summary,
     )
 }
 
 @Preview(
     showBackground = true,
-    group = "Editable",
+    group = "Edit",
 )
 @Composable
 fun PreviewEditableItemViewCardDataColumn(
@@ -292,22 +285,21 @@ fun PreviewEditableItemViewCardDataColumn(
         data = BaseCardData.ItemData(
             item = item,
         ),
-        onCheckedChange = {},
         onUpdate = {},
-        editMode = EditMode.Editable,
-        editableFields = setOf(
-            EditableFields.Name,
-            EditableFields.Description,
-            EditableFields.Dropdown,
-            EditableFields.IsFragile,
-            EditableFields.Value,
+        editMode = EditMode.Edit,
+        editFields = setOf(
+            EditFields.Name,
+            EditFields.Description,
+            EditFields.Dropdown,
+            EditFields.IsFragile,
+            EditFields.Value,
         ),
     )
 }
 
 @Preview(
     showBackground = true,
-    group = "Editable",
+    group = "Edit",
 )
 @Composable
 fun PreviewEditableBoxViewCardDataColumn(
@@ -318,19 +310,18 @@ fun PreviewEditableBoxViewCardDataColumn(
         data = BaseCardData.BoxData(
             box = box,
         ),
-        onCheckedChange = {},
         onUpdate = {},
-        editMode = EditMode.Editable,
-        editableFields = setOf(
-            EditableFields.Name,
-            EditableFields.Description,
-            EditableFields.Dropdown,
+        editMode = EditMode.Edit,
+        editFields = setOf(
+            EditFields.Name,
+            EditFields.Description,
+            EditFields.Dropdown,
         ),
     )
 }
 @Preview(
     showBackground = true,
-    group = "Editable",
+    group = "Edit",
 )
 @Composable
 fun PreviewEditableCollectionViewCardDataColumn(
@@ -341,12 +332,11 @@ fun PreviewEditableCollectionViewCardDataColumn(
         data = BaseCardData.CollectionData(
             collection = collection,
         ),
-        onCheckedChange = {},
         onUpdate = {},
-        editMode = EditMode.Editable,
-        editableFields = setOf(
-            EditableFields.Name,
-            EditableFields.Description,
+        editMode = EditMode.Edit,
+        editFields = setOf(
+            EditFields.Name,
+            EditFields.Description,
         ),
     )
 }
