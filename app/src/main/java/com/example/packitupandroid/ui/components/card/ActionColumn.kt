@@ -6,7 +6,6 @@ import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
-import androidx.compose.material.icons.filled.ArrowForward
 import androidx.compose.material.icons.filled.CameraAlt
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Edit
@@ -22,24 +21,21 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.DpOffset
 import androidx.compose.ui.unit.dp
-import com.example.packitupandroid.R
 
 @Composable
 fun ActionColumn(
     onClick: () -> Unit,
-    editMode: EditMode = EditMode.NonEditable,
-    cardType: CardType = CardType.NotSummaryCard,
-    elementType: ElementType = ElementType.Summary,
+    editMode: EditMode = EditMode.NoEdit,
+    cardType: CardType = CardType.Default,
 ) {
-    val actionIcon = when(cardType) {
-        is CardType.NotSummaryCard -> ImageVector.vectorResource(R.drawable.baseline_more_vert_24)
-        else -> Icons.Default.ArrowForward
+    val actionIcon: ActionColumnState = when(cardType) {
+        is CardType.Summary -> ActionColumnState.RightArrow
+        else -> ActionColumnState.ThreeDots
     }
+
     var expanded by remember {
         mutableStateOf(false)
     }
@@ -50,18 +46,18 @@ fun ActionColumn(
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
         when (editMode) {
-            is EditMode.Editable -> Box(modifier = Modifier
+            is EditMode.Edit -> Box(modifier = Modifier
                 .fillMaxHeight()
                 .size(24.dp))
             else -> {
-                if (elementType == ElementType.Summary) {
+                if (cardType == CardType.Summary) {
                     IconButton(
-                        onClick = {  },
+                        onClick = { onClick() }, // for navigation
                         modifier = Modifier
                             .fillMaxHeight(),
                         content = {
                             Icon(
-                                imageVector = actionIcon,
+                                imageVector = actionIcon.icon, // to avoid mismatch error
                                 contentDescription = "Icon Button",
                                 modifier = Modifier
                                     .size(24.dp)
@@ -76,7 +72,7 @@ fun ActionColumn(
                             .fillMaxHeight(),
                         content = {
                             Icon(
-                                imageVector = actionIcon,
+                                imageVector = actionIcon.icon,
                                 contentDescription = "Icon Button",
                                 modifier = Modifier
                                     .size(24.dp)
@@ -88,7 +84,7 @@ fun ActionColumn(
                         onDismissRequest = {  expanded = false },
                         offset = DpOffset(0.dp, (-180).dp),
                     ) {
-                        if(elementType is ElementType.Item) {
+                        if(cardType !is CardType.Item) {
                             DropdownMenuItem(
                                 text = { Text("add") },
                                 onClick = { /*TODO*/ },
@@ -110,7 +106,7 @@ fun ActionColumn(
                                 )
                             }
                         )
-                        if(elementType == ElementType.Item) {
+                        if(cardType == CardType.Item) {
                             DropdownMenuItem(
                                 text = { Text("camera") },
                                 onClick = { /*TODO*/ },
@@ -139,34 +135,41 @@ fun ActionColumn(
     }
 }
 
-
-@Preview(showBackground = true)
+@Preview(
+    showBackground = true,
+    group="Summary",
+)
 @Composable
-fun PreviewActionColumnSummaryCard() {
+fun PreviewActionColumnSummaryCardNoEdit() {
     ActionColumn(
         onClick = { },
-        editMode = EditMode.NonEditable,
-        cardType = CardType.SummaryCard,
-        elementType = ElementType.Summary,
+        editMode = EditMode.NoEdit,
+        cardType = CardType.Summary,
     )
 }
 
-@Preview(showBackground = true)
+@Preview(
+    showBackground = true,
+    group="Default",
+)
 @Composable
-fun PreviewActionColumnViewCardIsNotEditable() {
+fun PreviewActionColumnDefaultCardNoEdit() {
     ActionColumn(
         onClick = { },
-        editMode = EditMode.NonEditable,
-        cardType = CardType.NotSummaryCard,
+        editMode = EditMode.NoEdit,
+        cardType = CardType.Collection, // Box, Item
     )
 }
 
-@Preview(showBackground = true)
+@Preview(
+    showBackground = true,
+    group="Edit",
+)
 @Composable
-fun PreviewActionColumnEditCardIsEditable() {
+fun PreviewActionColumnEditCardEdit() {
     ActionColumn(
         onClick = { },
-        editMode = EditMode.Editable,
-        cardType = CardType.NotSummaryCard,
+        editMode = EditMode.Edit,
+        cardType = CardType.Collection, // Box, Item
     )
 }
