@@ -7,6 +7,8 @@ import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Label
 import androidx.compose.material3.Badge
 import androidx.compose.material3.BadgedBox
 import androidx.compose.material3.Icon
@@ -25,11 +27,10 @@ import com.example.packitupandroid.R
 @Composable
 fun IconsColumn(
     modifier: Modifier = Modifier,
-    imageUri: Int? = null,
-    imageVector1: ImageVector? = null,
-    imageVector2: ImageVector? = null,
-    firstBadgeCount: Int? = 0,
-    secondBadgeCount: Int? = 0,
+    icon1: ColumnIcon = ColumnIcon.VectorIcon(Icons.Default.Label),
+    icon2: ColumnIcon? = null,
+    badgeCount1: Int? = 0,
+    badgeCount2: Int? = 0,
     isShowBadgeCount: Boolean = true,
 ) {
     val imageDimens: Modifier = Modifier
@@ -47,60 +48,54 @@ fun IconsColumn(
             .width(dimensionResource(R.dimen.image_size_medium)),
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
-
-        when {
-            imageUri != null -> {
+        when(icon1) {
+            is ColumnIcon.UriIcon -> {
                 Image(
                     modifier = imageDimens,
-                    painter = painterResource(imageUri ?: R.drawable.ic_broken_image),
+                    painter = painterResource(icon1.uri as Int),
                     contentDescription = null,
                 )
             }
-
-            imageVector1 != null -> {
-                // Condition 'imageVector1 != null' is always 'true'
-                // but can't just do imageVector1
+            is ColumnIcon.VectorIcon -> {
                 BadgedBox(
                     modifier = Modifier,
                     badge = {
                         if (isShowBadgeCount) Badge(
                             modifier = badgeOffsets,
                         ) {
-                            Text(firstBadgeCount.toString())
+                            Text(badgeCount1.toString())
                         }
                     },
                 ) {
                     Icon(
                         modifier = imageDimens,
-                        imageVector = imageVector1,
+                        imageVector = icon1.imageVector,
                         contentDescription = null,
                     )
                 }
-                imageVector2?.let {
-                    BadgedBox(
-                        modifier = Modifier,
-                        badge = {
-                            if (isShowBadgeCount) Badge(
-                                modifier = badgeOffsets,
-                            ) {
-                                if (isShowBadgeCount) Text(secondBadgeCount.toString())
-                            }
-                        },
-                    ) {
-                        Icon(
-                            modifier = imageDimens,
-                            imageVector = it,
-                            contentDescription = null,
-                        )
-                    }
+            }
+        }
+
+        when(icon2) {
+            is ColumnIcon.VectorIcon -> {
+                BadgedBox(
+                    modifier = Modifier,
+                    badge = {
+                        if (isShowBadgeCount) Badge(
+                            modifier = badgeOffsets,
+                        ) {
+                            Text(badgeCount2.toString())
+                        }
+                    },
+                ) {
+                    Icon(
+                        modifier = imageDimens,
+                        imageVector = icon2.imageVector,
+                        contentDescription = null,
+                    )
                 }
             }
-            else -> {
-                Icon(
-                    imageVector = ImageVector.vectorResource(R.drawable.baseline_label_24),
-                    contentDescription = "",
-                )
-            }
+            else -> {}
         }
     }
 }
@@ -113,7 +108,7 @@ fun IconsColumn(
 @Composable
 fun PreviewBaseCardItemWithImageUriIconColumn() {
     IconsColumn(
-        imageUri = R.drawable.pug,
+        icon1 = ColumnIcon.UriIcon(R.drawable.pug)
     )
 }
 
@@ -133,8 +128,8 @@ fun PreviewBaseCardItemWithOutImageUriIconColumn() {
 @Composable
 fun PreviewBaseCardBoxIconColumn() {
     IconsColumn(
-        imageVector1 = ImageVector.vectorResource(R.drawable.baseline_label_24),
-        firstBadgeCount = 5,
+        icon1 = ColumnIcon.VectorIcon(ImageVector.vectorResource(R.drawable.ic_launcher_foreground)),
+        badgeCount1 = 5,
     )
 }
 
@@ -146,10 +141,10 @@ fun PreviewBaseCardBoxIconColumn() {
 @Composable
 fun PreviewBaseCardCollectionIconColumn() {
     IconsColumn(
-        imageVector1 = ImageVector.vectorResource(R.drawable.ic_launcher_foreground),
-        imageVector2 = ImageVector.vectorResource(R.drawable.baseline_label_24),
-        firstBadgeCount = 5,
-        secondBadgeCount = 2,
+        icon1 = ColumnIcon.VectorIcon(ImageVector.vectorResource(R.drawable.ic_launcher_foreground)),
+        icon2 = ColumnIcon.VectorIcon(Icons.Default.Label),
+        badgeCount1 = 5,
+        badgeCount2 = 2,
     )
 }
 
@@ -161,8 +156,8 @@ fun PreviewBaseCardCollectionIconColumn() {
 @Composable
 fun PreviewBaseCardItemSummaryIconColumn() {
     IconsColumn(
-        imageVector2 = ImageVector.vectorResource(R.drawable.baseline_label_24),
-        firstBadgeCount = 5,
+        icon1 = ColumnIcon.VectorIcon(Icons.Default.Label),
+        badgeCount1 = 5,
     )
 }
 
@@ -173,9 +168,8 @@ fun PreviewBaseCardItemSummaryIconColumn() {
 @Composable
 fun PreviewBaseCardBoxSummaryIconColumn() {
     IconsColumn(
-        imageVector1 = ImageVector.vectorResource(R.drawable.ic_launcher_foreground),
-        firstBadgeCount = 5,
-        isShowBadgeCount = false,
+        icon1 = ColumnIcon.VectorIcon(ImageVector.vectorResource(R.drawable.ic_launcher_foreground)),
+        badgeCount1 = 5,
     )
 }
 
@@ -186,11 +180,9 @@ fun PreviewBaseCardBoxSummaryIconColumn() {
 @Composable
 fun PreviewBaseCardCollectionSummaryIconColumn() {
     IconsColumn(
-        imageVector1 = ImageVector.vectorResource(R.drawable.ic_launcher_foreground),
-        imageVector2 = ImageVector.vectorResource(R.drawable.baseline_label_24),
-        firstBadgeCount = 5,
-        secondBadgeCount = 2,
-        isShowBadgeCount = false,
+        icon1 = ColumnIcon.VectorIcon(ImageVector.vectorResource(R.drawable.ic_launcher_foreground)),
+        icon2 = ColumnIcon.VectorIcon(Icons.Default.Label),
+        badgeCount1 = 5,
+        badgeCount2 = 2,
     )
 }
-
