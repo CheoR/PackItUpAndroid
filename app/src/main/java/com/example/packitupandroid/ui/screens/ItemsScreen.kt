@@ -17,7 +17,6 @@ import com.example.packitupandroid.ui.components.ItemCard
 import com.example.packitupandroid.ui.components.card.BaseCardData
 import com.example.packitupandroid.ui.components.counter.Counter
 
-
 @Composable
 fun ItemsScreen(
     uiState: PackItUpUiState,
@@ -43,8 +42,7 @@ fun ItemsScreen(
                 ItemCard(
                     item = item,
                     onUpdate = onUpdate,
-                    onDelete = {},
-                    onCardClick = {},
+                    onDelete = onDelete,
                 )
             }
         }

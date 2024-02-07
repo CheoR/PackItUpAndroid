@@ -42,8 +42,7 @@ fun BoxesScreen(
                 BoxCard(
                     box = it,
                     onUpdate = onUpdate,
-                    onDelete = {},
-                    onCardClick = {},
+                    onDelete = onDelete,
                 )
             }
         }

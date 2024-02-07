@@ -62,7 +62,6 @@ fun SummaryScreen(
             ),
             onUpdate = onUpdate,
             onDelete = { onDelete("collections") },
-            onCardClick = {}
         )
 
         SummaryCard(
@@ -74,7 +73,6 @@ fun SummaryScreen(
             ),
             onUpdate = onUpdate,
             onDelete = { onDelete("boxes") },
-            onCardClick = {}
         )
 
         SummaryCard(
@@ -86,7 +84,6 @@ fun SummaryScreen(
             ),
             onUpdate = onUpdate,
             onDelete = { onDelete("items") },
-            onCardClick = {},
         )
 
         Spacer(modifier = Modifier.weight(1f))
@@ -111,6 +108,7 @@ fun SummaryScreen(
         }
     }
 }
+
 @Preview(showBackground = true)
 @Composable
 fun PreviewSummaryScreen(

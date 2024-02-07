@@ -42,8 +42,7 @@ fun CollectionsScreen(
                 CollectionCard(
                     collection = it,
                     onUpdate = onUpdate,
-                    onDelete = {},
-                    onCardClick = {},
+                    onDelete = onDelete,
                 )
             }
         }
