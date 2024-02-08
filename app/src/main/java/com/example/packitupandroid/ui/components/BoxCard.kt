@@ -5,7 +5,6 @@ import com.example.packitupandroid.model.Box
 import com.example.packitupandroid.ui.components.card.BaseCard
 import com.example.packitupandroid.ui.components.card.BaseCardData
 import com.example.packitupandroid.ui.components.card.CardType
-import com.example.packitupandroid.ui.components.card.EditFields
 import com.example.packitupandroid.ui.components.card.EditMode
 
 @Composable
@@ -22,10 +21,6 @@ fun BoxCard(
         onDelete = { onDelete(box.id) },
         editMode = editMode,
         cardType = CardType.Box,
-        editFields = setOf(
-            EditFields.Name,
-            EditFields.Description,
-            EditFields.Dropdown,
-        ),
+        editFields = Box.editFields,
     )
 }

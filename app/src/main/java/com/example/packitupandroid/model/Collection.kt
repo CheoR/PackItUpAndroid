@@ -1,5 +1,6 @@
 package com.example.packitupandroid.model
 
+import com.example.packitupandroid.ui.components.card.EditFields
 import java.util.UUID
 
 data class Collection(
@@ -13,4 +14,10 @@ data class Collection(
         get() = boxes.any { it.isFragile }
     val value: Double
         get() = boxes.sumOf { it.value }
+    companion object {
+        val editFields = setOf(
+            EditFields.Name,
+            EditFields.Description,
+        )
+    }
 }

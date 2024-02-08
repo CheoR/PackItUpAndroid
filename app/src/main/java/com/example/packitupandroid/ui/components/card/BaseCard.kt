@@ -297,19 +297,6 @@ fun PreviewCollectionBaseCard(
     )
 }
 
-// for preveiws
-val itemEditFields = setOf(
-    EditFields.Name,
-    EditFields.Description,
-    EditFields.IsFragile,
-    EditFields.Value,
-)
-
-val boxOrCollectionEditFields = setOf(
-    EditFields.Name,
-    EditFields.Description,
-)
-
 // Summary
 @Preview(
     showBackground = true,
@@ -328,7 +315,7 @@ fun PreviewSummaryItemBaseCardWithImage(
         cardType = CardType.Summary,
         onUpdate = {},
         onDelete = {},
-        editFields = itemEditFields,
+        editFields = Item.editFields,
     )
 }
 
@@ -349,7 +336,7 @@ fun PreviewSummaryItemBaseCardWithoutImage(
         cardType = CardType.Summary,
         onUpdate = {},
         onDelete = {},
-        editFields = itemEditFields,
+        editFields = Item.editFields,
     )
 }
 
@@ -370,7 +357,7 @@ fun PreviewSummaryBoxBaseCard(
         cardType = CardType.Summary,
         onUpdate = {},
         onDelete = {},
-        editFields = boxOrCollectionEditFields,
+        editFields = Box.editFields,
     )
 }
 @Preview(
@@ -390,7 +377,7 @@ fun PreviewSummaryCollectionBaseCard(
         cardType = CardType.Summary,
         onUpdate = {},
         onDelete = {},
-        editFields = boxOrCollectionEditFields,
+        editFields = Collection.editFields,
     )
 }
 
@@ -413,7 +400,7 @@ fun PreviewEditItemBaseCardWithImage(
         editMode = EditMode.Edit,
         onUpdate = {},
         onDelete = {},
-        editFields = itemEditFields,
+        editFields = Item.editFields,
     )
 }
 
@@ -434,7 +421,7 @@ fun PreviewEditItemBaseCardWithoutImage(
         editMode = EditMode.Edit,
         onUpdate = {},
         onDelete = {},
-        editFields = itemEditFields,
+        editFields = Item.editFields,
     )
 }
 
@@ -455,7 +442,7 @@ fun PreviewEditBoxBaseCard(
         editMode = EditMode.Edit,
         onUpdate = {},
         onDelete = {},
-        editFields = boxOrCollectionEditFields,
+        editFields = Box.editFields,
     )
 }
 @Preview(
@@ -474,6 +461,6 @@ fun PreviewEditCollectionBaseCard(
         editMode = EditMode.Edit,
         onUpdate = {},
         onDelete = {},
-        editFields = boxOrCollectionEditFields,
+        editFields = Collection.editFields,
     )
 }
