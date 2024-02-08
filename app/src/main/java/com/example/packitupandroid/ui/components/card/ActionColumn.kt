@@ -28,6 +28,8 @@ import androidx.compose.ui.unit.dp
 @Composable
 fun ActionColumn(
     onClick: () -> Unit,
+    onUpdate: (BaseCardData) -> Unit,
+    onDelete: () -> Unit? = {},
     editMode: EditMode = EditMode.NoEdit,
     cardType: CardType = CardType.Default,
 ) {
@@ -120,7 +122,10 @@ fun ActionColumn(
                         }
                         DropdownMenuItem(
                             text = { Text("delete") },
-                            onClick = { /*TODO*/ },
+                            onClick = {
+                                onDelete()
+                                expanded = false
+                            },
                             leadingIcon = {
                                 Icon(
                                     imageVector = Icons.Default.Delete,

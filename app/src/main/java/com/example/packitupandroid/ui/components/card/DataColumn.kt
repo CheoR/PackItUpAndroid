@@ -52,17 +52,6 @@ fun DataColumn(
         modifier = modifier,
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
-//        Button(onClick = {
-//            onUpdate(BaseCardData.CollectionData(
-//                Collection(
-//                    id = id,
-//                    name = name,
-//                    description = description,
-//                )
-//            ))
-//        }) {
-//            Text(text="Update")
-//        }
         BasicTextField(
             value = name,
             onValueChange = { name = it },

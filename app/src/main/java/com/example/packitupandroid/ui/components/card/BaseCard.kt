@@ -116,8 +116,8 @@ sealed class ActionColumnState(val icon: ImageVector) {
 fun BaseCard(
     data: BaseCardData,
     onUpdate: (BaseCardData) -> Unit,
-    onDelete: () -> Unit,
     modifier: Modifier = Modifier,
+    onDelete: () -> Unit? = {},
     editMode: EditMode = EditMode.NoEdit,
     cardType: CardType = CardType.Default,
     editFields: Set<EditFields> = emptySet(),
@@ -126,8 +126,7 @@ fun BaseCard(
         modifier = modifier
             .height(dimensionResource(R.dimen.card_height))
             .fillMaxWidth()
-            .clip(RoundedCornerShape(dimensionResource(R.dimen.roundness_small)))
-            .clickable { onDelete() },
+            .clip(RoundedCornerShape(dimensionResource(R.dimen.roundness_small))),
         elevation = CardDefaults.cardElevation(defaultElevation = dimensionResource(R.dimen.image_size_medium)),
     ) {
         Row(
@@ -187,6 +186,8 @@ fun BaseCard(
                 onClick = {},
                 editMode = editMode,
                 cardType = cardType,
+                onUpdate = onUpdate,
+                onDelete = onDelete,
             )
         }
     }
