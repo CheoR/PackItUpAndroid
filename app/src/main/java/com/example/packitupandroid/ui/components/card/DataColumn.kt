@@ -26,50 +26,7 @@ import androidx.compose.ui.unit.dp
 import com.example.packitupandroid.data.local.LocalDataSource
 import com.example.packitupandroid.ui.components.asCurrencyString
 import com.example.packitupandroid.ui.components.parseCurrencyToDouble
-
-private fun extractData(data: BaseCardData): List<Any> {
-    var id: String
-    var name: String
-    var description: String
-    var isFragile: Boolean
-    var value: Double
-
-    when (data) {
-        is BaseCardData.ItemData -> {
-            id = data.item.id
-            name = data.item.name
-            description = data.item.description
-            isFragile = data.item.isFragile
-            value = data.item.value
-        }
-
-        is BaseCardData.BoxData -> {
-            id = data.box.id
-            name = data.box.name
-            description = data.box.description
-            isFragile = data.box.isFragile
-            value = data.box.value
-        }
-
-        is BaseCardData.CollectionData -> {
-            id = data.collection.id
-            name = data.collection.name
-            description = data.collection.description
-            isFragile = data.collection.isFragile
-            value = data.collection.value
-        }
-
-        is BaseCardData.SummaryData -> {
-            id = data.summary.id
-            name = data.summary.name
-            description = data.summary.description
-            isFragile = data.summary.isFragile
-            value = data.summary.value
-        }
-    }
-
-    return listOf(id, name, description, isFragile, value)
-}
+import com.example.packitupandroid.ui.utils.extractBaseCardData
 
 @Composable
 fun DataColumn(
@@ -83,7 +40,7 @@ fun DataColumn(
 ) {
     fun isEditable(field: EditFields) = editMode == EditMode.Edit && editFields.contains(field)
 
-    val (_id, _name, _description, _isFragile, _value) = extractData(data)
+    val (_id, _name, _description, _isFragile, _value) = extractBaseCardData(data)
 
     val id by remember { mutableStateOf(_id as String) }
     var name by remember { mutableStateOf(_name as String) }
