@@ -32,10 +32,6 @@ fun PackItUpNavHost(
 ) {
     Scaffold(
         modifier = modifier,
-//            .padding(
-//                start = dimensionResource(R.dimen.padding_small),
-//                end = dimensionResource(R.dimen.padding_small),
-//            ),
         topBar = {
             PackItUpAppBar(
                 title = when (navController.currentBackStackEntry?.destination?.route) {

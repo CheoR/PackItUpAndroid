@@ -86,13 +86,8 @@ class PackItUpViewModel(
         val newItems: MutableList<Item> = mutableListOf()
         if(count != null) {
             for (i in 1 .. count) {
-                val id = UUID.randomUUID().toString()
                 val name = "New Item ${i}"
-                val newItem = Item(
-                    id = id,
-                    name = name,
-                    value = 0.00,
-                )
+                val newItem = Item( name = name)
                 newItems.add(newItem)
             }
             _uiState.value = _uiState.value.copy(items = uiState.value.items + newItems)
@@ -104,9 +99,7 @@ class PackItUpViewModel(
         if(count != null) {
             for (i in 1 .. count) {
                 val name = "New Box ${i}"
-                val newBox = Box(
-                    name = name,
-                )
+                val newBox = Box(name = name)
                 newBoxes.add(newBox)
             }
             _uiState.value = _uiState.value.copy(boxes = uiState.value.boxes + newBoxes)
@@ -118,9 +111,7 @@ class PackItUpViewModel(
         if (count != null) {
             for (i in 1..count) {
                 val name = "New Collection ${i}"
-                val newCollection = Collection(
-                    name = name,
-                )
+                val newCollection = Collection(name = name)
                 newCollections.add(newCollection)
             }
             _uiState.value =
