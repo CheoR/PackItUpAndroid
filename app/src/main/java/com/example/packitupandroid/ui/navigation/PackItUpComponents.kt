@@ -27,12 +27,6 @@ fun PackItUpBottomNavigationBar(
 ) {
     NavigationBar(
         modifier = modifier,
-//            .fillMaxWidth(),
-//            .height(80.dp)
-//            .padding(
-//                top = 12.dp,
-//                bottom = 16.dp,
-//            ),
         contentColor = MaterialTheme.colorScheme.onPrimaryContainer,
     ) {
         TOP_LEVEL_DESTINATIONS.forEach { packItUpDestination ->
