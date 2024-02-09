@@ -1,5 +1,6 @@
 package com.example.packitupandroid.ui.components.card
 
+import android.util.Log
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxHeight
@@ -21,25 +22,53 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.DpOffset
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.window.Dialog
+import com.example.packitupandroid.ui.components.EditCard
 
 @Composable
 fun ActionColumn(
+    data: BaseCardData,
     onClick: () -> Unit,
     onUpdate: (BaseCardData) -> Unit,
     onDelete: () -> Unit? = {},
     editMode: EditMode = EditMode.NoEdit,
     cardType: CardType = CardType.Default,
+    editFields: Set<EditFields> = emptySet(),
 ) {
     val actionIcon: ActionColumnState = when(cardType) {
         is CardType.Summary -> ActionColumnState.RightArrow
         else -> ActionColumnState.ThreeDots
     }
 
-    var expanded by remember {
-        mutableStateOf(false)
+    var expanded by remember { mutableStateOf(false) }
+    var showEditCard by remember { mutableStateOf(false) }
+    var elementToEdit by remember { mutableStateOf<BaseCardData?>(data) }
+
+    if(showEditCard && elementToEdit != null) {
+        expanded = false
+        Dialog(
+            onDismissRequest = { showEditCard = false },
+        ) {
+            when (data) {
+                is BaseCardData.ItemData -> {
+//                    val itemData = elementToEdit as BaseCardData.ItemData
+                    EditCard(
+                        data = data, // itemData.item,
+                        onUpdate = {
+                            val updatedItem = it as BaseCardData.ItemData
+                            Log.i("ACTION COLUMN", updatedItem.toString())
+                            onUpdate(it)
+                            showEditCard = false
+                        },
+                        editFields = editFields,
+                        onCancel = { showEditCard = false },
+                    )
+                }
+                else -> {}
+            }
+        }
     }
 
     Column(
@@ -100,7 +129,7 @@ fun ActionColumn(
                         }
                         DropdownMenuItem(
                             text = { Text("edit") },
-                            onClick = { /*TODO*/ },
+                            onClick = { showEditCard = true },
                             leadingIcon = {
                                 Icon(
                                     imageVector = Icons.Default.Edit,
@@ -140,41 +169,41 @@ fun ActionColumn(
     }
 }
 
-@Preview(
-    showBackground = true,
-    group="Summary",
-)
-@Composable
-fun PreviewActionColumnSummaryCardNoEdit() {
-    ActionColumn(
-        onClick = { },
-        editMode = EditMode.NoEdit,
-        cardType = CardType.Summary,
-    )
-}
-
-@Preview(
-    showBackground = true,
-    group="Default",
-)
-@Composable
-fun PreviewActionColumnDefaultCardNoEdit() {
-    ActionColumn(
-        onClick = { },
-        editMode = EditMode.NoEdit,
-        cardType = CardType.Collection, // Box, Item
-    )
-}
-
-@Preview(
-    showBackground = true,
-    group="Edit",
-)
-@Composable
-fun PreviewActionColumnEditCardEdit() {
-    ActionColumn(
-        onClick = { },
-        editMode = EditMode.Edit,
-        cardType = CardType.Collection, // Box, Item
-    )
-}
+//@Preview(
+//    showBackground = true,
+//    group="Summary",
+//)
+//@Composable
+//fun PreviewActionColumnSummaryCardNoEdit() {
+//    ActionColumn(
+//        onClick = { },
+//        editMode = EditMode.NoEdit,
+//        cardType = CardType.Summary,
+//    )
+//}
+//
+//@Preview(
+//    showBackground = true,
+//    group="Default",
+//)
+//@Composable
+//fun PreviewActionColumnDefaultCardNoEdit() {
+//    ActionColumn(
+//        onClick = { },
+//        editMode = EditMode.NoEdit,
+//        cardType = CardType.Collection, // Box, Item
+//    )
+//}
+//
+//@Preview(
+//    showBackground = true,
+//    group="Edit",
+//)
+//@Composable
+//fun PreviewActionColumnEditCardEdit() {
+//    ActionColumn(
+//        onClick = { },
+//        editMode = EditMode.Edit,
+//        cardType = CardType.Collection, // Box, Item
+//    )
+//}

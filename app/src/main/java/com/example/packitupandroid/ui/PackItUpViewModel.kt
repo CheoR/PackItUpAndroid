@@ -81,6 +81,8 @@ class PackItUpViewModel(
     }
 
     fun createItem(count: Int? = 0) {
+        Log.i("CREATE", "${uiState.value.items.size} items")
+        Log.i("CREATE", "creating ${count} items")
         val newItems: MutableList<Item> = mutableListOf()
         if(count != null) {
             for (i in 1 .. count) {
@@ -89,6 +91,7 @@ class PackItUpViewModel(
                 newItems.add(newItem)
             }
             _uiState.value = _uiState.value.copy(items = uiState.value.items + newItems)
+            Log.i("CREATE", "${uiState.value.items.size} items")
         }
     }
 
@@ -155,8 +158,10 @@ class PackItUpViewModel(
 
     private fun updateItem(item: Item) {
         val itemToUpdate = getItem(item.id)
+        Log.i("UPDATE ITEM BEFORE", itemToUpdate.toString())
         if(itemToUpdate != null) {
             val updatedItem = itemToUpdate.copy(
+                id = item.id,
                 name = item.name,
                 description = item.description,
                 value = item.value,
@@ -166,6 +171,8 @@ class PackItUpViewModel(
             _uiState.value = _uiState.value.copy(items = uiState.value.items.map {
                 if (it.id == item.id) updatedItem else it
             })
+            val itemToUpdate2 = getItem(item.id)
+            Log.i("UPDATE ITEM AFTER", itemToUpdate2.toString())
         }
     }
 

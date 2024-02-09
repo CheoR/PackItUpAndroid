@@ -183,10 +183,12 @@ fun BaseCard(
             )
 
             ActionColumn(
+                data = data,
                 onClick = {},
                 editMode = editMode,
                 cardType = cardType,
                 onUpdate = onUpdate,
+                editFields = editFields,
                 onDelete = onDelete,
             )
         }

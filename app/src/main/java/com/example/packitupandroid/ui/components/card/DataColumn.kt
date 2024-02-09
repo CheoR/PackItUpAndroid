@@ -47,14 +47,20 @@ fun DataColumn(
     var description by remember { mutableStateOf(_description as String) }
     var isFragile by remember { mutableStateOf(_isFragile as Boolean) }
     var value by remember { mutableDoubleStateOf(_value as Double) }
-
+    var updatedData by remember { mutableStateOf(data) }
     Column(
         modifier = modifier,
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
         BasicTextField(
             value = name,
+//            value = updatedData.name,
             onValueChange = { name = it },
+//            onValueChange = {
+//                name = it
+//                updatedData = BaseCard(data = updatedData, onUpdate = {})
+//                onUpdate(updatedData)
+//            },
             textStyle = MaterialTheme.typography.titleSmall,
             enabled = isEditable(EditFields.Name),
             modifier = Modifier
@@ -90,7 +96,10 @@ fun DataColumn(
             ) {
                 Checkbox(
                     checked = isFragile,
-                    onCheckedChange = { isFragile = it },
+                    onCheckedChange = {
+                        isFragile = it
+                        onUpdate(data)
+                                      },
                     enabled = isEditable(EditFields.IsFragile),
                 )
                 Spacer(modifier = Modifier.width(4.dp))
