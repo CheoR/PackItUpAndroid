@@ -70,7 +70,7 @@ fun PackItUpNavHost(
                 CollectionsScreen(
                     uiState = uiState,
                     onCreate = viewModel::createCollection,
-                    onDelete = viewModel::deleteCollection,
+                    onDelete = viewModel::destroyCollection,
                     onUpdate = viewModel::updateElement,
                 )
             }
@@ -78,7 +78,7 @@ fun PackItUpNavHost(
                 BoxesScreen(
                     uiState = uiState,
                     onCreate = viewModel::createBox,
-                    onDelete = viewModel::deleteBox,
+                    onDelete = viewModel::destroyBox,
                     onUpdate = viewModel::updateElement,
                 )
             }
@@ -86,7 +86,7 @@ fun PackItUpNavHost(
                 ItemsScreen(
                     uiState = uiState,
                     onCreate = viewModel::createItem,
-                    onDelete = viewModel::deleteItem,
+                    onDelete = viewModel::destroyItem,
                     onUpdate = viewModel::updateElement,
                 )
             }

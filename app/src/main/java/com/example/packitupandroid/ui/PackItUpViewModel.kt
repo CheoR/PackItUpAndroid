@@ -9,17 +9,15 @@ import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import com.example.packitupandroid.PackItUpApplication
 import com.example.packitupandroid.model.Box
-import com.example.packitupandroid.model.Item
 import com.example.packitupandroid.model.Collection
+import com.example.packitupandroid.model.Item
 import com.example.packitupandroid.repository.DataRepository
 import com.example.packitupandroid.repository.LocalDataRepository
 import com.example.packitupandroid.ui.components.card.BaseCardData
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import java.util.UUID
 
 class PackItUpViewModel(
     private val repository: DataRepository = LocalDataRepository(),
@@ -119,7 +117,7 @@ class PackItUpViewModel(
         }
     }
 
-    fun deleteItem(id: String?) {
+    fun destroyItem(id: String?) {
         if(id != null) {
             val itemToDelete = getItem(id)
             if(itemToDelete != null) {
@@ -128,7 +126,7 @@ class PackItUpViewModel(
         }
     }
 
-    fun deleteBox(id: String?) {
+    fun destroyBox(id: String?) {
         if(id != null) {
             val boxToDelete = getBox(id)
             if(boxToDelete != null) {
@@ -137,7 +135,7 @@ class PackItUpViewModel(
         }
     }
 
-    fun deleteCollection(id: String?) {
+    fun destroyCollection(id: String?) {
         if(id != null) {
             val collectionToDelete = getCollection(id)
             if(collectionToDelete != null) {
@@ -146,14 +144,7 @@ class PackItUpViewModel(
         }
     }
 
-//
-//    fun removeBox(box: Box) {
-//        val currentBoxes = repository.boxes.value.toMutableList()
-//        currentBoxes.remove(box)
-//        repository.boxes.value = currentBoxes
-//    }
-
-     fun updateElement(element: BaseCardData) {
+    fun updateElement(element: BaseCardData) {
         when (element) {
             is BaseCardData.ItemData -> updateItem(element.item)
             is BaseCardData.BoxData -> updateBox(element.box)
@@ -201,19 +192,6 @@ class PackItUpViewModel(
             _uiState.value = _uiState.value.copy(collections = uiState.value.collections.map {
                 if (it.id == collection.id) updatedCollection else it
             })
-        }
-    }
-
-    fun resetItemList() {
-        viewModelScope.launch {
-            Log.i("MOOOOO", "CALLING REST")
-            Log.i("MOOO", "number of items: ${uiState.value.items.size}")
-            _uiState.update { currentState ->
-                currentState.copy(
-                    items = emptyList(),
-                )
-            }
-            Log.i("MOOO", "number of items: ${uiState.value.items.size}")
         }
     }
 
