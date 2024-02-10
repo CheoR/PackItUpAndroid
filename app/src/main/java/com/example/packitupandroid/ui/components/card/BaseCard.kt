@@ -108,11 +108,12 @@ sealed class ActionColumnState(val icon: ImageVector) {
 fun BaseCard(
     data: BaseCardData,
     onUpdate: (BaseCardData) -> Unit,
+    onDestroy: (BaseCardData) -> Unit,
     modifier: Modifier = Modifier,
-    onDelete: () -> Unit? = {},
     editMode: EditMode = EditMode.NoEdit,
     cardType: CardType = CardType.Default,
     editFields: Set<EditFields> = emptySet(),
+    // TODO: add dropdown field
 ) {
     Card(
         modifier = modifier
@@ -181,222 +182,10 @@ fun BaseCard(
                 cardType = cardType,
                 onUpdate = onUpdate,
                 editFields = editFields,
-                onDelete = onDelete,
+                onDestroy = onDestroy,
             )
         }
     }
-}
-
-@Preview(
-    showBackground = true,
-    group = "Default",
-)
-@Composable
-fun PreviewItemBaseCardWithImage() {
-    val item = Item(
-        id = "884e104a-f6f5-45e9-9f40-4a4cf8ea8c3a",
-        name = "oin oink ",
-        description = "hola cola",
-        value = 123.45,
-        isFragile = true,
-        imageUri = R.drawable.pug,
-    )
-
-    val editFields = setOf(
-        EditFields.Name,
-        EditFields.Description,
-        EditFields.IsFragile,
-        EditFields.Value,
-    )
-
-    BaseCard(
-        data = BaseCardData.ItemData(
-            item = item,
-        ),
-        onUpdate = {},
-        onDelete = {},
-        editFields = editFields,
-    )
-}
-
-@Preview(
-    showBackground = true,
-    group = "Default",
-)
-@Composable
-fun PreviewItemBaseCardWithoutImage(
-    localDataSource: LocalDataSource = LocalDataSource(),
-) {
-    val item = localDataSource.loadItems().first()
-    val editFields = setOf(
-        EditFields.Name,
-        EditFields.Description,
-        EditFields.IsFragile,
-        EditFields.Value,
-    )
-
-    BaseCard(
-        data = BaseCardData.ItemData(
-            item = item,
-        ),
-        onUpdate = {},
-        onDelete = {},
-        editFields = editFields,
-    )
-}
-
-@Preview(
-    showBackground = true,
-    group = "Default",
-)
-@Composable
-fun PreviewBoxBaseCard(
-    localDataSource: LocalDataSource = LocalDataSource(),
-) {
-    val box = localDataSource.loadBoxes().first()
-    val editFields = setOf(
-        EditFields.Name,
-        EditFields.Description,
-    )
-
-    BaseCard(
-        data = BaseCardData.BoxData(
-            box = box,
-        ),
-        onUpdate = {},
-        onDelete = {},
-        editFields = editFields,
-    )
-}
-@Preview(
-    showBackground = true,
-    group = "Default",
-)
-@Composable
-fun PreviewCollectionBaseCard(
-    localDataSource: LocalDataSource = LocalDataSource(),
-) {
-    val collection = localDataSource.loadCollections().first()
-    BaseCard(
-        data = BaseCardData.CollectionData(
-                collection = collection,
-        ),
-        onUpdate = {},
-        onDelete = {},
-        editFields = setOf(
-            EditFields.Name,
-            EditFields.Description,
-            EditFields.IsFragile,
-            EditFields.Value,
-        ),
-    )
-}
-
-// Summary
-@Preview(
-    showBackground = true,
-    group = "Summary",
-)
-@Composable
-fun PreviewSummaryItemBaseCardWithImage(
-    localDataSource: LocalDataSource = LocalDataSource(),
-) {
-    val item = localDataSource.loadItems().first()
-
-    BaseCard(
-        data = BaseCardData.ItemData(
-            item = item,
-        ),
-        cardType = CardType.Summary,
-        onUpdate = {},
-        onDelete = {},
-        editFields = Item.editFields,
-    )
-}
-
-@Preview(
-    showBackground = true,
-    group = "Summary",
-)
-@Composable
-fun PreviewSummaryItemBaseCardWithoutImage(
-    localDataSource: LocalDataSource = LocalDataSource(),
-) {
-    val item = localDataSource.loadItems().first()
-
-    BaseCard(
-        data = BaseCardData.ItemData(
-            item = item,
-        ),
-        cardType = CardType.Summary,
-        onUpdate = {},
-        onDelete = {},
-        editFields = Item.editFields,
-    )
-}
-
-@Preview(
-    showBackground = true,
-    group = "Summary",
-)
-@Composable
-fun PreviewSummaryBoxBaseCard(
-    localDataSource: LocalDataSource = LocalDataSource(),
-) {
-    val box = localDataSource.loadBoxes().first()
-
-    BaseCard(
-        data = BaseCardData.BoxData(
-            box = box
-        ),
-        cardType = CardType.Summary,
-        onUpdate = {},
-        onDelete = {},
-        editFields = Box.editFields,
-    )
-}
-@Preview(
-    showBackground = true,
-    group = "Summary",
-)
-@Composable
-fun PreviewSummaryCollectionBaseCard(
-    localDataSource: LocalDataSource = LocalDataSource(),
-) {
-    val collection = localDataSource.loadCollections().first()
-
-    BaseCard(
-        data = BaseCardData.CollectionData(
-            collection = collection,
-        ),
-        cardType = CardType.Summary,
-        onUpdate = {},
-        onDelete = {},
-        editFields = Collection.editFields,
-    )
-}
-
-// Editable
-
-@Preview(
-    showBackground = true,
-    group = "Edit",
-)
-@Composable
-fun PreviewEditItemBaseCardWithImage(
-    localDataSource: LocalDataSource = LocalDataSource(),
-) {
-    val item = localDataSource.loadItems().first()
-
-    BaseCard(
-        data = BaseCardData.ItemData(
-            item = item,
-        ),
-        editMode = EditMode.Edit,
-        onUpdate = {},
-        onDelete = {},
-        editFields = Item.editFields,
-    )
 }
 
 @Preview(

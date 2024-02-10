@@ -11,9 +11,10 @@ import com.example.packitupandroid.PackItUpApplication
 import com.example.packitupandroid.model.Box
 import com.example.packitupandroid.model.Collection
 import com.example.packitupandroid.model.Item
+import com.example.packitupandroid.model.BaseCardData
+import com.example.packitupandroid.model.Summary
 import com.example.packitupandroid.repository.DataRepository
 import com.example.packitupandroid.repository.LocalDataRepository
-import com.example.packitupandroid.ui.components.card.BaseCardData
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -80,7 +81,7 @@ class PackItUpViewModel(
         }
     }
 
-    fun createItem(count: Int? = 0) {
+    private fun createItem(count: Int? = 0) {
         Log.i("CREATE", "${uiState.value.items.size} items")
         Log.i("CREATE", "creating ${count} items")
         val newItems: MutableList<Item> = mutableListOf()
@@ -95,7 +96,7 @@ class PackItUpViewModel(
         }
     }
 
-    fun createBox(count: Int? = 0) {
+    private fun createBox(count: Int? = 0) {
         val newBoxes: MutableList<Box> = mutableListOf()
         if(count != null) {
             for (i in 1 .. count) {
@@ -107,7 +108,7 @@ class PackItUpViewModel(
         }
     }
 
-    fun createCollection(count: Int? = 0) {
+    private fun createCollection(count: Int? = 0) {
         val newCollections: MutableList<Collection> = mutableListOf()
         if (count != null) {
             for (i in 1..count) {
@@ -120,7 +121,16 @@ class PackItUpViewModel(
         }
     }
 
-    fun destroyItem(id: String?) {
+    fun createElement(element: BaseCardData, count: Int? = null) {
+        when (element) {
+            is Item -> createItem(count)
+            is Box -> createBox(count)
+            is Collection -> createCollection(count)
+            is Summary -> {}
+        }
+    }
+
+    private fun destroyItem(id: String?) {
         if(id != null) {
             val itemToDelete = getItem(id)
             if(itemToDelete != null) {
@@ -129,7 +139,7 @@ class PackItUpViewModel(
         }
     }
 
-    fun destroyBox(id: String?) {
+    private fun destroyBox(id: String?) {
         if(id != null) {
             val boxToDelete = getBox(id)
             if(boxToDelete != null) {
@@ -138,7 +148,7 @@ class PackItUpViewModel(
         }
     }
 
-    fun destroyCollection(id: String?) {
+    private fun destroyCollection(id: String?) {
         if(id != null) {
             val collectionToDelete = getCollection(id)
             if(collectionToDelete != null) {
@@ -149,10 +159,19 @@ class PackItUpViewModel(
 
     fun updateElement(element: BaseCardData) {
         when (element) {
-            is BaseCardData.ItemData -> updateItem(element.item)
-            is BaseCardData.BoxData -> updateBox(element.box)
-            is BaseCardData.CollectionData -> updateCollection(element.collection)
-            is BaseCardData.SummaryData -> {}
+            is Item -> updateItem(element)
+            is Box -> updateBox(element)
+            is Collection -> updateCollection(element)
+            is Summary -> {}
+        }
+    }
+
+    fun destroyElement(element: BaseCardData) {
+        when (element) {
+            is Item -> destroyItem(element.id)
+            is Box -> destroyBox(element.id)
+            is Collection -> destroyCollection(element.id)
+            is Summary -> {}
         }
     }
 

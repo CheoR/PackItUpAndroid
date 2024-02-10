@@ -19,11 +19,11 @@ import com.example.packitupandroid.ui.components.counter.Counter
 
 @Composable
 fun CollectionsScreen(
-    modifier: Modifier = Modifier,
     uiState: PackItUpUiState,
-    onCreate: (Int?) -> Unit,
-    onDelete: (String) -> Unit,
+    onCreate: (BaseCardData, Int?) -> Unit,
+    onDestroy: (BaseCardData) -> Unit,
     onUpdate: (BaseCardData) -> Unit,
+    modifier: Modifier = Modifier,
 ) {
     Column(
         modifier = modifier,
@@ -69,8 +69,8 @@ fun PreviewCollectionsScreen(
 
     CollectionsScreen(
         uiState = uiState,
-        onCreate = { count -> Log.i("Collections ", "Creating ${count} collections")},
-        onDelete = { Log.i("Collections ", "Deleting ${collections[0].id} collections")},
+        onCreate = { collection, count -> Log.i("Collections ", "Creating ${count} collections")},
+        onDestroy = { Log.i("Collections ", "Deleting ${collections[0].id} collections")},
         onUpdate = { Log.i("Collections ", "Updating ${collections[0].id}") },
     )
 }

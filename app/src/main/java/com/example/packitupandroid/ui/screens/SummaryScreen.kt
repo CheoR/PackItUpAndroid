@@ -20,20 +20,18 @@ import androidx.compose.ui.unit.dp
 import com.example.packitupandroid.R
 import com.example.packitupandroid.data.ScreenType
 import com.example.packitupandroid.data.local.LocalDataSource
-import com.example.packitupandroid.model.Box
-import com.example.packitupandroid.model.Collection
-import com.example.packitupandroid.model.Item
+import com.example.packitupandroid.model.BaseCardData
+import com.example.packitupandroid.model.Summary
 import com.example.packitupandroid.ui.PackItUpUiState
 import com.example.packitupandroid.ui.components.SummaryCard
 import com.example.packitupandroid.ui.components.asCurrencyString
-import com.example.packitupandroid.ui.components.card.BaseCardData
 
 
 @Composable
 fun SummaryScreen(
     uiState: PackItUpUiState,
     onCreate: (Int?) -> Unit,
-    onDelete: (String) -> Unit,
+    onDestroy: (String) -> Unit,
     onUpdate: (BaseCardData) -> Unit,
     modifier: Modifier = Modifier,
 ) {
@@ -50,7 +48,7 @@ fun SummaryScreen(
                 collections = uiState.collections,
             ),
             onUpdate = onUpdate,
-            onDelete = { onDelete("collections") },
+            onDestroy = { onDestroy("collections") },
         )
 
         SummaryCard(
@@ -61,7 +59,7 @@ fun SummaryScreen(
                 boxes = uiState.boxes,
             ),
             onUpdate = onUpdate,
-            onDelete = { onDelete("boxes") },
+            onDestroy = { onDestroy("boxes") },
         )
 
         SummaryCard(
@@ -72,7 +70,7 @@ fun SummaryScreen(
                 items = uiState.items,
             ),
             onUpdate = onUpdate,
-            onDelete = { onDelete("items") },
+            onDestroy = { onDestroy("items") },
         )
 
         Spacer(modifier = Modifier.weight(1f))
@@ -118,7 +116,7 @@ fun PreviewSummaryScreen(
     SummaryScreen(
         uiState = uiState,
         onCreate = { count -> Log.i("Items ", "Creating ${count} items")},
-        onDelete = { Log.i("Items ", "Deleting ${items[0].id} items") },
+        onDestroy = { Log.i("Items ", "Deleting ${items[0].id} items") },
         onUpdate = { Log.i("Items ", "Updating ${items[0].id}") },
     )
 }

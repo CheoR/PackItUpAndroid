@@ -28,7 +28,7 @@ import com.example.packitupandroid.ui.components.common.ButtonType
 fun EditCard(
     data: BaseCardData,
     onUpdate: (BaseCardData) -> Unit,
-    onCancel: (Int?) -> Unit,
+    onCancel: () -> Unit,
     modifier: Modifier = Modifier,
     editMode: EditMode = EditMode.Edit,
     cardType: CardType = CardType.Default,

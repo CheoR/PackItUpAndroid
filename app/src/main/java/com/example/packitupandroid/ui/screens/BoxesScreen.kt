@@ -20,8 +20,8 @@ import com.example.packitupandroid.ui.components.counter.Counter
 @Composable
 fun BoxesScreen(
     uiState: PackItUpUiState,
-    onCreate: (Int?) -> Unit,
-    onDelete: (String) -> Unit,
+    onCreate: (BaseCardData, Int?) -> Unit,
+    onDestroy: (BaseCardData) -> Unit,
     onUpdate: (BaseCardData) -> Unit,
     modifier: Modifier = Modifier,
 ) {
@@ -69,8 +69,8 @@ fun PreviewBoxesScreen(
 
     BoxesScreen(
         uiState = uiState,
-        onCreate = { count -> Log.i("Boxes ", "Creating ${count} boxes")},
-        onDelete = { Log.i("Boxes ", "Deleting ${boxes[0].id} boxes")},
+        onCreate = { box, count -> Log.i("Boxes ", "Creating ${count} boxes")},
+        onDestroy = { Log.i("Boxes ", "Deleting ${boxes[0].id} boxes")},
         onUpdate = { Log.i("Boxes ", "Updating ${boxes[0].id}") },
     )
 }
