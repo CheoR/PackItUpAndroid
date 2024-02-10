@@ -25,23 +25,17 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.example.packitupandroid.data.ScreenType
+import com.example.packitupandroid.model.BaseCardData
+import com.example.packitupandroid.model.Item
 import com.example.packitupandroid.ui.components.common.AddConfirmCancelButton
 import com.example.packitupandroid.ui.components.common.ButtonType
 
 @Composable
-fun Counter(
-    screen: ScreenType,
-    onClick: (Int?) -> Unit,
+fun <T: BaseCardData> Counter(
+    onClick: (T, Int?) -> Unit,
     modifier: Modifier = Modifier,
+    type : T? = null,
 ) {
-    val action = when(screen) {
-        ScreenType.Items,
-        ScreenType.Boxes,
-        ScreenType.Collections -> ButtonType.Add
-        else -> {}
-    }
-
     var count by remember { mutableIntStateOf(0) }
     val buttonModifier = Modifier
         .size(40.dp)
@@ -64,7 +58,6 @@ fun Counter(
             ) {
                 Icon(imageVector = Icons.Default.Remove, contentDescription = "subtract")
             }
-
             TextButton(
                 modifier = buttonModifier,
                 onClick = {},
@@ -75,7 +68,6 @@ fun Counter(
                     style = MaterialTheme.typography.titleLarge,
                 )
             }
-
             IconButton(
                 modifier = buttonModifier,
                 onClick = { count++ },
@@ -84,10 +76,14 @@ fun Counter(
             }
         }
         AddConfirmCancelButton(
-            button = action as ButtonType,
-            count = count,
-            onClick = onClick,
-            resetCount = { resetCount() },
+            button = ButtonType.Add,
+            enabled = type != null && count > 0,
+            onClick = {
+                if(type != null) {
+                    onClick(type, count)
+                    resetCount()
+                }
+                      },
         )
     }
 }
@@ -95,8 +91,13 @@ fun Counter(
 @Preview(showBackground = true)
 @Composable
 fun PreviewCounter() {
-    Counter(
-        screen = ScreenType.Items,
-        onClick = {}
+    Counter<Item>(
+        type = Item(
+            name = "Sample Item",
+            description = "This is a sample item",
+            value = 10.0,
+            isFragile = false
+        ),
+        onClick = { item, _ -> println("Clicked: ${item.name}") }
     )
 }
