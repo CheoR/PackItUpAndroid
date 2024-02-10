@@ -1,21 +1,16 @@
 package com.example.packitupandroid.ui.screens
 
 import android.util.Log
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.tooling.preview.Preview
-import com.example.packitupandroid.R
 import com.example.packitupandroid.data.ScreenType
 import com.example.packitupandroid.data.local.LocalDataSource
+import com.example.packitupandroid.model.BaseCardData
+import com.example.packitupandroid.model.Collection
 import com.example.packitupandroid.ui.PackItUpUiState
-import com.example.packitupandroid.ui.components.CollectionCard
-import com.example.packitupandroid.ui.components.card.BaseCardData
-import com.example.packitupandroid.ui.components.counter.Counter
+import com.example.packitupandroid.ui.components.card.BaseCard
+import com.example.packitupandroid.ui.components.card.CardType
 
 @Composable
 fun CollectionsScreen(
@@ -25,29 +20,22 @@ fun CollectionsScreen(
     onUpdate: (BaseCardData) -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    Column(
+    Screen(
         modifier = modifier,
-    ) {
-        LazyColumn(
-            modifier = Modifier
-                .weight(1f),
-            verticalArrangement = Arrangement.spacedBy(
-                dimensionResource(R.dimen.padding_small)
+        elements = uiState.collections,
+        card = { data, update, destroy ->
+            BaseCard(
+                data = data,
+                onUpdate = { baseCardData -> update(baseCardData as Collection) },
+                onDestroy = { baseCardData -> destroy(baseCardData as Collection) },
+                cardType = CardType.Collection,
+                editFields = Collection.EDIT_FIELDS,
             )
-        ) {
-            items(
-                items = uiState.collections,
-                key = { it.id }
-            ) {
-                CollectionCard(
-                    collection = it,
-                    onUpdate = onUpdate,
-                    onDelete = onDelete,
-                )
-            }
-        }
-        Counter(screen = ScreenType.Collections, onClick = onCreate)
-    }
+        },
+        onClick = onCreate,
+        updateElement =  onUpdate,
+        destroyElement = onDestroy,
+    )
 }
 
 @Preview(showBackground = true)

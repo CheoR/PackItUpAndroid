@@ -1,21 +1,16 @@
 package com.example.packitupandroid.ui.screens
 
 import android.util.Log
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.tooling.preview.Preview
-import com.example.packitupandroid.R
 import com.example.packitupandroid.data.ScreenType
 import com.example.packitupandroid.data.local.LocalDataSource
+import com.example.packitupandroid.model.BaseCardData
+import com.example.packitupandroid.model.Box
 import com.example.packitupandroid.ui.PackItUpUiState
-import com.example.packitupandroid.ui.components.BoxCard
-import com.example.packitupandroid.ui.components.card.BaseCardData
-import com.example.packitupandroid.ui.components.counter.Counter
+import com.example.packitupandroid.ui.components.card.BaseCard
+import com.example.packitupandroid.ui.components.card.CardType
 
 @Composable
 fun BoxesScreen(
@@ -25,29 +20,22 @@ fun BoxesScreen(
     onUpdate: (BaseCardData) -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    Column(
+    Screen(
         modifier = modifier,
-    ) {
-        LazyColumn(
-            modifier = modifier
-                .weight(1f),
-            verticalArrangement = Arrangement.spacedBy(
-                dimensionResource(R.dimen.padding_small)
+        elements = uiState.boxes,
+        card = { data, update, destroy ->
+            BaseCard(
+                data = data,
+                onUpdate = { baseCardData -> update(baseCardData as Box) },
+                onDestroy = { baseCardData -> destroy(baseCardData as Box) },
+                cardType = CardType.Box,
+                editFields = Box.EDIT_FIELDS,
             )
-        ) {
-            items(
-                items = uiState.boxes,
-                key = { it.id }
-            ) {
-                BoxCard(
-                    box = it,
-                    onUpdate = onUpdate,
-                    onDelete = onDelete,
-                )
-            }
-        }
-        Counter(screen = ScreenType.Boxes, onClick = onCreate)
-    }
+        },
+        onClick = onCreate,
+        updateElement = onUpdate,
+        destroyElement = onDestroy,
+    )
 }
 
 @Preview(showBackground = true)

@@ -1,21 +1,16 @@
 package com.example.packitupandroid.ui.screens
 
 import android.util.Log
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.tooling.preview.Preview
-import com.example.packitupandroid.R
 import com.example.packitupandroid.data.ScreenType
 import com.example.packitupandroid.data.local.LocalDataSource
+import com.example.packitupandroid.model.BaseCardData
+import com.example.packitupandroid.model.Item
 import com.example.packitupandroid.ui.PackItUpUiState
-import com.example.packitupandroid.ui.components.ItemCard
-import com.example.packitupandroid.ui.components.card.BaseCardData
-import com.example.packitupandroid.ui.components.counter.Counter
+import com.example.packitupandroid.ui.components.card.BaseCard
+import com.example.packitupandroid.ui.components.card.CardType
 
 @Composable
 fun ItemsScreen(
@@ -25,29 +20,22 @@ fun ItemsScreen(
     onUpdate: (BaseCardData) -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    Column(
+    Screen(
         modifier = modifier,
-    ) {
-        LazyColumn(
-            modifier = modifier
-                .weight(2f),
-            verticalArrangement = Arrangement.spacedBy(
-                dimensionResource(R.dimen.padding_small)
+        elements = uiState.items,
+        card = { data, update, destroy ->
+            BaseCard(
+                data = data,
+                onUpdate = { baseCardData -> update(baseCardData as Item) },
+                onDestroy = { baseCardData -> destroy(baseCardData as Item) },
+                cardType = CardType.Item,
+                editFields = Item.EDIT_FIELDS,
             )
-        ) {
-            items(
-                items = uiState.items,
-                key = { it.id }
-            ) { item ->
-                ItemCard(
-                    item = item,
-                    onUpdate = onUpdate,
-                    onDelete = onDelete,
-                )
-            }
-        }
-        Counter(screen = ScreenType.Items, onClick = onCreate)
-    }
+        },
+        onClick = onCreate,
+        updateElement = onUpdate,
+        destroyElement = onDestroy,
+    )
 }
 
 @Preview(showBackground = true)
