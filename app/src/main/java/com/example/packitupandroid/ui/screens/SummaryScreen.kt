@@ -28,17 +28,6 @@ import com.example.packitupandroid.ui.components.SummaryCard
 import com.example.packitupandroid.ui.components.asCurrencyString
 import com.example.packitupandroid.ui.components.card.BaseCardData
 
-data class Summary (
-    val id: String,
-    val name: String,
-    val description: String = "",
-    val collections: List<Collection> = emptyList(),
-    val boxes: List<Box> = emptyList(),
-    val items: List<Item> = emptyList(),
-) {
-    val isFragile: Boolean = items.any { it.isFragile }
-    val value: Double = items.sumOf { it.value }
-}
 
 @Composable
 fun SummaryScreen(
