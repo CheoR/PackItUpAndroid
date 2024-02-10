@@ -27,15 +27,7 @@ import com.example.packitupandroid.R
 import com.example.packitupandroid.data.local.LocalDataSource
 import com.example.packitupandroid.model.Box
 import com.example.packitupandroid.model.Item
-import com.example.packitupandroid.model.Collection
-import com.example.packitupandroid.ui.screens.Summary
-
-sealed class BaseCardData {
-    data class SummaryData(val summary: Summary) : BaseCardData()
-    data class CollectionData(val collection: Collection) : BaseCardData()
-    data class BoxData(val box: Box) : BaseCardData()
-    data class ItemData(val item: Item) : BaseCardData()
-}
+import com.example.packitupandroid.model.Summary
 
 sealed class CardType {
     object Default : CardType()
