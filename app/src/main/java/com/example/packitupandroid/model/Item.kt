@@ -4,15 +4,15 @@ import com.example.packitupandroid.ui.components.card.EditFields
 import java.util.UUID
 
 data class Item(
-    val id: String = UUID.randomUUID().toString(),
-    val name: String,
-    val description: String = "",
-    val isFragile: Boolean = false,
+    override val id: String = UUID.randomUUID().toString(),
+    override var name: String,
+    override var description: String = "",
     val imageUri: Int? = null,
-    val value: Double = 0.00,
-) {
+    override var value: Double = 0.00,
+    override var isFragile: Boolean = false
+) : BaseCardData {
     companion object {
-        val editFields = setOf(
+        val EDIT_FIELDS = setOf(
             EditFields.Name,
             EditFields.Description,
             EditFields.Dropdown,
@@ -20,4 +20,5 @@ data class Item(
             EditFields.Value,
         )
     }
+    override val editFields get() = EDIT_FIELDS
 }

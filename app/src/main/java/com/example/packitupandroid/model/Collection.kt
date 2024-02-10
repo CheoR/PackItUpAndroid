@@ -4,20 +4,21 @@ import com.example.packitupandroid.ui.components.card.EditFields
 import java.util.UUID
 
 data class Collection(
-    val id: String = UUID.randomUUID().toString(),
-    val name: String,
-    val description: String = "",
+    override val id: String = UUID.randomUUID().toString(),
+    override var name: String,
+    override var description: String = "",
     val boxes: List<Box> = emptyList(),
-) {
+) : BaseCardData {
     // TODO: FIX THIS
-    val isFragile: Boolean
+    override var isFragile: Boolean = false
         get() = boxes.any { it.isFragile }
-    val value: Double
+    override var value: Double = 0.0
         get() = boxes.sumOf { it.value }
     companion object {
-        val editFields = setOf(
+        val EDIT_FIELDS = setOf(
             EditFields.Name,
             EditFields.Description,
         )
     }
+    override val editFields get() = EDIT_FIELDS
 }
