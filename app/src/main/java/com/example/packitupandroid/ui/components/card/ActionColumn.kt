@@ -152,7 +152,7 @@ fun ActionColumn(
                         DropdownMenuItem(
                             text = { Text("delete") },
                             onClick = {
-                                onDelete()
+                                onDestroy(data)
                                 expanded = false
                             },
                             leadingIcon = {
