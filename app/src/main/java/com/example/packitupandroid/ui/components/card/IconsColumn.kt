@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Category
 import androidx.compose.material.icons.filled.Label
 import androidx.compose.material3.Badge
 import androidx.compose.material3.BadgedBox
@@ -23,9 +24,55 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.tooling.preview.Preview
 import com.example.packitupandroid.R
+import com.example.packitupandroid.model.BaseCardData
+import com.example.packitupandroid.model.Box
+import com.example.packitupandroid.model.Collection
+import com.example.packitupandroid.model.Item
+import com.example.packitupandroid.model.Summary
 
 @Composable
 fun IconsColumn(
+    data: BaseCardData,
+    cardType: CardType = CardType.Default,
+) {
+    when(data) {
+        is Item -> {
+            val image = data.imageUri
+            ProjectIcons(
+                icon1 = if (image != null) ColumnIcon.UriIcon(image) else ColumnIcon.VectorIcon(Icons.Default.Label),
+                isShowBadgeCount = cardType is CardType.Summary
+            )
+        }
+        is Box -> {
+            ProjectIcons(
+                icon1 = ColumnIcon.VectorIcon(Icons.Default.Label),
+                badgeCount1 = data.items.size,
+            )
+        }
+        is Collection -> {
+            ProjectIcons(
+                icon1 = ColumnIcon.VectorIcon(ImageVector.vectorResource(R.drawable.ic_launcher_foreground)),
+                icon2 = ColumnIcon.VectorIcon(Icons.Default.Label),
+                badgeCount1 = data.boxes.size,
+                badgeCount2 = data.boxes.sumOf { it.items.size },
+            )
+        }
+        is Summary -> {
+            val (count, icon) = when(data.id) {
+                "collections" -> Pair(data.collections.size, Icons.Default.Category)
+                "boxes" -> Pair(data.boxes.size, ImageVector.vectorResource(R.drawable.ic_launcher_foreground))
+                else -> Pair(data.items.size, Icons.Default.Label)
+            }
+            ProjectIcons(
+                icon1 = ColumnIcon.VectorIcon(icon),
+                badgeCount1 = count,
+            )
+        }
+    }
+}
+
+@Composable
+fun ProjectIcons(
     modifier: Modifier = Modifier,
     icon1: ColumnIcon = ColumnIcon.VectorIcon(Icons.Default.Label),
     icon2: ColumnIcon? = null,
@@ -107,7 +154,7 @@ fun IconsColumn(
 )
 @Composable
 fun PreviewBaseCardItemWithImageUriIconColumn() {
-    IconsColumn(
+    ProjectIcons(
         icon1 = ColumnIcon.UriIcon(R.drawable.pug)
     )
 }
@@ -118,7 +165,7 @@ fun PreviewBaseCardItemWithImageUriIconColumn() {
 )
 @Composable
 fun PreviewBaseCardItemWithOutImageUriIconColumn() {
-    IconsColumn()
+    ProjectIcons()
 }
 
 @Preview(
@@ -127,7 +174,7 @@ fun PreviewBaseCardItemWithOutImageUriIconColumn() {
 )
 @Composable
 fun PreviewBaseCardBoxIconColumn() {
-    IconsColumn(
+    ProjectIcons(
         icon1 = ColumnIcon.VectorIcon(ImageVector.vectorResource(R.drawable.ic_launcher_foreground)),
         badgeCount1 = 5,
     )
@@ -140,7 +187,7 @@ fun PreviewBaseCardBoxIconColumn() {
 )
 @Composable
 fun PreviewBaseCardCollectionIconColumn() {
-    IconsColumn(
+    ProjectIcons(
         icon1 = ColumnIcon.VectorIcon(ImageVector.vectorResource(R.drawable.ic_launcher_foreground)),
         icon2 = ColumnIcon.VectorIcon(Icons.Default.Label),
         badgeCount1 = 5,
@@ -155,7 +202,7 @@ fun PreviewBaseCardCollectionIconColumn() {
 )
 @Composable
 fun PreviewBaseCardItemSummaryIconColumn() {
-    IconsColumn(
+    ProjectIcons(
         icon1 = ColumnIcon.VectorIcon(Icons.Default.Label),
         badgeCount1 = 5,
     )
@@ -167,7 +214,7 @@ fun PreviewBaseCardItemSummaryIconColumn() {
 )
 @Composable
 fun PreviewBaseCardBoxSummaryIconColumn() {
-    IconsColumn(
+    ProjectIcons(
         icon1 = ColumnIcon.VectorIcon(ImageVector.vectorResource(R.drawable.ic_launcher_foreground)),
         badgeCount1 = 5,
     )
@@ -179,7 +226,7 @@ fun PreviewBaseCardBoxSummaryIconColumn() {
 )
 @Composable
 fun PreviewBaseCardCollectionSummaryIconColumn() {
-    IconsColumn(
+    ProjectIcons(
         icon1 = ColumnIcon.VectorIcon(ImageVector.vectorResource(R.drawable.ic_launcher_foreground)),
         icon2 = ColumnIcon.VectorIcon(Icons.Default.Label),
         badgeCount1 = 5,

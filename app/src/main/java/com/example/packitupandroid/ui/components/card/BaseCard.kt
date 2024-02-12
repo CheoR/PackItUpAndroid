@@ -127,42 +127,7 @@ fun BaseCard(
                 .fillMaxWidth()
                 .padding(dimensionResource(R.dimen.padding_small)),
         ) {
-            when(data) {
-                is BaseCardData.ItemData -> {
-                    val image = data.item.imageUri
-                    IconsColumn(
-                        icon1 = if (image != null) ColumnIcon.UriIcon(image) else ColumnIcon.VectorIcon(Icons.Default.Label),
-                        isShowBadgeCount = cardType is CardType.Summary
-                    )
-                }
-                is BaseCardData.BoxData -> {
-                    IconsColumn(
-                        icon1 = ColumnIcon.VectorIcon(Icons.Default.Label),
-                        badgeCount1 = data.box.items.size,
-                    )
-                }
-                is BaseCardData.CollectionData -> {
-                    IconsColumn(
-                        icon1 = ColumnIcon.VectorIcon(ImageVector.vectorResource(R.drawable.ic_launcher_foreground)),
-                        icon2 = ColumnIcon.VectorIcon(Icons.Default.Label),
-                        badgeCount1 = data.collection.boxes.size,
-                        badgeCount2 = data.collection.boxes.sumOf { it.items.size },
-                    )
-                }
-                is BaseCardData.SummaryData -> {
-                    val (count, icon) = when(data.summary.id) {
-                        "collections" -> Pair(data.summary.collections.size, Icons.Default.Category)
-                        "boxes" -> Pair(data.summary.boxes.size, ImageVector.vectorResource(R.drawable.ic_launcher_foreground))
-                        else -> Pair(data.summary.items.size, Icons.Default.Label)
-                    }
-                    IconsColumn(
-                        icon1 = ColumnIcon.VectorIcon(icon),
-                        badgeCount1 = count,
-                    )
-                }
-            }
-
-            // Call DataColumn with Modifier.weight(2f).fillMaxHeight()
+            IconsColumn(data = data, cardType = cardType)
             DataColumn(
                 modifier = Modifier
                     .fillMaxHeight()
