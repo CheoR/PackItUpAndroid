@@ -49,7 +49,7 @@ fun ActionColumn(
     if(showEditCard && elementToEdit != null) {
         expanded = false
         Dialog(
-            onDismissRequest = { showEditCard = false },
+            onDismissRequest = onCancel
         ) {
             when (data) {
                 is BaseCardData.ItemData -> {

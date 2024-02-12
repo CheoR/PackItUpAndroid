@@ -53,7 +53,7 @@ fun AddConfirmCancelButton(
                 .fillMaxWidth()
                 .background(color = color),
             enabled = enabled,
-            onClick = { onClick() },
+            onClick = onClick,
             shape = RoundedCornerShape(dimensionResource(R.dimen.roundness_x_small)),
             colors = ButtonDefaults.buttonColors(
                 containerColor = color,
