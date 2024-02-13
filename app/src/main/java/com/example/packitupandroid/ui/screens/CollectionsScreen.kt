@@ -1,6 +1,7 @@
 package com.example.packitupandroid.ui.screens
 
 import android.util.Log
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
@@ -20,22 +21,22 @@ fun CollectionsScreen(
     onUpdate: (BaseCardData) -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    Screen(
-        modifier = modifier,
-        elements = uiState.collections,
-        card = { data, update, destroy ->
-            BaseCard(
-                data = data,
-                onUpdate = { baseCardData -> update(baseCardData as Collection) },
-                onDestroy = { baseCardData -> destroy(baseCardData as Collection) },
-                cardType = CardType.Collection,
-                editFields = Collection.EDIT_FIELDS,
-            )
-        },
-        onClick = onCreate,
-        updateElement =  onUpdate,
-        destroyElement = onDestroy,
-    )
+    Text(text = "collections screen")
+//    Screen(
+//        modifier = modifier,
+//        elements = uiState.collections,
+//        card = { data, update, destroy ->
+//            BaseCard(
+//                data = data,
+//                onUpdate = { baseCardData -> update(baseCardData as Collection) },
+//                onDestroy = { destroy(data) }, // { baseCardData -> destroy(baseCardData as Collection) },
+//                cardType = CardType.Collection,
+//            )
+//        },
+//        onClick = onCreate,
+//        updateElement =  onUpdate,
+//        destroyElement = onDestroy,
+//    )
 }
 
 @Preview(showBackground = true)

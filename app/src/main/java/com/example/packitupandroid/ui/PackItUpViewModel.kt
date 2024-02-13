@@ -156,7 +156,6 @@ class PackItUpViewModel(
             }
         }
     }
-
     fun updateElement(element: BaseCardData) {
         when (element) {
             is Item -> updateItem(element)
@@ -177,7 +176,7 @@ class PackItUpViewModel(
 
     private fun updateItem(item: Item) {
         val itemToUpdate = getItem(item.id)
-        Log.i("UPDATE ITEM BEFORE", itemToUpdate.toString())
+        Log.i("VM: UPDATE ITEM BEFORE", itemToUpdate.toString())
         if(itemToUpdate != null) {
             val updatedItem = itemToUpdate.copy(
                 id = item.id,
@@ -191,7 +190,7 @@ class PackItUpViewModel(
                 if (it.id == item.id) updatedItem else it
             })
             val itemToUpdate2 = getItem(item.id)
-            Log.i("UPDATE ITEM AFTER", itemToUpdate2.toString())
+            Log.i("VM: UPDATE ITEM AFTER", itemToUpdate2.toString())
         }
     }
 

@@ -1,6 +1,7 @@
 package com.example.packitupandroid.ui.components.card
 
-import androidx.compose.foundation.clickable
+import android.annotation.SuppressLint
+import android.util.Log
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -9,25 +10,24 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowForward
-import androidx.compose.material.icons.filled.Category
 import androidx.compose.material.icons.filled.CheckBoxOutlineBlank
-import androidx.compose.material.icons.filled.Label
 import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.derivedStateOf
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.dimensionResource
-import androidx.compose.ui.res.vectorResource
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.packitupandroid.R
-import com.example.packitupandroid.data.local.LocalDataSource
-import com.example.packitupandroid.model.Box
-import com.example.packitupandroid.model.Item
-import com.example.packitupandroid.model.Summary
+import com.example.packitupandroid.model.BaseCardData
 
 sealed class CardType {
     object Default : CardType()
@@ -106,15 +106,19 @@ sealed class ActionColumnState(val icon: ImageVector) {
 
 @Composable
 fun BaseCard(
-    data: BaseCardData,
+//    data: BaseCardData,
+    data: MutableState<BaseCardData>,
     onUpdate: (BaseCardData) -> Unit,
-    onDestroy: (BaseCardData) -> Unit,
+    onDestroy: () -> Unit,
     modifier: Modifier = Modifier,
     editMode: EditMode = EditMode.NoEdit,
     cardType: CardType = CardType.Default,
-    editFields: Set<EditFields> = emptySet(),
     // TODO: add dropdown field
 ) {
+    var expanded = remember { mutableStateOf(false) }
+    var showEditCard = remember { mutableStateOf(false) }
+    // var updatedData = data // remember { mutableStateOf(data) }
+
     Card(
         modifier = modifier
             .height(dimensionResource(R.dimen.card_height))
@@ -127,89 +131,268 @@ fun BaseCard(
                 .fillMaxWidth()
                 .padding(dimensionResource(R.dimen.padding_small)),
         ) {
-            IconsColumn(data = data, cardType = cardType)
+//            IconsColumn(data = data, cardType = cardType)
             DataColumn(
                 modifier = Modifier
                     .fillMaxHeight()
                     .weight(2f)
                     .padding(horizontal = 4.dp),
-                data = data,
+                data = data, // updatedData,
+//                onUpdate = {
+//                    Log.i("BC: UPDATE CALLED", it.toString())
+//                    updatedData.value = it
+//                },
                 onUpdate = onUpdate,
-                editFields = editFields,
-                editMode = editMode,
-                cardType = cardType,
+                editMode = editMode
             )
-
             ActionColumn(
-                data = data,
+                data = data, // updatedData,
                 onClick = {},
                 editMode = editMode,
-                cardType = cardType,
-                onUpdate = onUpdate,
-                editFields = editFields,
+                onSave = {
+                    Log.i("BC ONSAVE: ", data.value.toString())
+                    onUpdate(data.value)
+                    expanded.value = false
+                    showEditCard.value = false
+                },
+                onCancel = {
+                    expanded.value = false
+                    showEditCard.value = false
+                },
+                onEdit = {
+                    data.value = it
+                },
                 onDestroy = onDestroy,
+                isExpanded = expanded,
+                isShowEditCard = showEditCard,
+                cardType = cardType,
             )
         }
     }
 }
 
-@Preview(
-    showBackground = true,
-    group = "Edit",
-)
-@Composable
-fun PreviewEditItemBaseCardWithoutImage(
-    localDataSource: LocalDataSource = LocalDataSource(),
-) {
-    val item = localDataSource.loadItems().first()
+//
+//@Preview(
+//    showBackground = true,
+//    group = "Default",
+//)
+//@Composable
+//fun PreviewItemBaseCardWithImage(
+//    localDataSource: LocalDataSource = LocalDataSource(),
+//) {
+//    val item = localDataSource.loadItems().first()
+//    BaseCard(
+//        data = item,
+//        onUpdate = {},
+//        onDestroy = {},
+//    )
+//}
+//
+//@Preview(
+//    showBackground = true,
+//    group = "Default",
+//)
+//@Composable
+//fun PreviewItemBaseCardWithoutImage(
+//    localDataSource: LocalDataSource = LocalDataSource(),
+//) {
+//    val item = localDataSource.loadItems()[1]
+//    BaseCard(
+//        data = item,
+//        onUpdate = {},
+//        onDestroy = {},
+//    )
+//}
+//
+//@Preview(
+//    showBackground = true,
+//    group = "Default",
+//)
+//@Composable
+//fun PreviewBoxBaseCard(
+//    localDataSource: LocalDataSource = LocalDataSource(),
+//) {
+//    val box = localDataSource.loadBoxes().first()
+//    BaseCard(
+//        data = box,
+//        onUpdate = {},
+//        onDestroy = {},
+//    )
+//}
+//@Preview(
+//    showBackground = true,
+//    group = "Default",
+//)
+//@Composable
+//fun PreviewCollectionBaseCard(
+//    localDataSource: LocalDataSource = LocalDataSource(),
+//) {
+//    val collection = localDataSource.loadCollections().first()
+//    BaseCard(
+//        data = collection,
+//        onUpdate = {},
+//        onDestroy = {},
+//    )
+//}
+//
+//// Summary
+//@Preview(
+//    showBackground = true,
+//    group = "Summary",
+//)
+//@Composable
+//fun PreviewSummaryItemBaseCardWithImage(
+//    localDataSource: LocalDataSource = LocalDataSource(),
+//) {
+//    val item = localDataSource.loadItems().first()
+//    BaseCard(
+//        data = item,
+//        cardType = CardType.Summary,
+//        onUpdate = {},
+//        onDestroy = {},
+//    )
+//}
+//
+//@Preview(
+//    showBackground = true,
+//    group = "Summary",
+//)
+//@Composable
+//fun PreviewSummaryItemBaseCardWithoutImage(
+//    localDataSource: LocalDataSource = LocalDataSource(),
+//) {
+//    val item = localDataSource.loadItems()[1]
+//    BaseCard(
+//        data = item,
+//        cardType = CardType.Summary,
+//        onUpdate = {},
+//        onDestroy = {},
+//    )
+//}
+//
+//@Preview(
+//    showBackground = true,
+//    group = "Summary",
+//)
+//@Composable
+//fun PreviewSummaryBoxBaseCard(
+//    localDataSource: LocalDataSource = LocalDataSource(),
+//) {
+//    val box = localDataSource.loadBoxes().first()
+//    BaseCard(
+//        data = box,
+//        cardType = CardType.Summary,
+//        onUpdate = {},
+//        onDestroy = {},
+//    )
+//}
+//@Preview(
+//    showBackground = true,
+//    group = "Summary",
+//)
+//@Composable
+//fun PreviewSummaryCollectionBaseCard(
+//    localDataSource: LocalDataSource = LocalDataSource(),
+//) {
+//    val collection = localDataSource.loadCollections().first()
+//    BaseCard(
+//        data = collection,
+//        cardType = CardType.Summary,
+//        onUpdate = {},
+//        onDestroy = {},
+//    )
+//}
+//
+//// Editable
+//
+//@Preview(
+//    showBackground = true,
+//    group = "Edit",
+//)
+//@Composable
+//fun PreviewEditItemBaseCardWithImage(
+//    localDataSource: LocalDataSource = LocalDataSource(),
+//) {
+//    val item = localDataSource.loadItems().first()
+//    BaseCard(
+//        data = item,
+//        editMode = EditMode.Edit,
+//        onUpdate = {},
+//        onDestroy = {},
+//    )
+//}
+//
+//@Preview(
+//    showBackground = true,
+//    group = "Edit",
+//)
+//@Composable
+//fun PreviewEditItemBaseCardWithoutImage(
+//    localDataSource: LocalDataSource = LocalDataSource(),
+//) {
+//    val item = localDataSource.loadItems()[1]
+//    BaseCard(
+//        data = item,
+//        editMode = EditMode.Edit,
+//        onUpdate = {},
+//        onDestroy = {},
+//    )
+//}
+//
+//@Preview(
+//    showBackground = true,
+//    group = "Edit",
+//)
+//@Composable
+//fun PreviewEditBoxBaseCard(
+//    localDataSource: LocalDataSource = LocalDataSource(),
+//) {
+//    val box = localDataSource.loadBoxes().first()
+//    BaseCard(
+//        data = box,
+//        editMode = EditMode.Edit,
+//        onUpdate = {},
+//        onDestroy = {},
+//    )
+//}
+//@Preview(
+//    showBackground = true,
+//    group = "Edit",
+//)
+//@Composable
+//fun PreviewEditCollectionBaseCard(
+//    localDataSource: LocalDataSource = LocalDataSource(),
+//) {
+//    val collection = localDataSource.loadCollections().first()
+//    BaseCard(
+//        data = collection,
+//        editMode = EditMode.Edit,
+//        onUpdate = {},
+//        onDestroy = {},
+//    )
+//}
 
-    BaseCard(
-        data = BaseCardData.ItemData(
-            item = item,
-        ),
-        editMode = EditMode.Edit,
-        onUpdate = {},
-        onDelete = {},
-        editFields = Item.editFields,
-    )
-}
 
-@Preview(
-    showBackground = true,
-    group = "Edit",
-)
-@Composable
-fun PreviewEditBoxBaseCard(
-    localDataSource: LocalDataSource = LocalDataSource(),
-) {
-    val box = localDataSource.loadBoxes().first()
 
-    BaseCard(
-        data = BaseCardData.BoxData(
-            box = box,
-        ),
-        editMode = EditMode.Edit,
-        onUpdate = {},
-        onDelete = {},
-        editFields = Box.editFields,
-    )
-}
-@Preview(
-    showBackground = true,
-    group = "Edit",
-)
-@Composable
-fun PreviewEditCollectionBaseCard(
-    localDataSource: LocalDataSource = LocalDataSource(),
-) {
-    val collection = localDataSource.loadCollections().first()
-    BaseCard(
-        data = BaseCardData.CollectionData(
-            collection = collection,
-        ),
-        editMode = EditMode.Edit,
-        onUpdate = {},
-        onDelete = {},
-        editFields = Collection.editFields,
-    )
-}
+//        BaseCard(
+//            data = updatedData,
+//            onUpdate = { it ->
+//                Log.i("EDITITEMCARD", updatedData.toString())
+//                Log.i("EDITITEMCARD2", it.toString())
+//                updatedData = it
+//            },
+//            editMode = editMode,
+//            cardType = cardType,
+//            editFields = data.editFields,
+//            onDestroy = {},
+//        )
+//        Spacer(modifier = Modifier.weight(1f))
+//        Button(onClick = {
+//            Log.i("EDIT ITEM CARD", updatedData.toString())
+//            onUpdate(updatedData)
+//        }) {
+//            Text(text = "Update Moo Cow opink")
+//        }
+//        AddConfirmCancelButton(button = ButtonType.Cancel, onClick = onCancel)
+//    }
+//}

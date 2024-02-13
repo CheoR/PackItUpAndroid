@@ -2,6 +2,9 @@ package com.example.packitupandroid.ui.screens
 
 import android.util.Log
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import com.example.packitupandroid.data.ScreenType
@@ -24,12 +27,24 @@ fun ItemsScreen(
         modifier = modifier,
         elements = uiState.items,
         card = { data, update, destroy ->
+            val mutableStateData = remember {
+                mutableStateOf<BaseCardData>(data)
+            }
+//            BaseCard(
+//                data = data,
+//                onUpdate = { baseCardData -> update(baseCardData as Item) },
+//                onDestroy = { destroy(data) },
+//                cardType = CardType.Item,
+//            )
             BaseCard(
-                data = data,
-                onUpdate = { baseCardData -> update(baseCardData as Item) },
-                onDestroy = { baseCardData -> destroy(baseCardData as Item) },
+                data = mutableStateData as MutableState<BaseCardData>,
+                onUpdate = { updatedData ->
+                    mutableStateData.value = updatedData
+//                           mutableStateData.value = updatedData as Item
+                    update(updatedData as Item)
+                },
+                onDestroy = { destroy(data) },
                 cardType = CardType.Item,
-                editFields = Item.EDIT_FIELDS,
             )
         },
         onClick = onCreate,
@@ -37,28 +52,28 @@ fun ItemsScreen(
         destroyElement = onDestroy,
     )
 }
-
-@Preview(showBackground = true)
-@Composable
-fun PreviewItemsScreen(
-    localDataSource: LocalDataSource = LocalDataSource(),
-) {
-    val currentScreen = ScreenType.Summary
-    val items = localDataSource.loadItems()
-    val boxes = localDataSource.loadBoxes()
-    val collections = localDataSource.loadCollections()
-
-    val uiState = PackItUpUiState(
-        currentScreen = currentScreen,
-        items = items,
-        boxes = boxes,
-        collections = collections,
-    )
-
-    ItemsScreen(
-        uiState = uiState,
-        onCreate = { item , count -> Log.i("Items ", "Creating ${count} items")},
-        onDestroy = { Log.i("Items ", "Deleting ${items[0].id} items") },
-        onUpdate = { Log.i("Items ", "Updating ${items[0].id}") },
-    )
-}
+//
+//@Preview(showBackground = true)
+//@Composable
+//fun PreviewItemsScreen(
+//    localDataSource: LocalDataSource = LocalDataSource(),
+//) {
+//    val currentScreen = ScreenType.Summary
+//    val items = localDataSource.loadItems()
+//    val boxes = localDataSource.loadBoxes()
+//    val collections = localDataSource.loadCollections()
+//
+//    val uiState = PackItUpUiState(
+//        currentScreen = currentScreen,
+//        items = items,
+//        boxes = boxes,
+//        collections = collections,
+//    )
+//
+//    ItemsScreen(
+//        uiState = uiState,
+//        onCreate = { item , count -> Log.i("Items ", "Creating ${count} items")},
+//        onDestroy = { Log.i("Items ", "Deleting ${items[0].id} items") },
+//        onUpdate = { Log.i("Items ", "Updating ${items[0].id}") },
+//    )
+//}

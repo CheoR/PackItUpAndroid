@@ -1,6 +1,7 @@
 package com.example.packitupandroid.ui.components.card
 
 import android.util.Log
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxHeight
@@ -10,80 +11,83 @@ import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.CameraAlt
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Edit
+import androidx.compose.material3.Card
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.MenuDefaults
+import androidx.compose.material3.MenuItemColors
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.DpOffset
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
+import com.example.packitupandroid.data.local.LocalDataSource
+import com.example.packitupandroid.model.BaseCardData
+import com.example.packitupandroid.model.Item
+import com.example.packitupandroid.model.Summary
 import com.example.packitupandroid.ui.components.EditCard
 
 @Composable
 fun ActionColumn(
-    data: BaseCardData,
+    data: MutableState<BaseCardData>,
+//    data: BaseCardData,
     onClick: () -> Unit,
-    onUpdate: (BaseCardData) -> Unit,
-    onDelete: () -> Unit? = {},
+    onSave: () -> Unit,
+    onCancel: () -> Unit,
+    onEdit: (BaseCardData) -> Unit,
+    isExpanded: MutableState<Boolean>,
+    isShowEditCard: MutableState<Boolean>,
+    modifier: Modifier = Modifier,
     editMode: EditMode = EditMode.NoEdit,
     cardType: CardType = CardType.Default,
-    editFields: Set<EditFields> = emptySet(),
+    onDestroy: () -> Unit? = {},
 ) {
     val actionIcon: ActionColumnState = when(cardType) {
         is CardType.Summary -> ActionColumnState.RightArrow
         else -> ActionColumnState.ThreeDots
     }
-
-    var expanded by remember { mutableStateOf(false) }
-    var showEditCard by remember { mutableStateOf(false) }
-    var elementToEdit by remember { mutableStateOf<BaseCardData?>(data) }
-
-    if(showEditCard && elementToEdit != null) {
-        expanded = false
+    
+    if(isShowEditCard.value) {
+        isExpanded.value = false
         Dialog(
             onDismissRequest = onCancel
         ) {
-            when (data) {
-                is BaseCardData.ItemData -> {
-//                    val itemData = elementToEdit as BaseCardData.ItemData
-                    EditCard(
-                        data = data, // itemData.item,
-                        onUpdate = {
-                            val updatedItem = it as BaseCardData.ItemData
-                            Log.i("ACTION COLUMN", updatedItem.toString())
-                            onUpdate(it)
-                            showEditCard = false
-                        },
-                        editFields = editFields,
-                        onCancel = { showEditCard = false },
-                    )
-                }
-                else -> {}
-            }
+            EditCard(
+                data = data,
+                onEdit = onEdit,
+                onSave = onSave,
+                onCancel = onCancel,
+            )
         }
     }
 
     Column(
-        modifier = Modifier
+        modifier = modifier
             .fillMaxHeight(),
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
         when (editMode) {
             is EditMode.Edit -> Box(modifier = Modifier
                 .fillMaxHeight()
-                .size(24.dp))
+                .size(24.dp)
+            )
+
             else -> {
-                if (cardType == CardType.Summary) {
+                if(cardType is CardType.Summary) {
                     IconButton(
-                        onClick = { onClick() }, // for navigation
+                        onClick = onClick, // for navigation
                         modifier = Modifier
                             .fillMaxHeight(),
                         content = {
@@ -98,7 +102,7 @@ fun ActionColumn(
                 }
                 else {
                     IconButton(
-                        onClick = { expanded = true },
+                        onClick = { isExpanded.value = true },
                         modifier = Modifier
                             .fillMaxHeight(),
                         content = {
@@ -111,25 +115,29 @@ fun ActionColumn(
                         }
                     )
                     DropdownMenu(
-                        expanded = expanded,
-                        onDismissRequest = {  expanded = false },
-                        offset = DpOffset(0.dp, (-180).dp),
+                        expanded = isExpanded.value,
+                        onDismissRequest = onCancel,
+                        offset = DpOffset(0.dp, (-150).dp),
+                        modifier = Modifier
+                            .background(MaterialTheme.colorScheme.inversePrimary),
                     ) {
                         if(cardType !is CardType.Item) {
                             DropdownMenuItem(
-                                text = { Text("add") },
+                                text = { Text(
+                                    "add",
+                                )},
                                 onClick = { /*TODO*/ },
                                 leadingIcon = {
                                     Icon(
                                         imageVector = Icons.Default.Add,
-                                        contentDescription = "add"
+                                        contentDescription = "add",
                                     )
-                                }
+                                },
                             )
                         }
                         DropdownMenuItem(
                             text = { Text("edit") },
-                            onClick = { showEditCard = true },
+                            onClick = { isShowEditCard.value = true },
                             leadingIcon = {
                                 Icon(
                                     imageVector = Icons.Default.Edit,
@@ -137,7 +145,7 @@ fun ActionColumn(
                                 )
                             }
                         )
-                        if(cardType == CardType.Item) {
+                        if(cardType is CardType.Item) {
                             DropdownMenuItem(
                                 text = { Text("camera") },
                                 onClick = { /*TODO*/ },
@@ -152,8 +160,8 @@ fun ActionColumn(
                         DropdownMenuItem(
                             text = { Text("delete") },
                             onClick = {
-                                onDestroy(data)
-                                expanded = false
+                                onDestroy()
+                                isExpanded.value = false
                             },
                             leadingIcon = {
                                 Icon(
@@ -175,10 +183,22 @@ fun ActionColumn(
 //)
 //@Composable
 //fun PreviewActionColumnSummaryCardNoEdit() {
+//    val summary = Summary(
+//        id = "summary",
+//        name = "summary",
+//        description = "summary",
+//    )
+//
+//    val isShowEditCard = remember { mutableStateOf(false) }
+//    val isExpanded = remember { mutableStateOf(false) }
+////        editMode = EditMode.NoEdit,
 //    ActionColumn(
-//        onClick = { },
-//        editMode = EditMode.NoEdit,
-//        cardType = CardType.Summary,
+//        data = summary,
+//        onUpdate = {},
+//        onClick = {},
+//        isShowEditCard = isShowEditCard,
+//        isExpanded = isExpanded,
+////        editMode = EditMode.NoEdit,
 //    )
 //}
 //
@@ -187,11 +207,19 @@ fun ActionColumn(
 //    group="Default",
 //)
 //@Composable
-//fun PreviewActionColumnDefaultCardNoEdit() {
+//fun PreviewActionColumnDefaultCardNoEdit(
+//    localDataSource: LocalDataSource = LocalDataSource(),
+//) {
+//    val collection = localDataSource.loadCollections().first()
+//    val isShowEditCard = remember { mutableStateOf(false) }
+//    val isExpanded = remember { mutableStateOf(false) }
 //    ActionColumn(
-//        onClick = { },
-//        editMode = EditMode.NoEdit,
-//        cardType = CardType.Collection, // Box, Item
+//        data = collection,
+//        onUpdate = {},
+//        onClick = {},
+//        isShowEditCard = isShowEditCard,
+//        isExpanded = isExpanded,
+////        editMode = EditMode.NoEdit,
 //    )
 //}
 //
@@ -200,10 +228,18 @@ fun ActionColumn(
 //    group="Edit",
 //)
 //@Composable
-//fun PreviewActionColumnEditCardEdit() {
+//fun PreviewActionColumnEditCardEdit(
+//    localDataSource: LocalDataSource = LocalDataSource(),
+//) {
+//    val collection = localDataSource.loadCollections().first()
+//    val isShowEditCard = remember { mutableStateOf(false) }
+//    val isExpanded = remember { mutableStateOf(false) }
 //    ActionColumn(
-//        onClick = { },
-//        editMode = EditMode.Edit,
-//        cardType = CardType.Collection, // Box, Item
+//        data = collection,
+//        onUpdate = {},
+//        onClick = {},
+//        isShowEditCard = isShowEditCard,
+//        isExpanded = isExpanded,
+////        editMode = EditMode.Edit,
 //    )
 //}

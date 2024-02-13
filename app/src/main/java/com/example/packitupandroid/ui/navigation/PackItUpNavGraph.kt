@@ -66,22 +66,22 @@ fun PackItUpNavHost(
                     onUpdate = {},
                 )
             }
-            composable(route = PackItUpRoute.COLLECTIONS) {
-                CollectionsScreen(
-                    uiState = uiState,
-                    onCreate = viewModel::createElement,
-                    onDestroy = viewModel::destroyElement,
-                    onUpdate = viewModel::updateElement,
-                )
-            }
-            composable(route = PackItUpRoute.BOXES) {
-                BoxesScreen(
-                    uiState = uiState,
-                    onCreate = viewModel::createElement,
-                    onDestroy = viewModel::destroyElement,
-                    onUpdate = viewModel::updateElement,
-                )
-            }
+//            composable(route = PackItUpRoute.COLLECTIONS) {
+//                CollectionsScreen(
+//                    uiState = uiState,
+//                    onCreate = viewModel::createElement,
+//                    onDestroy = viewModel::destroyElement,
+//                    onUpdate = viewModel::updateElement,
+//                )
+//            }
+//            composable(route = PackItUpRoute.BOXES) {
+//                BoxesScreen(
+//                    uiState = uiState,
+//                    onCreate = viewModel::createElement,
+//                    onDestroy = viewModel::destroyElement,
+//                    onUpdate = viewModel::updateElement,
+//                )
+//            }
             composable(route = PackItUpRoute.ITEMS) {
                 ItemsScreen(
                     uiState = uiState,
