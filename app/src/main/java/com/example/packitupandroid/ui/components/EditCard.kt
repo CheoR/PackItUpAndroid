@@ -56,53 +56,7 @@ fun EditCard(
                     .fillMaxWidth()
                     .padding(dimensionResource(R.dimen.padding_small)),
             ) {
-                when (data.value) {
-                    is Item -> {
-                        val image = (data.value as Item).imageUri
-                        ProjectIcons(
-                            icon1 = if (image != null) ColumnIcon.UriIcon(image) else ColumnIcon.VectorIcon(
-                                Icons.Default.Label
-                            ),
-                            isShowBadgeCount = cardType is CardType.Summary,
-                        )
-                    }
-
-                    is Box -> {
-                        ProjectIcons(
-                            icon1 = ColumnIcon.VectorIcon(Icons.Default.Label),
-                            badgeCount1 = (data.value as Box).items.size,
-                        )
-                    }
-
-                    is Collection -> {
-                        ProjectIcons(
-                            icon1 = ColumnIcon.VectorIcon(ImageVector.vectorResource(R.drawable.ic_launcher_foreground)),
-                            icon2 = ColumnIcon.VectorIcon(Icons.Default.Label),
-                            badgeCount1 = (data.value as Collection).boxes.size,
-                            badgeCount2 = (data.value as Collection).boxes.sumOf { it.items.size },
-                        )
-                    }
-
-                    is Summary -> {
-                        val (count, icon) = when (data.value.id) {
-                            "collections" -> Pair(
-                                (data.value as Summary).collections.size,
-                                Icons.Default.Category
-                            )
-
-                            "boxes" -> Pair(
-                                (data.value as Summary).boxes.size,
-                                ImageVector.vectorResource(R.drawable.ic_launcher_foreground)
-                            )
-
-                            else -> Pair((data.value as Summary).items.size, Icons.Default.Label)
-                        }
-                        ProjectIcons(
-                            icon1 = ColumnIcon.VectorIcon(icon),
-                            badgeCount1 = count,
-                        )
-                    }
-                }
+                IconsColumn(data = data.value, cardType = cardType)
                 DataColumn(
                     modifier = Modifier
                         .fillMaxHeight()
