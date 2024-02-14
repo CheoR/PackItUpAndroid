@@ -41,8 +41,7 @@ import com.example.packitupandroid.ui.components.EditCard
 
 @Composable
 fun ActionColumn(
-    data: MutableState<BaseCardData>,
-//    data: BaseCardData,
+    data: BaseCardData,
     onClick: () -> Unit,
     onSave: () -> Unit,
     onCancel: () -> Unit,

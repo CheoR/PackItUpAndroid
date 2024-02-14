@@ -220,6 +220,12 @@ class PackItUpViewModel(
         }
     }
 
+    override fun onCleared() {
+        super.onCleared()
+        println("VIEWMODEL CLEARED")
+        println(uiState.value.items.toString())
+        println("number of items: ${uiState.value.items.size}")
+    }
     /**
      * A companion object helps us by having a single instance of an object that is used by everyone
      * without needing to create a new instance of an expensive object. This is an implementation

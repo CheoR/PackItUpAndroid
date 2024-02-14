@@ -1,14 +1,9 @@
 package com.example.packitupandroid.ui.screens
 
-import android.util.Log
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
-import com.example.packitupandroid.data.ScreenType
-import com.example.packitupandroid.data.local.LocalDataSource
 import com.example.packitupandroid.model.BaseCardData
 import com.example.packitupandroid.model.Item
 import com.example.packitupandroid.ui.PackItUpUiState
@@ -25,24 +20,11 @@ fun ItemsScreen(
 ) {
     Screen(
         modifier = modifier,
-        elements = uiState.items,
+        elements = uiState.items.toList(),
         card = { data, update, destroy ->
-            val mutableStateData = remember {
-                mutableStateOf<BaseCardData>(data)
-            }
-//            BaseCard(
-//                data = data,
-//                onUpdate = { baseCardData -> update(baseCardData as Item) },
-//                onDestroy = { destroy(data) },
-//                cardType = CardType.Item,
-//            )
             BaseCard(
-                data = mutableStateData as MutableState<BaseCardData>,
-                onUpdate = { updatedData ->
-                    mutableStateData.value = updatedData
-//                           mutableStateData.value = updatedData as Item
-                    update(updatedData as Item)
-                },
+                data = data,
+                onUpdate = { baseCardData -> update(baseCardData as Item) },
                 onDestroy = { destroy(data) },
                 cardType = CardType.Item,
             )

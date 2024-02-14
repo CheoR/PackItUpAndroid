@@ -8,58 +8,37 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Category
-import androidx.compose.material.icons.filled.Label
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.MutableState
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.dimensionResource
-import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.packitupandroid.R
 import com.example.packitupandroid.model.BaseCardData
-import com.example.packitupandroid.model.Box
-import com.example.packitupandroid.model.Collection
 import com.example.packitupandroid.model.Item
-import com.example.packitupandroid.model.Summary
 import com.example.packitupandroid.ui.PackItUpViewModel
-import com.example.packitupandroid.ui.components.card.ActionColumn
-import com.example.packitupandroid.ui.components.card.BaseCard
 import com.example.packitupandroid.ui.components.card.CardType
-import com.example.packitupandroid.ui.components.card.ColumnIcon
 import com.example.packitupandroid.ui.components.card.DataColumn
-import com.example.packitupandroid.ui.components.card.EditFields
 import com.example.packitupandroid.ui.components.card.EditMode
 import com.example.packitupandroid.ui.components.card.IconsColumn
-import com.example.packitupandroid.ui.components.card.ProjectIcons
 import com.example.packitupandroid.ui.components.common.AddConfirmCancelButton
 import com.example.packitupandroid.ui.components.common.ButtonType
 
 @Composable
 fun EditCard(
-    data: MutableState<BaseCardData>,
-//    data: BaseCardData,
+    data: BaseCardData,
     onEdit: (BaseCardData) -> Unit,
     onSave: () -> Unit,
     onCancel: () -> Unit,
@@ -68,10 +47,8 @@ fun EditCard(
     cardType: CardType = CardType.Default,
     // TODO: add dropdown
 ) {
-//    val localData = remember { stateOf(data) }
     val vm: PackItUpViewModel = viewModel(factory = PackItUpViewModel.Factory)
     val vmOnUpdate = vm::updateElement
-    val localData = remember { mutableStateOf(data.value) }
 
     Column(
         modifier = modifier
@@ -93,7 +70,7 @@ fun EditCard(
                     .fillMaxWidth()
                     .padding(dimensionResource(R.dimen.padding_small)),
             ) {
-//                IconsColumn(data = data, cardType = cardType)
+                IconsColumn(data = data, cardType = cardType)
                 DataColumn(
                     modifier = Modifier
                         .fillMaxHeight()
@@ -101,7 +78,7 @@ fun EditCard(
                         .padding(horizontal = 4.dp),
                     data = data,
                     onUpdate =  {
-//                        data.value = it
+                        vmOnUpdate(it)
                         onEdit(it)
                     },
                     editMode = editMode,
@@ -121,10 +98,10 @@ fun EditCard(
         Spacer(modifier = Modifier.weight(1f))
         Button(
             onClick = {
-                Log.i("EDIT ITEM CARD", data.value.toString())
+                Log.i("EDIT ITEM CARD", data.toString())
 //                onSave()
                 vmOnUpdate(Item(
-                    id = data.value.id,
+                    id = data.id,
                     name =  "peggy pug look at updated",
                     isFragile = false,
                 ))

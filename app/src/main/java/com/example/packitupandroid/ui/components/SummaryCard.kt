@@ -15,12 +15,11 @@ fun SummaryCard(
     onDestroy: () -> Unit,
     editMode: EditMode = EditMode.NoEdit,
 ) {
-    Text(text = "summary")
-//    BaseCard(
-//        data = summary,
-//        onUpdate = onUpdate,
-//        onDestroy = onDestroy,
-//        editMode = editMode,
-//        cardType = CardType.Summary,
-//    )
+    BaseCard(
+        data = summary,
+        onUpdate = onUpdate,
+        onDestroy = onDestroy,
+        editMode = editMode,
+        cardType = CardType.Summary,
+    )
 }

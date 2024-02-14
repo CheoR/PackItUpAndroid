@@ -106,8 +106,7 @@ sealed class ActionColumnState(val icon: ImageVector) {
 
 @Composable
 fun BaseCard(
-//    data: BaseCardData,
-    data: MutableState<BaseCardData>,
+    data: BaseCardData,
     onUpdate: (BaseCardData) -> Unit,
     onDestroy: () -> Unit,
     modifier: Modifier = Modifier,
@@ -117,7 +116,6 @@ fun BaseCard(
 ) {
     var expanded = remember { mutableStateOf(false) }
     var showEditCard = remember { mutableStateOf(false) }
-    // var updatedData = data // remember { mutableStateOf(data) }
 
     Card(
         modifier = modifier
@@ -131,27 +129,22 @@ fun BaseCard(
                 .fillMaxWidth()
                 .padding(dimensionResource(R.dimen.padding_small)),
         ) {
-//            IconsColumn(data = data, cardType = cardType)
+            IconsColumn(data = data, cardType = cardType)
             DataColumn(
                 modifier = Modifier
                     .fillMaxHeight()
                     .weight(2f)
                     .padding(horizontal = 4.dp),
-                data = data, // updatedData,
-//                onUpdate = {
-//                    Log.i("BC: UPDATE CALLED", it.toString())
-//                    updatedData.value = it
-//                },
+                data = data,
                 onUpdate = onUpdate,
                 editMode = editMode
             )
             ActionColumn(
-                data = data, // updatedData,
+                data = data,
                 onClick = {},
                 editMode = editMode,
                 onSave = {
-                    Log.i("BC ONSAVE: ", data.value.toString())
-                    onUpdate(data.value)
+                    onUpdate(data)
                     expanded.value = false
                     showEditCard.value = false
                 },
@@ -160,7 +153,7 @@ fun BaseCard(
                     showEditCard.value = false
                 },
                 onEdit = {
-                    data.value = it
+                    onUpdate(it)
                 },
                 onDestroy = onDestroy,
                 isExpanded = expanded,

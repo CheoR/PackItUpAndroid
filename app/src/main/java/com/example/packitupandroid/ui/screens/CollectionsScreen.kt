@@ -1,7 +1,6 @@
 package com.example.packitupandroid.ui.screens
 
 import android.util.Log
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
@@ -21,45 +20,44 @@ fun CollectionsScreen(
     onUpdate: (BaseCardData) -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    Text(text = "collections screen")
-//    Screen(
-//        modifier = modifier,
-//        elements = uiState.collections,
-//        card = { data, update, destroy ->
-//            BaseCard(
-//                data = data,
-//                onUpdate = { baseCardData -> update(baseCardData as Collection) },
-//                onDestroy = { destroy(data) }, // { baseCardData -> destroy(baseCardData as Collection) },
-//                cardType = CardType.Collection,
-//            )
-//        },
-//        onClick = onCreate,
-//        updateElement =  onUpdate,
-//        destroyElement = onDestroy,
+    Screen(
+        modifier = modifier,
+        elements = uiState.collections,
+        card = { data, update, destroy ->
+            BaseCard(
+                data = data,
+                onUpdate = { baseCardData -> update(baseCardData as Collection) },
+                onDestroy = { destroy(data) }, // { baseCardData -> destroy(baseCardData as Collection) },
+                cardType = CardType.Collection,
+            )
+        },
+        onClick = onCreate,
+        updateElement =  onUpdate,
+        destroyElement = onDestroy,
+    )
+}
+
+//@Preview(showBackground = true)
+//@Composable
+//fun PreviewCollectionsScreen(
+//    localDataSource: LocalDataSource = LocalDataSource(),
+//) {
+//    val currentScreen = ScreenType.Summary
+//    val items = localDataSource.loadItems()
+//    val boxes = localDataSource.loadBoxes()
+//    val collections = localDataSource.loadCollections()
+//
+//    val uiState = PackItUpUiState(
+//        currentScreen = currentScreen,
+//        items = items,
+//        boxes = boxes,
+//        collections = collections,
 //    )
-}
-
-@Preview(showBackground = true)
-@Composable
-fun PreviewCollectionsScreen(
-    localDataSource: LocalDataSource = LocalDataSource(),
-) {
-    val currentScreen = ScreenType.Summary
-    val items = localDataSource.loadItems()
-    val boxes = localDataSource.loadBoxes()
-    val collections = localDataSource.loadCollections()
-
-    val uiState = PackItUpUiState(
-        currentScreen = currentScreen,
-        items = items,
-        boxes = boxes,
-        collections = collections,
-    )
-
-    CollectionsScreen(
-        uiState = uiState,
-        onCreate = { collection, count -> Log.i("Collections ", "Creating ${count} collections")},
-        onDestroy = { Log.i("Collections ", "Deleting ${collections[0].id} collections")},
-        onUpdate = { Log.i("Collections ", "Updating ${collections[0].id}") },
-    )
-}
+//
+//    CollectionsScreen(
+//        uiState = uiState,
+//        onCreate = { collection, count -> Log.i("Collections ", "Creating ${count} collections")},
+//        onDestroy = { Log.i("Collections ", "Deleting ${collections[0].id} collections")},
+//        onUpdate = { Log.i("Collections ", "Updating ${collections[0].id}") },
+//    )
+//}
