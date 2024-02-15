@@ -81,6 +81,33 @@ class PackItUpViewModel(
         }
     }
 
+    fun createElement(element: BaseCardData, count: Int? = null) {
+        when (element) {
+            is Item -> createItem(count)
+            is Box -> createBox(count)
+            is Collection -> createCollection(count)
+            is Summary -> {}
+        }
+    }
+
+    fun updateElement(element: BaseCardData) {
+        when (element) {
+            is Item -> updateItem(element)
+            is Box -> updateBox(element)
+            is Collection -> updateCollection(element)
+            is Summary -> {}
+        }
+    }
+
+    fun destroyElement(element: BaseCardData) {
+        when (element) {
+            is Item -> destroyItem(element.id)
+            is Box -> destroyBox(element.id)
+            is Collection -> destroyCollection(element.id)
+            is Summary -> {}
+        }
+    }
+
     private fun createItem(count: Int? = 0) {
         Log.i("CREATE", "${uiState.value.items.size} items")
         Log.i("CREATE", "creating ${count} items")
@@ -121,15 +148,6 @@ class PackItUpViewModel(
         }
     }
 
-    fun createElement(element: BaseCardData, count: Int? = null) {
-        when (element) {
-            is Item -> createItem(count)
-            is Box -> createBox(count)
-            is Collection -> createCollection(count)
-            is Summary -> {}
-        }
-    }
-
     private fun destroyItem(id: String?) {
         if(id != null) {
             val itemToDelete = getItem(id)
@@ -154,23 +172,6 @@ class PackItUpViewModel(
             if(collectionToDelete != null) {
                 _uiState.value = _uiState.value.copy(collections = uiState.value.collections.filter { it.id != collectionToDelete.id })
             }
-        }
-    }
-    fun updateElement(element: BaseCardData) {
-        when (element) {
-            is Item -> updateItem(element)
-            is Box -> updateBox(element)
-            is Collection -> updateCollection(element)
-            is Summary -> {}
-        }
-    }
-
-    fun destroyElement(element: BaseCardData) {
-        when (element) {
-            is Item -> destroyItem(element.id)
-            is Box -> destroyBox(element.id)
-            is Collection -> destroyCollection(element.id)
-            is Summary -> {}
         }
     }
 
