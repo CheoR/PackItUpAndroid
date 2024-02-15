@@ -1,9 +1,10 @@
 package com.example.packitupandroid.ui.screens
 
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.tooling.preview.Preview
+import com.example.packitupandroid.data.ScreenType
+import com.example.packitupandroid.data.local.LocalDataSource
 import com.example.packitupandroid.model.BaseCardData
 import com.example.packitupandroid.model.Item
 import com.example.packitupandroid.ui.PackItUpUiState
@@ -34,28 +35,28 @@ fun ItemsScreen(
         destroyElement = onDestroy,
     )
 }
-//
-//@Preview(showBackground = true)
-//@Composable
-//fun PreviewItemsScreen(
-//    localDataSource: LocalDataSource = LocalDataSource(),
-//) {
-//    val currentScreen = ScreenType.Summary
-//    val items = localDataSource.loadItems()
-//    val boxes = localDataSource.loadBoxes()
-//    val collections = localDataSource.loadCollections()
-//
-//    val uiState = PackItUpUiState(
-//        currentScreen = currentScreen,
-//        items = items,
-//        boxes = boxes,
-//        collections = collections,
-//    )
-//
-//    ItemsScreen(
-//        uiState = uiState,
-//        onCreate = { item , count -> Log.i("Items ", "Creating ${count} items")},
-//        onDestroy = { Log.i("Items ", "Deleting ${items[0].id} items") },
-//        onUpdate = { Log.i("Items ", "Updating ${items[0].id}") },
-//    )
-//}
+
+@Preview(showBackground = true)
+@Composable
+fun PreviewItemsScreen(
+    localDataSource: LocalDataSource = LocalDataSource(),
+) {
+    val currentScreen = ScreenType.Summary
+    val items = localDataSource.loadItems()
+    val boxes = localDataSource.loadBoxes()
+    val collections = localDataSource.loadCollections()
+
+    val uiState = PackItUpUiState(
+        currentScreen = currentScreen,
+        items = items,
+        boxes = boxes,
+        collections = collections,
+    )
+
+    ItemsScreen(
+        uiState = uiState,
+        onCreate = { item , count -> },
+        onDestroy = {},
+        onUpdate = {},
+    )
+}

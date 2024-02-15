@@ -1,10 +1,9 @@
 package com.example.packitupandroid.ui.screens
 
-import android.util.Log
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
 import com.example.packitupandroid.data.ScreenType
+import androidx.compose.ui.tooling.preview.Preview
 import com.example.packitupandroid.data.local.LocalDataSource
 import com.example.packitupandroid.model.BaseCardData
 import com.example.packitupandroid.model.Box
@@ -37,27 +36,27 @@ fun BoxesScreen(
     )
 }
 
-//@Preview(showBackground = true)
-//@Composable
-//fun PreviewBoxesScreen(
-//    localDataSource: LocalDataSource = LocalDataSource(),
-//) {
-//    val currentScreen = ScreenType.Summary
-//    val items = localDataSource.loadItems()
-//    val boxes = localDataSource.loadBoxes()
-//    val collections = localDataSource.loadCollections()
-//
-//    val uiState = PackItUpUiState(
-//        currentScreen = currentScreen,
-//        items = items,
-//        boxes = boxes,
-//        collections = collections,
-//    )
-//
-//    BoxesScreen(
-//        uiState = uiState,
-//        onCreate = { box, count -> Log.i("Boxes ", "Creating ${count} boxes")},
-//        onDestroy = { Log.i("Boxes ", "Deleting ${boxes[0].id} boxes")},
-//        onUpdate = { Log.i("Boxes ", "Updating ${boxes[0].id}") },
-//    )
-//}
+@Preview(showBackground = true)
+@Composable
+fun PreviewBoxesScreen(
+    localDataSource: LocalDataSource = LocalDataSource(),
+) {
+    val currentScreen = ScreenType.Summary
+    val items = localDataSource.loadItems()
+    val boxes = localDataSource.loadBoxes()
+    val collections = localDataSource.loadCollections()
+
+    val uiState = PackItUpUiState(
+        currentScreen = currentScreen,
+        items = items,
+        boxes = boxes,
+        collections = collections,
+    )
+
+    BoxesScreen(
+        uiState = uiState,
+        onCreate = { box, count -> },
+        onDestroy = {},
+        onUpdate = {},
+    )
+}
