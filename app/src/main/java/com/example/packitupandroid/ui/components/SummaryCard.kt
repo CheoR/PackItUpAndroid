@@ -1,6 +1,5 @@
 package com.example.packitupandroid.ui.components
 
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import com.example.packitupandroid.model.BaseCardData
 import com.example.packitupandroid.model.Summary
