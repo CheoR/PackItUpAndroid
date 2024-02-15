@@ -41,17 +41,20 @@ class PackItUpViewModel(
             }
         }
     }
+    private fun <T : BaseCardData> getEntity(id: String, entities: List<T>): T? {
+        return entities.firstOrNull { it.id == id }
+    }
 
     private fun getItem(id: String): Item? {
-        return uiState.value.items.firstOrNull { it.id == id }
+        return getEntity(id, uiState.value.items)
     }
 
     private fun getBox(id: String): Box? {
-        return uiState.value.boxes.firstOrNull { it.id == id }
+        return getEntity(id, uiState.value.boxes)
     }
 
     private fun getCollection(id: String): Collection? {
-        return uiState.value.collections.firstOrNull { it.id == id }
+        return getEntity(id, uiState.value.collections)
     }
 
     private suspend fun loadItems() {
