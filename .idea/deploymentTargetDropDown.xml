@@ -5,6 +5,12 @@
       <entry key="PreviewActionColumnDefaultCardNoEdit">
         <State />
       </entry>
+      <entry key="PreviewActionColumnEditCardEdit">
+        <State />
+      </entry>
+      <entry key="PreviewActionColumnSummaryCardNoEdit">
+        <State />
+      </entry>
       <entry key="PreviewSummaryScreen">
         <State />
       </entry>
