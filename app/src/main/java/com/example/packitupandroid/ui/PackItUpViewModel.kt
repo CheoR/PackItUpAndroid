@@ -89,7 +89,7 @@ class PackItUpViewModel(
             is Item -> createItem(count)
             is Box -> createBox(count)
             is Collection -> createCollection(count)
-            is Summary -> {}
+            is Summary -> throw Exception("Cannot create Summary")
         }
     }
 
@@ -98,7 +98,7 @@ class PackItUpViewModel(
             is Item -> updateItem(element)
             is Box -> updateBox(element)
             is Collection -> updateCollection(element)
-            is Summary -> {}
+            is Summary -> throw Exception("Cannot update Summary")
         }
     }
 
@@ -107,7 +107,7 @@ class PackItUpViewModel(
             is Item -> destroyItem(element.id)
             is Box -> destroyBox(element.id)
             is Collection -> destroyCollection(element.id)
-            is Summary -> {}
+            is Summary -> throw Exception("Cannot destroy Summary")
         }
     }
 
