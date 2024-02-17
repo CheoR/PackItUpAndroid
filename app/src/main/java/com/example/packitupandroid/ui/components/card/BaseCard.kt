@@ -143,6 +143,9 @@ fun BaseCard(
                     showEditCard.value = false
                 },
                 onEdit = {
+                    onUpdate(it)
+                    expanded.value = false
+                    showEditCard.value = false
                 },
                 onDestroy = onDestroy,
                 isExpanded = expanded,

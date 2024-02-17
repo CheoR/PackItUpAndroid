@@ -35,6 +35,8 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import com.example.packitupandroid.R
 import com.example.packitupandroid.model.BaseCardData
+import com.example.packitupandroid.model.Box
+import com.example.packitupandroid.model.Collection
 import com.example.packitupandroid.model.Item
 import com.example.packitupandroid.model.Summary
 import com.example.packitupandroid.ui.components.card.CardType
@@ -55,7 +57,8 @@ fun EditCard(
     // TODO: add dropdown
 ) {
     fun isEditable(field: EditFields) = editMode == EditMode.Edit && data.editFields.contains(field)
-    var localData by remember { mutableStateOf(data)}
+    var localData by remember { mutableStateOf(data) }
+
     Column(
         modifier = modifier
             .fillMaxSize()
@@ -87,7 +90,13 @@ fun EditCard(
                     BasicTextField(
                         value = localData.name,
                         onValueChange = {
-                            localData = (localData as Item).copy(name = it)
+                            // TODO: refactor this
+                            localData = when (localData) {
+                                is Item -> (localData as Item).copy(name = it)
+                                is Box -> (localData as Box).copy(name = it)
+                                is Collection -> (localData as Collection).copy(name = it)
+                                else -> throw IllegalStateException("Unsupported type")
+                            }
                         },
                         textStyle = MaterialTheme.typography.titleSmall,
                         enabled = isEditable(EditFields.Name),
@@ -110,7 +119,12 @@ fun EditCard(
                     BasicTextField(
                         value = localData.description,
                         onValueChange = {
-                            localData = (localData as Item).copy(description = it)
+                            localData = when (localData) {
+                                is Item -> (localData as Item).copy(description = it)
+                                is Box -> (localData as Box).copy(description = it)
+                                is Collection -> (localData as Collection).copy(description = it)
+                                else -> throw IllegalStateException("Unsupported type")
+                            }
                         },
                         textStyle = MaterialTheme.typography.bodySmall,
                         enabled = isEditable(EditFields.Description),
@@ -128,7 +142,10 @@ fun EditCard(
                             Checkbox(
                                 checked = localData.isFragile,
                                 onCheckedChange = {
-                                    localData = (localData as Item).copy(isFragile = it)
+                                    localData = when (localData) {
+                                        is Item -> (localData as Item).copy(isFragile = it)
+                                        else -> throw IllegalStateException("Unsupported type")
+                                    }
                                 },
                                 enabled = isEditable(EditFields.IsFragile),
                             )
@@ -140,7 +157,10 @@ fun EditCard(
                                 onValueChange = {
                                     // Handle the case where the user enters an empty string
                                     val value = if (it.isEmpty()) 0.0 else it.parseCurrencyToDouble()
-                                    localData = (localData as Item).copy(value = value)
+                                    localData = when (localData) {
+                                        is Item -> (localData as Item).copy(value = value)
+                                        else -> throw IllegalStateException("Unsupported type")
+                                    }
                                 },
                                 textStyle = MaterialTheme.typography.bodySmall,
                                 enabled = isEditable(EditFields.Value),
