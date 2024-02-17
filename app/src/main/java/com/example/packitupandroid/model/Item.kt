@@ -7,7 +7,7 @@ data class Item(
     override val id: String = UUID.randomUUID().toString(),
     override var name: String,
     override var description: String = "",
-    val imageUri: Int? = null,
+    var imageUri: Int? = null,
     override var value: Double = 0.00,
     override var isFragile: Boolean = false
 ) : BaseCardData {
