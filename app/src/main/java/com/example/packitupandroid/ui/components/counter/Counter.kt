@@ -1,5 +1,6 @@
 package com.example.packitupandroid.ui.components.counter
 
+import android.annotation.SuppressLint
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -17,6 +18,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableDoubleStateOf
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -88,6 +90,7 @@ fun <T: BaseCardData> Counter(
     }
 }
 
+@SuppressLint("UnrememberedMutableState")
 @Preview(showBackground = true)
 @Composable
 fun PreviewCounter() {
@@ -95,7 +98,7 @@ fun PreviewCounter() {
         type = Item(
             name = "Sample Item",
             description = "This is a sample item",
-            value = 10.0,
+            value = mutableDoubleStateOf(10.0),
             isFragile = false
         ),
         onClick = { item, _ -> println("Clicked: ${item.name}") }
