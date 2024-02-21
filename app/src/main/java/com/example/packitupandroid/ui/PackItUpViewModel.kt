@@ -1,7 +1,5 @@
 package com.example.packitupandroid.ui
 
-import android.util.Log
-import androidx.compose.runtime.mutableDoubleStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProvider.AndroidViewModelFactory.Companion.APPLICATION_KEY
@@ -9,14 +7,13 @@ import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import com.example.packitupandroid.PackItUpApplication
+import com.example.packitupandroid.model.BaseCardData
 import com.example.packitupandroid.model.Box
 import com.example.packitupandroid.model.Collection
 import com.example.packitupandroid.model.Item
-import com.example.packitupandroid.model.BaseCardData
 import com.example.packitupandroid.model.Summary
 import com.example.packitupandroid.repository.DataRepository
 import com.example.packitupandroid.repository.LocalDataRepository
-import com.example.packitupandroid.ui.components.asCurrencyString
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow

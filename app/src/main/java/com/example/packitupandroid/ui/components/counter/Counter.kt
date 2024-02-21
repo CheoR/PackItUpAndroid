@@ -18,7 +18,6 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableDoubleStateOf
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -98,7 +97,7 @@ fun PreviewCounter() {
         type = Item(
             name = "Sample Item",
             description = "This is a sample item",
-            value = mutableDoubleStateOf(10.0),
+            value = 10.0,
             isFragile = false
         ),
         onClick = { item, _ -> println("Clicked: ${item.name}") }
