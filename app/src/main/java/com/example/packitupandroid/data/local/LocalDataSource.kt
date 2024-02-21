@@ -22,7 +22,7 @@ class LocalDataSource() {
          */
 
         val boxSublist = loadBoxes().slice( start .. stop )
-        val value = boxSublist.sumOf { it.value}
+        val value = boxSublist.sumOf { it.value }
 
         return Pair(boxSublist, value)
     }
@@ -126,6 +126,27 @@ class LocalDataSource() {
             Item(
                 id = "1c86b55f-5879-4552-8266-8e5e98952ecd",
                 name = "14L",
+                description = "not for breaking into homes",
+                isFragile = true,
+                value = 3.00,
+            ),
+            Item(
+                id = "3f8b7b8d-b7d1-4b7b-b8e0-b3d7a8a8e9d8",
+                name = "15L",
+                description = "not for breaking into homes",
+                isFragile = true,
+                value = 100.00,
+            ),
+            Item(
+                id = "8c1b0d0f-9d5c-4b7d-8b1c-0f9d5c4b7d8b",
+                name = "16L",
+                description = "not for breaking into homes",
+                isFragile = true,
+                value = 125.00,
+            ),
+            Item(
+                id = "9b1c0d0f-9d5c-4b7d-8b1c-0f9d5c4b7d8b",
+                name = "17L",
                 description = "not for breaking into homes",
                 isFragile = true,
                 value = 3.00,
