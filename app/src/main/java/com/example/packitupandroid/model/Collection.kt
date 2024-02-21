@@ -5,15 +5,14 @@ import java.util.UUID
 
 data class Collection(
     override val id: String = UUID.randomUUID().toString(),
-    override var name: String,
-    override var description: String = "",
+    override val name: String,
+    override val description: String = "",
     val boxes: List<Box> = emptyList(),
 ) : BaseCardData {
-    // TODO: FIX THIS
-    override var isFragile: Boolean = false
+    override val isFragile: Boolean
         get() = boxes.any { it.isFragile }
-    override var value: Double = 0.0
-        get() = boxes.sumOf { it.value }
+override val value: Double
+    get() = boxes.sumOf { it.value }
     companion object {
         val EDIT_FIELDS = setOf(
             EditFields.Name,

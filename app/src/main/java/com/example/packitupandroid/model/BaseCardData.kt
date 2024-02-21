@@ -4,9 +4,9 @@ import com.example.packitupandroid.ui.components.card.EditFields
 
 sealed interface BaseCardData {
     val id: String
-    var name: String
-    var description: String
-    var isFragile: Boolean
-    var value: Double
+    val name: String
+    val description: String
+    val isFragile: Boolean
+    val value: Double
     val editFields: Set<EditFields>
 }

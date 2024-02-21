@@ -5,16 +5,13 @@ import java.util.UUID
 
 data class Box(
     override val id: String = UUID.randomUUID().toString(),
-    override var name: String,
-    override var description: String = "",
+    override val name: String,
+    override val description: String = "",
     val items: List<Item> = emptyList(),
 ) : BaseCardData {
-    // These properties are read-only and will be computed when the `Box` object is created.
-    // If the `items` list changes, create a new `Box` object to update these properties.
-    // TODO: FIX THIS
-    override var isFragile: Boolean = false
+    override val isFragile: Boolean
         get() = items.any { it.isFragile }
-    override var value: Double = 0.0
+    override val value: Double
         get() = items.sumOf { it.value }
     companion object {
         val EDIT_FIELDS = setOf(
