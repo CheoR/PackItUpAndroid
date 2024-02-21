@@ -1,6 +1,7 @@
 package com.example.packitupandroid.ui
 
 import android.util.Log
+import androidx.compose.runtime.mutableDoubleStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProvider.AndroidViewModelFactory.Companion.APPLICATION_KEY
@@ -15,9 +16,11 @@ import com.example.packitupandroid.model.BaseCardData
 import com.example.packitupandroid.model.Summary
 import com.example.packitupandroid.repository.DataRepository
 import com.example.packitupandroid.repository.LocalDataRepository
+import com.example.packitupandroid.ui.components.asCurrencyString
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 class PackItUpViewModel(
@@ -189,6 +192,35 @@ class PackItUpViewModel(
             _uiState.value = _uiState.value.copy(items = uiState.value.items.map {
                 if (it.id == item.id) updatedItem else it
             })
+            // TODO: only run if `value` or `isFragile` is changed
+            notifyBox(updatedItem)
+        }
+    }
+
+    private fun notifyBox(item: Item) {
+        // TODO: refactor
+        // find box that Item belongs to
+        // replace Item in that box with copy to trigger recomposition
+        _uiState.update { currentState ->
+            val boxIndex = currentState.boxes.indexOfFirst { box ->
+                box.items.any { it.id == item.id }
+            }
+            if (boxIndex != -1) {
+                val itemIndex = currentState.boxes[boxIndex].items.indexOfFirst { it.id == item.id }
+                if (itemIndex != -1) {
+                    val updatedBox = currentState.boxes[boxIndex].copy(
+                        items = currentState.boxes[boxIndex].items.toMutableList().also {
+                            it[itemIndex] = item
+                        }
+                    )
+
+                    currentState.copy(
+                        boxes = currentState.boxes.toMutableList().also {
+                            it[boxIndex] = updatedBox
+                        }
+                    )
+                } else currentState
+            } else currentState
         }
     }
 
@@ -197,7 +229,7 @@ class PackItUpViewModel(
         if(boxToUpdate != null) {
             val updatedBox = boxToUpdate.copy(
                 name = box.name,
-                description = box.description
+                description = box.description,
             )
             _uiState.value = _uiState.value.copy(boxes = uiState.value.boxes.map {
                 if (it.id == box.id) updatedBox else it
@@ -218,12 +250,6 @@ class PackItUpViewModel(
         }
     }
 
-    override fun onCleared() {
-        super.onCleared()
-        println("VIEWMODEL CLEARED")
-        println(uiState.value.items.toString())
-        println("number of items: ${uiState.value.items.size}")
-    }
     /**
      * A companion object helps us by having a single instance of an object that is used by everyone
      * without needing to create a new instance of an expensive object. This is an implementation
