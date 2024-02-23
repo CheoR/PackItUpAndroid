@@ -1,5 +1,6 @@
 package com.example.packitupandroid.ui
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProvider.AndroidViewModelFactory.Companion.APPLICATION_KEY
@@ -14,6 +15,7 @@ import com.example.packitupandroid.model.Item
 import com.example.packitupandroid.model.Summary
 import com.example.packitupandroid.repository.DataRepository
 import com.example.packitupandroid.repository.LocalDataRepository
+import com.example.packitupandroid.ui.components.asCurrencyString
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -190,34 +192,36 @@ class PackItUpViewModel(
                 if (it.id == item.id) updatedItem else it
             })
             // TODO: only run if `value` or `isFragile` is changed
-            notifyBox(updatedItem)
+            broadcastItemUpdate(updatedItem)
         }
     }
 
-    private fun notifyBox(item: Item) {
-        // TODO: refactor
-        // find box that Item belongs to
-        // replace Item in that box with copy to trigger recomposition
+    private fun broadcastItemUpdate(item: Item) {
+        val boxIndex = uiState.value.boxes.indexOfFirst { box -> box.items.any { it.id == item.id } }
+        val itemIndex = uiState.value.boxes[boxIndex].items.indexOfFirst { it.id == item.id}
+        val collectionIndex = uiState.value.collections.indexOfFirst { collection -> collection.boxes.any { it.id == uiState.value.boxes[boxIndex].id } }
         _uiState.update { currentState ->
-            val boxIndex = currentState.boxes.indexOfFirst { box ->
-                box.items.any { it.id == item.id }
-            }
-            if (boxIndex != -1) {
-                val itemIndex = currentState.boxes[boxIndex].items.indexOfFirst { it.id == item.id }
-                if (itemIndex != -1) {
-                    val updatedBox = currentState.boxes[boxIndex].copy(
-                        items = currentState.boxes[boxIndex].items.toMutableList().also {
-                            it[itemIndex] = item
-                        }
-                    )
+            val updatedBox = currentState.boxes[boxIndex].copy(
+                items = currentState.boxes[boxIndex].items.toMutableList().also {
+                    it[itemIndex] = item
+                }
+            )
 
-                    currentState.copy(
-                        boxes = currentState.boxes.toMutableList().also {
-                            it[boxIndex] = updatedBox
-                        }
-                    )
-                } else currentState
-            } else currentState
+            val updatedCollection = currentState.collections[collectionIndex].copy(
+                boxes = currentState.collections[collectionIndex].boxes.toMutableList().also {
+                    it[boxIndex] = updatedBox
+                }
+            )
+
+            val updatedState = currentState.copy(
+                collections = currentState.collections.toMutableList().also {
+                    it[collectionIndex] = updatedCollection
+                }
+            )
+            Log.i("notifyCollection item value", updatedState.collections[collectionIndex].boxes[boxIndex].items[itemIndex].value.asCurrencyString())
+            Log.i("notifyCollection box value", updatedState.collections[collectionIndex].boxes[boxIndex].value.asCurrencyString())
+            Log.i("notifyCollection collection value", updatedState.collections[collectionIndex].value.asCurrencyString())
+            updatedState
         }
     }
 
@@ -231,35 +235,6 @@ class PackItUpViewModel(
             _uiState.value = _uiState.value.copy(boxes = uiState.value.boxes.map {
                 if (it.id == box.id) updatedBox else it
             })
-        }
-    }
-
-    private fun notifyCollection(box: Box) {
-        // TODO: refactor
-        // find collection that Box belongs to
-        // replace Box in that collection with copy to trigger recomposition
-        _uiState.update { currentState ->
-            val collectionIndex = currentState.collections.indexOfFirst { collection ->
-                collection.boxes.any { it.id == box.id }
-            }
-            if (collectionIndex != -1) {
-                val boxIndex = currentState.collections[collectionIndex].boxes.indexOfFirst { it.id == box.id }
-                if  (boxIndex != -1) {
-                    val updatedCollection = currentState.collections[collectionIndex].copy(
-                        boxes = currentState.collections[collectionIndex].boxes.toMutableList().also {
-                            it[boxIndex] = box
-                        }
-                    )
-                    val updatedState = currentState.copy(
-                        collections = currentState.collections.toMutableList().also {
-                            it[collectionIndex] = updatedCollection
-                        }
-                    )
-                    Log.i("notifyCollection collection value", updatedState.collections[0].value.asCurrencyString())
-                    _uiState.value = updatedState
-                    updatedState
-                } else currentState
-            } else currentState
         }
     }
 
