@@ -234,6 +234,35 @@ class PackItUpViewModel(
         }
     }
 
+    private fun notifyCollection(box: Box) {
+        // TODO: refactor
+        // find collection that Box belongs to
+        // replace Box in that collection with copy to trigger recomposition
+        _uiState.update { currentState ->
+            val collectionIndex = currentState.collections.indexOfFirst { collection ->
+                collection.boxes.any { it.id == box.id }
+            }
+            if (collectionIndex != -1) {
+                val boxIndex = currentState.collections[collectionIndex].boxes.indexOfFirst { it.id == box.id }
+                if  (boxIndex != -1) {
+                    val updatedCollection = currentState.collections[collectionIndex].copy(
+                        boxes = currentState.collections[collectionIndex].boxes.toMutableList().also {
+                            it[boxIndex] = box
+                        }
+                    )
+                    val updatedState = currentState.copy(
+                        collections = currentState.collections.toMutableList().also {
+                            it[collectionIndex] = updatedCollection
+                        }
+                    )
+                    Log.i("notifyCollection collection value", updatedState.collections[0].value.asCurrencyString())
+                    _uiState.value = updatedState
+                    updatedState
+                } else currentState
+            } else currentState
+        }
+    }
+
     private fun updateCollection(collection: Collection){
         val collectionToUpdate = getCollection(collection.id)
         if(collectionToUpdate != null) {
