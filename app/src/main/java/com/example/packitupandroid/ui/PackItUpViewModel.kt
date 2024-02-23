@@ -155,6 +155,7 @@ class PackItUpViewModel(
             val itemToDelete = getItem(id)
             if(itemToDelete != null) {
                 _uiState.value = _uiState.value.copy(items = uiState.value.items.filter { it.id != itemToDelete.id })
+                broadcastItemUpdate(itemToDelete, true)
             }
         }
     }
@@ -196,15 +197,22 @@ class PackItUpViewModel(
         }
     }
 
-    private fun broadcastItemUpdate(item: Item) {
+    private fun broadcastItemUpdate(item: Item, deleteItem: Boolean = false) {
         val boxIndex = uiState.value.boxes.indexOfFirst { box -> box.items.any { it.id == item.id } }
         val itemIndex = uiState.value.boxes[boxIndex].items.indexOfFirst { it.id == item.id}
         val collectionIndex = uiState.value.collections.indexOfFirst { collection -> collection.boxes.any { it.id == uiState.value.boxes[boxIndex].id } }
         _uiState.update { currentState ->
             val updatedBox = currentState.boxes[boxIndex].copy(
-                items = currentState.boxes[boxIndex].items.toMutableList().also {
-                    it[itemIndex] = item
+                items = if (deleteItem) {
+                    Log.i("broadcastItemUpdate delete item: ", item.toString())
+                    currentState.boxes[boxIndex].items.filter { it.id != item.id }
+                } else {
+                    Log.i("broadcastItemUpdate update item: ", item.toString())
+                    currentState.boxes[boxIndex].items.toMutableList().also {
+                        it[itemIndex] = item
+                    }
                 }
+
             )
 
             val updatedCollection = currentState.collections[collectionIndex].copy(
@@ -218,9 +226,15 @@ class PackItUpViewModel(
                     it[collectionIndex] = updatedCollection
                 }
             )
-            Log.i("notifyCollection item value", updatedState.collections[collectionIndex].boxes[boxIndex].items[itemIndex].value.asCurrencyString())
-            Log.i("notifyCollection box value", updatedState.collections[collectionIndex].boxes[boxIndex].value.asCurrencyString())
-            Log.i("notifyCollection collection value", updatedState.collections[collectionIndex].value.asCurrencyString())
+
+            val boxValue = updatedState.collections[collectionIndex].boxes[boxIndex].value.asCurrencyString()
+            val boxSize = updatedState.collections[collectionIndex].boxes[boxIndex].items.size
+            val collectionValue = updatedState.collections[collectionIndex].value.asCurrencyString()
+            val collectionSize = updatedState.collections[collectionIndex].boxes.size
+            val collectionItemSize = updatedState.collections[collectionIndex].boxes.sumOf { it.items.size }
+            Log.i("notifyCollection item: value = ", updatedState.collections[collectionIndex].boxes[boxIndex].items[itemIndex].value.asCurrencyString())
+            Log.i("notifyCollection box: ", "value = ${boxValue}\tboxes = ${boxSize}")
+            Log.i("notifyCollection collection: ", "value = ${collectionValue}\tboxes = ${collectionSize}\titems: ${collectionItemSize}")
             updatedState
         }
     }

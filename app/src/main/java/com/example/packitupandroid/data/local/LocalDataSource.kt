@@ -34,7 +34,7 @@ class LocalDataSource() {
                 name = "Peggy PUg",
                 description = "Cutest little pug in the world",
                 isFragile = true,
-                value = 100000000000000.00,
+                value = 100.00, // 100000000000000.00,
                 imageUri = R.drawable.pug,
             ),
             Item(
