@@ -21,7 +21,7 @@ fun ItemsScreen(
 ) {
     Screen(
         modifier = modifier,
-        elements = uiState.items.toList(),
+        elements = uiState.items,
         card = { data, update, destroy ->
             BaseCard(
                 data = data,
