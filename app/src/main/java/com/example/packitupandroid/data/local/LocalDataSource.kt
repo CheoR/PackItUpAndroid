@@ -6,29 +6,11 @@ import com.example.packitupandroid.model.Collection
 import com.example.packitupandroid.model.Item
 
 class LocalDataSource() {
-    private fun itemsAndValue(start: Int, stop: Int) : Pair<List<Item>, Double> {
-        /**
-         * Return sublist of [Item] and sublist total value.
-         */
-
-        val itemSublist = loadItems().slice( start .. stop )
-        val value = itemSublist.sumOf { it.value }
-        return Pair(itemSublist, value)
-    }
-
-    private fun boxesAndValue(start: Int, stop: Int) : Pair<List<Box>, Double> {
-        /**
-         * Return sublist of [Box] and sublist total value.
-         */
-
-        val boxSublist = loadBoxes().slice( start .. stop )
-        val value = boxSublist.sumOf { it.value }
-
-        return Pair(boxSublist, value)
-    }
+    private val items = loadItems()
+    private val boxes = loadBoxes()
 
     fun loadItems(): List<Item> {
-        return listOf<Item> (
+        return listOf(
             Item(
                 id = "4adfb752-c6b3-4002-901c-c2fa7889473b",
                 name = "Peggy PUg",
@@ -159,23 +141,23 @@ class LocalDataSource() {
             Box(
                 id = "af0d2c01-4fe6-46b2-8b7a-3c5429eb9e99",
                 name = "kitchen",
-                items = itemsAndValue(0,3).first,
+                items = items.slice(0..3),
                 description = "don't open until i get home",
             ),
             Box(
                 id = "d377ac29-39ca-4094-8a07-da49525d21b1",
                 name = "bedroom1",
-                items = itemsAndValue(3,5).first,
+                items = items.slice(3..5),
             ),
             Box(
                 id = "c4b6d417-e077-4a20-8d6e-f21f72885cdd",
                 name = "bedroom2",
-                items = itemsAndValue(6,9).first,
+                items = items.slice(6..9),
             ),
             Box(
                 id = "2d6c2c8c-56fe-4f7e-9483-e6f9511f9fc5",
                 name = "garage",
-                items = itemsAndValue(10,12).first,
+                items = items.slice(10..12),
             ),
             Box(
                 id = "1cb842ee-9636-4394-a49f-f56c922ef0d1",
@@ -185,7 +167,7 @@ class LocalDataSource() {
             Box(
                 id = "37d40996-393b-4a3c-bed8-e67382d56d19",
                 name = "garage",
-                items = itemsAndValue(12,15).first,
+                items = items.slice(12..15),
             ),
         )
     }
@@ -195,17 +177,17 @@ class LocalDataSource() {
             Collection(
                 id = "748c0084-4f2b-4957-ae2f-4892670c85f3",
                 name = "for home",
-                boxes = boxesAndValue(0,2).first,
+                boxes = boxes.slice(0..2),
             ),
             Collection(
                 id = "cc92160b-b6f1-41f2-bac5-8cd5f868e645",
                 name = "for donation",
-                boxes = boxesAndValue(3,3).first,
+                boxes = boxes.slice(3..3),
             ),
             Collection(
                 id = "0d394337-0886-48b2-b788-5a706cda52e6",
                 name = "not sure yet",
-                boxes = boxesAndValue(4,4).first,
+                boxes = boxes.slice(4..4),
             ),
             Collection(
                 id = "ffd69d63-8bb1-4f15-856e-316777c36f3e",
@@ -215,7 +197,7 @@ class LocalDataSource() {
             Collection(
                 id = "bc71bf4b-4771-4508-917d-b615211bc786",
                 name = "4L not sure yet",
-                boxes = boxesAndValue(5,5).first,
+                boxes = boxes.slice(5..5),
             ),
         )
     }
