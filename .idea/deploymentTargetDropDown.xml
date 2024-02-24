@@ -2,16 +2,7 @@
 <project version="4">
   <component name="deploymentTargetDropDown">
     <value>
-      <entry key="PreviewActionColumnDefaultCardNoEdit">
-        <State />
-      </entry>
-      <entry key="PreviewActionColumnEditCardEdit">
-        <State />
-      </entry>
-      <entry key="PreviewActionColumnSummaryCardNoEdit">
-        <State />
-      </entry>
-      <entry key="PreviewSummaryScreen">
+      <entry key="CounterUiTests">
         <State />
       </entry>
       <entry key="app">
