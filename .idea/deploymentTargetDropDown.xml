@@ -2,6 +2,9 @@
 <project version="4">
   <component name="deploymentTargetDropDown">
     <value>
+      <entry key="CounterTest">
+        <State />
+      </entry>
       <entry key="CounterUiTests">
         <State />
       </entry>
@@ -20,6 +23,9 @@
           </targetSelectedWithDropDown>
           <timeTargetWasSelectedWithDropDown value="2024-01-23T15:52:20.280208824Z" />
         </State>
+      </entry>
+      <entry key="testIncrement()">
+        <State />
       </entry>
     </value>
   </component>
