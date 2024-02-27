@@ -8,6 +8,9 @@
       <entry key="CounterUiTests">
         <State />
       </entry>
+      <entry key="ExampleInstrumentedTest">
+        <State />
+      </entry>
       <entry key="app">
         <State>
           <targetSelectedWithDropDown>
@@ -21,11 +24,8 @@
               </deviceKey>
             </Target>
           </targetSelectedWithDropDown>
-          <timeTargetWasSelectedWithDropDown value="2024-01-23T15:52:20.280208824Z" />
+          <timeTargetWasSelectedWithDropDown value="2024-02-27T17:59:22.735455005Z" />
         </State>
-      </entry>
-      <entry key="testIncrement()">
-        <State />
       </entry>
     </value>
   </component>
