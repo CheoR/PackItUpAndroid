@@ -2,13 +2,16 @@
 <project version="4">
   <component name="deploymentTargetDropDown">
     <value>
-      <entry key="CounterTest">
+      <entry key="ButtonTest">
         <State />
       </entry>
       <entry key="CounterUiTests">
         <State />
       </entry>
       <entry key="ExampleInstrumentedTest">
+        <State />
+      </entry>
+      <entry key="Test">
         <State />
       </entry>
       <entry key="app">
@@ -26,6 +29,9 @@
           </targetSelectedWithDropDown>
           <timeTargetWasSelectedWithDropDown value="2024-02-27T17:59:22.735455005Z" />
         </State>
+      </entry>
+      <entry key="testCounterOnClick()">
+        <State />
       </entry>
     </value>
   </component>
