@@ -181,14 +181,7 @@ class PackItUpViewModel(
     private fun updateItem(item: Item) {
         val itemToUpdate = getItem(item.id)
         if(itemToUpdate != null) {
-            val updatedItem = itemToUpdate.copy(
-                id = item.id,
-                name = item.name,
-                description = item.description,
-                value = item.value,
-                imageUri = item.imageUri,
-                isFragile = item.isFragile,
-            )
+            val updatedItem = item.copy()
             _uiState.value = _uiState.value.copy(items = uiState.value.items.map {
                 if (it.id == item.id) updatedItem else it
             })
@@ -242,10 +235,7 @@ class PackItUpViewModel(
     private fun updateBox(box: Box){
         val boxToUpdate = getBox(box.id)
         if(boxToUpdate != null) {
-            val updatedBox = boxToUpdate.copy(
-                name = box.name,
-                description = box.description,
-            )
+            val updatedBox = box.copy()
             _uiState.value = _uiState.value.copy(boxes = uiState.value.boxes.map {
                 if (it.id == box.id) updatedBox else it
             })
@@ -255,10 +245,7 @@ class PackItUpViewModel(
     private fun updateCollection(collection: Collection){
         val collectionToUpdate = getCollection(collection.id)
         if(collectionToUpdate != null) {
-            val updatedCollection = collectionToUpdate.copy(
-                name = collection.name,
-                description = collection.description,
-            )
+            val updatedCollection = collection.copy()
             _uiState.value = _uiState.value.copy(collections = uiState.value.collections.map {
                 if (it.id == collection.id) updatedCollection else it
             })
