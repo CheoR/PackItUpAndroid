@@ -185,8 +185,10 @@ class PackItUpViewModel(
             _uiState.value = _uiState.value.copy(items = uiState.value.items.map {
                 if (it.id == item.id) updatedItem else it
             })
-            // TODO: only run if `value` or `isFragile` is changed
-            broadcastItemUpdate(updatedItem)
+
+            if(itemToUpdate.value != item.value || itemToUpdate.isFragile != item.isFragile) {
+                broadcastItemUpdate(updatedItem)
+            }
         }
     }
 
@@ -195,18 +197,21 @@ class PackItUpViewModel(
         val itemIndex = uiState.value.boxes[boxIndex].items.indexOfFirst { it.id == item.id}
         val collectionIndex = uiState.value.collections.indexOfFirst { collection -> collection.boxes.any { it.id == uiState.value.boxes[boxIndex].id } }
         _uiState.update { currentState ->
-            val updatedBox = currentState.boxes[boxIndex].copy(
-                items = if (deleteItem) {
-                    Log.i("broadcastItemUpdate delete item: ", item.toString())
-                    currentState.boxes[boxIndex].items.filter { it.id != item.id }
-                } else {
-                    Log.i("broadcastItemUpdate update item: ", item.toString())
-                    currentState.boxes[boxIndex].items.toMutableList().also {
-                        it[itemIndex] = item
-                    }
+            val oldBox = currentState.boxes[boxIndex]
+            val updatedItems = if (deleteItem) {
+                Log.i("broadcastItemUpdate delete item: ", item.toString())
+                oldBox.items.filter { it.id != item.id }
+            } else {
+                Log.i("broadcastItemUpdate update item: ", item.toString())
+                oldBox.items.toMutableList().also {
+                    it[itemIndex] = item
                 }
-
+            }
+            val updatedBox = oldBox.copy(
+                items = updatedItems
             )
+
+            updateElement(updatedBox)
 
             val updatedCollection = currentState.collections[collectionIndex].copy(
                 boxes = currentState.collections[collectionIndex].boxes.toMutableList().also {
