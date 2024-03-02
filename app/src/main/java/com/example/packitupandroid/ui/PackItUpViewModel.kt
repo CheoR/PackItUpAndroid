@@ -1,6 +1,5 @@
 package com.example.packitupandroid.ui
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProvider.AndroidViewModelFactory.Companion.APPLICATION_KEY
@@ -161,6 +160,10 @@ class PackItUpViewModel(
     private fun destroyBox(id: String?) {
         if(id != null) {
             val boxToDelete = getBox(id)
+            val items = boxToDelete?.items
+
+            items?.forEach { destroyElement(it) }
+
             if(boxToDelete != null) {
                 _uiState.value = _uiState.value.copy(boxes = uiState.value.boxes.filter { it.id != boxToDelete.id })
                 notifyUpdateToParent(boxToDelete, true)
@@ -171,6 +174,12 @@ class PackItUpViewModel(
     private fun destroyCollection(id: String?) {
         if(id != null) {
             val collectionToDelete = getCollection(id)
+            val boxes = collectionToDelete?.boxes
+            val items = collectionToDelete?.boxes?.flatMap { it.items }
+
+            items?.forEach { destroyElement(it) }
+            boxes?.forEach { destroyElement(it) }
+
             if(collectionToDelete != null) {
                 _uiState.value = _uiState.value.copy(collections = uiState.value.collections.filter { it.id != collectionToDelete.id })
             }
@@ -221,7 +230,6 @@ class PackItUpViewModel(
     }
 
     private fun updateBox(box: Box){
-        Log.i("UPDATEBOX ", "UPDATING BOX: ${box.toString()}")
         val boxToUpdate = getBox(box.id)
         if(boxToUpdate != null) {
             val updatedBox = box.copy()
