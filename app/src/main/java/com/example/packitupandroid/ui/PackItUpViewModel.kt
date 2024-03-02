@@ -15,11 +15,9 @@ import com.example.packitupandroid.model.Item
 import com.example.packitupandroid.model.Summary
 import com.example.packitupandroid.repository.DataRepository
 import com.example.packitupandroid.repository.LocalDataRepository
-import com.example.packitupandroid.ui.components.asCurrencyString
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 class PackItUpViewModel(
@@ -155,7 +153,7 @@ class PackItUpViewModel(
             val itemToDelete = getItem(id)
             if(itemToDelete != null) {
                 _uiState.value = _uiState.value.copy(items = uiState.value.items.filter { it.id != itemToDelete.id })
-                broadcastItemUpdate(itemToDelete, true)
+                notifyUpdateToParent(itemToDelete, true)
             }
         }
     }
@@ -165,6 +163,7 @@ class PackItUpViewModel(
             val boxToDelete = getBox(id)
             if(boxToDelete != null) {
                 _uiState.value = _uiState.value.copy(boxes = uiState.value.boxes.filter { it.id != boxToDelete.id })
+                notifyUpdateToParent(boxToDelete, true)
             }
         }
     }
@@ -187,63 +186,52 @@ class PackItUpViewModel(
             })
 
             if(itemToUpdate.value != item.value || itemToUpdate.isFragile != item.isFragile) {
-                broadcastItemUpdate(updatedItem)
+                notifyUpdateToParent(updatedItem)
             }
         }
     }
 
-    private fun broadcastItemUpdate(item: Item, deleteItem: Boolean = false) {
-        val boxIndex = uiState.value.boxes.indexOfFirst { box -> box.items.any { it.id == item.id } }
-        val itemIndex = uiState.value.boxes[boxIndex].items.indexOfFirst { it.id == item.id}
-        val collectionIndex = uiState.value.collections.indexOfFirst { collection -> collection.boxes.any { it.id == uiState.value.boxes[boxIndex].id } }
-        _uiState.update { currentState ->
-            val oldBox = currentState.boxes[boxIndex]
-            val updatedItems = if (deleteItem) {
-                Log.i("broadcastItemUpdate delete item: ", item.toString())
-                oldBox.items.filter { it.id != item.id }
+    private fun notifyUpdateToParent(element: BaseCardData, deleteElement: Boolean = false) {
+        if (element is Item) {
+            val box = uiState.value.boxes.find { box -> box.items.any { it.id == element.id } }
+            val items = if(deleteElement) {
+                box?.items?.filter { it.id != element.id }
             } else {
-                Log.i("broadcastItemUpdate update item: ", item.toString())
-                oldBox.items.toMutableList().also {
-                    it[itemIndex] = item
+                box?.items?.map {
+                    if (it.id == element.id) element else it
                 }
             }
-            val updatedBox = oldBox.copy(
-                items = updatedItems
-            )
-
-            updateElement(updatedBox)
-
-            val updatedCollection = currentState.collections[collectionIndex].copy(
-                boxes = currentState.collections[collectionIndex].boxes.toMutableList().also {
-                    it[boxIndex] = updatedBox
+            val updatedBox = box?.copy(items = items as List<Item>)
+            updateBox(updatedBox as Box)
+            notifyUpdateToParent(updatedBox as Box)
+        } else {
+            val collection = uiState.value.collections.find { collection -> collection.boxes.any { it.id == element.id } }
+            val boxes = if(deleteElement) {
+                collection?.boxes?.filter { it.id != element.id }
+            } else {
+                collection?.boxes?.map {
+                    if (it.id == element.id) element else it
                 }
-            )
+            }
 
-            val updatedState = currentState.copy(
-                collections = currentState.collections.toMutableList().also {
-                    it[collectionIndex] = updatedCollection
-                }
-            )
-
-            val boxValue = updatedState.collections[collectionIndex].boxes[boxIndex].value.asCurrencyString()
-            val boxSize = updatedState.collections[collectionIndex].boxes[boxIndex].items.size
-            val collectionValue = updatedState.collections[collectionIndex].value.asCurrencyString()
-            val collectionSize = updatedState.collections[collectionIndex].boxes.size
-            val collectionItemSize = updatedState.collections[collectionIndex].boxes.sumOf { it.items.size }
-            Log.i("notifyCollection item: value = ", updatedState.collections[collectionIndex].boxes[boxIndex].items[itemIndex].value.asCurrencyString())
-            Log.i("notifyCollection box: ", "value = ${boxValue}\tboxes = ${boxSize}")
-            Log.i("notifyCollection collection: ", "value = ${collectionValue}\tboxes = ${collectionSize}\titems: ${collectionItemSize}")
-            updatedState
+            val updatedCollection = collection?.copy(boxes = boxes as List<Box>)
+            updateCollection(updatedCollection as Collection)
         }
+
     }
 
     private fun updateBox(box: Box){
+        Log.i("UPDATEBOX ", "UPDATING BOX: ${box.toString()}")
         val boxToUpdate = getBox(box.id)
         if(boxToUpdate != null) {
             val updatedBox = box.copy()
             _uiState.value = _uiState.value.copy(boxes = uiState.value.boxes.map {
                 if (it.id == box.id) updatedBox else it
             })
+
+            if(boxToUpdate.value != box.value || boxToUpdate.isFragile != box.isFragile) {
+                notifyUpdateToParent(updatedBox)
+            }
         }
     }
 
