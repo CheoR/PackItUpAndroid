@@ -31,7 +31,7 @@ import com.example.packitupandroid.ui.components.asCurrencyString
 fun SummaryScreen(
     uiState: PackItUpUiState,
     onCreate: (Int?) -> Unit,
-    onDestroy: (String) -> Unit,
+    onDestroy: () -> Unit,
     onUpdate: (BaseCardData) -> Unit,
     modifier: Modifier = Modifier,
 ) {
@@ -48,7 +48,7 @@ fun SummaryScreen(
                 collections = uiState.collections,
             ),
             onUpdate = onUpdate,
-            onDestroy = { onDestroy("collections") },
+            onDestroy = onDestroy,
         )
 
         SummaryCard(
@@ -59,7 +59,7 @@ fun SummaryScreen(
                 boxes = uiState.boxes,
             ),
             onUpdate = onUpdate,
-            onDestroy = { onDestroy("boxes") },
+            onDestroy = onDestroy,
         )
 
         SummaryCard(
@@ -70,7 +70,7 @@ fun SummaryScreen(
                 items = uiState.items,
             ),
             onUpdate = onUpdate,
-            onDestroy = { onDestroy("items") },
+            onDestroy = onDestroy,
         )
 
         Spacer(modifier = Modifier.weight(1f))
