@@ -9,8 +9,7 @@ data class Summary (
     val collections: List<Collection> = emptyList(),
     val boxes: List<Box> = emptyList(),
     val items: List<Item> = emptyList(),
-) : BaseCardData {
-    override val isFragile: Boolean = items.any { it.isFragile }
-    override val value: Double = items.sumOf { it.value }
-    override val editFields: Set<EditFields> = emptySet()
-}
+    override val isFragile: Boolean = items.any { it.isFragile },
+    override val value: Double = items.sumOf { it.value },
+    override val editFields: Set<EditFields> = emptySet(),
+) : BaseCardData

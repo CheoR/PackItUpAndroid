@@ -8,11 +8,9 @@ data class Box(
     override val name: String,
     override val description: String = "",
     val items: List<Item> = emptyList(),
+    override val value: Double = items.sumOf { it.value },
+    override val isFragile: Boolean = items.any { it.isFragile },
 ) : BaseCardData {
-    override val isFragile: Boolean
-        get() = items.any { it.isFragile }
-    override val value: Double
-        get() = items.sumOf { it.value }
     companion object {
         val EDIT_FIELDS = setOf(
             EditFields.Name,
