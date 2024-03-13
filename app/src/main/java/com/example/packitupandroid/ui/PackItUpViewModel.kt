@@ -24,12 +24,16 @@ sealed class State {
     object Update : State()
     object Destroy : State()
 }
-
 class PackItUpViewModel(
     private val repository: DataRepository = LocalDataRepository(),
 ) : ViewModel() {
     private val _uiState = MutableStateFlow(PackItUpUiState())
     val uiState: StateFlow<PackItUpUiState> = _uiState.asStateFlow()
+
+//    private val _entityCache = MutableStateFlow<Map<String, BaseCardData>>(emptyMap())
+//    private val entityCache: StateFlow<Map<String, BaseCardData>> = _entityCache.asStateFlow()
+    private val entityCacheMap = mutableMapOf<String, BaseCardData>()
+    private val entityCache: Map<String, BaseCardData> get() = entityCacheMap
 
     init {
         viewModelScope.launch {
@@ -41,6 +45,19 @@ class PackItUpViewModel(
             }
             if (_uiState.value.collections.isEmpty()) {
                 loadData(repository::loadCollections) { collections -> _uiState.value.copy(collections = collections) }
+            }
+        }
+
+        viewModelScope.launch {
+            // Observe changes in uiState and update the cache
+            //  suspending function that collects latest value of uiState whenever it changes
+            uiState.collect { state ->
+                val newCache = state.items.associateBy { it.id }
+                    .plus(state.boxes.associateBy { it.id })
+                    .plus(state.collections.associateBy { it.id })
+//                _entityCache.emit(newCache)
+                entityCacheMap.clear()
+                entityCacheMap.putAll(newCache)
             }
         }
     }
@@ -56,8 +73,9 @@ class PackItUpViewModel(
     }
 
     fun destroyElement(element: BaseCardData) {
-        val elements = destroyEntity(element)
-        updateState(State.Destroy, elements)
+        val (elementsToUpdate, elementsToDestroy) = destroyEntity(element)
+        updateState(State.Update, elementsToUpdate)
+        updateState(State.Destroy, elementsToDestroy)
     }
 
     private suspend inline fun <reified T> loadData(
@@ -73,65 +91,63 @@ class PackItUpViewModel(
     }
 
     private fun <T : BaseCardData> getEntity(element: T): T {
-        val entity = uiState.value.items
-            .plus(uiState.value.boxes)
-            .plus(uiState.value.collections)
-            .firstOrNull { it.id == element.id } as? T
+        val entity = entityCache[element.id] as? T
         return entity ?: throw NoSuchElementException("Entity not found")
     }
 
-    private inline fun <reified T: BaseCardData> createEntity(element: T, count: Int?): MutableList<T> {
-        if (count == null) {
-            throw IllegalArgumentException("Cannot create entity with null count")
-        }
+    private fun <T: BaseCardData> createEntity(element: T, count: Int?): List<T> {
+        requireNotNull(count) { "Cannot create entity with null count" }
+        require(element !is Summary) { "Element cannot be Summary" }
 
-        if (element is Summary) {
-            throw IllegalArgumentException("Element cannot be Summary")
-        }
-
-        val newElements: MutableList<T> = mutableListOf()
-         (0 until count).mapIndexed { index, _ ->
-            val newElement = when(element) {
-                is Item -> element.copy(name="Item ${index + 1}")
-                is Box -> element.copy(name="Box ${index + 1}")
-                is Collection -> element.copy(name="Collection ${index + 1}")
+        return (0 until count).mapIndexed { index, _ ->
+            when(element) {
+                is Item -> Item(name = "Item ${index + 1}")
+                is Box -> Box(name = "Box ${index + 1}")
+                is Collection -> Collection(name = "Collection ${index + 1}")
                 else -> throw Exception("Could not create element")
             } as T
-             newElements.add(newElement)
         }
-        return newElements
     }
 
-    private fun<T: BaseCardData> getParent(element: T): BaseCardData {
-        val parentElement = when(element) {
-            is Item -> uiState.value.boxes.find { box -> box.items.any { it.id == element.id } }
-            is Box -> uiState.value.collections.find { collection -> collection.boxes.any { it.id == element.id } }
-            else -> throw IllegalArgumentException("Could not get parent element")
+    private fun <T : BaseCardData> getParent(element: T): BaseCardData {
+        val parentElement = when (element) {
+            is Item -> getParentBox(element.id)
+            is Box -> getParentCollection(element.id)
+            else -> null
         }
 
         return parentElement ?: throw IllegalArgumentException("Could not get parent element")
     }
 
-    private fun <T : BaseCardData> updateEntity(element: T): MutableList<BaseCardData>  {
+    private fun getParentBox(itemId: String): BaseCardData? {
+        return uiState.value.boxes.find { box -> box.items.any { it.id == itemId } }
+    }
+
+    private fun getParentCollection(boxId: String): BaseCardData? {
+        return uiState.value.collections.find { collection -> collection.boxes.any { it.id == boxId } }
+    }
+
+    private fun <T : BaseCardData> updateEntity(element: T): List<BaseCardData> {
         val elementsToUpdate: MutableList<BaseCardData> = mutableListOf()
         when (element) {
             is Item -> {
                 val elementToUpdate = getEntity(element)
                 elementsToUpdate.add(element)
+
                 if (elementToUpdate.value != element.value || elementToUpdate.isFragile != element.isFragile) {
                     val box = getParent(element) as Box
                     val collection = getParent(box) as Collection
+                    val (newBoxValue, newBoxIsFragile) = updateValueAndIsFragile(box.items, element)
+
                     val updatedBox = box.copy(
-                        value = box.items.filterNot { it.id == element.id }
-                            .sumOf { it.value } + element.value,
-                        isFragile = box.items.filterNot { it.id == element.id }
-                            .any { it.isFragile } || element.isFragile,
+                        value = newBoxValue,
+                        isFragile = newBoxIsFragile
                     )
+                    val (newCollectionValue, newCollectionIsFragile) = updateValueAndIsFragile(collection.boxes, updatedBox)
+
                     val updatedCollection = collection.copy(
-                        value = collection.boxes.filterNot { it.id == updatedBox.id }
-                            .sumOf { it.value } + updatedBox.value,
-                        isFragile = collection.boxes.filterNot { it.id == updatedBox.id }
-                            .any { it.isFragile } || updatedBox.isFragile,
+                        value = newCollectionValue,
+                        isFragile = newCollectionIsFragile,
                     )
                     elementsToUpdate.add(updatedBox)
                     elementsToUpdate.add(updatedCollection)
@@ -141,9 +157,17 @@ class PackItUpViewModel(
             is Collection -> elementsToUpdate.add(element)
             else -> throw IllegalArgumentException("Cannot copy element")
         }
-        return elementsToUpdate
+        return elementsToUpdate.toList()
     }
-    private fun <T : BaseCardData> destroyEntity(element: T): MutableList<T> {
+
+    private fun <T: BaseCardData>updateValueAndIsFragile(elements: List<T>, element: T): Pair<Double, Boolean> {
+        val newValue = elements.filterNot { it.id == element.id }.sumOf { it.value } + element.value
+        val newIsFragile = elements.filterNot { it.id == element.id }.any { it.isFragile } || element.isFragile
+        return Pair(newValue, newIsFragile)
+    }
+
+    private fun <T : BaseCardData> destroyEntity(element: T): Pair<List<BaseCardData>, List<BaseCardData>> {
+        val elementsToUpdate: MutableList<BaseCardData> = mutableListOf()
         val elementsToDestroy: MutableList<BaseCardData> = mutableListOf()
         when (element) {
             is Item -> {
@@ -161,9 +185,8 @@ class PackItUpViewModel(
                     value = boxes.sumOf { it.value },
                     isFragile = boxes.any { it.isFragile },
                 )
-                // TODO: redo. don't like state update and returning list of what to destroy
-                updateState(State.Update, updateEntity(updatedBox))
-                updateState(State.Update, updateEntity(updatedCollection))
+                elementsToUpdate.add(updatedBox)
+                elementsToUpdate.add(updatedCollection)
                 elementsToDestroy.add(element)
             }
 
@@ -176,7 +199,7 @@ class PackItUpViewModel(
                     value = boxes.sumOf { it.value },
                     isFragile = boxes.any { it.isFragile }
                 )
-                updateState(State.Update, updateEntity(updatedCollection))
+                elementsToUpdate.add(updatedCollection)
                 elementsToDestroy.addAll(items)
                 elementsToDestroy.add(element)
             }
@@ -190,58 +213,41 @@ class PackItUpViewModel(
             else -> throw IllegalArgumentException("Cannot copy element")
         }
 
-        return elementsToDestroy as MutableList<T>
+        return Pair(elementsToUpdate.toList(), elementsToDestroy.toList())
+    }
+
+    private fun <T : BaseCardData> replaceElements(oldElements: List<T>, newElements: List<T>): List<T> {
+        return oldElements.map { oldElement ->
+            newElements.find { it.id == oldElement.id } ?: oldElement
+        }
     }
 
     private fun<T : BaseCardData> updateState(state: State, elements: List<T>) {
+        val items = elements.filterIsInstance<Item>() // elements.filter { it is Item }
+        val boxes = elements.filterIsInstance<Box>() //  { it is Box }
+        val collections = elements.filterIsInstance<Collection>()
+
         val newState : PackItUpUiState = when(state) {
             is State.Create -> {
                 when (elements.firstOrNull()) {
-                     is Item ->  uiState.value.copy(items = uiState.value.items + elements as List<Item>)
-                     is Box -> uiState.value.copy(boxes = uiState.value.boxes + elements as List<Box>)
-                     is Collection -> uiState.value.copy(collections = uiState.value.collections + elements as List<Collection>)
-                     else -> throw IllegalStateException("Unknown element type")
-                 }
+                    is Item ->  uiState.value.copy(items = uiState.value.items + elements as List<Item>)
+                    is Box -> uiState.value.copy(boxes = uiState.value.boxes + elements as List<Box>)
+                    is Collection -> uiState.value.copy(collections = uiState.value.collections + elements as List<Collection>)
+                    else -> throw IllegalStateException("Unknown element type")
+                }
             }
             is State.Update -> {
-                val items = elements.filter { it is Item }
-                val boxes = elements.filter { it is Box }
-                val collections = elements.filter { it is Collection }
-
-                val updatedItems = if(items.isNotEmpty()) {
-                    uiState.value.items.map { item ->
-                        items.find { it.id == item.id } ?: item
-                    }
-                } else {
-                    uiState.value.items
-                }
-
-                val updatedBoxes = if(boxes.isNotEmpty()) {
-                    uiState.value.boxes.map { box ->
-                        boxes.find { it.id == box.id } ?: box
-                    }
-                } else {
-                    uiState.value.boxes
-                }
-
-                val updatedCollections = if(collections.isNotEmpty()) {
-                    uiState.value.collections.map { collection ->
-                        collections.find { it.id == collection.id } ?: collection
-                    }
-                } else {
-                    uiState.value.collections
-                }
+                val updatedItems = replaceElements(uiState.value.items, items)
+                val updatedBoxes = replaceElements(uiState.value.boxes, boxes)
+                val updatedCollections = replaceElements(uiState.value.collections, collections)
 
                 uiState.value.copy(
-                    items = updatedItems as List<Item>,
-                    boxes = updatedBoxes as List<Box>,
-                    collections = updatedCollections as List<Collection>,
+                    items = updatedItems,
+                    boxes = updatedBoxes,
+                    collections = updatedCollections,
                 )
             }
             is State.Destroy -> {
-                val items = elements.filterIsInstance<Item>()
-                val boxes = elements.filterIsInstance<Box>()
-                val collections = elements.filterIsInstance<Collection>()
                 uiState.value.copy(
                     items = uiState.value.items.filterNot { items.contains(it) },
                     boxes = uiState.value.boxes.filterNot { boxes.contains(it) },
@@ -272,3 +278,4 @@ class PackItUpViewModel(
         }
     }
 }
+
