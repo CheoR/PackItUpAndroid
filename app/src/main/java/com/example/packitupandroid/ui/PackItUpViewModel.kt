@@ -36,6 +36,11 @@ class PackItUpViewModel(
     private val entityCache: Map<String, BaseCardData> get() = entityCacheMap
 
     init {
+        initializeUIState()
+        observeUIState()
+    }
+
+    private fun initializeUIState() {
         viewModelScope.launch {
             if (_uiState.value.items.isEmpty()) {
                 loadData(repository::loadItems) { items -> _uiState.value.copy(items = items) }
@@ -47,7 +52,9 @@ class PackItUpViewModel(
                 loadData(repository::loadCollections) { collections -> _uiState.value.copy(collections = collections) }
             }
         }
+    }
 
+    private fun observeUIState() {
         viewModelScope.launch {
             // Observe changes in uiState and update the cache
             //  suspending function that collects latest value of uiState whenever it changes
@@ -222,41 +229,45 @@ class PackItUpViewModel(
         }
     }
 
-    private fun<T : BaseCardData> updateState(state: State, elements: List<T>) {
-        val items = elements.filterIsInstance<Item>() // elements.filter { it is Item }
-        val boxes = elements.filterIsInstance<Box>() //  { it is Box }
-        val collections = elements.filterIsInstance<Collection>()
+    private fun <T : BaseCardData> updateState(state: State, elements: List<T>) {
+        viewModelScope.launch {
+            val items = elements.filterIsInstance<Item>() // elements.filter { it is Item }
+            val boxes = elements.filterIsInstance<Box>() //  { it is Box }
+            val collections = elements.filterIsInstance<Collection>()
 
-        val newState : PackItUpUiState = when(state) {
-            is State.Create -> {
-                when (elements.firstOrNull()) {
-                    is Item ->  uiState.value.copy(items = uiState.value.items + elements as List<Item>)
-                    is Box -> uiState.value.copy(boxes = uiState.value.boxes + elements as List<Box>)
-                    is Collection -> uiState.value.copy(collections = uiState.value.collections + elements as List<Collection>)
-                    else -> throw IllegalStateException("Unknown element type")
+            val newState: PackItUpUiState = when (state) {
+                is State.Create -> {
+                    when (elements.firstOrNull()) {
+                        is Item -> uiState.value.copy(items = uiState.value.items + elements as List<Item>)
+                        is Box -> uiState.value.copy(boxes = uiState.value.boxes + elements as List<Box>)
+                        is Collection -> uiState.value.copy(collections = uiState.value.collections + elements as List<Collection>)
+                        else -> throw IllegalStateException("Unknown element type")
+                    }
+                }
+
+                is State.Update -> {
+                    val updatedItems = replaceElements(uiState.value.items, items)
+                    val updatedBoxes = replaceElements(uiState.value.boxes, boxes)
+                    val updatedCollections = replaceElements(uiState.value.collections, collections)
+
+                    uiState.value.copy(
+                        items = updatedItems,
+                        boxes = updatedBoxes,
+                        collections = updatedCollections,
+                    )
+                }
+
+                is State.Destroy -> {
+                    uiState.value.copy(
+                        items = uiState.value.items.filterNot { items.contains(it) },
+                        boxes = uiState.value.boxes.filterNot { boxes.contains(it) },
+                        collections = uiState.value.collections.filterNot { collections.contains(it) },
+                    )
                 }
             }
-            is State.Update -> {
-                val updatedItems = replaceElements(uiState.value.items, items)
-                val updatedBoxes = replaceElements(uiState.value.boxes, boxes)
-                val updatedCollections = replaceElements(uiState.value.collections, collections)
 
-                uiState.value.copy(
-                    items = updatedItems,
-                    boxes = updatedBoxes,
-                    collections = updatedCollections,
-                )
-            }
-            is State.Destroy -> {
-                uiState.value.copy(
-                    items = uiState.value.items.filterNot { items.contains(it) },
-                    boxes = uiState.value.boxes.filterNot { boxes.contains(it) },
-                    collections = uiState.value.collections.filterNot { collections.contains(it) },
-                )
-            }
+            _uiState.value = newState
         }
-
-        _uiState.value = newState
     }
 
     /**
