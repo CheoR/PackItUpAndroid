@@ -10,6 +10,7 @@ import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.CameraAlt
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Edit
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.Icon
@@ -25,7 +26,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.DpOffset
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.window.Dialog
 import com.example.packitupandroid.data.local.LocalDataSource
 import com.example.packitupandroid.model.BaseCardData
 import com.example.packitupandroid.model.Summary
@@ -50,27 +50,38 @@ fun ActionColumn(
         is CardType.Summary -> ActionColumnState.RightArrow
         else -> ActionColumnState.ThreeDots
     }
-    
-    if(isShowEditCard.value) {
-        isExpanded.value = false
-        Dialog(onDismissRequest = onCancel) {
-            EditCard(
-                data = data,
-                onEdit = onEdit,
-                onCancel = onCancel,
+
+        if(isShowEditCard.value) {
+            isExpanded.value = false
+            AlertDialog(
+                onDismissRequest = onCancel,
+                confirmButton = {},
+                dismissButton = {},
+                text = {
+                    EditCard(
+                        data = data,
+                        onEdit = onEdit,
+                        onCancel = onCancel,
+                    )
+                }
             )
         }
-    }
+
 
     if(isShowDeleteCard.value) {
         isExpanded.value = false
-        Dialog(onDismissRequest = onCancel) {
-            DeleteCard(
-                data = data,
-                onDelete = onDelete,
-                onCancel = onCancel,
-            )
-        }
+        AlertDialog(
+            onDismissRequest = onCancel,
+            confirmButton = {},
+            dismissButton = {},
+            text = {
+                DeleteCard(
+                    data = data,
+                    onDelete = onDelete,
+                    onCancel = onCancel
+                )
+                   },
+        )
     }
 
     Column(

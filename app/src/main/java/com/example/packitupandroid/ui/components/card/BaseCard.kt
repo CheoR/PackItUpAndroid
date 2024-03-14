@@ -15,6 +15,7 @@ import androidx.compose.material3.CardDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.vector.ImageVector
@@ -113,6 +114,7 @@ fun BaseCard(
     val expanded = remember { mutableStateOf(false) }
     val showEditCard = remember { mutableStateOf(false) }
     val showDeleteCard = remember { mutableStateOf(false) }
+
     Card(
         modifier = modifier
             .height(dimensionResource(R.dimen.card_height))
