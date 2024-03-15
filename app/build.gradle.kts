@@ -39,6 +39,7 @@ android {
     }
     buildFeatures {
         compose = true
+//        viewBinding = true
     }
     composeOptions {
         kotlinCompilerExtensionVersion = rootProject.extra["compose_compiler_version"].toString()
@@ -68,6 +69,14 @@ dependencies {
     implementation("androidx.lifecycle:lifecycle-runtime-ktx:${rootProject.extra["lifecycle_version"]}")
     implementation("androidx.lifecycle:lifecycle-runtime-compose:${rootProject.extra["lifecycle_version"]}")
     implementation("androidx.lifecycle:lifecycle-viewmodel-compose:${rootProject.extra["lifecycle_version"]}")
+
+    // CameraX
+    implementation("androidx.camera:camera-core:${rootProject.extra["camerax_version"]}")
+    implementation("androidx.camera:camera-camera2:${rootProject.extra["camerax_version"]}")
+    implementation("androidx.camera:camera-lifecycle:${rootProject.extra["camerax_version"]}")
+    implementation("androidx.camera:camera-video:${rootProject.extra["camerax_version"]}")
+    implementation("androidx.camera:camera-view:${rootProject.extra["camerax_version"]}")
+    implementation("androidx.camera:camera-extensions:${rootProject.extra["camerax_version"]}")
 
     testImplementation("junit:junit:4.13.2")
 
