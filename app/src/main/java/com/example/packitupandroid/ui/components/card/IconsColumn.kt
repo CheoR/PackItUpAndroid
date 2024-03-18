@@ -1,5 +1,8 @@
 package com.example.packitupandroid.ui.components.card
 
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
+import android.util.Base64
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxHeight
@@ -18,6 +21,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
@@ -27,6 +31,7 @@ import com.example.packitupandroid.R
 import com.example.packitupandroid.model.BaseCardData
 import com.example.packitupandroid.model.Box
 import com.example.packitupandroid.model.Collection
+import com.example.packitupandroid.model.ImageUri
 import com.example.packitupandroid.model.Item
 import com.example.packitupandroid.model.Summary
 
@@ -37,9 +42,13 @@ fun IconsColumn(
 ) {
     when(data) {
         is Item -> {
-            val image = data.imageUri
+            val icon = when (val imageUri = data.imageUri) {
+                is ImageUri.StringUri -> ColumnIcon.UriStringIcon(imageUri.uri)
+                is ImageUri.ResourceUri -> ColumnIcon.UriIcon(imageUri.resourceId)
+                null -> ColumnIcon.VectorIcon(Icons.Default.Label)
+            }
             ProjectIcons(
-                icon1 = if (image != null) ColumnIcon.UriIcon(image) else ColumnIcon.VectorIcon(Icons.Default.Label),
+                icon1 = icon,
                 isShowBadgeCount = cardType is CardType.Summary
             )
         }
@@ -121,6 +130,19 @@ fun ProjectIcons(
                     )
                 }
             }
+            is ColumnIcon.UriStringIcon -> {
+                if (icon1.uri != null) {
+                    val bitmap = base64ToBitmap(icon1.uri)
+                    bitmap?.asImageBitmap()?.let { imageBitmap ->
+                        Image(
+                            modifier = imageDimens,
+                            bitmap = imageBitmap,
+                            contentDescription = null,
+                        )
+                    }
+                }
+
+            }
         }
 
         when(icon2) {
@@ -145,6 +167,11 @@ fun ProjectIcons(
             else -> {}
         }
     }
+}
+
+private fun base64ToBitmap(base64Image: String): Bitmap? {
+    val decodedBytes = Base64.decode(base64Image, Base64.DEFAULT)
+    return BitmapFactory.decodeByteArray(decodedBytes, 0, decodedBytes.size)
 }
 
 

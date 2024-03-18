@@ -15,7 +15,6 @@ import androidx.compose.material3.CardDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.vector.ImageVector
@@ -40,7 +39,7 @@ sealed class EditMode {
 }
 
 sealed class EditFields {
-    object None : EditFields()
+    object ImageUri : EditFields()
     object Name : EditFields()
     object Description : EditFields()
     object IsFragile : EditFields()
@@ -60,6 +59,7 @@ sealed class ColumnIcon {
     // statically typed language, to know variable type at compile time.
     data class VectorIcon(val imageVector: ImageVector) : ColumnIcon()
     data class UriIcon(val uri: Int?) : ColumnIcon()
+    data class UriStringIcon(val uri: String?) : ColumnIcon()
 }
 
 sealed class ActionColumnState(val icon: ImageVector) {
@@ -113,6 +113,7 @@ fun BaseCard(
 ) {
     val expanded = remember { mutableStateOf(false) }
     val showEditCard = remember { mutableStateOf(false) }
+    val showCameraCard = remember { mutableStateOf(false) }
     val showDeleteCard = remember { mutableStateOf(false) }
 
     Card(
@@ -144,20 +145,24 @@ fun BaseCard(
                 onCancel = {
                     expanded.value = false
                     showEditCard.value = false
+                    showCameraCard.value = false
                     showDeleteCard.value = false
                 },
                 onEdit = {
                     onUpdate(it)
                     expanded.value = false
+                    showCameraCard.value = false
                     showEditCard.value = false
                 },
                 onDelete = {
                     expanded.value = false
+                    showCameraCard.value = false
                     showDeleteCard.value = false
                     onDestroy()
                 },
                 isExpanded = expanded,
                 isShowEditCard = showEditCard,
+                isShowCameraCard = showCameraCard,
                 isShowDeleteCard = showDeleteCard,
                 cardType = cardType,
             )

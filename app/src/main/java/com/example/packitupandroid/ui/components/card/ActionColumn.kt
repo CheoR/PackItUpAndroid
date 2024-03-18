@@ -29,6 +29,7 @@ import androidx.compose.ui.unit.dp
 import com.example.packitupandroid.data.local.LocalDataSource
 import com.example.packitupandroid.model.BaseCardData
 import com.example.packitupandroid.model.Summary
+import com.example.packitupandroid.ui.components.CameraCard
 import com.example.packitupandroid.ui.components.DeleteCard
 import com.example.packitupandroid.ui.components.EditCard
 
@@ -37,6 +38,7 @@ fun ActionColumn(
     data: BaseCardData,
     isExpanded: MutableState<Boolean>,
     isShowEditCard: MutableState<Boolean>,
+    isShowCameraCard: MutableState<Boolean>,
     isShowDeleteCard: MutableState<Boolean>,
     onClick: () -> Unit,
     onCancel: () -> Unit,
@@ -51,22 +53,21 @@ fun ActionColumn(
         else -> ActionColumnState.ThreeDots
     }
 
-        if(isShowEditCard.value) {
-            isExpanded.value = false
-            AlertDialog(
-                onDismissRequest = onCancel,
-                confirmButton = {},
-                dismissButton = {},
-                text = {
-                    EditCard(
-                        data = data,
-                        onEdit = onEdit,
-                        onCancel = onCancel,
-                    )
-                }
-            )
-        }
-
+    if(isShowEditCard.value) {
+        isExpanded.value = false
+        AlertDialog(
+            onDismissRequest = onCancel,
+            confirmButton = {},
+            dismissButton = {},
+            text = {
+                EditCard(
+                    data = data,
+                    onEdit = onEdit,
+                    onCancel = onCancel,
+                )
+            }
+        )
+    }
 
     if(isShowDeleteCard.value) {
         isExpanded.value = false
@@ -81,6 +82,22 @@ fun ActionColumn(
                     onCancel = onCancel
                 )
                    },
+        )
+    }
+
+    if(isShowCameraCard.value) {
+        isExpanded.value = false
+        AlertDialog(
+            onDismissRequest = onCancel,
+            confirmButton = {},
+            dismissButton = {},
+            text = {
+                CameraCard(
+                    data = data,
+                    onClick = onEdit,
+                    onCancel = onCancel,
+                )
+            }
         )
     }
 
@@ -159,7 +176,7 @@ fun ActionColumn(
                         if(cardType is CardType.Item) {
                             DropdownMenuItem(
                                 text = { Text("camera") },
-                                onClick = { /*TODO*/ },
+                                onClick = { isShowCameraCard.value = true },
                                 leadingIcon = {
                                     Icon(
                                         imageVector = Icons.Default.CameraAlt,
@@ -202,6 +219,7 @@ fun PreviewActionColumnSummaryCardNoEdit() {
     // to avoid
     // Creating a state object during composition without using remember More... (Ctrl+F1)
     val isShowEditCard = remember { mutableStateOf(false) }
+    val isShowCameraCard = remember { mutableStateOf(false) }
     val isShowDeleteCard = remember { mutableStateOf(false) }
     val isExpanded = remember { mutableStateOf(false) }
     ActionColumn(
@@ -211,6 +229,7 @@ fun PreviewActionColumnSummaryCardNoEdit() {
         onCancel = {},
         onDelete = {},
         isShowEditCard = isShowEditCard,
+        isShowCameraCard = isShowCameraCard,
         isShowDeleteCard = isShowDeleteCard,
         isExpanded = isExpanded,
         cardType = CardType.Summary,
@@ -227,6 +246,7 @@ fun PreviewActionColumnDefaultCardNoEdit(
 ) {
     val collection = localDataSource.loadCollections().first()
     val isShowEditCard = remember { mutableStateOf(false) }
+    val isShowCameraCard = remember { mutableStateOf(false) }
     val isShowDeleteCard = remember { mutableStateOf(false) }
     val isExpanded = remember { mutableStateOf(false) }
     ActionColumn(
@@ -236,6 +256,7 @@ fun PreviewActionColumnDefaultCardNoEdit(
         onCancel = {},
         onDelete = {},
         isShowEditCard = isShowEditCard,
+        isShowCameraCard = isShowCameraCard,
         isShowDeleteCard = isShowDeleteCard,
         isExpanded = isExpanded,
     )
@@ -251,6 +272,7 @@ fun PreviewActionColumnEditCardEdit(
 ) {
     val collection = localDataSource.loadCollections().first()
     val isShowEditCard = remember { mutableStateOf(false) }
+    val isShowCameraCard = remember { mutableStateOf(false) }
     val isShowDeleteCard = remember { mutableStateOf(false) }
     val isExpanded = remember { mutableStateOf(false) }
     ActionColumn(
@@ -260,6 +282,7 @@ fun PreviewActionColumnEditCardEdit(
         onCancel = {},
         onDelete = {},
         isShowEditCard = isShowEditCard,
+        isShowCameraCard = isShowCameraCard,
         isShowDeleteCard = isShowDeleteCard,
         isExpanded = isExpanded,
         editMode = EditMode.Edit,
