@@ -5,6 +5,7 @@ buildscript {
         set("navigation_version", "2.7.7")
         set("compose_compiler_version", "1.5.1")
         set("camerax_version", "1.3.2")
+        set("room_version", "2.6.1")
     }
 }
 
