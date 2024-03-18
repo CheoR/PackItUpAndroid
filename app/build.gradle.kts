@@ -1,6 +1,7 @@
 plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
+    id("com.google.devtools.ksp") version "1.9.23-1.0.19"
 }
 
 android {
@@ -77,6 +78,11 @@ dependencies {
     implementation("androidx.camera:camera-video:${rootProject.extra["camerax_version"]}")
     implementation("androidx.camera:camera-view:${rootProject.extra["camerax_version"]}")
     implementation("androidx.camera:camera-extensions:${rootProject.extra["camerax_version"]}")
+
+    //Room
+    ksp("androidx.room:room-compiler:${rootProject.extra["room_version"]}")
+    implementation("androidx.room:room-ktx:${rootProject.extra["room_version"]}")
+    implementation("androidx.room:room-runtime:${rootProject.extra["room_version"]}")
 
     testImplementation("junit:junit:4.13.2")
 
