@@ -23,7 +23,6 @@ class LocalDataRepository (
             items = localDataSource.loadItems()
         }
         return items as List<Item>
-//        return localDataSource.loadItems()
     }
 
     override suspend fun loadBoxes(): List<Box> {
@@ -31,11 +30,9 @@ class LocalDataRepository (
             boxes = localDataSource.loadBoxes()
         }
         return boxes as List<Box>
-//        return localDataSource.loadBoxes()
     }
 
     override suspend fun loadCollections(): List<Collection> {
-//        return localDataSource.loadCollections()
         if(collections ==  null) {
             collections = localDataSource.loadCollections()
         }

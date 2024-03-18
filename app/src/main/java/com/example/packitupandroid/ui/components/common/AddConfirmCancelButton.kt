@@ -1,10 +1,10 @@
 package com.example.packitupandroid.ui.components.common
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
@@ -43,15 +43,13 @@ fun AddConfirmCancelButton(
     }
 
     Row(
-        modifier = modifier
-            .height(64.dp),
+        modifier = modifier,
         horizontalArrangement = Arrangement.Center,
         verticalAlignment = Alignment.CenterVertically,
     ) {
         Button(
             modifier = modifier
-                .fillMaxWidth()
-                .background(color = color),
+                .fillMaxWidth(),
             enabled = enabled,
             onClick = onClick,
             shape = RoundedCornerShape(dimensionResource(R.dimen.roundness_x_small)),
@@ -61,18 +59,20 @@ fun AddConfirmCancelButton(
                 disabledContainerColor = MaterialTheme.colorScheme.primary,
                 disabledContentColor = color,
             ),
-        ) {
-            Icon(
-                imageVector = icon,
-                contentDescription = label,
-                tint = MaterialTheme.colorScheme.onPrimary,
-            )
-            Text(
-                text = label,
-                style = MaterialTheme.typography.labelSmall,
-                color = MaterialTheme.colorScheme.onPrimary,
-            )
-        }
+            content = {
+                Icon(
+                    imageVector = icon,
+                    contentDescription = label,
+                    tint = MaterialTheme.colorScheme.onPrimary,
+                )
+                Spacer(modifier = Modifier.width(8.dp))
+                Text(
+                    text = label,
+                    style = MaterialTheme.typography.labelSmall,
+                    color = MaterialTheme.colorScheme.onPrimary,
+                )
+            },
+        )
     }
 }
 

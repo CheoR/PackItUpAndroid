@@ -10,6 +10,7 @@ import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.CameraAlt
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Edit
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.Icon
@@ -25,10 +26,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.DpOffset
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.window.Dialog
 import com.example.packitupandroid.data.local.LocalDataSource
 import com.example.packitupandroid.model.BaseCardData
 import com.example.packitupandroid.model.Summary
+import com.example.packitupandroid.ui.components.CameraCard
+import com.example.packitupandroid.ui.components.DeleteCard
 import com.example.packitupandroid.ui.components.EditCard
 
 @Composable
@@ -36,11 +38,13 @@ fun ActionColumn(
     data: BaseCardData,
     isExpanded: MutableState<Boolean>,
     isShowEditCard: MutableState<Boolean>,
+    isShowCameraCard: MutableState<Boolean>,
+    isShowDeleteCard: MutableState<Boolean>,
     onClick: () -> Unit,
     onCancel: () -> Unit,
+    onDelete: () -> Unit,
     onEdit: (BaseCardData) -> Unit,
     modifier: Modifier = Modifier,
-    onDestroy: () -> Unit? = {},
     editMode: EditMode = EditMode.NoEdit,
     cardType: CardType = CardType.Default,
 ) {
@@ -48,18 +52,53 @@ fun ActionColumn(
         is CardType.Summary -> ActionColumnState.RightArrow
         else -> ActionColumnState.ThreeDots
     }
-    
+
     if(isShowEditCard.value) {
         isExpanded.value = false
-        Dialog(
-            onDismissRequest = onCancel
-        ) {
-            EditCard(
-                data = data,
-                onEdit = onEdit,
-                onCancel = onCancel,
-            )
-        }
+        AlertDialog(
+            onDismissRequest = onCancel,
+            confirmButton = {},
+            dismissButton = {},
+            text = {
+                EditCard(
+                    data = data,
+                    onEdit = onEdit,
+                    onCancel = onCancel,
+                )
+            }
+        )
+    }
+
+    if(isShowDeleteCard.value) {
+        isExpanded.value = false
+        AlertDialog(
+            onDismissRequest = onCancel,
+            confirmButton = {},
+            dismissButton = {},
+            text = {
+                DeleteCard(
+                    data = data,
+                    onDelete = onDelete,
+                    onCancel = onCancel
+                )
+                   },
+        )
+    }
+
+    if(isShowCameraCard.value) {
+        isExpanded.value = false
+        AlertDialog(
+            onDismissRequest = onCancel,
+            confirmButton = {},
+            dismissButton = {},
+            text = {
+                CameraCard(
+                    data = data,
+                    onClick = onEdit,
+                    onCancel = onCancel,
+                )
+            }
+        )
     }
 
     Column(
@@ -137,7 +176,7 @@ fun ActionColumn(
                         if(cardType is CardType.Item) {
                             DropdownMenuItem(
                                 text = { Text("camera") },
-                                onClick = { /*TODO*/ },
+                                onClick = { isShowCameraCard.value = true },
                                 leadingIcon = {
                                     Icon(
                                         imageVector = Icons.Default.CameraAlt,
@@ -149,8 +188,7 @@ fun ActionColumn(
                         DropdownMenuItem(
                             text = { Text("delete") },
                             onClick = {
-                                onDestroy()
-                                isExpanded.value = false
+                                isShowDeleteCard.value = true
                             },
                             leadingIcon = {
                                 Icon(
@@ -181,13 +219,18 @@ fun PreviewActionColumnSummaryCardNoEdit() {
     // to avoid
     // Creating a state object during composition without using remember More... (Ctrl+F1)
     val isShowEditCard = remember { mutableStateOf(false) }
+    val isShowCameraCard = remember { mutableStateOf(false) }
+    val isShowDeleteCard = remember { mutableStateOf(false) }
     val isExpanded = remember { mutableStateOf(false) }
     ActionColumn(
         data = summary,
         onClick = {},
         onEdit = {},
         onCancel = {},
+        onDelete = {},
         isShowEditCard = isShowEditCard,
+        isShowCameraCard = isShowCameraCard,
+        isShowDeleteCard = isShowDeleteCard,
         isExpanded = isExpanded,
         cardType = CardType.Summary,
     )
@@ -203,13 +246,18 @@ fun PreviewActionColumnDefaultCardNoEdit(
 ) {
     val collection = localDataSource.loadCollections().first()
     val isShowEditCard = remember { mutableStateOf(false) }
+    val isShowCameraCard = remember { mutableStateOf(false) }
+    val isShowDeleteCard = remember { mutableStateOf(false) }
     val isExpanded = remember { mutableStateOf(false) }
     ActionColumn(
         data = collection,
         onClick = {},
         onEdit = {},
         onCancel = {},
+        onDelete = {},
         isShowEditCard = isShowEditCard,
+        isShowCameraCard = isShowCameraCard,
+        isShowDeleteCard = isShowDeleteCard,
         isExpanded = isExpanded,
     )
 }
@@ -224,13 +272,18 @@ fun PreviewActionColumnEditCardEdit(
 ) {
     val collection = localDataSource.loadCollections().first()
     val isShowEditCard = remember { mutableStateOf(false) }
+    val isShowCameraCard = remember { mutableStateOf(false) }
+    val isShowDeleteCard = remember { mutableStateOf(false) }
     val isExpanded = remember { mutableStateOf(false) }
     ActionColumn(
         data = collection,
         onClick = {},
         onEdit = {},
         onCancel = {},
+        onDelete = {},
         isShowEditCard = isShowEditCard,
+        isShowCameraCard = isShowCameraCard,
+        isShowDeleteCard = isShowDeleteCard,
         isExpanded = isExpanded,
         editMode = EditMode.Edit,
     )

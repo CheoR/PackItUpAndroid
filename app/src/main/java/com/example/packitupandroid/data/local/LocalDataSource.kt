@@ -3,6 +3,7 @@ package com.example.packitupandroid.data.local
 import com.example.packitupandroid.R
 import com.example.packitupandroid.model.Box
 import com.example.packitupandroid.model.Collection
+import com.example.packitupandroid.model.ImageUri
 import com.example.packitupandroid.model.Item
 
 class LocalDataSource() {
@@ -17,7 +18,7 @@ class LocalDataSource() {
                 description = "Cutest little pug in the world",
                 isFragile = true,
                 value = 100.00, // 100000000000000.00,
-                imageUri = R.drawable.pug,
+                imageUri = ImageUri.ResourceUri(R.drawable.pug),
             ),
             Item(
                 id = "9bbbaa9f-d11c-4410-a9aa-906221f0ec8b",

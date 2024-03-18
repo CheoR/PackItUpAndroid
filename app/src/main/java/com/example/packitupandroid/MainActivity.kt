@@ -1,5 +1,7 @@
 package com.example.packitupandroid
 
+import android.Manifest
+import android.content.pm.PackageManager
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -17,6 +19,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.DpSize
 import androidx.compose.ui.unit.dp
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.packitupandroid.data.ScreenType
 import com.example.packitupandroid.data.local.LocalDataSource
@@ -31,6 +35,13 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         enableEdgeToEdge()
         super.onCreate(savedInstanceState)
+
+        if (!hasRequiredPermissions()) {
+            ActivityCompat.requestPermissions(
+                this, CAMERAX_PERMISSIONS, 0
+            )
+        }
+
         setContent {
             PackItUpAndroidTheme {
                 val windowSize = calculateWindowSizeClass(this)
@@ -47,6 +58,21 @@ class MainActivity : ComponentActivity() {
                 }
             }
         }
+    }
+
+    private fun hasRequiredPermissions(): Boolean {
+        return CAMERAX_PERMISSIONS.all {
+            ContextCompat.checkSelfPermission(
+                applicationContext,
+                it
+            ) == PackageManager.PERMISSION_GRANTED
+        }
+    }
+
+    companion object {
+        private val CAMERAX_PERMISSIONS = arrayOf(
+            Manifest.permission.CAMERA,
+        )
     }
 }
 
