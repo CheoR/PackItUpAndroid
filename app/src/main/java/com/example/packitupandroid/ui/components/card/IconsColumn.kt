@@ -31,7 +31,7 @@ import com.example.packitupandroid.R
 import com.example.packitupandroid.model.BaseCardData
 import com.example.packitupandroid.model.Box
 import com.example.packitupandroid.model.Collection
-import com.example.packitupandroid.model.ImageUri
+//import com.example.packitupandroid.model.ImageUri
 import com.example.packitupandroid.model.Item
 import com.example.packitupandroid.model.Summary
 
@@ -42,11 +42,12 @@ fun IconsColumn(
 ) {
     when(data) {
         is Item -> {
-            val icon = when (val imageUri = data.imageUri) {
-                is ImageUri.StringUri -> ColumnIcon.UriStringIcon(imageUri.uri)
-                is ImageUri.ResourceUri -> ColumnIcon.UriIcon(imageUri.resourceId)
-                null -> ColumnIcon.VectorIcon(Icons.Default.Label)
-            }
+//            val icon = when (val imageUri = data.imageUri) {
+//                is ImageUri.StringUri -> ColumnIcon.UriStringIcon(imageUri.uri)
+//                is ImageUri.ResourceUri -> ColumnIcon.UriIcon(imageUri.resourceId)
+//                null -> ColumnIcon.VectorIcon(Icons.Default.Label)
+//            }
+            val icon = if(data.imageUri != null) ColumnIcon.UriStringIcon(data.imageUri) else  ColumnIcon.VectorIcon(Icons.Default.Label)
             ProjectIcons(
                 icon1 = icon,
                 isShowBadgeCount = cardType is CardType.Summary

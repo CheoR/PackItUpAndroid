@@ -30,7 +30,7 @@ import androidx.compose.ui.res.dimensionResource
 import androidx.core.content.ContextCompat
 import com.example.packitupandroid.R
 import com.example.packitupandroid.model.BaseCardData
-import com.example.packitupandroid.model.ImageUri
+//import com.example.packitupandroid.model.ImageUri
 import com.example.packitupandroid.model.Item
 import com.example.packitupandroid.ui.components.camera.CameraPreview
 import com.example.packitupandroid.ui.components.card.EditFields
@@ -84,7 +84,7 @@ fun CameraCard(
                     onPhotoTaken = {
                         if (isEditable(EditFields.ImageUri)) {
                             localData = (localData as Item).copy(
-                                imageUri = ImageUri.StringUri(it)
+                                imageUri = it, // ImageUri.StringUri(it)
                             )
                         }
                         onClick(localData)

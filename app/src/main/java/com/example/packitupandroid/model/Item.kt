@@ -7,7 +7,7 @@ data class Item(
     override val id: String = UUID.randomUUID().toString(),
     override val name: String,
     override val description: String = "",
-    val imageUri: ImageUri? = null,
+    val imageUri: String? = null, // ImageUri? = null,
     override val value: Double  = 0.0,
     override val isFragile: Boolean = false
 ) : BaseCardData  {
@@ -24,7 +24,7 @@ data class Item(
     override val editFields get() = EDIT_FIELDS
 }
 
-sealed class ImageUri {
-    data class StringUri(val uri: String) : ImageUri()
-    data class ResourceUri(val resourceId: Int) : ImageUri()
-}
+//sealed class ImageUri {
+//    data class StringUri(val uri: String) : ImageUri()
+//    data class ResourceUri(val resourceId: Int) : ImageUri()
+//}
