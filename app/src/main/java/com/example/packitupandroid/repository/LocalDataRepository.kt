@@ -1,6 +1,6 @@
 package com.example.packitupandroid.repository
 
-import com.example.packitupandroid.data.local.LocalDataSource
+import com.example.packitupandroid.data.source.local.LocalDataSource
 import com.example.packitupandroid.model.Box
 import com.example.packitupandroid.model.Collection
 import com.example.packitupandroid.model.Item

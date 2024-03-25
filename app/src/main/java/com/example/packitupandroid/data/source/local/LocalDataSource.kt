@@ -1,6 +1,5 @@
-package com.example.packitupandroid.data.local
+package com.example.packitupandroid.data.source.local
 
-import com.example.packitupandroid.R
 import com.example.packitupandroid.model.Box
 import com.example.packitupandroid.model.Collection
 //import com.example.packitupandroid.model.ImageUri
