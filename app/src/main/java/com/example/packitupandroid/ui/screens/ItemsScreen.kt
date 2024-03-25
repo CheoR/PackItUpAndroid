@@ -4,7 +4,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import com.example.packitupandroid.data.ScreenType
-import com.example.packitupandroid.data.local.LocalDataSource
+import com.example.packitupandroid.data.source.local.LocalDataSource
 import com.example.packitupandroid.model.BaseCardData
 import com.example.packitupandroid.model.Item
 import com.example.packitupandroid.ui.PackItUpUiState
