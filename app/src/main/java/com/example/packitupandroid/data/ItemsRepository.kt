@@ -1,6 +1,6 @@
 package com.example.packitupandroid.data
 
-import com.example.packitupandroid.model.Item
+import com.example.packitupandroid.data.database.entities.ItemEntity
 import kotlinx.coroutines.flow.Flow
 
 /**
@@ -10,25 +10,25 @@ interface ItemsRepository {
     /**
      * Retrieve all the items from the given data source.
      */
-    fun getAllItemsStream(): Flow<List<Item>>
+    fun getAllItemsStream(): Flow<List<ItemEntity>>
 
     /**
      * Retrieve an item from the given data source that matches with the [id].
      */
-    fun getItemStream(id: String): Flow<Item?>
+    fun getItemStream(id: String): Flow<ItemEntity?>
 
     /**
      * Insert item in the data source
      */
-    suspend fun insertItem(item: Item)
+    suspend fun insertItem(item: ItemEntity)
 
     /**
      * Delete item from the data source
      */
-    suspend fun deleteItem(item: Item)
+    suspend fun deleteItem(item: ItemEntity)
 
     /**
      * Update item in the data source
      */
-    suspend fun updateItem(item: Item)
+    suspend fun updateItem(item: ItemEntity)
 }

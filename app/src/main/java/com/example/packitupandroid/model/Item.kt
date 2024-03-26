@@ -1,16 +1,10 @@
 package com.example.packitupandroid.model
 
-import androidx.room.Entity
-import androidx.room.PrimaryKey
+import com.example.packitupandroid.data.database.entities.ItemEntity
 import com.example.packitupandroid.ui.components.card.EditFields
 import java.util.UUID
 
-@Entity(
-    tableName = "items",
-//    ignoredColumns = ["value", "isFragile"],
-)
 data class Item(
-    @PrimaryKey
     override val id: String = UUID.randomUUID().toString(),
     override val name: String,
     override val description: String = "",
@@ -30,6 +24,15 @@ data class Item(
     }
     override val editFields get() = EDIT_FIELDS
 }
+
+fun Item.toEntity(): ItemEntity = ItemEntity(
+    id = this.id,
+    name = this.name,
+    description = this.description,
+    imageUri = this.imageUri,
+    value = this.value,
+    isFragile = this.isFragile,
+)
 
 //sealed class ImageUri {
 //    data class StringUri(val uri: String) : ImageUri()

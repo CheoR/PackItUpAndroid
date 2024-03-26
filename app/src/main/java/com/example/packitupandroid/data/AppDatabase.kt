@@ -5,7 +5,7 @@ import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
 import com.example.packitupandroid.data.database.dao.ItemDao
-import com.example.packitupandroid.model.Item
+import com.example.packitupandroid.data.database.entities.ItemEntity
 import com.example.packitupandroid.ui.utils.DATABASE_NAME
 
 
@@ -15,7 +15,7 @@ import com.example.packitupandroid.ui.utils.DATABASE_NAME
 
 // version - increase version number whenever database table schema changes.
 // exportSchema - set as false as to not keep schema version history backup
-@Database(entities = [Item::class], version = 1, exportSchema = false)
+@Database(entities = [ItemEntity::class], version = 1, exportSchema = false)
 abstract class AppDatabase : RoomDatabase() {
 
     abstract fun itemDao(): ItemDao
