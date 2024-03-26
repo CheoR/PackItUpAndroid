@@ -1,5 +1,6 @@
 package com.example.packitupandroid.data
 
+import com.example.packitupandroid.data.database.dao.ItemDao
 import com.example.packitupandroid.model.Item
 import kotlinx.coroutines.flow.Flow
 
