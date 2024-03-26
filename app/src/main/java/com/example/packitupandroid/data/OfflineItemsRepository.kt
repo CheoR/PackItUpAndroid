@@ -1,17 +1,17 @@
 package com.example.packitupandroid.data
 
 import com.example.packitupandroid.data.database.dao.ItemDao
-import com.example.packitupandroid.model.Item
+import com.example.packitupandroid.data.database.entities.ItemEntity
 import kotlinx.coroutines.flow.Flow
 
 class OfflineItemsRepository(private val itemDao: ItemDao) : ItemsRepository {
-    override fun getAllItemsStream(): Flow<List<Item>> = itemDao.getAllItems()
+    override fun getAllItemsStream(): Flow<List<ItemEntity>> = itemDao.getAllItems()
 
-    override fun getItemStream(id: String): Flow<Item?> = itemDao.getItem(id)
+    override fun getItemStream(id: String): Flow<ItemEntity?> = itemDao.getItem(id)
 
-    override suspend fun insertItem(item: Item) = itemDao.insert(item)
+    override suspend fun insertItem(item: ItemEntity) = itemDao.insert(item)
 
-    override suspend fun deleteItem(item: Item) = itemDao.delete(item)
+    override suspend fun deleteItem(item: ItemEntity) = itemDao.delete(item)
 
-    override suspend fun updateItem(item: Item) = itemDao.update(item)
+    override suspend fun updateItem(item: ItemEntity) = itemDao.update(item)
 }
