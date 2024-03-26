@@ -1,4 +1,4 @@
-package com.example.packitupandroid.data
+package com.example.packitupandroid.data.database.dao
 
 import androidx.room.Dao
 import androidx.room.Delete
