@@ -1,4 +1,4 @@
-package com.example.packitupandroid.data
+package com.example.packitupandroid.data.database
 
 import android.content.Context
 import androidx.room.Database
