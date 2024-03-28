@@ -1,5 +1,6 @@
 package com.example.packitupandroid.ui
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProvider.AndroidViewModelFactory.Companion.APPLICATION_KEY
@@ -7,13 +8,16 @@ import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import com.example.packitupandroid.PackItUpApplication
+import com.example.packitupandroid.data.ItemsRepository
 import com.example.packitupandroid.model.BaseCardData
 import com.example.packitupandroid.model.Box
 import com.example.packitupandroid.model.Collection
 import com.example.packitupandroid.model.Item
 import com.example.packitupandroid.model.Summary
+import com.example.packitupandroid.model.toEntity
 import com.example.packitupandroid.repository.DataRepository
 import com.example.packitupandroid.repository.LocalDataRepository
+import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -26,7 +30,9 @@ sealed class State {
 }
 class PackItUpViewModel(
     private val repository: DataRepository = LocalDataRepository(),
+//    private val itemsRepository: ItemsRepository,
 ) : ViewModel() {
+    private lateinit var itemsRepository: ItemsRepository
     private val _uiState = MutableStateFlow(PackItUpUiState())
     val uiState: StateFlow<PackItUpUiState> = _uiState.asStateFlow()
 
@@ -72,7 +78,10 @@ class PackItUpViewModel(
     fun createElement(element: BaseCardData, count: Int?) {
         val elements = createEntity(element, count)
         updateState(State.Create, elements)
-    }
+        viewModelScope.launch {
+            saveItem(elements[0] as Item)
+        }
+     }
 
     fun updateElement(element: BaseCardData) {
         val elements = updateEntity(element)
@@ -173,7 +182,8 @@ class PackItUpViewModel(
         return Pair(newValue, newIsFragile)
     }
 
-    private fun <T : BaseCardData> destroyEntity(element: T): Pair<List<BaseCardData>, List<BaseCardData>> {
+//    private fun <T : BaseCardData> destroyEntity(element: T): Pair<List<BaseCardData>, List<BaseCardData>> {
+private fun destroyEntity(element: BaseCardData): Pair<List<BaseCardData>, List<BaseCardData>> {
         val elementsToUpdate: MutableList<BaseCardData> = mutableListOf()
         val elementsToDestroy: MutableList<BaseCardData> = mutableListOf()
         when (element) {
@@ -270,6 +280,10 @@ class PackItUpViewModel(
         }
     }
 
+    suspend fun saveItem(item: Item) {
+        itemsRepository.insertItem(item.toEntity())
+    }
+
     /**
      * A companion object helps us by having a single instance of an object that is used by everyone
      * without needing to create a new instance of an expensive object. This is an implementation
@@ -284,7 +298,17 @@ class PackItUpViewModel(
             initializer {
                 val application = (this[APPLICATION_KEY] as PackItUpApplication)
                 val localDataRepository = application.container.localDataRepository
-                PackItUpViewModel(repository = localDataRepository)
+                val itemsRepository = application.container.itemsRepository
+                Log.i("DEBUG", "itemsRepositorY: $itemsRepository")
+                println("DEBUGG")
+                println(itemsRepository.toString())
+                PackItUpViewModel(
+                    repository = localDataRepository,
+//                    itemsRepository = itemsRepository,
+                )
+                    .apply {
+                        this.itemsRepository = itemsRepository
+                    }
             }
         }
     }
