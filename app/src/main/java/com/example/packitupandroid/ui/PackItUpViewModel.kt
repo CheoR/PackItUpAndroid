@@ -1,26 +1,21 @@
 package com.example.packitupandroid.ui
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.ViewModelProvider.AndroidViewModelFactory.Companion.APPLICATION_KEY
 import androidx.lifecycle.viewModelScope
-import androidx.lifecycle.viewmodel.initializer
-import androidx.lifecycle.viewmodel.viewModelFactory
-import com.example.packitupandroid.PackItUpApplication
 import com.example.packitupandroid.data.ItemsRepository
+import com.example.packitupandroid.data.database.entities.toItem
 import com.example.packitupandroid.model.BaseCardData
 import com.example.packitupandroid.model.Box
 import com.example.packitupandroid.model.Collection
 import com.example.packitupandroid.model.Item
 import com.example.packitupandroid.model.Summary
 import com.example.packitupandroid.model.toEntity
-import com.example.packitupandroid.repository.DataRepository
-import com.example.packitupandroid.repository.LocalDataRepository
-import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 
 sealed class State {
@@ -29,10 +24,10 @@ sealed class State {
     object Destroy : State()
 }
 class PackItUpViewModel(
-    private val repository: DataRepository = LocalDataRepository(),
-//    private val itemsRepository: ItemsRepository,
+//    private val localDataRepository: DataRepository = LocalDataRepository(),
+    private val itemsRepository: ItemsRepository,
 ) : ViewModel() {
-    private lateinit var itemsRepository: ItemsRepository
+//    private lateinit var itemsRepository: ItemsRepository
     private val _uiState = MutableStateFlow(PackItUpUiState())
     val uiState: StateFlow<PackItUpUiState> = _uiState.asStateFlow()
 
@@ -49,15 +44,29 @@ class PackItUpViewModel(
     private fun initializeUIState() {
         viewModelScope.launch {
             if (_uiState.value.items.isEmpty()) {
-                loadData(repository::loadItems) { items -> _uiState.value.copy(items = items) }
+                loadStuff()
+//                loadData(localDataRepository::loadItems) { items -> _uiState.value.copy(items = items) }
             }
             if (_uiState.value.boxes.isEmpty()) {
-                loadData(repository::loadBoxes) { boxes -> _uiState.value.copy(boxes = boxes) }
+//                loadData(localDataRepository::loadBoxes) { boxes -> _uiState.value.copy(boxes = boxes) }
             }
             if (_uiState.value.collections.isEmpty()) {
-                loadData(repository::loadCollections) { collections -> _uiState.value.copy(collections = collections) }
+//                loadData(localDataRepository::loadCollections) { collections -> _uiState.value.copy(collections = collections) }
             }
         }
+    }
+
+    private fun loadStuff() {
+        itemsRepository.getAllItemsStream().map { items ->
+            _uiState.value.copy(
+                items = items.map{ it.toItem() }
+            )
+        }
+            .stateIn(
+                scope = viewModelScope,
+                started = SharingStarted.WhileSubscribed(TIMEOUT_MILLIS),
+                initialValue = PackItUpUiState()
+            )
     }
 
     private fun observeUIState() {
@@ -280,6 +289,9 @@ private fun destroyEntity(element: BaseCardData): Pair<List<BaseCardData>, List<
         }
     }
 
+    fun getAllItems() {
+        itemsRepository.getAllItemsStream()
+    }
     suspend fun saveItem(item: Item) {
         itemsRepository.insertItem(item.toEntity())
     }
@@ -294,23 +306,7 @@ private fun destroyEntity(element: BaseCardData): Pair<List<BaseCardData>, List<
      * used to retrieve the repository used for dependency injection.
      */
     companion object {
-        val Factory: ViewModelProvider.Factory = viewModelFactory {
-            initializer {
-                val application = (this[APPLICATION_KEY] as PackItUpApplication)
-                val localDataRepository = application.container.localDataRepository
-                val itemsRepository = application.container.itemsRepository
-                Log.i("DEBUG", "itemsRepositorY: $itemsRepository")
-                println("DEBUGG")
-                println(itemsRepository.toString())
-                PackItUpViewModel(
-                    repository = localDataRepository,
-//                    itemsRepository = itemsRepository,
-                )
-                    .apply {
-                        this.itemsRepository = itemsRepository
-                    }
-            }
-        }
+        private const val TIMEOUT_MILLIS = 5_000L
     }
 }
 
