@@ -27,10 +27,13 @@ import com.example.packitupandroid.data.source.local.LocalDataSource
 import com.example.packitupandroid.ui.PackItUpApp
 import com.example.packitupandroid.ui.PackItUpUiState
 import com.example.packitupandroid.ui.PackItUpViewModel
+import com.example.packitupandroid.ui.PackItUpViewModelProvider
 import com.example.packitupandroid.ui.theme.PackItUpAndroidTheme
 
 class MainActivity : ComponentActivity() {
-    private val viewModel: PackItUpViewModel by viewModels()
+    private val viewModel: PackItUpViewModel by viewModels {
+        PackItUpViewModelProvider.Factory
+    }
     @OptIn(ExperimentalMaterial3WindowSizeClassApi::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         enableEdgeToEdge()

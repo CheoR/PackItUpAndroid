@@ -3,6 +3,7 @@ package com.example.packitupandroid.ui.navigation
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -12,6 +13,7 @@ import androidx.navigation.compose.composable
 import com.example.packitupandroid.R
 import com.example.packitupandroid.ui.PackItUpUiState
 import com.example.packitupandroid.ui.PackItUpViewModel
+import com.example.packitupandroid.ui.PackItUpViewModelProvider
 import com.example.packitupandroid.ui.screens.BoxesScreen
 import com.example.packitupandroid.ui.screens.CollectionsScreen
 import com.example.packitupandroid.ui.screens.ItemsScreen
@@ -28,8 +30,12 @@ fun PackItUpNavHost(
     navigationType: PackItUpNavigationType,
     navigateToTopLevelDestination: (PackItUpTopLevelDestination) -> Unit,
     modifier: Modifier = Modifier,
-    viewModel: PackItUpViewModel = viewModel(factory = PackItUpViewModel.Factory),
+    viewModel: PackItUpViewModel = viewModel(factory = PackItUpViewModelProvider.Factory),
 ) {
+
+    LaunchedEffect(key1 = null) {
+        viewModel.getAllItems()
+    }
 
     Scaffold(
         modifier = modifier,
@@ -57,7 +63,7 @@ fun PackItUpNavHost(
             modifier = modifier
                 .padding(innerPadding),
             navController = navController,
-            startDestination = PackItUpRoute.SUMMARY,
+            startDestination = PackItUpRoute.ITEMS,
         ) {
             composable(route = PackItUpRoute.SUMMARY) {
                 SummaryScreen(
