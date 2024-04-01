@@ -14,6 +14,7 @@ import com.example.packitupandroid.ui.components.counter.Counter
 @Composable
 fun <T: BaseCardData> Screen(
     elements: List<T>,
+    type: T,
     onClick: (T, Int?) -> Unit,
     updateElement: (T) -> Unit,
     destroyElement: (T) -> Unit,
@@ -34,6 +35,6 @@ fun <T: BaseCardData> Screen(
                 card(element, updateElement, destroyElement)
             }
         }
-        Counter(type = elements.firstOrNull(), onClick = onClick)
+        Counter(type =  elements.firstOrNull() ?: type, onClick = onClick)
     }
 }
