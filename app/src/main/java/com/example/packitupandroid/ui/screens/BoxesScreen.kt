@@ -22,6 +22,8 @@ fun BoxesScreen(
     Screen(
         modifier = modifier,
         elements = uiState.boxes,
+        // TODO: fix this
+        type = Box(name="fix this"),
         card = { data, update, destroy ->
             BaseCard(
                 data = data,

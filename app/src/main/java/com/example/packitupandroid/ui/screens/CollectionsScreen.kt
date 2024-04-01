@@ -22,6 +22,8 @@ fun CollectionsScreen(
     Screen(
         modifier = modifier,
         elements = uiState.collections,
+        // TODO: fix this
+        type = Collection(name="fix this"),
         card = { data, update, destroy ->
             BaseCard(
                 data = data,
