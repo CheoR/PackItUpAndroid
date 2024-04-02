@@ -23,6 +23,11 @@ interface ItemsRepository {
     suspend fun insertItem(item: ItemEntity)
 
     /**
+     * Insert more than one item in the data source
+     */
+    suspend fun insertAll(items: List<ItemEntity>)
+
+    /**
      * Delete item from the data source
      */
     suspend fun deleteItem(item: ItemEntity)

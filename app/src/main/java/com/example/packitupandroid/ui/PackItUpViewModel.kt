@@ -85,10 +85,11 @@ class PackItUpViewModel(
     }
 
     fun createElement(element: BaseCardData, count: Int?) {
-        val elements = createEntity(element, count)
+        val elements: List<Item> = createEntity(element, count) as List<Item>
+        Log.i("MOO", "creating ${elements.size} elements")
         updateState(State.Create, elements)
         viewModelScope.launch {
-            saveItem(elements[0] as Item)
+            saveItem(elements)
         }
      }
 
@@ -294,6 +295,14 @@ private fun destroyEntity(element: BaseCardData): Pair<List<BaseCardData>, List<
     }
     suspend fun saveItem(item: Item) {
         itemsRepository.insertItem(item.toEntity())
+    suspend fun saveItem(items: List<Item>) {
+        val entities: List<ItemEntity> = items.map { item -> item.toEntity() }
+
+        if(entities.size == 1) {
+            itemsRepository.insertItem(entities[0])
+        } else {
+            itemsRepository.insertAll(entities)
+        }
     }
 
     /**
