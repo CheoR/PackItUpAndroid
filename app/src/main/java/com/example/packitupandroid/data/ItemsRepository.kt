@@ -4,7 +4,7 @@ import com.example.packitupandroid.data.database.entities.ItemEntity
 import kotlinx.coroutines.flow.Flow
 
 /**
- * Repository that provides insert, update, delete, and retrieve of [Item] from a given data source.
+ * Repository that provides insert, update, delete, and retrieve of [ItemEntity] from a given data source.
  */
 interface ItemsRepository {
     /**
@@ -31,6 +31,11 @@ interface ItemsRepository {
      * Delete item from the data source
      */
     suspend fun deleteItem(item: ItemEntity)
+
+    /**
+     * Delete more than one item from the data source
+     */
+    suspend fun deleteAll(items: List<ItemEntity>)
 
     /**
      * Update item in the data source

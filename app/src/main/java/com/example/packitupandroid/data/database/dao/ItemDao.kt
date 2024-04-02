@@ -23,6 +23,9 @@ interface ItemDao {
     @Delete
     suspend fun delete(item: ItemEntity)
 
+    @Delete
+    suspend fun deleteAll(items: List<ItemEntity>)
+
     // recommended to use Flow in persistence layer
     @Query("SELECT * FROM items WHERE id = :id")
     fun getItem(id: String): Flow<ItemEntity>
