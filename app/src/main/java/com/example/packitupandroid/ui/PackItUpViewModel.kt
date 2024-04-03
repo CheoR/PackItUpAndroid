@@ -1,8 +1,10 @@
 package com.example.packitupandroid.ui
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.packitupandroid.data.ItemsRepository
+import com.example.packitupandroid.data.database.entities.ItemEntity
 import com.example.packitupandroid.data.database.entities.toItem
 import com.example.packitupandroid.model.BaseCardData
 import com.example.packitupandroid.model.Box
@@ -10,6 +12,8 @@ import com.example.packitupandroid.model.Collection
 import com.example.packitupandroid.model.Item
 import com.example.packitupandroid.model.Summary
 import com.example.packitupandroid.model.toEntity
+import com.example.packitupandroid.repository.DataRepository
+import com.example.packitupandroid.repository.LocalDataRepository
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
@@ -24,10 +28,10 @@ sealed class State {
     object Destroy : State()
 }
 class PackItUpViewModel(
-//    private val localDataRepository: DataRepository = LocalDataRepository(),
+    private val localDataRepository: DataRepository = LocalDataRepository(),
     private val itemsRepository: ItemsRepository,
 ) : ViewModel() {
-//    private lateinit var itemsRepository: ItemsRepository
+    private val isUseMockData = true
     private val _uiState = MutableStateFlow(PackItUpUiState())
     val uiState: StateFlow<PackItUpUiState> = _uiState.asStateFlow()
 
@@ -37,26 +41,52 @@ class PackItUpViewModel(
     private val entityCache: Map<String, BaseCardData> get() = entityCacheMap
 
     init {
-        initializeUIState()
+        initializeUIState(isUseMockData)
         observeUIState()
     }
 
-    private fun initializeUIState() {
-        viewModelScope.launch {
-            if (_uiState.value.items.isEmpty()) {
-                loadStuff()
-//                loadData(localDataRepository::loadItems) { items -> _uiState.value.copy(items = items) }
+    private fun initializeUIState(useMockData: Boolean) {
+        Log.i("MOO", "initializeUIState")
+        if (useMockData) {
+            // populate data from file for future tutorial
+            viewModelScope.launch {
+                val items: List<Item> = localDataRepository.loadItems()
+                val entities = items.map { it.toEntity() }
+                saveItem(items)
+                itemsRepository.getAllItemsStream().map { items ->
+                    _uiState.value.copy(
+                        items = items.map{ it.toItem() }
+                    )
+                }
+                    .stateIn(
+                        scope = viewModelScope,
+                        started = SharingStarted.WhileSubscribed(TIMEOUT_MILLIS),
+                        initialValue = PackItUpUiState()
+                    )
+                    .collect { newState ->
+                        _uiState.value = newState
+                    }
             }
-            if (_uiState.value.boxes.isEmpty()) {
+
+        } else {
+            // user regular db
+            viewModelScope.launch {
+                if (_uiState.value.items.isEmpty()) {
+                    loadStuff()
+                    loadData(localDataRepository::loadItems) { items -> _uiState.value.copy(items = items) }
+                }
+//            if (_uiState.value.boxes.isEmpty()) {
 //                loadData(localDataRepository::loadBoxes) { boxes -> _uiState.value.copy(boxes = boxes) }
-            }
-            if (_uiState.value.collections.isEmpty()) {
+//            }
+//            if (_uiState.value.collections.isEmpty()) {
 //                loadData(localDataRepository::loadCollections) { collections -> _uiState.value.copy(collections = collections) }
+//            }
             }
         }
     }
 
     private fun loadStuff() {
+        Log.i("MOO", "loadStuff laoding stuff")
         itemsRepository.getAllItemsStream().map { items ->
             _uiState.value.copy(
                 items = items.map{ it.toItem() }
@@ -70,13 +100,14 @@ class PackItUpViewModel(
     }
 
     private fun observeUIState() {
+        Log.i("MOO", "observeUIState")
         viewModelScope.launch {
             // Observe changes in uiState and update the cache
             //  suspending function that collects latest value of uiState whenever it changes
             uiState.collect { state ->
                 val newCache = state.items.associateBy { it.id }
-                    .plus(state.boxes.associateBy { it.id })
-                    .plus(state.collections.associateBy { it.id })
+//                    .plus(state.boxes.associateBy { it.id })
+//                    .plus(state.collections.associateBy { it.id })
 //                _entityCache.emit(newCache)
                 entityCacheMap.clear()
                 entityCacheMap.putAll(newCache)
@@ -90,7 +121,21 @@ class PackItUpViewModel(
         updateState(State.Create, elements)
         viewModelScope.launch {
             saveItem(elements)
+            itemsRepository.getAllItemsStream().map { items ->
+                _uiState.value.copy(
+                    items = items.map{ it.toItem() }
+                )
+            }
+                .stateIn(
+                    scope = viewModelScope,
+                    started = SharingStarted.WhileSubscribed(TIMEOUT_MILLIS),
+                    initialValue = PackItUpUiState()
+                )
+                .collect { newState ->
+                    _uiState.value = newState
+                }
         }
+
      }
 
     fun updateElement(element: BaseCardData) {
@@ -293,8 +338,6 @@ private fun destroyEntity(element: BaseCardData): Pair<List<BaseCardData>, List<
     fun getAllItems() {
         itemsRepository.getAllItemsStream()
     }
-    suspend fun saveItem(item: Item) {
-        itemsRepository.insertItem(item.toEntity())
     suspend fun saveItem(items: List<Item>) {
         val entities: List<ItemEntity> = items.map { item -> item.toEntity() }
 
