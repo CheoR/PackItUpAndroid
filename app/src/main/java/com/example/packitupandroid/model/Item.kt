@@ -2,6 +2,8 @@ package com.example.packitupandroid.model
 
 import com.example.packitupandroid.data.database.entities.ItemEntity
 import com.example.packitupandroid.ui.components.card.EditFields
+import com.example.packitupandroid.ui.utils.Converters
+import java.util.Date
 import java.util.UUID
 
 data class Item(
@@ -10,7 +12,8 @@ data class Item(
     override val description: String = "",
     val imageUri: String? = null, // ImageUri? = null,
     override val value: Double  = 0.0,
-    override val isFragile: Boolean = false
+    override val isFragile: Boolean = false,
+    override val lastModified: Date = Date(),
 ) : BaseCardData  {
     companion object {
         val EDIT_FIELDS = setOf(
