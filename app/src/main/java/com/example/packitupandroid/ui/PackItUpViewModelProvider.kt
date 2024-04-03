@@ -13,7 +13,10 @@ import com.example.packitupandroid.PackItUpApplication
 object PackItUpViewModelProvider {
     val Factory = viewModelFactory {
         initializer {
-            PackItUpViewModel(packItUpApplication().container.itemsRepository)
+            PackItUpViewModel(
+                localDataRepository = packItUpApplication().container.localDataRepository,
+                itemsRepository =  packItUpApplication().container.itemsRepository,
+            )
         }
     }
 }
