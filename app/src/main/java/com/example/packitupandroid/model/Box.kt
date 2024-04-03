@@ -1,6 +1,7 @@
 package com.example.packitupandroid.model
 
 import com.example.packitupandroid.ui.components.card.EditFields
+import java.util.Date
 import java.util.UUID
 
 data class Box(
@@ -10,6 +11,7 @@ data class Box(
     val items: List<Item> = emptyList(),
     override val value: Double = items.sumOf { it.value },
     override val isFragile: Boolean = items.any { it.isFragile },
+    override val lastModified: Date = Date(),
 ) : BaseCardData {
     companion object {
         val EDIT_FIELDS = setOf(

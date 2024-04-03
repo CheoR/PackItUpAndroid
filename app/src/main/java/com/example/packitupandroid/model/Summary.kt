@@ -1,6 +1,7 @@
 package com.example.packitupandroid.model
 
 import com.example.packitupandroid.ui.components.card.EditFields
+import java.util.Date
 
 data class Summary (
     override val id: String,
@@ -12,4 +13,5 @@ data class Summary (
     override val isFragile: Boolean = items.any { it.isFragile },
     override val value: Double = items.sumOf { it.value },
     override val editFields: Set<EditFields> = emptySet(),
+    override val lastModified: Date = Date(),
 ) : BaseCardData
