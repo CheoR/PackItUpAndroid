@@ -30,7 +30,7 @@ interface ItemDao {
     @Query("SELECT * FROM items WHERE id = :id")
     fun getItem(id: String): Flow<ItemEntity>
 
-    @Query("SELECT * from items ORDER BY name ASC")
+    @Query("SELECT * from items ORDER BY last_modified ASC")
     fun getAllItems(): Flow<List<ItemEntity>>
 
 }
