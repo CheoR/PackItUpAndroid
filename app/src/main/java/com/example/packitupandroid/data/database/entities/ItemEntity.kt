@@ -4,6 +4,8 @@ import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import com.example.packitupandroid.model.Item
+import com.example.packitupandroid.ui.utils.Converters
+import java.util.Date
 
 @Entity(tableName = "items")
 data class ItemEntity(
@@ -21,6 +23,11 @@ data class ItemEntity(
         defaultValue = "false",
     )
     val isFragile: Boolean,
+    @ColumnInfo(
+        name = "last_modified",
+        defaultValue = ""
+    )
+    val lastModified: Long,
 )
 
 fun ItemEntity.toItem(): Item = Item(
@@ -30,4 +37,5 @@ fun ItemEntity.toItem(): Item = Item(
     imageUri = this.imageUri,
     value = this.value,
     isFragile = this.isFragile,
+    lastModified = Converters().fromTimestamp(this.lastModified) ?: Date()
 )

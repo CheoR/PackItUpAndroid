@@ -35,6 +35,7 @@ fun Item.toEntity(): ItemEntity = ItemEntity(
     imageUri = this.imageUri,
     value = this.value,
     isFragile = this.isFragile,
+    lastModified = Converters().dateToTimestamp(this.lastModified) ?: 0L,
 )
 
 //sealed class ImageUri {
