@@ -36,6 +36,7 @@ abstract class AppDatabase : RoomDatabase() {
             return Instance ?: synchronized(this) {
                 Room
                     .databaseBuilder(context, AppDatabase::class.java, DATABASE_NAME)
+                    .createFromAsset("database/$DATABASE_NAME")
                     /**
                      * Setting option in app's database builder means that Room
                      * permanently deletes all data from database tables when it
