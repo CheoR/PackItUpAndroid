@@ -1,4 +1,4 @@
-package com.example.packitupandroid.ui.utils
+package com.example.packitupandroid.utils
 
 enum class PackItUpNavigationType {
     BOTTOM_NAVIGATION,
