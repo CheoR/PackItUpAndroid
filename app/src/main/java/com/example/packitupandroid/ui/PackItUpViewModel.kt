@@ -3,7 +3,7 @@ package com.example.packitupandroid.ui
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.packitupandroid.data.ItemsRepository
+import com.example.packitupandroid.data.repository.ItemsRepository
 import com.example.packitupandroid.data.database.entities.ItemEntity
 import com.example.packitupandroid.data.database.entities.toItem
 import com.example.packitupandroid.data.model.BaseCardData
