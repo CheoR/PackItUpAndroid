@@ -7,7 +7,7 @@ import java.util.UUID
 data class Box(
     override val id: String = UUID.randomUUID().toString(),
     override val name: String,
-    override val description: String = "",
+    override val description: String? = null,
     val items: List<Item> = emptyList(),
     override val value: Double = items.sumOf { it.value },
     override val isFragile: Boolean = items.any { it.isFragile },

@@ -7,7 +7,7 @@ import java.util.UUID
 data class Collection(
     override val id: String = UUID.randomUUID().toString(),
     override val name: String,
-    override val description: String = "",
+    override val description: String? = null,
     val boxes: List<Box> = emptyList(),
     override val isFragile: Boolean = boxes.any { it.isFragile },
     override val value: Double = boxes.sumOf { it.value },
