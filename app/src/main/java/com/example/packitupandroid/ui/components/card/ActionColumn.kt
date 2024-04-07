@@ -27,8 +27,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.DpOffset
 import androidx.compose.ui.unit.dp
 import com.example.packitupandroid.data.source.local.LocalDataSource
-import com.example.packitupandroid.model.BaseCardData
-import com.example.packitupandroid.model.Summary
+import com.example.packitupandroid.data.model.BaseCardData
+import com.example.packitupandroid.data.model.Summary
 import com.example.packitupandroid.ui.components.CameraCard
 import com.example.packitupandroid.ui.components.DeleteCard
 import com.example.packitupandroid.ui.components.EditCard

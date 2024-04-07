@@ -29,8 +29,8 @@ import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.example.packitupandroid.model.BaseCardData
-import com.example.packitupandroid.model.Item
+import com.example.packitupandroid.data.model.BaseCardData
+import com.example.packitupandroid.data.model.Item
 import com.example.packitupandroid.ui.components.common.AddConfirmCancelButton
 import com.example.packitupandroid.ui.components.common.ButtonType
 

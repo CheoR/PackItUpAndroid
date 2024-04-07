@@ -34,11 +34,11 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import com.example.packitupandroid.R
-import com.example.packitupandroid.model.BaseCardData
-import com.example.packitupandroid.model.Box
-import com.example.packitupandroid.model.Collection
-import com.example.packitupandroid.model.Item
-import com.example.packitupandroid.model.Summary
+import com.example.packitupandroid.data.model.BaseCardData
+import com.example.packitupandroid.data.model.Box
+import com.example.packitupandroid.data.model.Collection
+import com.example.packitupandroid.data.model.Item
+import com.example.packitupandroid.data.model.Summary
 import com.example.packitupandroid.ui.components.card.IconsColumn
 import com.example.packitupandroid.ui.components.common.AddConfirmCancelButton
 import com.example.packitupandroid.ui.components.common.ButtonType

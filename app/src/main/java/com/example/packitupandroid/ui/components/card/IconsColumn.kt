@@ -28,11 +28,11 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.tooling.preview.Preview
 import com.example.packitupandroid.R
-import com.example.packitupandroid.model.BaseCardData
-import com.example.packitupandroid.model.Box
-import com.example.packitupandroid.model.Collection
-import com.example.packitupandroid.model.Item
-import com.example.packitupandroid.model.Summary
+import com.example.packitupandroid.data.model.BaseCardData
+import com.example.packitupandroid.data.model.Box
+import com.example.packitupandroid.data.model.Collection
+import com.example.packitupandroid.data.model.Item
+import com.example.packitupandroid.data.model.Summary
 import com.example.packitupandroid.utils.CardType
 
 @Composable

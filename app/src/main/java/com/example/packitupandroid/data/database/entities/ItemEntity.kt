@@ -3,7 +3,7 @@ package com.example.packitupandroid.data.database.entities
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import com.example.packitupandroid.model.Item
+import com.example.packitupandroid.data.model.Item
 import com.example.packitupandroid.utils.Converters
 import java.util.Date
 

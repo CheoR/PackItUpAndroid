@@ -5,8 +5,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import com.example.packitupandroid.data.ScreenType
 import com.example.packitupandroid.data.source.local.LocalDataSource
-import com.example.packitupandroid.model.BaseCardData
-import com.example.packitupandroid.model.Item
+import com.example.packitupandroid.data.model.BaseCardData
+import com.example.packitupandroid.data.model.Item
 import com.example.packitupandroid.ui.PackItUpUiState
 import com.example.packitupandroid.ui.components.card.BaseCard
 import com.example.packitupandroid.ui.components.card.CardType

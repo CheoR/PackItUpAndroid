@@ -8,7 +8,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.dimensionResource
 import com.example.packitupandroid.R
-import com.example.packitupandroid.model.BaseCardData
+import com.example.packitupandroid.data.model.BaseCardData
 import com.example.packitupandroid.ui.components.counter.Counter
 
 @Composable
