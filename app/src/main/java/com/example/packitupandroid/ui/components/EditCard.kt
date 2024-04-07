@@ -39,12 +39,14 @@ import com.example.packitupandroid.model.Box
 import com.example.packitupandroid.model.Collection
 import com.example.packitupandroid.model.Item
 import com.example.packitupandroid.model.Summary
-import com.example.packitupandroid.ui.components.card.CardType
-import com.example.packitupandroid.ui.components.card.EditFields
-import com.example.packitupandroid.ui.components.card.EditMode
 import com.example.packitupandroid.ui.components.card.IconsColumn
 import com.example.packitupandroid.ui.components.common.AddConfirmCancelButton
 import com.example.packitupandroid.ui.components.common.ButtonType
+import com.example.packitupandroid.utils.CardType
+import com.example.packitupandroid.utils.EditFields
+import com.example.packitupandroid.utils.EditMode
+import com.example.packitupandroid.utils.asCurrencyString
+import com.example.packitupandroid.utils.parseCurrencyToDouble
 
 @Composable
 fun EditCard(

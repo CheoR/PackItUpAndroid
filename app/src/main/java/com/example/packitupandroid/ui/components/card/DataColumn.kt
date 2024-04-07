@@ -17,7 +17,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.packitupandroid.data.source.local.LocalDataSource
 import com.example.packitupandroid.model.BaseCardData
-import com.example.packitupandroid.ui.components.asCurrencyString
+import com.example.packitupandroid.utils.asCurrencyString
 
 @Composable
 fun DataColumn(
