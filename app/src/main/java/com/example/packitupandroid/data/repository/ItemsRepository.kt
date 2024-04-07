@@ -1,4 +1,4 @@
-package com.example.packitupandroid.data
+package com.example.packitupandroid.data.repository
 
 import com.example.packitupandroid.data.database.entities.ItemEntity
 import kotlinx.coroutines.flow.Flow

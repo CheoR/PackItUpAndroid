@@ -1,7 +1,8 @@
-package com.example.packitupandroid.data
+package com.example.packitupandroid.data.repository
 
 import com.example.packitupandroid.data.database.dao.ItemDao
 import com.example.packitupandroid.data.database.entities.ItemEntity
+import com.example.packitupandroid.data.repository.ItemsRepository
 import kotlinx.coroutines.flow.Flow
 
 class OfflineItemsRepository(private val itemDao: ItemDao) : ItemsRepository {

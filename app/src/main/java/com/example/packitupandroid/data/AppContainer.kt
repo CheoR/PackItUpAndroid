@@ -2,7 +2,9 @@ package com.example.packitupandroid.data
 
 import android.content.Context
 import com.example.packitupandroid.data.database.AppDatabase
+import com.example.packitupandroid.data.repository.ItemsRepository
 import com.example.packitupandroid.data.repository.LocalDataRepository
+import com.example.packitupandroid.data.repository.OfflineItemsRepository
 
 /**
  * App container for Dependency injection.
