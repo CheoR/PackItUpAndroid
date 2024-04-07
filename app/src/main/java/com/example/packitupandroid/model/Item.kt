@@ -2,19 +2,19 @@ package com.example.packitupandroid.model
 
 import com.example.packitupandroid.data.database.entities.ItemEntity
 import com.example.packitupandroid.ui.components.card.EditFields
-import com.example.packitupandroid.ui.utils.Converters
+import com.example.packitupandroid.utils.Converters
 import java.util.Date
 import java.util.UUID
 
 data class Item(
     override val id: String = UUID.randomUUID().toString(),
     override val name: String,
-    override val description: String = "",
-    val imageUri: String? = null, // ImageUri? = null,
+    override val description: String? = null,
+    val imageUri: String? = null,
     override val value: Double  = 0.0,
     override val isFragile: Boolean = false,
     override val lastModified: Date = Date(),
-) : BaseCardData  {
+) : BaseCardData {
     companion object {
         val EDIT_FIELDS = setOf(
             EditFields.Name,
@@ -36,6 +36,15 @@ fun Item.toEntity(): ItemEntity = ItemEntity(
     value = this.value,
     isFragile = this.isFragile,
     lastModified = Converters().dateToTimestamp(this.lastModified) ?: 0L,
+)
+
+fun Item.updateWith(other: Item) : Item = copy (
+    name = other.name,
+    description = other.description,
+    value = other.value,
+    isFragile = other.isFragile,
+    imageUri = other.imageUri,
+    lastModified = Date(),
 )
 
 //sealed class ImageUri {
