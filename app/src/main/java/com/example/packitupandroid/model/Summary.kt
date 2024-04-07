@@ -6,7 +6,7 @@ import java.util.Date
 data class Summary (
     override val id: String,
     override val name: String,
-    override val description: String = "",
+    override val description: String? = null,
     val collections: List<Collection> = emptyList(),
     val boxes: List<Box> = emptyList(),
     val items: List<Item> = emptyList(),
