@@ -1,9 +1,9 @@
 package com.example.packitupandroid.data.repository
 
 import com.example.packitupandroid.data.source.local.LocalDataSource
-import com.example.packitupandroid.model.Box
-import com.example.packitupandroid.model.Collection
-import com.example.packitupandroid.model.Item
+import com.example.packitupandroid.data.model.Box
+import com.example.packitupandroid.data.model.Collection
+import com.example.packitupandroid.data.model.Item
 
 interface DataRepository {
     suspend fun loadItems(): List<Item>

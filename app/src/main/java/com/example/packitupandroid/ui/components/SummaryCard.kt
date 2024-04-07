@@ -1,8 +1,8 @@
 package com.example.packitupandroid.ui.components
 
 import androidx.compose.runtime.Composable
-import com.example.packitupandroid.model.BaseCardData
-import com.example.packitupandroid.model.Summary
+import com.example.packitupandroid.data.model.BaseCardData
+import com.example.packitupandroid.data.model.Summary
 import com.example.packitupandroid.ui.components.card.BaseCard
 import com.example.packitupandroid.utils.CardType
 import com.example.packitupandroid.utils.EditMode

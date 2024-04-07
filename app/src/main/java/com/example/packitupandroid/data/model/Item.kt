@@ -1,4 +1,4 @@
-package com.example.packitupandroid.model
+package com.example.packitupandroid.data.model
 
 import com.example.packitupandroid.data.database.entities.ItemEntity
 import com.example.packitupandroid.ui.components.card.EditFields

@@ -20,8 +20,8 @@ import androidx.compose.ui.unit.dp
 import com.example.packitupandroid.R
 import com.example.packitupandroid.data.ScreenType
 import com.example.packitupandroid.data.source.local.LocalDataSource
-import com.example.packitupandroid.model.BaseCardData
-import com.example.packitupandroid.model.Summary
+import com.example.packitupandroid.data.model.BaseCardData
+import com.example.packitupandroid.data.model.Summary
 import com.example.packitupandroid.ui.PackItUpUiState
 import com.example.packitupandroid.ui.components.SummaryCard
 import com.example.packitupandroid.utils.asCurrencyString

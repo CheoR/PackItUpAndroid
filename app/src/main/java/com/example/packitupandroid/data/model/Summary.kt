@@ -1,4 +1,4 @@
-package com.example.packitupandroid.model
+package com.example.packitupandroid.data.model
 
 import com.example.packitupandroid.ui.components.card.EditFields
 import java.util.Date

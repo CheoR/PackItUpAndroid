@@ -29,8 +29,8 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.dimensionResource
 import androidx.core.content.ContextCompat
 import com.example.packitupandroid.R
-import com.example.packitupandroid.model.BaseCardData
-import com.example.packitupandroid.model.Item
+import com.example.packitupandroid.data.model.BaseCardData
+import com.example.packitupandroid.data.model.Item
 import com.example.packitupandroid.ui.components.camera.CameraPreview
 import com.example.packitupandroid.ui.components.common.AddConfirmCancelButton
 import com.example.packitupandroid.ui.components.common.ButtonType
