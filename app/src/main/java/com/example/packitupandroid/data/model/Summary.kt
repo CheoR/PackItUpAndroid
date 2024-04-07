@@ -1,6 +1,6 @@
 package com.example.packitupandroid.data.model
 
-import com.example.packitupandroid.ui.components.card.EditFields
+import com.example.packitupandroid.utils.EditFields
 import java.util.Date
 
 data class Summary (
