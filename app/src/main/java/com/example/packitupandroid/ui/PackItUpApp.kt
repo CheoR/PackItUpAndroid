@@ -12,8 +12,8 @@ import com.example.packitupandroid.ui.navigation.PackItUpNavHost
 import com.example.packitupandroid.ui.navigation.PackItUpNavigationActions
 import com.example.packitupandroid.ui.navigation.PackItUpRoute
 import com.example.packitupandroid.ui.navigation.PackItUpTopLevelDestination
-import com.example.packitupandroid.ui.utils.PackItUpContentType
-import com.example.packitupandroid.ui.utils.PackItUpNavigationType
+import com.example.packitupandroid.utils.PackItUpContentType
+import com.example.packitupandroid.utils.PackItUpNavigationType
 
 @Composable
 fun PackItUpApp(

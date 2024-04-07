@@ -18,8 +18,8 @@ import com.example.packitupandroid.ui.screens.BoxesScreen
 import com.example.packitupandroid.ui.screens.CollectionsScreen
 import com.example.packitupandroid.ui.screens.ItemsScreen
 import com.example.packitupandroid.ui.screens.SummaryScreen
-import com.example.packitupandroid.ui.utils.PackItUpContentType
-import com.example.packitupandroid.ui.utils.PackItUpNavigationType
+import com.example.packitupandroid.utils.PackItUpContentType
+import com.example.packitupandroid.utils.PackItUpNavigationType
 
 @Composable
 fun PackItUpNavHost(

@@ -7,8 +7,8 @@ import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
 import com.example.packitupandroid.data.database.dao.ItemDao
 import com.example.packitupandroid.data.database.entities.ItemEntity
-import com.example.packitupandroid.ui.utils.Converters
-import com.example.packitupandroid.ui.utils.DATABASE_NAME
+import com.example.packitupandroid.utils.Converters
+import com.example.packitupandroid.utils.DATABASE_NAME
 
 
 /**
