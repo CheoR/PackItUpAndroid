@@ -1,4 +1,4 @@
-package com.example.packitupandroid.repository
+package com.example.packitupandroid.data.repository
 
 import com.example.packitupandroid.data.source.local.LocalDataSource
 import com.example.packitupandroid.model.Box
