@@ -1,8 +1,8 @@
 package com.example.packitupandroid.data.model
 
 import com.example.packitupandroid.data.database.entities.ItemEntity
-import com.example.packitupandroid.ui.components.card.EditFields
 import com.example.packitupandroid.utils.Converters
+import com.example.packitupandroid.utils.EditFields
 import java.util.Date
 import java.util.UUID
 
