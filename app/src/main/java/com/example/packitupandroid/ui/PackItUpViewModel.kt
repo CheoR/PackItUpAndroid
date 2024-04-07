@@ -12,8 +12,8 @@ import com.example.packitupandroid.model.Collection
 import com.example.packitupandroid.model.Item
 import com.example.packitupandroid.model.Summary
 import com.example.packitupandroid.model.toEntity
-import com.example.packitupandroid.repository.DataRepository
-import com.example.packitupandroid.repository.LocalDataRepository
+import com.example.packitupandroid.data.repository.DataRepository
+import com.example.packitupandroid.data.repository.LocalDataRepository
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
