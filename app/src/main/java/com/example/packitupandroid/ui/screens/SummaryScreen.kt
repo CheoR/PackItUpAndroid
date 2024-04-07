@@ -24,7 +24,7 @@ import com.example.packitupandroid.model.BaseCardData
 import com.example.packitupandroid.model.Summary
 import com.example.packitupandroid.ui.PackItUpUiState
 import com.example.packitupandroid.ui.components.SummaryCard
-import com.example.packitupandroid.ui.components.asCurrencyString
+import com.example.packitupandroid.utils.asCurrencyString
 
 
 @Composable

@@ -24,28 +24,8 @@ import androidx.compose.ui.unit.dp
 import com.example.packitupandroid.R
 import com.example.packitupandroid.data.source.local.LocalDataSource
 import com.example.packitupandroid.model.BaseCardData
-
-sealed class CardType {
-    object Default : CardType()
-    object Summary : CardType()
-    object Collection : CardType()
-    object Box : CardType()
-    object Item : CardType()
-}
-
-sealed class EditMode {
-    object NoEdit : EditMode()
-    object Edit : EditMode()
-}
-
-sealed class EditFields {
-    object ImageUri : EditFields()
-    object Name : EditFields()
-    object Description : EditFields()
-    object IsFragile : EditFields()
-    object Value : EditFields()
-    object Dropdown: EditFields()
-}
+import com.example.packitupandroid.utils.CardType
+import com.example.packitupandroid.utils.EditMode
 
 sealed class ElementType {
     object Summary : ElementType()

@@ -32,10 +32,11 @@ import androidx.compose.ui.unit.dp
 import com.example.packitupandroid.R
 import com.example.packitupandroid.model.BaseCardData
 import com.example.packitupandroid.model.Summary
-import com.example.packitupandroid.ui.components.card.CardType
 import com.example.packitupandroid.ui.components.card.IconsColumn
 import com.example.packitupandroid.ui.components.common.AddConfirmCancelButton
 import com.example.packitupandroid.ui.components.common.ButtonType
+import com.example.packitupandroid.utils.CardType
+import com.example.packitupandroid.utils.asCurrencyString
 
 
 @Composable

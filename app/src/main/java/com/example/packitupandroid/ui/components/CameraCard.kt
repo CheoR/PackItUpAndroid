@@ -32,10 +32,10 @@ import com.example.packitupandroid.R
 import com.example.packitupandroid.model.BaseCardData
 import com.example.packitupandroid.model.Item
 import com.example.packitupandroid.ui.components.camera.CameraPreview
-import com.example.packitupandroid.ui.components.card.EditFields
-import com.example.packitupandroid.ui.components.card.EditMode
 import com.example.packitupandroid.ui.components.common.AddConfirmCancelButton
 import com.example.packitupandroid.ui.components.common.ButtonType
+import com.example.packitupandroid.utils.EditFields
+import com.example.packitupandroid.utils.EditMode
 import java.io.ByteArrayOutputStream
 
 @Composable

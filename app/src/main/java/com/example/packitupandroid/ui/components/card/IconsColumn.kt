@@ -31,9 +31,9 @@ import com.example.packitupandroid.R
 import com.example.packitupandroid.model.BaseCardData
 import com.example.packitupandroid.model.Box
 import com.example.packitupandroid.model.Collection
-//import com.example.packitupandroid.model.ImageUri
 import com.example.packitupandroid.model.Item
 import com.example.packitupandroid.model.Summary
+import com.example.packitupandroid.utils.CardType
 
 @Composable
 fun IconsColumn(

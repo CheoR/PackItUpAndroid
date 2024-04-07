@@ -4,8 +4,8 @@ import androidx.compose.runtime.Composable
 import com.example.packitupandroid.model.BaseCardData
 import com.example.packitupandroid.model.Summary
 import com.example.packitupandroid.ui.components.card.BaseCard
-import com.example.packitupandroid.ui.components.card.CardType
-import com.example.packitupandroid.ui.components.card.EditMode
+import com.example.packitupandroid.utils.CardType
+import com.example.packitupandroid.utils.EditMode
 
 @Composable
 fun SummaryCard(
