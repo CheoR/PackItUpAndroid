@@ -24,6 +24,7 @@ fun PackItUpBottomNavigationBar(
     selectedDestination: String,
     navigateToTopLevelDestination: (PackItUpTopLevelDestination) -> Unit,
     modifier: Modifier = Modifier,
+    setCurrentScreen: (String) -> Unit,
 ) {
     NavigationBar(
         modifier = modifier,
@@ -38,7 +39,10 @@ fun PackItUpBottomNavigationBar(
                 modifier = Modifier,
 //                    .height(dimensionResource(R.dimen.navigation_bar_item_height))
                 selected = selectedDestination == packItUpDestination.route,
-                onClick = { navigateToTopLevelDestination(packItUpDestination) },
+                onClick = {
+                    setCurrentScreen(packItUpDestination.route)
+                    navigateToTopLevelDestination(packItUpDestination)
+                          },
                 icon = {
                     Icon(
                         imageVector = selectedIcon,

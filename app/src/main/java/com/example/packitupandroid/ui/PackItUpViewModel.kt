@@ -14,6 +14,7 @@ import com.example.packitupandroid.data.model.Summary
 import com.example.packitupandroid.data.model.toEntity
 import com.example.packitupandroid.data.repository.DataRepository
 import com.example.packitupandroid.data.repository.LocalDataRepository
+import com.example.packitupandroid.ui.navigation.PackItUpRoute
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
@@ -346,6 +347,12 @@ private fun destroyEntity(element: BaseCardData): Pair<List<BaseCardData>, List<
         } else {
             itemsRepository.insertAll(entities)
         }
+    }
+
+    fun setCurrentScreen(selectedScreen: String = PackItUpRoute.SUMMARY) {
+        _uiState.value = uiState.value.copy(
+            currentScreen = selectedScreen
+        )
     }
 
     /**

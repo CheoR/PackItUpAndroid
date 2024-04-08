@@ -2,7 +2,6 @@ package com.example.packitupandroid.ui.screens
 
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import com.example.packitupandroid.data.ScreenType
 import androidx.compose.ui.tooling.preview.Preview
 import com.example.packitupandroid.data.source.local.LocalDataSource
 import com.example.packitupandroid.data.model.BaseCardData
@@ -10,6 +9,8 @@ import com.example.packitupandroid.data.model.Box
 import com.example.packitupandroid.ui.PackItUpUiState
 import com.example.packitupandroid.ui.components.card.BaseCard
 import com.example.packitupandroid.ui.components.card.CardType
+import com.example.packitupandroid.ui.navigation.PackItUpRoute
+import com.example.packitupandroid.utils.CardType
 
 @Composable
 fun BoxesScreen(
@@ -43,7 +44,7 @@ fun BoxesScreen(
 fun PreviewBoxesScreen(
     localDataSource: LocalDataSource = LocalDataSource(),
 ) {
-    val currentScreen = ScreenType.Summary
+    val currentScreen = PackItUpRoute.SUMMARY
     val items = localDataSource.loadItems()
     val boxes = localDataSource.loadBoxes()
     val collections = localDataSource.loadCollections()
