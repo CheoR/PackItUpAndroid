@@ -55,7 +55,8 @@ fun PackItUpNavHost(
         bottomBar = {
             PackItUpBottomNavigationBar(
                 selectedDestination = selectedDestination,
-                navigateToTopLevelDestination = navigateToTopLevelDestination
+                navigateToTopLevelDestination = navigateToTopLevelDestination,
+                setCurrentScreen = viewModel::setCurrentScreen,
             )
         }
     ) { innerPadding ->

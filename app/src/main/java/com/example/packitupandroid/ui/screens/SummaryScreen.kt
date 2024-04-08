@@ -18,12 +18,11 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.packitupandroid.R
-import com.example.packitupandroid.data.ScreenType
-import com.example.packitupandroid.data.source.local.LocalDataSource
 import com.example.packitupandroid.data.model.BaseCardData
 import com.example.packitupandroid.data.model.Summary
 import com.example.packitupandroid.ui.PackItUpUiState
 import com.example.packitupandroid.ui.components.SummaryCard
+import com.example.packitupandroid.ui.navigation.PackItUpRoute
 import com.example.packitupandroid.utils.asCurrencyString
 
 
@@ -101,7 +100,7 @@ fun SummaryScreen(
 fun PreviewSummaryScreen(
     localDataSource: LocalDataSource = LocalDataSource(),
 ) {
-    val currentScreen = ScreenType.Summary
+    val currentScreen = PackItUpRoute.SUMMARY
     val items = localDataSource.loadItems()
     val boxes = localDataSource.loadBoxes()
     val collections = localDataSource.loadCollections()

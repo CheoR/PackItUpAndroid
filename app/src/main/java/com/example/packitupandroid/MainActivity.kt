@@ -22,12 +22,12 @@ import androidx.compose.ui.unit.dp
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.example.packitupandroid.data.ScreenType
 import com.example.packitupandroid.data.source.local.LocalDataSource
 import com.example.packitupandroid.ui.PackItUpApp
 import com.example.packitupandroid.ui.PackItUpUiState
 import com.example.packitupandroid.ui.PackItUpViewModel
 import com.example.packitupandroid.ui.PackItUpViewModelProvider
+import com.example.packitupandroid.ui.navigation.PackItUpRoute
 import com.example.packitupandroid.ui.theme.PackItUpAndroidTheme
 
 class MainActivity : ComponentActivity() {
@@ -88,7 +88,7 @@ fun PreviewPackItUp(
     val items = localDataSource.loadItems()
     val boxes = localDataSource.loadBoxes()
     val collections = localDataSource.loadCollections()
-    val currentScreen: ScreenType = ScreenType.Summary
+    val currentScreen = PackItUpRoute.SUMMARY
 
     PackItUpAndroidTheme {
         Surface {
