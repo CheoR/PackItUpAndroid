@@ -2,6 +2,7 @@ package com.example.packitupandroid.data.model
 
 import com.example.packitupandroid.utils.EditFields
 import java.util.Date
+import kotlin.collections.Collection
 
 data class Summary (
     override val id: String,
