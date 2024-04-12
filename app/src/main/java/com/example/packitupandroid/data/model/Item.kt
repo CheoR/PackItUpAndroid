@@ -13,6 +13,7 @@ data class Item(
     val imageUri: String? = null,
     override val value: Double  = 0.0,
     override val isFragile: Boolean = false,
+    val boxId: String?,
     override val lastModified: Date = Date(),
 ) : BaseCardData {
     companion object {
@@ -35,6 +36,7 @@ fun Item.toEntity(): ItemEntity = ItemEntity(
     imageUri = this.imageUri,
     value = this.value,
     isFragile = this.isFragile,
+    boxId = this.boxId,
     lastModified = Converters().dateToTimestamp(this.lastModified) ?: 0L,
 )
 
@@ -44,6 +46,7 @@ fun Item.updateWith(other: Item) : Item = copy (
     value = other.value,
     isFragile = other.isFragile,
     imageUri = other.imageUri,
+    boxId = other.boxId,
     lastModified = Date(),
 )
 
