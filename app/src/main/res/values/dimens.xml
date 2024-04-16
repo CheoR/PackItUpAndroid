@@ -11,4 +11,5 @@
     <dimen name="padding_medium">16dp</dimen>
     <dimen name="roundness_x_small">8dp</dimen>
     <dimen name="roundness_small">8dp</dimen>
+    <dimen name="space_arrangement_small">8dp</dimen>
 </resources>
