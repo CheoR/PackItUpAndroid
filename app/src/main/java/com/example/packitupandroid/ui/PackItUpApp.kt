@@ -18,7 +18,7 @@ import com.example.packitupandroid.utils.PackItUpNavigationType
 @Composable
 fun PackItUpApp(
     windowSize: WindowSizeClass,
-    uiState: PackItUpUiState,
+//    uiState: PackItUpUiState,
 ) {
     /*
         To implement navigation drawer, determine navigation type based on app's window size.
@@ -45,7 +45,7 @@ fun PackItUpApp(
     PackItUpNavigationWrapper(
         navigationType = navigationType,
         contentType = contentType,
-        uiState = uiState,
+//        uiState = uiState,
     )
 }
 
@@ -53,7 +53,7 @@ fun PackItUpApp(
 private fun PackItUpNavigationWrapper(
     navigationType: PackItUpNavigationType,
     contentType: PackItUpContentType,
-    uiState: PackItUpUiState,
+//    uiState: PackItUpUiState,
 ) {
     val navController = rememberNavController()
     val navigationActions = remember(navController) {
@@ -65,7 +65,7 @@ private fun PackItUpNavigationWrapper(
     PackItUpContent(
         navigationType = navigationType,
         contentType = contentType,
-        uiState = uiState,
+//        uiState = uiState,
         navController = navController,
         selectedDestination = selectedDestination,
         navigateToTopLevelDestination = navigationActions::navigateTo,
@@ -76,7 +76,7 @@ private fun PackItUpNavigationWrapper(
 fun PackItUpContent(
     navigationType: PackItUpNavigationType,
     contentType: PackItUpContentType,
-    uiState: PackItUpUiState,
+//    uiState: PackItUpUiState,
     navController: NavHostController,
     selectedDestination: String,
     navigateToTopLevelDestination: (PackItUpTopLevelDestination) -> Unit,
@@ -84,7 +84,7 @@ fun PackItUpContent(
     PackItUpNavHost(
         navController = navController,
         contentType = contentType,
-        uiState = uiState,
+//        uiState = uiState,
         navigationType = navigationType,
         selectedDestination = selectedDestination,
         navigateToTopLevelDestination = navigateToTopLevelDestination,

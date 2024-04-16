@@ -23,19 +23,15 @@ import com.example.packitupandroid.utils.PackItUpNavigationType
 
 @Composable
 fun PackItUpNavHost(
-    uiState: PackItUpUiState,
+//    uiState: PackItUpUiState,
     selectedDestination: String,
     navController: NavHostController,
     contentType: PackItUpContentType,
     navigationType: PackItUpNavigationType,
     navigateToTopLevelDestination: (PackItUpTopLevelDestination) -> Unit,
     modifier: Modifier = Modifier,
-    viewModel: PackItUpViewModel = viewModel(factory = PackItUpViewModelProvider.Factory),
+    viewModel: ScreenViewModel = viewModel(factory = PackItUpViewModelProvider.Factory),
 ) {
-
-    LaunchedEffect(key1 = null) {
-        viewModel.getAllItems()
-    }
 
     Scaffold(
         modifier = modifier,
@@ -57,6 +53,7 @@ fun PackItUpNavHost(
                 selectedDestination = selectedDestination,
                 navigateToTopLevelDestination = navigateToTopLevelDestination,
                 setCurrentScreen = viewModel::setCurrentScreen,
+                loadCurrentScreenData = viewModel::loadCurrentScreenData,
             )
         }
     ) { innerPadding ->
