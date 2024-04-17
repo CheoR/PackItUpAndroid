@@ -42,6 +42,7 @@ fun IconsColumn(
 ) {
     when(data) {
         is Item -> {
+            // TODO: FIX
 //            val icon = when (val imageUri = data.imageUri) {
 //                is ImageUri.StringUri -> ColumnIcon.UriStringIcon(imageUri.uri)
 //                is ImageUri.ResourceUri -> ColumnIcon.UriIcon(imageUri.resourceId)
@@ -56,15 +57,15 @@ fun IconsColumn(
         is Box -> {
             ProjectIcons(
                 icon1 = ColumnIcon.VectorIcon(Icons.Default.Label),
-                badgeCount1 = data.items.size,
+                badgeCount1 = data.count,
             )
         }
         is Collection -> {
             ProjectIcons(
                 icon1 = ColumnIcon.VectorIcon(ImageVector.vectorResource(R.drawable.ic_launcher_foreground)),
                 icon2 = ColumnIcon.VectorIcon(Icons.Default.Label),
-                badgeCount1 = data.boxes.size,
-                badgeCount2 = data.boxes.sumOf { it.items.size },
+                badgeCount1 = 5, // TODO: Fix data.boxes.size,
+                badgeCount2 = 5, // TODO: Fix data.boxes.sumOf { it.items.size },
             )
         }
         is Summary -> {
