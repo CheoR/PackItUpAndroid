@@ -18,6 +18,9 @@ import com.example.packitupandroid.ui.screens.BoxesScreen
 import com.example.packitupandroid.ui.screens.CollectionsScreen
 import com.example.packitupandroid.ui.screens.ItemsScreen
 import com.example.packitupandroid.ui.screens.SummaryScreen
+import com.example.packitupandroid.ui.screens.ScreenViewModel
+import com.example.packitupandroid.ui.screens.box.BoxesScreen
+import com.example.packitupandroid.ui.screens.box.BoxesScreenViewModel
 import com.example.packitupandroid.utils.PackItUpContentType
 import com.example.packitupandroid.utils.PackItUpNavigationType
 
@@ -80,11 +83,14 @@ fun PackItUpNavHost(
                 )
             }
             composable(route = PackItUpRoute.BOXES) {
+                val vm: BoxesScreenViewModel = viewModel(factory = PackItUpViewModelProvider.Factory)
+                val uiState by viewModel.uiState.collectAsState()
+
                 BoxesScreen(
                     uiState = uiState,
-                    onCreate = viewModel::createElement,
-                    onDestroy = viewModel::destroyElement,
-                    onUpdate = viewModel::updateElement,
+                    createElement = vm::create,
+                    updateElement = vm::update,
+                    destroyElement = vm::destroy,
                 )
             }
             composable(route = PackItUpRoute.ITEMS) {
