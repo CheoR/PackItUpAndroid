@@ -1,6 +1,5 @@
 package com.example.packitupandroid.ui.components.counter
 
-import android.annotation.SuppressLint
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -25,25 +24,24 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.testTag
+import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.example.packitupandroid.data.model.BaseCardData
-import com.example.packitupandroid.data.model.Item
+import com.example.packitupandroid.R
 import com.example.packitupandroid.ui.components.common.AddConfirmCancelButton
 import com.example.packitupandroid.ui.components.common.ButtonType
 
 @Composable
-fun <T: BaseCardData> Counter(
-    onClick: (T, Int?) -> Unit,
+fun Counter(
+    onClick: (Int) -> Unit,
     modifier: Modifier = Modifier,
-    type : T? = null,
 ) {
     var count by remember { mutableIntStateOf(0) }
     val buttonModifier = Modifier
         .size(40.dp)
-        .clip(RoundedCornerShape(8.dp))
+        .clip(RoundedCornerShape(dimensionResource(R.dimen.roundness_small)))
         .background(Color.Gray)
 
     fun resetCount() {
@@ -65,7 +63,7 @@ fun <T: BaseCardData> Counter(
             TextButton(
                 modifier = buttonModifier
                     .semantics {
-                               contentDescription = "Counter Value"
+                        contentDescription = "Counter Value"
                     },
                 onClick = {},
                 enabled = false,
@@ -85,28 +83,19 @@ fun <T: BaseCardData> Counter(
         }
         AddConfirmCancelButton(
             button = ButtonType.Add,
-            enabled = type != null && count > 0,
+            enabled = count > 0,
             onClick = {
-                if(type != null) {
-                    onClick(type, count)
-                    resetCount()
-                }
-                      },
+                onClick(count)
+                resetCount()
+            },
         )
     }
 }
 
-@SuppressLint("UnrememberedMutableState")
 @Preview(showBackground = true)
 @Composable
 fun PreviewCounter() {
-    Counter<Item>(
-        type = Item(
-            name = "Sample Item",
-            description = "This is a sample item",
-            value = 10.0,
-            isFragile = false
-        ),
-        onClick = { item, _ -> println("Clicked: ${item.name}") }
+    Counter(
+        onClick = {}
     )
 }
