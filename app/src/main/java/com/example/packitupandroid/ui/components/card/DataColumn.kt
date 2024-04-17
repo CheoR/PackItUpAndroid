@@ -17,6 +17,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.packitupandroid.data.source.local.LocalDataSource
 import com.example.packitupandroid.data.model.BaseCardData
+import com.example.packitupandroid.utils.CardType
+import com.example.packitupandroid.utils.EditMode
 import com.example.packitupandroid.utils.asCurrencyString
 
 @Composable
@@ -51,7 +53,8 @@ fun DataColumn(
             )
         }
         BasicTextField(
-            value = data.description,
+            // TODO: fix
+            value = data.description ?: "missing",
             onValueChange = {},
             textStyle = MaterialTheme.typography.bodySmall,
             enabled = editMode == EditMode.Edit,
@@ -87,6 +90,8 @@ fun DataColumn(
     }
 }
 
+// TODO: fix
+
 @Preview(
     showBackground = true,
     group = "Default",
@@ -114,19 +119,19 @@ fun PreviewBoxViewCardDataColumn(
         data = box,
     )
 }
-@Preview(
-    showBackground = true,
-    group = "Default",
-)
-@Composable
-fun PreviewCollectionViewCardDataColumn(
-    localDataSource: LocalDataSource = LocalDataSource(),
-) {
-    val collection = localDataSource.loadCollections().first()
-    DataColumn(
-        data = collection,
-    )
-}
+//@Preview(
+//    showBackground = true,
+//    group = "Default",
+//)
+//@Composable
+//fun PreviewCollectionViewCardDataColumn(
+//    localDataSource: LocalDataSource = LocalDataSource(),
+//) {
+//    val collection = localDataSource.loadCollections().first()
+//    DataColumn(
+//        data = collection,
+//    )
+//}
 
 @Preview(
     showBackground = true,
@@ -157,17 +162,17 @@ fun PreviewBoxSummaryCardDataColumn(
         cardType = CardType.Summary,
     )
 }
-@Preview(
-    showBackground = true,
-    group = "Summary",
-)
-@Composable
-fun PreviewCollectionSummaryCardDataColumn(
-    localDataSource: LocalDataSource = LocalDataSource(),
-) {
-    val collection = localDataSource.loadCollections().first()
-    DataColumn(
-        data = collection,
-        cardType = CardType.Summary,
-    )
-}
+//@Preview(
+//    showBackground = true,
+//    group = "Summary",
+//)
+//@Composable
+//fun PreviewCollectionSummaryCardDataColumn(
+//    localDataSource: LocalDataSource = LocalDataSource(),
+//) {
+//    val collection = localDataSource.loadCollections().first()
+//    DataColumn(
+//        data = collection,
+//        cardType = CardType.Summary,
+//    )
+//}

@@ -1,4 +1,4 @@
-package com.example.packitupandroid.ui.components
+package com.example.packitupandroid.ui.components.card
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -32,7 +32,6 @@ import androidx.compose.ui.unit.dp
 import com.example.packitupandroid.R
 import com.example.packitupandroid.data.model.BaseCardData
 import com.example.packitupandroid.data.model.Summary
-import com.example.packitupandroid.ui.components.card.IconsColumn
 import com.example.packitupandroid.ui.components.common.AddConfirmCancelButton
 import com.example.packitupandroid.ui.components.common.ButtonType
 import com.example.packitupandroid.utils.CardType
@@ -103,7 +102,8 @@ fun DeleteCard(
 //                        )
 //                    }
                     BasicTextField(
-                        value = data.description,
+                        // TODO: fix
+                        value = data.description ?: "missing",
                         onValueChange = {},
                         textStyle = MaterialTheme.typography.bodySmall,
                         enabled = false,

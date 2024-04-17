@@ -1,4 +1,4 @@
-package com.example.packitupandroid.ui.components
+package com.example.packitupandroid.ui.components.card
 
 import android.content.Context
 import android.graphics.Bitmap
@@ -83,8 +83,8 @@ fun<T: BaseCardData> CameraCard(
                     onPhotoTaken = {
                         if (isEditable(EditFields.ImageUri)) {
                             localData = (localData as Item).copy(
-                                imageUri = it, // ImageUri.StringUri(it)
-                            )
+                                imageUri = it,
+                            ) as T
                         }
                         onClick(localData)
                     }
