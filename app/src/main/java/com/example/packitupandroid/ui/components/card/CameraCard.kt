@@ -39,9 +39,9 @@ import com.example.packitupandroid.utils.EditMode
 import java.io.ByteArrayOutputStream
 
 @Composable
-fun CameraCard(
-    data: BaseCardData,
-    onClick: (BaseCardData) -> Unit,
+fun<T: BaseCardData> CameraCard(
+    data: T,
+    onClick: (T) -> Unit,
     onCancel: () -> Unit,
     modifier: Modifier = Modifier,
     editMode: EditMode = EditMode.Edit,
