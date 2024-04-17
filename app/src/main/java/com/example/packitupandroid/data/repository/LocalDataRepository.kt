@@ -1,20 +1,19 @@
 package com.example.packitupandroid.data.repository
 
-import com.example.packitupandroid.data.source.local.LocalDataSource
 import com.example.packitupandroid.data.model.Box
-import com.example.packitupandroid.data.model.Collection
 import com.example.packitupandroid.data.model.Item
+import com.example.packitupandroid.data.source.local.LocalDataSource
 
 interface DataRepository {
     suspend fun loadItems(): List<Item>
     suspend fun loadBoxes(): List<Box>
-    suspend fun loadCollections(): List<Collection>
+//    suspend fun loadCollections(): List<Collection>
 }
 
 class LocalDataRepository (
     private val localDataSource: LocalDataSource = LocalDataSource(),
 ) : DataRepository {
-    private var collections : List<Collection>? = null
+    //    private var collections : List<Collection>? = null
     private var boxes : List<Box>? = null
     private var items : List<Item>? = null
 
@@ -32,10 +31,10 @@ class LocalDataRepository (
         return boxes as List<Box>
     }
 
-    override suspend fun loadCollections(): List<Collection> {
-        if(collections ==  null) {
-            collections = localDataSource.loadCollections()
-        }
-        return collections as List<Collection>
-    }
+//    override suspend fun loadCollections(): List<Collection> {
+//        if(collections ==  null) {
+//            collections = localDataSource.loadCollections()
+//        }
+//        return collections as List<Collection>
+//    }
 }
