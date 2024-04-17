@@ -49,9 +49,9 @@ import com.example.packitupandroid.utils.asCurrencyString
 import com.example.packitupandroid.utils.parseCurrencyToDouble
 
 @Composable
-fun EditCard(
-    data: BaseCardData,
-    onEdit: (BaseCardData) -> Unit,
+fun<T: BaseCardData> EditCard(
+    data: T,
+    onEdit: (T) -> Unit,
     onCancel: () -> Unit,
     modifier: Modifier = Modifier,
     editMode: EditMode = EditMode.Edit,

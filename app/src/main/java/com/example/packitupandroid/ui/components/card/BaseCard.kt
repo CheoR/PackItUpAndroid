@@ -82,10 +82,10 @@ sealed class ActionColumnState(val icon: ImageVector) {
 //}
 
 @Composable
-fun BaseCard(
-    data: BaseCardData,
-    onUpdate: (BaseCardData) -> Unit,
-    onDestroy: () -> Unit,
+fun<T: BaseCardData> BaseCard(
+    data: T,
+    onUpdate: (T) -> Unit,
+    onDestroy: (T) -> Unit,
     modifier: Modifier = Modifier,
     editMode: EditMode = EditMode.NoEdit,
     cardType: CardType = CardType.Default,
