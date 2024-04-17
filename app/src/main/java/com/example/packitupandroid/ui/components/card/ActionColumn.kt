@@ -29,13 +29,12 @@ import androidx.compose.ui.unit.dp
 import com.example.packitupandroid.data.source.local.LocalDataSource
 import com.example.packitupandroid.data.model.BaseCardData
 import com.example.packitupandroid.data.model.Summary
-import com.example.packitupandroid.ui.components.CameraCard
-import com.example.packitupandroid.ui.components.DeleteCard
-import com.example.packitupandroid.ui.components.EditCard
+import com.example.packitupandroid.utils.CardType
+import com.example.packitupandroid.utils.EditMode
 
 @Composable
-fun ActionColumn(
-    data: BaseCardData,
+fun<T: BaseCardData> ActionColumn(
+    data: T,
     isExpanded: MutableState<Boolean>,
     isShowEditCard: MutableState<Boolean>,
     isShowCameraCard: MutableState<Boolean>,
@@ -43,7 +42,7 @@ fun ActionColumn(
     onClick: () -> Unit,
     onCancel: () -> Unit,
     onDelete: () -> Unit,
-    onEdit: (BaseCardData) -> Unit,
+    onEdit: (T) -> Unit,
     modifier: Modifier = Modifier,
     editMode: EditMode = EditMode.NoEdit,
     cardType: CardType = CardType.Default,
@@ -236,55 +235,56 @@ fun PreviewActionColumnSummaryCardNoEdit() {
     )
 }
 
-@Preview(
-    showBackground = true,
-    group="Default",
-)
-@Composable
-fun PreviewActionColumnDefaultCardNoEdit(
-    localDataSource: LocalDataSource = LocalDataSource(),
-) {
-    val collection = localDataSource.loadCollections().first()
-    val isShowEditCard = remember { mutableStateOf(false) }
-    val isShowCameraCard = remember { mutableStateOf(false) }
-    val isShowDeleteCard = remember { mutableStateOf(false) }
-    val isExpanded = remember { mutableStateOf(false) }
-    ActionColumn(
-        data = collection,
-        onClick = {},
-        onEdit = {},
-        onCancel = {},
-        onDelete = {},
-        isShowEditCard = isShowEditCard,
-        isShowCameraCard = isShowCameraCard,
-        isShowDeleteCard = isShowDeleteCard,
-        isExpanded = isExpanded,
-    )
-}
-
-@Preview(
-    showBackground = true,
-    group="Edit",
-)
-@Composable
-fun PreviewActionColumnEditCardEdit(
-    localDataSource: LocalDataSource = LocalDataSource(),
-) {
-    val collection = localDataSource.loadCollections().first()
-    val isShowEditCard = remember { mutableStateOf(false) }
-    val isShowCameraCard = remember { mutableStateOf(false) }
-    val isShowDeleteCard = remember { mutableStateOf(false) }
-    val isExpanded = remember { mutableStateOf(false) }
-    ActionColumn(
-        data = collection,
-        onClick = {},
-        onEdit = {},
-        onCancel = {},
-        onDelete = {},
-        isShowEditCard = isShowEditCard,
-        isShowCameraCard = isShowCameraCard,
-        isShowDeleteCard = isShowDeleteCard,
-        isExpanded = isExpanded,
-        editMode = EditMode.Edit,
-    )
-}
+// TODO: Fix
+//@Preview(
+//    showBackground = true,
+//    group="Default",
+//)
+//@Composable
+//fun PreviewActionColumnDefaultCardNoEdit(
+//    localDataSource: LocalDataSource = LocalDataSource(),
+//) {
+//    val collection = localDataSource.loadCollections().first()
+//    val isShowEditCard = remember { mutableStateOf(false) }
+//    val isShowCameraCard = remember { mutableStateOf(false) }
+//    val isShowDeleteCard = remember { mutableStateOf(false) }
+//    val isExpanded = remember { mutableStateOf(false) }
+//    ActionColumn(
+//        data = collection,
+//        onClick = {},
+//        onEdit = {},
+//        onCancel = {},
+//        onDelete = {},
+//        isShowEditCard = isShowEditCard,
+//        isShowCameraCard = isShowCameraCard,
+//        isShowDeleteCard = isShowDeleteCard,
+//        isExpanded = isExpanded,
+//    )
+//}
+//
+//@Preview(
+//    showBackground = true,
+//    group="Edit",
+//)
+//@Composable
+//fun PreviewActionColumnEditCardEdit(
+//    localDataSource: LocalDataSource = LocalDataSource(),
+//) {
+//    val collection = localDataSource.loadCollections().first()
+//    val isShowEditCard = remember { mutableStateOf(false) }
+//    val isShowCameraCard = remember { mutableStateOf(false) }
+//    val isShowDeleteCard = remember { mutableStateOf(false) }
+//    val isExpanded = remember { mutableStateOf(false) }
+//    ActionColumn(
+//        data = collection,
+//        onClick = {},
+//        onEdit = {},
+//        onCancel = {},
+//        onDelete = {},
+//        isShowEditCard = isShowEditCard,
+//        isShowCameraCard = isShowCameraCard,
+//        isShowDeleteCard = isShowDeleteCard,
+//        isExpanded = isExpanded,
+//        editMode = EditMode.Edit,
+//    )
+//}
