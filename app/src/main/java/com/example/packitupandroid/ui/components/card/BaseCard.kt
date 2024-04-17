@@ -138,7 +138,7 @@ fun<T: BaseCardData> BaseCard(
                     expanded.value = false
                     showCameraCard.value = false
                     showDeleteCard.value = false
-                    onDestroy()
+                    onDestroy(data)
                 },
                 isExpanded = expanded,
                 isShowEditCard = showEditCard,
@@ -197,21 +197,23 @@ fun PreviewBoxBaseCard(
         onDestroy = {},
     )
 }
-@Preview(
-    showBackground = true,
-    group = "Default",
-)
-@Composable
-fun PreviewCollectionBaseCard(
-    localDataSource: LocalDataSource = LocalDataSource(),
-) {
-    val collection = localDataSource.loadCollections().first()
-    BaseCard(
-        data = collection,
-        onUpdate = {},
-        onDestroy = {},
-    )
-}
+// TODO: Fix
+
+//@Preview(
+//    showBackground = true,
+//    group = "Default",
+//)
+//@Composable
+//fun PreviewCollectionBaseCard(
+//    localDataSource: LocalDataSource = LocalDataSource(),
+//) {
+//    val collection = localDataSource.loadCollections().first()
+//    BaseCard(
+//        data = collection,
+//        onUpdate = {},
+//        onDestroy = {},
+//    )
+//}
 
 // Summary
 @Preview(
@@ -264,22 +266,24 @@ fun PreviewSummaryBoxBaseCard(
         onDestroy = {},
     )
 }
-@Preview(
-    showBackground = true,
-    group = "Summary",
-)
-@Composable
-fun PreviewSummaryCollectionBaseCard(
-    localDataSource: LocalDataSource = LocalDataSource(),
-) {
-    val collection = localDataSource.loadCollections().first()
-    BaseCard(
-        data = collection,
-        cardType = CardType.Summary,
-        onUpdate = {},
-        onDestroy = {},
-    )
-}
+
+// TODO: Fix
+//@Preview(
+//    showBackground = true,
+//    group = "Summary",
+//)
+//@Composable
+//fun PreviewSummaryCollectionBaseCard(
+//    localDataSource: LocalDataSource = LocalDataSource(),
+//) {
+//    val collection = localDataSource.loadCollections().first()
+//    BaseCard(
+//        data = collection,
+//        cardType = CardType.Summary,
+//        onUpdate = {},
+//        onDestroy = {},
+//    )
+//}
 
 // Editable
 
@@ -333,19 +337,21 @@ fun PreviewEditBoxBaseCard(
         onDestroy = {},
     )
 }
-@Preview(
-    showBackground = true,
-    group = "Edit",
-)
-@Composable
-fun PreviewEditCollectionBaseCard(
-    localDataSource: LocalDataSource = LocalDataSource(),
-) {
-    val collection = localDataSource.loadCollections().first()
-    BaseCard(
-        data = collection,
-        editMode = EditMode.Edit,
-        onUpdate = {},
-        onDestroy = {},
-    )
-}
+
+// TODO: Fix
+//@Preview(
+//    showBackground = true,
+//    group = "Edit",
+//)
+//@Composable
+//fun PreviewEditCollectionBaseCard(
+//    localDataSource: LocalDataSource = LocalDataSource(),
+//) {
+//    val collection = localDataSource.loadCollections().first()
+//    BaseCard(
+//        data = collection,
+//        editMode = EditMode.Edit,
+//        onUpdate = {},
+//        onDestroy = {},
+//    )
+//}
