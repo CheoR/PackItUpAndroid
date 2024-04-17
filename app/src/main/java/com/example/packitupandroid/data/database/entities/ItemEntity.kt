@@ -12,11 +12,6 @@ data class ItemEntity(
     @PrimaryKey
     val id: String,
     val name: String,
-    @ColumnInfo(
-        name = "image_uri",
-        defaultValue = "null",
-    )
-    val imageUri: String?,
     @ColumnInfo(defaultValue = "null")
     val description: String?,
     @ColumnInfo(defaultValue = "0.0")
@@ -31,16 +26,27 @@ data class ItemEntity(
         defaultValue = "0",
     )
     val lastModified: Long,
+    @ColumnInfo(
+        name = "box_id",
+        defaultValue = "null",
+    )
+    val boxId: String?,
+    @ColumnInfo(
+        name = "image_uri",
+        defaultValue = "null",
+    )
+    val imageUri: String?,
 )
 
 fun ItemEntity.toItem(): Item = Item(
     id = this.id,
     name = this.name,
     description = this.description,
-    imageUri = this.imageUri,
     value = this.value,
     isFragile = this.isFragile,
-    lastModified = Converters().fromTimestamp(this.lastModified) ?: Date()
+    lastModified = Converters().fromTimestamp(this.lastModified) ?: Date(),
+    boxId = this.boxId,
+    imageUri = this.imageUri
 )
 
 fun ItemEntity.updateWith(other: ItemEntity) : ItemEntity = copy (
@@ -48,6 +54,7 @@ fun ItemEntity.updateWith(other: ItemEntity) : ItemEntity = copy (
     description = other.description,
     value = other.value,
     isFragile = other.isFragile,
-    imageUri = other.imageUri,
     lastModified = System.currentTimeMillis(),
+    imageUri = other.imageUri,
+    boxId = other.boxId,
 )

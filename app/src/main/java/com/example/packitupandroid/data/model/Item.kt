@@ -10,11 +10,11 @@ data class Item(
     override val id: String = UUID.randomUUID().toString(),
     override val name: String,
     override val description: String? = null,
-    val imageUri: String? = null,
     override val value: Double  = 0.0,
     override val isFragile: Boolean = false,
-    val boxId: String?,
     override val lastModified: Date = Date(),
+    val boxId: String?,
+    val imageUri: String? = null,
 ) : BaseCardData {
     companion object {
         val EDIT_FIELDS = setOf(
@@ -33,11 +33,11 @@ fun Item.toEntity(): ItemEntity = ItemEntity(
     id = this.id,
     name = this.name,
     description = this.description,
-    imageUri = this.imageUri,
     value = this.value,
     isFragile = this.isFragile,
-    boxId = this.boxId,
     lastModified = Converters().dateToTimestamp(this.lastModified) ?: 0L,
+    boxId = this.boxId,
+    imageUri = this.imageUri,
 )
 
 fun Item.updateWith(other: Item) : Item = copy (
@@ -45,12 +45,7 @@ fun Item.updateWith(other: Item) : Item = copy (
     description = other.description,
     value = other.value,
     isFragile = other.isFragile,
-    imageUri = other.imageUri,
-    boxId = other.boxId,
     lastModified = Date(),
+    boxId = other.boxId,
+    imageUri = other.imageUri,
 )
-
-//sealed class ImageUri {
-//    data class StringUri(val uri: String) : ImageUri()
-//    data class ResourceUri(val resourceId: Int) : ImageUri()
-//}
