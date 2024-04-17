@@ -8,6 +8,11 @@ import kotlinx.coroutines.flow.Flow
  */
 interface ItemsRepository {
     /**
+     * Retrieve an item from the given data source that matches with the [id].
+     */
+    suspend fun getItem(id: String): ItemEntity?
+
+    /**
      * Retrieve all the items from the given data source.
      */
     fun getAllItemsStream(): Flow<List<ItemEntity>>
@@ -28,6 +33,11 @@ interface ItemsRepository {
     suspend fun insertAll(items: List<ItemEntity>)
 
     /**
+     * Update item in the data source
+     */
+    suspend fun updateItem(item: ItemEntity)
+
+    /**
      * Delete item from the data source
      */
     suspend fun deleteItem(item: ItemEntity)
@@ -38,7 +48,7 @@ interface ItemsRepository {
     suspend fun deleteAll(items: List<ItemEntity>)
 
     /**
-     * Update item in the data source
+     * Clear all items in the data source
      */
-    suspend fun updateItem(item: ItemEntity)
+    suspend fun clearAllItems()
 }
