@@ -14,17 +14,18 @@ import androidx.compose.material3.TopAppBarScrollBehavior
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
+import androidx.compose.ui.unit.dp
 import com.example.packitupandroid.R
 
 @Composable
 fun PackItUpBottomNavigationBar(
     selectedDestination: String,
     navigateToTopLevelDestination: (PackItUpTopLevelDestination) -> Unit,
-    modifier: Modifier = Modifier,
     setCurrentScreen: (String) -> Unit,
+    loadCurrentScreenData: (String) -> Unit,
+    modifier: Modifier = Modifier,
 ) {
     NavigationBar(
         modifier = modifier,
@@ -41,13 +42,14 @@ fun PackItUpBottomNavigationBar(
                 selected = selectedDestination == packItUpDestination.route,
                 onClick = {
                     setCurrentScreen(packItUpDestination.route)
+                    loadCurrentScreenData(packItUpDestination.route)
                     navigateToTopLevelDestination(packItUpDestination)
-                          },
+                },
                 icon = {
                     Icon(
                         imageVector = selectedIcon,
                         contentDescription = stringResource(packItUpDestination.iconTextId),
-                        modifier = Modifier.size(dimensionResource(R.dimen.image_size_small)),
+                        modifier = Modifier.size(40.dp),
                         tint = if (selectedDestination == packItUpDestination.route) {
                             MaterialTheme.colorScheme.primary
                         } else {
@@ -64,7 +66,7 @@ fun PackItUpBottomNavigationBar(
                             MaterialTheme.colorScheme.onSurfaceVariant
                         },
                         style = MaterialTheme.typography.bodySmall,
-//                        modifier = Modifier.padding(top = 4.dp)
+//                        modifier = Modifier.padding(top = dimensionResource(R.dimen.padding_small))
                     )
                 }
             )
