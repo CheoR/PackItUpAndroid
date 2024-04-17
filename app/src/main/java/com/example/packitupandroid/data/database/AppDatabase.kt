@@ -5,11 +5,12 @@ import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
+import com.example.packitupandroid.data.database.dao.BoxDao
 import com.example.packitupandroid.data.database.dao.ItemDao
+import com.example.packitupandroid.data.database.entities.BoxEntity
 import com.example.packitupandroid.data.database.entities.ItemEntity
 import com.example.packitupandroid.utils.Converters
 import com.example.packitupandroid.utils.DATABASE_NAME
-
 
 /**
  * Database class with singleton Instance object.
@@ -17,11 +18,12 @@ import com.example.packitupandroid.utils.DATABASE_NAME
 
 // version - increase version number whenever database table schema changes.
 // exportSchema - set as false as to not keep schema version history backup
-@Database(entities = [ItemEntity::class], version = 2, exportSchema = false)
+@Database(entities = [ItemEntity::class, BoxEntity::class], version = 3, exportSchema = false)
 @TypeConverters(Converters::class)
 abstract class AppDatabase : RoomDatabase() {
 
     abstract fun itemDao(): ItemDao
+    abstract fun boxDao(): BoxDao
 
     companion object {
         @Volatile
