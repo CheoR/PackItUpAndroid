@@ -1,4 +1,4 @@
-package com.example.packitupandroid.ui.components
+package com.example.packitupandroid.ui.components.card
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -39,7 +39,6 @@ import com.example.packitupandroid.data.model.Box
 import com.example.packitupandroid.data.model.Collection
 import com.example.packitupandroid.data.model.Item
 import com.example.packitupandroid.data.model.Summary
-import com.example.packitupandroid.ui.components.card.IconsColumn
 import com.example.packitupandroid.ui.components.common.AddConfirmCancelButton
 import com.example.packitupandroid.ui.components.common.ButtonType
 import com.example.packitupandroid.utils.CardType
@@ -94,9 +93,9 @@ fun<T: BaseCardData> EditCard(
                         onValueChange = {
                             // TODO: refactor this
                             localData = when (localData) {
-                                is Item -> (localData as Item).copy(name = it)
-                                is Box -> (localData as Box).copy(name = it)
-                                is Collection -> (localData as Collection).copy(name = it)
+                                is Item -> (localData as Item).copy(name = it) as T
+                                is Box -> (localData as Box).copy(name = it) as T
+                                is Collection -> (localData as Collection).copy(name = it) as T
                                 else -> throw IllegalStateException("Unsupported type")
                             }
                         },
@@ -119,12 +118,13 @@ fun<T: BaseCardData> EditCard(
 //                        )
 //                    }
                     BasicTextField(
-                        value = localData.description,
+                        // TODO: fix
+                        value = localData.description ?: "missing",
                         onValueChange = {
                             localData = when (localData) {
-                                is Item -> (localData as Item).copy(description = it)
-                                is Box -> (localData as Box).copy(description = it)
-                                is Collection -> (localData as Collection).copy(description = it)
+                                is Item -> (localData as Item).copy(description = it) as T
+                                is Box -> (localData as Box).copy(description = it) as T
+                                is Collection -> (localData as Collection).copy(description = it) as T
                                 else -> throw IllegalStateException("Unsupported type")
                             }
                         },
@@ -145,7 +145,7 @@ fun<T: BaseCardData> EditCard(
                                 checked = localData.isFragile,
                                 onCheckedChange = {
                                     localData = when (localData) {
-                                        is Item -> (localData as Item).copy(isFragile = it)
+                                        is Item -> (localData as Item).copy(isFragile = it) as T
                                         else -> throw IllegalStateException("Unsupported type")
                                     }
                                 },
@@ -160,7 +160,7 @@ fun<T: BaseCardData> EditCard(
                                     // Handle the case where the user enters an empty string
                                     val value = if (it.isEmpty()) 0.0 else it.parseCurrencyToDouble()
                                     localData = when (localData) {
-                                        is Item -> (localData as Item).copy(value = value)
+                                        is Item -> (localData as Item).copy(value = value) as T
                                         else -> throw IllegalStateException("Unsupported type")
                                     }
                                 },
