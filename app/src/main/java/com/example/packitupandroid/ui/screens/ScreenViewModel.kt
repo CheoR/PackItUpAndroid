@@ -24,14 +24,19 @@ class ScreenViewModel(
     fun loadCurrentScreenData(selectedScreen: String) {
         viewModelScope.launch {
             when(selectedScreen) {
+                PackItUpRoute.ITEMS -> {
+                    itemViewModel.uiState.collect { itemUiState ->
+                        _uiState.value = itemUiState
+                    }
+                }
                 PackItUpRoute.BOXES -> {
                     boxViewModel.uiState.collect { boxUiState ->
                         _uiState.value = boxUiState
                     }
                 }
-                PackItUpRoute.ITEMS -> {
-                    itemViewModel.uiState.collect { itemUiState ->
-                        _uiState.value = itemUiState
+                PackItUpRoute.COLLECTIONS -> {
+                    collectionViewModel.uiState.collect { boxUiState ->
+                        _uiState.value = boxUiState
                     }
                 }
             }

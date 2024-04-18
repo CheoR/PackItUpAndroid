@@ -57,7 +57,7 @@ fun IconsColumn(
         is Box -> {
             ProjectIcons(
                 icon1 = ColumnIcon.VectorIcon(Icons.Default.Label),
-                badgeCount1 = data.count,
+                badgeCount1 = data.item_count,
             )
         }
         is Collection -> {

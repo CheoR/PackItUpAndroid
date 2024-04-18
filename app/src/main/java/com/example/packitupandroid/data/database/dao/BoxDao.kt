@@ -23,7 +23,7 @@ interface BoxDao {
         b.last_modified as last_modified,
         ROUND(SUM(i.value), 2) AS value,
         MAX(CASE WHEN i.is_fragile THEN 1 ELSE 0 END) AS is_fragile,
-        COUNT(i.id) AS count
+        COUNT(i.id) AS item_count
     FROM boxes b    
     LEFT JOIN items i ON b.id = i.box_id    
     GROUP BY b.id

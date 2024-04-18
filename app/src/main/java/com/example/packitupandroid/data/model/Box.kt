@@ -13,7 +13,7 @@ data class QueryBox(
     val value: Double = 0.0,
     val is_fragile: Boolean = false,
     val last_modified: Long,
-    val count: Int = 0,
+    val item_count: Int = 0,
     val collectionId: String? = null,
 )
 
@@ -21,7 +21,7 @@ fun QueryBox.toBox(): Box = Box(
     id = this.id,
     name = this.name,
     description = this.description,
-    count = this.count,
+    item_count = this.item_count,
     value = this.value,
     isFragile = this.is_fragile,
     lastModified = Converters().fromTimestamp(this.last_modified) ?: Date(),
@@ -35,7 +35,7 @@ data class Box(
     override val value: Double = 0.0,
     override val isFragile: Boolean = false,
     override val lastModified: Date = Date(),
-    val count: Int = 0,
+    val item_count: Int = 0,
     val collectionId: String? = null,
 ) : BaseCardData {
     companion object {
@@ -60,7 +60,7 @@ fun Box.updateWith(other: Box) : Box = copy (
     description = other.description,
     value = other.value,
     isFragile = other.isFragile,
-    count = other.count,
+    item_count = other.item_count,
     lastModified = Date(),
     collectionId = other.collectionId,
 )
