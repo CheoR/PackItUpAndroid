@@ -5,6 +5,7 @@ import androidx.lifecycle.viewModelScope
 import com.example.packitupandroid.PackItUpUiState
 import com.example.packitupandroid.ui.navigation.PackItUpRoute
 import com.example.packitupandroid.ui.screens.box.BoxesScreenViewModel
+import com.example.packitupandroid.ui.screens.collection.CollectionsScreenViewModel
 import com.example.packitupandroid.ui.screens.item.ItemsScreenViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -14,6 +15,7 @@ import kotlinx.coroutines.launch
 class ScreenViewModel(
     private val itemViewModel: ItemsScreenViewModel,
     private val boxViewModel: BoxesScreenViewModel,
+    private val collectionViewModel: CollectionsScreenViewModel,
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(PackItUpUiState())
