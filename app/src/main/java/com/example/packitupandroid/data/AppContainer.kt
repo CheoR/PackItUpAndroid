@@ -3,9 +3,11 @@ package com.example.packitupandroid.data
 import android.content.Context
 import com.example.packitupandroid.data.database.AppDatabase
 import com.example.packitupandroid.data.repository.BoxesRepository
+import com.example.packitupandroid.data.repository.CollectionsRepository
 import com.example.packitupandroid.data.repository.ItemsRepository
 import com.example.packitupandroid.data.repository.LocalDataRepository
 import com.example.packitupandroid.data.repository.OfflineBoxesRepository
+import com.example.packitupandroid.data.repository.OfflineCollectionsRepository
 import com.example.packitupandroid.data.repository.OfflineItemsRepository
 
 /**
@@ -15,6 +17,7 @@ interface AppContainer {
     val localDataRepository: LocalDataRepository
     val itemsRepository: ItemsRepository
     val boxesRepository: BoxesRepository
+    val collectionsRepository: CollectionsRepository
 }
 
 /**
@@ -42,5 +45,12 @@ class DefaultAppContainer(private val context: Context) : AppContainer {
      */
     override val boxesRepository: BoxesRepository by lazy {
         OfflineBoxesRepository(AppDatabase.getDatabase(context).boxDao())
+    }
+
+    /**
+     * [CollectionsRepository] implementation
+     */
+    override val collectionsRepository: CollectionsRepository by lazy {
+        OfflineCollectionsRepository(AppDatabase.getDatabase(context).collectionDao())
     }
 }

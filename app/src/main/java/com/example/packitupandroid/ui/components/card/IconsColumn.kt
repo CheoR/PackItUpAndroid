@@ -64,8 +64,8 @@ fun IconsColumn(
             ProjectIcons(
                 icon1 = ColumnIcon.VectorIcon(ImageVector.vectorResource(R.drawable.ic_launcher_foreground)),
                 icon2 = ColumnIcon.VectorIcon(Icons.Default.Label),
-                badgeCount1 = 5, // TODO: Fix data.boxes.size,
-                badgeCount2 = 5, // TODO: Fix data.boxes.sumOf { it.items.size },
+                badgeCount1 = data.box_count,
+                badgeCount2 = data.item_count,
             )
         }
         is Summary -> {

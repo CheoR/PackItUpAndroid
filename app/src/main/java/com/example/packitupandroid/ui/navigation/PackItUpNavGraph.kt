@@ -17,6 +17,8 @@ import com.example.packitupandroid.ui.PackItUpViewModelProvider
 import com.example.packitupandroid.ui.screens.ScreenViewModel
 import com.example.packitupandroid.ui.screens.box.BoxesScreen
 import com.example.packitupandroid.ui.screens.box.BoxesScreenViewModel
+import com.example.packitupandroid.ui.screens.collection.CollectionsScreen
+import com.example.packitupandroid.ui.screens.collection.CollectionsScreenViewModel
 import com.example.packitupandroid.ui.screens.item.ItemsScreen
 import com.example.packitupandroid.ui.screens.item.ItemsScreenViewModel
 import com.example.packitupandroid.ui.screens.summary.SummaryScreen
@@ -72,14 +74,17 @@ fun PackItUpNavHost(
 //                    onUpdate = viewModel::updateElement,
                 )
             }
-//            composable(route = PackItUpRoute.COLLECTIONS) {
-//                CollectionsScreen(
-//                    uiState = uiState,
-//                    onCreate = viewModel::createElement,
-//                    onDestroy = viewModel::destroyElement,
-//                    onUpdate = viewModel::updateElement,
-//                )
-//            }
+            composable(route = PackItUpRoute.COLLECTIONS) {
+                val vm: CollectionsScreenViewModel = viewModel(factory = PackItUpViewModelProvider.Factory)
+                val uiState by viewModel.uiState.collectAsState()
+
+                CollectionsScreen(
+                    uiState = uiState,
+                    createElement = vm::create,
+                    updateElement = vm::update,
+                    destroyElement = vm::destroy,
+                )
+            }
             composable(route = PackItUpRoute.BOXES) {
                 val vm: BoxesScreenViewModel = viewModel(factory = PackItUpViewModelProvider.Factory)
                 val uiState by viewModel.uiState.collectAsState()

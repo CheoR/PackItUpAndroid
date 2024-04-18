@@ -1,57 +1,56 @@
 package com.example.packitupandroid.ui.screens.collection
 
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.dimensionResource
+import androidx.compose.ui.tooling.preview.Preview
 import com.example.packitupandroid.PackItUpUiState
-import com.example.packitupandroid.R
+import com.example.packitupandroid.Result
 import com.example.packitupandroid.data.model.BaseCardData
+import com.example.packitupandroid.data.model.Collection
+import com.example.packitupandroid.data.source.local.LocalDataSource
+import com.example.packitupandroid.ui.components.card.BaseCard
+import com.example.packitupandroid.ui.screens.Screen
+import com.example.packitupandroid.utils.CardType
 
 @Composable
 fun <T: BaseCardData> CollectionsScreen(
     uiState: PackItUpUiState,
-    onCreate: (T, Int) -> Unit,
-    onDestroy: (T) -> Unit,
-    onUpdate: (T) -> Unit,
+    createElement: (Int) -> Unit,
+    updateElement: (T) -> Unit,
+    destroyElement: (T) -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    Column(
+    Screen(
         modifier = modifier,
-        verticalArrangement = Arrangement
-            .spacedBy(dimensionResource(R.dimen.padding_small))
-    ) {
-        Row {
-            Text(text = "Collection Card Space Holder")
-        }
-    }
+        uiState = uiState,
+        card = { data, update, destroy ->
+            BaseCard(
+                data = data,
+                onUpdate = update,
+                onDestroy = destroy,
+                cardType = CardType.Collection,
+            )
+        },
+        createElement = createElement,
+        updateElement = updateElement,
+        destroyElement = destroyElement,
+    )
 }
 
-// TODO: Fix
-//@Preview(showBackground = true)
-//@Composable
-//fun PreviewCollectionsScreen(
-//    localDataSource: LocalDataSource = LocalDataSource(),
-//) {
-//    val currentScreen = PackItUpRoute.SUMMARY
-//    val items = localDataSource.loadItems()
-//    val boxes = localDataSource.loadBoxes()
-//    val collections = localDataSource.loadCollections()
-//
-//    val uiState = PackItUpUiState(
-//        currentScreen = currentScreen,
-//        items = items,
-//        boxes = boxes,
-//        collections = collections,
-//    )
-//
-//    CollectionsScreen(
-//        uiState = uiState,
-//        onCreate = { collection, count -> },
-//        onDestroy = {},
-//        onUpdate = {},
-//    )
-//}
+@Preview(showBackground = true)
+@Composable
+fun PreviewCollectionsScreen(
+    localDataSource: LocalDataSource = LocalDataSource(),
+) {
+    val collections = localDataSource.loadCollections()
+    val uiState = PackItUpUiState(
+        currentScreen = "Boxes",
+        result = Result.Complete(collections)
+    )
+    CollectionsScreen<Collection>(
+        uiState = uiState,
+        createElement = {},
+        updateElement = {},
+        destroyElement = {},
+    )
+}
