@@ -9,6 +9,7 @@ import com.example.packitupandroid.ui.screens.ScreenViewModel
 import com.example.packitupandroid.ui.screens.box.BoxesScreenViewModel
 import com.example.packitupandroid.ui.screens.collection.CollectionsScreenViewModel
 import com.example.packitupandroid.ui.screens.item.ItemsScreenViewModel
+import com.example.packitupandroid.ui.screens.summary.SummaryScreenViewModel
 
 
 /**
@@ -35,10 +36,17 @@ object PackItUpViewModelProvider {
         }
 
         initializer {
+            SummaryScreenViewModel(
+                summaryRepository = packItUpApplication().container.summaryRepository,
+            )
+        }
+
+        initializer {
             ScreenViewModel(
                 itemViewModel = ItemsScreenViewModel(packItUpApplication().container.itemsRepository),
                 boxViewModel = BoxesScreenViewModel(packItUpApplication().container.boxesRepository),
-                collectionViewModel = CollectionsScreenViewModel(packItUpApplication().container.collectionsRepository)
+                collectionViewModel = CollectionsScreenViewModel(packItUpApplication().container.collectionsRepository),
+                summaryScreenViewModel = SummaryScreenViewModel(packItUpApplication().container.summaryRepository)
             )
         }
     }

@@ -70,9 +70,9 @@ fun IconsColumn(
         }
         is Summary -> {
             val (count, icon) = when(data.id) {
-                "collections" -> Pair(data.collections.size, Icons.Default.Category)
-                "boxes" -> Pair(data.boxes.size, ImageVector.vectorResource(R.drawable.ic_launcher_foreground))
-                else -> Pair(data.items.size, Icons.Default.Label)
+                "collections" -> Pair(data.collectionCount, Icons.Default.Category)
+                "boxes" -> Pair(data.boxCount, ImageVector.vectorResource(R.drawable.ic_launcher_foreground))
+                else -> Pair(data.itemCount, Icons.Default.Label)
             }
             ProjectIcons(
                 icon1 = ColumnIcon.VectorIcon(icon),
@@ -102,7 +102,7 @@ fun ProjectIcons(
 
     Column(
         modifier = modifier
-            .fillMaxHeight()
+//            .fillMaxHeight()
             .width(dimensionResource(R.dimen.image_size_medium)),
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {

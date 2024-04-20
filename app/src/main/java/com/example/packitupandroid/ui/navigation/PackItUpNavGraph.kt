@@ -67,11 +67,9 @@ fun PackItUpNavHost(
             startDestination = PackItUpRoute.SUMMARY,
         ) {
             composable(route = PackItUpRoute.SUMMARY) {
+                val uiState by viewModel.uiState.collectAsState()
                 SummaryScreen<Summary>(
-//                    uiState = uiState,
-//                    onCreate = viewModel::createElement,
-//                    onDestroy = viewModel::destroyElement,
-//                    onUpdate = viewModel::updateElement,
+                    uiState = uiState,
                 )
             }
             composable(route = PackItUpRoute.COLLECTIONS) {
