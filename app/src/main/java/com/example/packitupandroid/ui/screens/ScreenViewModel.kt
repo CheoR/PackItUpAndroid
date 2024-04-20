@@ -7,6 +7,7 @@ import com.example.packitupandroid.ui.navigation.PackItUpRoute
 import com.example.packitupandroid.ui.screens.box.BoxesScreenViewModel
 import com.example.packitupandroid.ui.screens.collection.CollectionsScreenViewModel
 import com.example.packitupandroid.ui.screens.item.ItemsScreenViewModel
+import com.example.packitupandroid.ui.screens.summary.SummaryScreenViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -16,6 +17,7 @@ class ScreenViewModel(
     private val itemViewModel: ItemsScreenViewModel,
     private val boxViewModel: BoxesScreenViewModel,
     private val collectionViewModel: CollectionsScreenViewModel,
+    private val summaryScreenViewModel: SummaryScreenViewModel,
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(PackItUpUiState())
@@ -39,6 +41,11 @@ class ScreenViewModel(
                 PackItUpRoute.COLLECTIONS -> {
                     collectionViewModel.uiState.collect { boxUiState ->
                         _uiState.value = boxUiState
+                    }
+                }
+                PackItUpRoute.SUMMARY -> {
+                    summaryScreenViewModel.uiState.collect { summaryUiState ->
+                        _uiState.value = summaryUiState
                     }
                 }
             }

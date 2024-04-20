@@ -8,6 +8,7 @@ import androidx.room.TypeConverters
 import com.example.packitupandroid.data.database.dao.BoxDao
 import com.example.packitupandroid.data.database.dao.CollectionDao
 import com.example.packitupandroid.data.database.dao.ItemDao
+import com.example.packitupandroid.data.database.dao.SummaryDao
 import com.example.packitupandroid.data.database.entities.BoxEntity
 import com.example.packitupandroid.data.database.entities.CollectionEntity
 import com.example.packitupandroid.data.database.entities.ItemEntity
@@ -27,6 +28,7 @@ abstract class AppDatabase : RoomDatabase() {
     abstract fun itemDao(): ItemDao
     abstract fun boxDao(): BoxDao
     abstract fun collectionDao(): CollectionDao
+    abstract fun summaryDao(): SummaryDao
 
     companion object {
         @Volatile

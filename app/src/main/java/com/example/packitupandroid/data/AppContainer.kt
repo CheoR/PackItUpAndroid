@@ -9,6 +9,8 @@ import com.example.packitupandroid.data.repository.LocalDataRepository
 import com.example.packitupandroid.data.repository.OfflineBoxesRepository
 import com.example.packitupandroid.data.repository.OfflineCollectionsRepository
 import com.example.packitupandroid.data.repository.OfflineItemsRepository
+import com.example.packitupandroid.data.repository.OfflineSummaryRepository
+import com.example.packitupandroid.data.repository.SummaryRepository
 
 /**
  * App container for Dependency injection.
@@ -18,6 +20,7 @@ interface AppContainer {
     val itemsRepository: ItemsRepository
     val boxesRepository: BoxesRepository
     val collectionsRepository: CollectionsRepository
+    val summaryRepository: SummaryRepository
 }
 
 /**
@@ -52,5 +55,12 @@ class DefaultAppContainer(private val context: Context) : AppContainer {
      */
     override val collectionsRepository: CollectionsRepository by lazy {
         OfflineCollectionsRepository(AppDatabase.getDatabase(context).collectionDao())
+    }
+
+    /**
+     * [SummaryRepository] implementation
+     */
+    override val summaryRepository: SummaryRepository by lazy {
+        OfflineSummaryRepository(AppDatabase.getDatabase(context).summaryDao())
     }
 }
