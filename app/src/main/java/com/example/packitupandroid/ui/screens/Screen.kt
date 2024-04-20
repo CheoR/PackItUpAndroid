@@ -5,7 +5,6 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import com.example.packitupandroid.Result
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -14,6 +13,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.dimensionResource
 import com.example.packitupandroid.PackItUpUiState
 import com.example.packitupandroid.R
+import com.example.packitupandroid.Result
 import com.example.packitupandroid.data.model.BaseCardData
 import com.example.packitupandroid.ui.components.counter.Counter
 
@@ -26,8 +26,8 @@ fun <T: BaseCardData> Screen(
     card: @Composable (T, (T) -> Unit, (T) -> Unit) -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    val elements: List<T> = when(val result = uiState.result) {
-        is Result.Complete -> result.elements.map { it as T }
+    val elements: List<T>? = when(val result = uiState.result) {
+        is Result.Complete -> result.elements?.map { it as T }
         else -> emptyList()
     }
 
@@ -43,13 +43,15 @@ fun <T: BaseCardData> Screen(
                     )
                 ) {
                     items(
-                        items = elements,
+                        items = elements ?: emptyList(),
                         key = { it.id }
                     ) { element ->
                         card(element, updateElement, destroyElement)
                     }
                 }
             }
+
+            else -> {}
         }
         Counter(onClick = createElement)
     }
