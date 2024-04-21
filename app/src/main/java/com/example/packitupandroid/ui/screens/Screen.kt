@@ -48,8 +48,6 @@ fun <T: BaseCardData> Screen(
                     }
                 }
             }
-
-            else -> {}
         }
         Counter(onClick = createElement)
     }
