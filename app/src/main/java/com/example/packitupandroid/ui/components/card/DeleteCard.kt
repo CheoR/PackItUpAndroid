@@ -47,7 +47,11 @@ fun DeleteCard(
     cardType: CardType = CardType.Default,
     // TODO: add dropdown
 ) {
-    val iconsAndBadges = getIconsAndBadges(data)
+    val (icons, badgeCounts) = getIconsAndBadges(data)
+    val icon1 = icons.first
+    val icon2 = icons.second
+    val badgeCount1 = badgeCounts.first
+    val badgeCount2 = badgeCounts.second
 
     Column(
         modifier = modifier
@@ -75,7 +79,11 @@ fun DeleteCard(
                     .padding(dimensionResource(R.dimen.padding_small)),
             ) {
                 IconsColumn(
-                    isShowBadgeCount = cardType is CardType.Summary,
+                    icon1 = icon1,
+                    icon2 = icon2,
+                    badgeCount1 = badgeCount1,
+                    badgeCount2 = badgeCount2,
+                    isShowBadgeCount = cardType !is CardType.Item,
                 )
                 Column(
                     modifier = Modifier
