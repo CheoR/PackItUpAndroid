@@ -59,6 +59,7 @@ fun<T: BaseCardData> EditCard(
 ) {
     fun isEditable(field: EditFields) = editMode == EditMode.Edit && data.editFields.contains(field)
     var localData by remember { mutableStateOf(data) }
+    val iconsAndBadges = getIconsAndBadges(data)
 
     Column(
         modifier = modifier
