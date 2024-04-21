@@ -1,8 +1,8 @@
 package com.example.packitupandroid.ui.components.card
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -19,7 +19,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.unit.dp
 import com.example.packitupandroid.R
@@ -29,7 +28,6 @@ import com.example.packitupandroid.utils.EditMode
 fun SummaryCard(
     name: String,
     description: String,
-    modifier: Modifier = Modifier.background(color = Color.Red),
     icon1: ColumnIcon,
     modifier: Modifier = Modifier,
     badgeCount1: Int = 0,
@@ -47,8 +45,7 @@ fun SummaryCard(
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(dimensionResource(R.dimen.padding_small))
-                .background(color=Color.Yellow),
+                .padding(dimensionResource(R.dimen.padding_small)),
         ) {
             IconsColumn(
                 icon1 = icon1,
@@ -56,8 +53,9 @@ fun SummaryCard(
             )
             Column(
                 modifier = Modifier
-                    .fillMaxWidth()
-                    .background(color=Color.Blue),
+                    .fillMaxHeight()
+                    .weight(2f)
+                    .padding(horizontal = 4.dp),
                 horizontalAlignment = Alignment.CenterHorizontally,
             ) {
                 BasicTextField(
@@ -69,15 +67,7 @@ fun SummaryCard(
                         .fillMaxWidth(),
                 )
 
-                BasicTextField(
-                    value = description, // Todo: display selected value if available else first
-                    onValueChange = {},
-                    textStyle = MaterialTheme.typography.bodySmall,
-                    enabled = editMode == EditMode.Edit,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(4.dp)
-                )
+                Spacer(modifier = Modifier.height(24.dp))
 
                 BasicTextField(
                     // TODO: fix
@@ -91,22 +81,25 @@ fun SummaryCard(
                         .fillMaxWidth(),
                 )
             }
-            IconButton(
-                onClick = {}, // for navigation
-                modifier = Modifier
-                    .fillMaxHeight()
-                    .fillMaxWidth()
-                    .background(color=Color.Cyan),
-                content = {
-                    Icon(
-                        imageVector = actionIcon.icon,
-                        contentDescription = "Icon Button",
-                        modifier = Modifier
-                            .size(24.dp)
-                            .background(color=Color.Red)
-                    )
-                }
-            )
+            Column(
+                modifier = modifier
+                    .fillMaxHeight(),
+                horizontalAlignment = Alignment.CenterHorizontally,
+            ) {
+                IconButton(
+                    onClick = {}, // for navigation
+                    modifier = Modifier
+                        .fillMaxHeight(),
+                    content = {
+                        Icon(
+                            imageVector = actionIcon.icon,
+                            contentDescription = "Icon Button",
+                            modifier = Modifier
+                                .size(24.dp),
+                        )
+                    }
+                )
+            }
 
         }
     }

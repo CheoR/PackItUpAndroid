@@ -5,13 +5,11 @@ import android.graphics.BitmapFactory
 import android.util.Base64
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Category
 import androidx.compose.material.icons.filled.Label
 import androidx.compose.material3.Badge
 import androidx.compose.material3.BadgedBox
@@ -28,62 +26,9 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.tooling.preview.Preview
 import com.example.packitupandroid.R
-import com.example.packitupandroid.data.model.BaseCardData
-import com.example.packitupandroid.data.model.Box
-import com.example.packitupandroid.data.model.Collection
-import com.example.packitupandroid.data.model.Item
-import com.example.packitupandroid.data.model.Summary
-import com.example.packitupandroid.utils.CardType
 
 @Composable
 fun IconsColumn(
-    data: BaseCardData,
-    cardType: CardType = CardType.Default,
-) {
-    when(data) {
-        is Item -> {
-            // TODO: FIX
-//            val icon = when (val imageUri = data.imageUri) {
-//                is ImageUri.StringUri -> ColumnIcon.UriStringIcon(imageUri.uri)
-//                is ImageUri.ResourceUri -> ColumnIcon.UriIcon(imageUri.resourceId)
-//                null -> ColumnIcon.VectorIcon(Icons.Default.Label)
-//            }
-            val icon = if(data.imageUri != null) ColumnIcon.UriStringIcon(data.imageUri) else  ColumnIcon.VectorIcon(Icons.Default.Label)
-            ProjectIcons(
-                icon1 = icon,
-                isShowBadgeCount = cardType is CardType.Summary
-            )
-        }
-        is Box -> {
-            ProjectIcons(
-                icon1 = ColumnIcon.VectorIcon(Icons.Default.Label),
-                badgeCount1 = data.item_count,
-            )
-        }
-        is Collection -> {
-            ProjectIcons(
-                icon1 = ColumnIcon.VectorIcon(ImageVector.vectorResource(R.drawable.ic_launcher_foreground)),
-                icon2 = ColumnIcon.VectorIcon(Icons.Default.Label),
-                badgeCount1 = data.box_count,
-                badgeCount2 = data.item_count,
-            )
-        }
-        is Summary -> {
-            val (count, icon) = when(data.id) {
-                "collections" -> Pair(data.collectionCount, Icons.Default.Category)
-                "boxes" -> Pair(data.boxCount, ImageVector.vectorResource(R.drawable.ic_launcher_foreground))
-                else -> Pair(data.itemCount, Icons.Default.Label)
-            }
-            ProjectIcons(
-                icon1 = ColumnIcon.VectorIcon(icon),
-                badgeCount1 = count,
-            )
-        }
-    }
-}
-
-@Composable
-fun ProjectIcons(
     modifier: Modifier = Modifier,
     icon1: ColumnIcon = ColumnIcon.VectorIcon(Icons.Default.Label),
     icon2: ColumnIcon? = null,
@@ -183,7 +128,7 @@ private fun base64ToBitmap(base64Image: String): Bitmap? {
 )
 @Composable
 fun PreviewBaseCardItemWithImageUriIconColumn() {
-    ProjectIcons(
+    IconsColumn(
         icon1 = ColumnIcon.UriIcon(R.drawable.pug)
     )
 }
@@ -194,7 +139,7 @@ fun PreviewBaseCardItemWithImageUriIconColumn() {
 )
 @Composable
 fun PreviewBaseCardItemWithOutImageUriIconColumn() {
-    ProjectIcons()
+    IconsColumn()
 }
 
 @Preview(
@@ -203,7 +148,7 @@ fun PreviewBaseCardItemWithOutImageUriIconColumn() {
 )
 @Composable
 fun PreviewBaseCardBoxIconColumn() {
-    ProjectIcons(
+    IconsColumn(
         icon1 = ColumnIcon.VectorIcon(ImageVector.vectorResource(R.drawable.ic_launcher_foreground)),
         badgeCount1 = 5,
     )
@@ -216,7 +161,7 @@ fun PreviewBaseCardBoxIconColumn() {
 )
 @Composable
 fun PreviewBaseCardCollectionIconColumn() {
-    ProjectIcons(
+    IconsColumn(
         icon1 = ColumnIcon.VectorIcon(ImageVector.vectorResource(R.drawable.ic_launcher_foreground)),
         icon2 = ColumnIcon.VectorIcon(Icons.Default.Label),
         badgeCount1 = 5,
@@ -231,7 +176,7 @@ fun PreviewBaseCardCollectionIconColumn() {
 )
 @Composable
 fun PreviewBaseCardItemSummaryIconColumn() {
-    ProjectIcons(
+    IconsColumn(
         icon1 = ColumnIcon.VectorIcon(Icons.Default.Label),
         badgeCount1 = 5,
     )
@@ -243,7 +188,7 @@ fun PreviewBaseCardItemSummaryIconColumn() {
 )
 @Composable
 fun PreviewBaseCardBoxSummaryIconColumn() {
-    ProjectIcons(
+    IconsColumn(
         icon1 = ColumnIcon.VectorIcon(ImageVector.vectorResource(R.drawable.ic_launcher_foreground)),
         badgeCount1 = 5,
     )
@@ -255,7 +200,7 @@ fun PreviewBaseCardBoxSummaryIconColumn() {
 )
 @Composable
 fun PreviewBaseCardCollectionSummaryIconColumn() {
-    ProjectIcons(
+    IconsColumn(
         icon1 = ColumnIcon.VectorIcon(ImageVector.vectorResource(R.drawable.ic_launcher_foreground)),
         icon2 = ColumnIcon.VectorIcon(Icons.Default.Label),
         badgeCount1 = 5,
