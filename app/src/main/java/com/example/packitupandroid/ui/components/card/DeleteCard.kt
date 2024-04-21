@@ -47,6 +47,8 @@ fun DeleteCard(
     cardType: CardType = CardType.Default,
     // TODO: add dropdown
 ) {
+    val iconsAndBadges = getIconsAndBadges(data)
+
     Column(
         modifier = modifier
             .fillMaxSize()

@@ -8,7 +8,9 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowForward
+import androidx.compose.material.icons.filled.Category
 import androidx.compose.material.icons.filled.CheckBoxOutlineBlank
+import androidx.compose.material.icons.filled.Label
 import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
@@ -19,11 +21,16 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.dimensionResource
+import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.packitupandroid.R
-import com.example.packitupandroid.data.source.local.LocalDataSource
 import com.example.packitupandroid.data.model.BaseCardData
+import com.example.packitupandroid.data.model.Box
+import com.example.packitupandroid.data.model.Collection
+import com.example.packitupandroid.data.model.Item
+import com.example.packitupandroid.data.model.Summary
+import com.example.packitupandroid.data.source.local.LocalDataSource
 import com.example.packitupandroid.utils.CardType
 import com.example.packitupandroid.utils.EditMode
 
@@ -48,39 +55,11 @@ sealed class ActionColumnState(val icon: ImageVector) {
     object None : ActionColumnState(Icons.Default.CheckBoxOutlineBlank)
 }
 
-//sealed class IconColumnState {
-//    data object Default : IconColumnState()
-//    data class OneIcon(val icon: ColumnIcon, val badgeCount: Int? = null) : IconColumnState()
-//    data class TwoIcons(
-//        val icon1: ColumnIcon,
-//        val badgeCount1: Int? = null,
-//        val icon2: ColumnIcon,
-//        val badgeCount2: Int? = null,
-//    ) : IconColumnState()
-//}
+typealias IconPair = Pair<ColumnIcon, ColumnIcon?>
+typealias BadgeCountPair = Pair<Int, Int>
 
-//sealed class CombinedMode {
-//    object SummaryNonEditable : CombinedMode()
-//    object SummaryEditable : CombinedMode()
-//    object NotSummaryNonEditable : CombinedMode()
-//    object NotSummaryEditable : CombinedMode()
-//
-//    companion object {
-//        fun combine(viewMode: ViewMode, editMode: EditMode): CombinedMode {
-//            return when (viewMode) {
-//                ViewMode.SummaryCard -> when (editMode) {
-//                    EditMode.NonEditable -> SummaryNonEditable
-//                    EditMode.Editable -> SummaryEditable
-//                }
-//                ViewMode.NotSummaryCard -> when (editMode) {
-//                    EditMode.NonEditable -> NotSummaryNonEditable
-//                    EditMode.Editable -> NotSummaryEditable
-//                }
-//            }
-//        }
-//    }
-//}
-
+// TODO: FIx - look into compound pattern to hide/display bottom part of data column
+// and to display/hide right column icon
 @Composable
 fun<T: BaseCardData> BaseCard(
     data: T,
@@ -95,6 +74,12 @@ fun<T: BaseCardData> BaseCard(
     val showEditCard = remember { mutableStateOf(false) }
     val showCameraCard = remember { mutableStateOf(false) }
     val showDeleteCard = remember { mutableStateOf(false) }
+
+    val (icons, badgeCounts) = getIconsAndBadges(data)
+    val icon1 = icons.first
+    val icon2 = icons.second
+    val badgeCount1 = badgeCounts.first
+    val badgeCount2 = badgeCounts.second
 
     Card(
         modifier = modifier
@@ -154,6 +139,46 @@ fun<T: BaseCardData> BaseCard(
             )
         }
     }
+}
+
+
+
+@Composable
+fun <T: BaseCardData> getIconsAndBadges(data: T): Pair<IconPair,BadgeCountPair> {
+   return when(data) {
+        is Item -> {
+            // TODO: FIX
+//            val icon = when (val imageUri = data.imageUri) {
+//                is ImageUri.StringUri -> ColumnIcon.UriStringIcon(imageUri.uri)
+//                is ImageUri.ResourceUri -> ColumnIcon.UriIcon(imageUri.resourceId)
+//                null -> ColumnIcon.VectorIcon(Icons.Default.Label)
+//            }
+            val icon1 = if(data.imageUri != null) ColumnIcon.UriStringIcon(data.imageUri) else  ColumnIcon.VectorIcon(Icons.Default.Label)
+            Pair(Pair(icon1, null), Pair(0, 0))
+        }
+        is Box -> {
+            val icon1 = ColumnIcon.VectorIcon(Icons.Default.Label)
+            val badgeCount1 = data.item_count
+            Pair(Pair(icon1, null), Pair(badgeCount1, 0))
+        }
+        is Collection -> {
+            val icon1 = ColumnIcon.VectorIcon(ImageVector.vectorResource(R.drawable.ic_launcher_foreground))
+            val icon2 = ColumnIcon.VectorIcon(Icons.Default.Label)
+            val badgeCount1 = data.box_count
+            val badgeCount2 = data.item_count
+            Pair(Pair(icon1, icon2), Pair(badgeCount1, badgeCount2))
+        }
+        is Summary -> {
+            val (icon1, badgeCount1) = when(data.id) {
+                "collections" -> Pair(ColumnIcon.VectorIcon(Icons.Default.Category), data.collectionCount)
+                "boxes" -> Pair(ColumnIcon.VectorIcon(ImageVector.vectorResource(R.drawable.ic_launcher_foreground)), data.boxCount)
+                else -> Pair(ColumnIcon.VectorIcon(Icons.Default.Label), data.itemCount)
+            }
+            Pair(Pair(icon1, null), Pair(badgeCount1, 0))
+        }
+
+       else -> Pair(Pair(ColumnIcon.VectorIcon(Icons.Default.Label), null), Pair(0, 0))
+   }
 }
 
 @Preview(
