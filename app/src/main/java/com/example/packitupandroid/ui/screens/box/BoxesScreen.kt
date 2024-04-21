@@ -1,25 +1,22 @@
 package com.example.packitupandroid.ui.screens.box
 
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
-import com.example.packitupandroid.PackItUpUiState
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.packitupandroid.data.model.BaseCardData
-import com.example.packitupandroid.data.model.Box
-import com.example.packitupandroid.data.source.local.LocalDataSource
+import com.example.packitupandroid.ui.PackItUpViewModelProvider
 import com.example.packitupandroid.ui.components.card.BaseCard
 import com.example.packitupandroid.ui.screens.Screen
 import com.example.packitupandroid.utils.CardType
-import com.example.packitupandroid.Result
 
 @Composable
 fun <T: BaseCardData> BoxesScreen(
-    uiState: PackItUpUiState,
-    createElement: (Int) -> Unit,
-    updateElement: (T) -> Unit,
-    destroyElement: (T) -> Unit,
     modifier: Modifier = Modifier,
+    viewModel: BoxesScreenViewModel = viewModel(factory = PackItUpViewModelProvider.Factory),
 ) {
+    val uiState by viewModel.uiState.collectAsState()
     Screen(
         modifier = modifier,
         uiState = uiState,
@@ -31,26 +28,26 @@ fun <T: BaseCardData> BoxesScreen(
                 cardType = CardType.Box,
             )
         },
-        createElement = createElement,
-        updateElement = updateElement,
-        destroyElement = destroyElement,
+        createElement = viewModel::create,
+        updateElement = viewModel::update,
+        destroyElement = viewModel::destroy,
     )
 }
 
-@Preview(showBackground = true)
-@Composable
-fun PreviewItemsScreen(
-    localDataSource: LocalDataSource = LocalDataSource(),
-) {
-    val boxes = localDataSource.loadBoxes()
-    val uiState = PackItUpUiState(
-        currentScreen = "Boxes",
-        result = Result.Complete(boxes)
-    )
-    BoxesScreen<Box>(
-        uiState = uiState,
-        createElement = {},
-        updateElement = {},
-        destroyElement = {},
-    )
-}
+//@Preview(showBackground = true)
+//@Composable
+//fun PreviewItemsScreen(
+//    localDataSource: LocalDataSource = LocalDataSource(),
+//) {
+//    val boxes = localDataSource.loadBoxes()
+//    val uiState = PackItUpUiState(
+//        currentScreen = "Boxes",
+//        result = Result.Complete(boxes)
+//    )
+//    BoxesScreen<Box>(
+//        uiState = uiState,
+//        createElement = {},
+//        updateElement = {},
+//        destroyElement = {},
+//    )
+//}

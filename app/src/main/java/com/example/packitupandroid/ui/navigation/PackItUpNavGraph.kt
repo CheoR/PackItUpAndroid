@@ -3,8 +3,6 @@ package com.example.packitupandroid.ui.navigation
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -12,15 +10,15 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.example.packitupandroid.R
+import com.example.packitupandroid.data.model.Box
+import com.example.packitupandroid.data.model.Collection
+import com.example.packitupandroid.data.model.Item
 import com.example.packitupandroid.data.model.Summary
 import com.example.packitupandroid.ui.PackItUpViewModelProvider
 import com.example.packitupandroid.ui.screens.ScreenViewModel
 import com.example.packitupandroid.ui.screens.box.BoxesScreen
-import com.example.packitupandroid.ui.screens.box.BoxesScreenViewModel
 import com.example.packitupandroid.ui.screens.collection.CollectionsScreen
-import com.example.packitupandroid.ui.screens.collection.CollectionsScreenViewModel
 import com.example.packitupandroid.ui.screens.item.ItemsScreen
-import com.example.packitupandroid.ui.screens.item.ItemsScreenViewModel
 import com.example.packitupandroid.ui.screens.summary.SummaryScreen
 import com.example.packitupandroid.utils.PackItUpContentType
 import com.example.packitupandroid.utils.PackItUpNavigationType
@@ -67,43 +65,16 @@ fun PackItUpNavHost(
             startDestination = PackItUpRoute.SUMMARY,
         ) {
             composable(route = PackItUpRoute.SUMMARY) {
-                val uiState by viewModel.uiState.collectAsState()
-                SummaryScreen<Summary>(
-                    uiState = uiState,
-                )
+                SummaryScreen<Summary>()
             }
             composable(route = PackItUpRoute.COLLECTIONS) {
-                val vm: CollectionsScreenViewModel = viewModel(factory = PackItUpViewModelProvider.Factory)
-                val uiState by viewModel.uiState.collectAsState()
-
-                CollectionsScreen(
-                    uiState = uiState,
-                    createElement = vm::create,
-                    updateElement = vm::update,
-                    destroyElement = vm::destroy,
-                )
+                CollectionsScreen<Collection>()
             }
             composable(route = PackItUpRoute.BOXES) {
-                val vm: BoxesScreenViewModel = viewModel(factory = PackItUpViewModelProvider.Factory)
-                val uiState by viewModel.uiState.collectAsState()
-
-                BoxesScreen(
-                    uiState = uiState,
-                    createElement = vm::create,
-                    updateElement = vm::update,
-                    destroyElement = vm::destroy,
-                )
+                BoxesScreen<Box>()
             }
             composable(route = PackItUpRoute.ITEMS) {
-                val vm: ItemsScreenViewModel = viewModel(factory = PackItUpViewModelProvider.Factory)
-                val uiState by viewModel.uiState.collectAsState()
-
-                ItemsScreen(
-                    uiState = uiState,
-                    createElement = vm::create,
-                    updateElement = vm::update,
-                    destroyElement = vm::destroy,
-                )
+                ItemsScreen<Item>()
             }
         }
     }

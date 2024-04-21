@@ -14,33 +14,35 @@ import androidx.compose.material3.Checkbox
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.vectorResource
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.example.packitupandroid.PackItUpUiState
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.packitupandroid.R
 import com.example.packitupandroid.Result
 import com.example.packitupandroid.data.model.BaseCardData
 import com.example.packitupandroid.data.model.Summary
-import com.example.packitupandroid.data.source.local.LocalDataSource
+import com.example.packitupandroid.ui.PackItUpViewModelProvider
 import com.example.packitupandroid.ui.components.card.ColumnIcon
 import com.example.packitupandroid.ui.components.card.SummaryCard
 import com.example.packitupandroid.utils.asCurrencyString
 
 @Composable
 fun <T: BaseCardData> SummaryScreen(
-    uiState: PackItUpUiState,
     modifier: Modifier = Modifier,
+    viewModel: SummaryScreenViewModel = viewModel(factory = PackItUpViewModelProvider.Factory),
 ) {
+    val uiState by viewModel.uiState.collectAsState()
     Column(modifier = modifier) {
         when (uiState.result) {
             is Result.Loading -> ContentMessage(text = "Loading . .")
             is Result.Error -> ContentMessage(text = "Error . . ")
-            is Result.Complete -> uiState.result.summary?.let { Summary(it) }
+            is Result.Complete -> (uiState.result as Result.Complete).summary?.let { Summary(it) }
         }
     }
 }
@@ -95,11 +97,6 @@ private fun Summary(
             Spacer(modifier = Modifier.width(4.dp))
             Text("Fragile")
             Spacer(modifier = Modifier.weight(1f))
-//            Text(
-//                text = "Total: ${value.asCurrencyString()}",
-//                style = MaterialTheme.typography.bodySmall,
-//                color = MaterialTheme.colorScheme.secondary
-//            )
             BasicTextField(
                 value = "Total: ${value.asCurrencyString()}",
                 onValueChange = {},
@@ -122,30 +119,30 @@ private fun ContentMessage(text: String) {
     }
 }
 
-@Preview(showBackground = true)
-@Composable
-fun PreviewSummaryScreen(
-    localDataSource: LocalDataSource = LocalDataSource(),
-) {
-    val collections = localDataSource.loadCollections()
-    val boxes = localDataSource.loadBoxes()
-    val items = localDataSource.loadItems()
-    val summary = Summary(
-        id="summary",
-        name="summary",
-        value = items.sumOf { it.value },
-        isFragile = items.any { it.isFragile },
-        itemCount = items.size,
-        boxCount = boxes.size,
-        collectionCount = collections.size,
-    )
-    val uiState = PackItUpUiState(
-        currentScreen = "Boxes",
-        result = Result.Complete(
-            summary = summary,
-        ),
-    )
-    SummaryScreen<Summary>(
-        uiState = uiState,
-    )
-}
+//@Preview(showBackground = true)
+//@Composable
+//fun PreviewSummaryScreen(
+//    localDataSource: LocalDataSource = LocalDataSource(),
+//) {
+//    val collections = localDataSource.loadCollections()
+//    val boxes = localDataSource.loadBoxes()
+//    val items = localDataSource.loadItems()
+//    val summary = Summary(
+//        id="summary",
+//        name="summary",
+//        value = items.sumOf { it.value },
+//        isFragile = items.any { it.isFragile },
+//        itemCount = items.size,
+//        boxCount = boxes.size,
+//        collectionCount = collections.size,
+//    )
+//    val uiState = PackItUpUiState(
+//        currentScreen = "Boxes",
+//        result = Result.Complete(
+//            summary = summary,
+//        ),
+//    )
+//    SummaryScreen<Summary>(
+//        uiState = uiState,
+//    )
+//}
