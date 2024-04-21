@@ -29,9 +29,10 @@ import com.example.packitupandroid.utils.EditMode
 fun SummaryCard(
     name: String,
     description: String,
-    icon: ColumnIcon,
     modifier: Modifier = Modifier.background(color = Color.Red),
-    badgeCount: Int = 0,
+    icon1: ColumnIcon,
+    modifier: Modifier = Modifier,
+    badgeCount1: Int = 0,
     editMode: EditMode = EditMode.NoEdit,
 ) {
     val actionIcon: ActionColumnState = ActionColumnState.RightArrow
@@ -49,11 +50,10 @@ fun SummaryCard(
                 .padding(dimensionResource(R.dimen.padding_small))
                 .background(color=Color.Yellow),
         ) {
-            ProjectIcons(
-                icon1 = icon,
-                badgeCount1 = badgeCount,
+            IconsColumn(
+                icon1 = icon1,
+                badgeCount1 = badgeCount1,
             )
-
             Column(
                 modifier = Modifier
                     .fillMaxWidth()

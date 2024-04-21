@@ -1,12 +1,12 @@
 package com.example.packitupandroid.ui.screens.summary
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Category
 import androidx.compose.material.icons.filled.Label
@@ -16,7 +16,6 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.vectorResource
@@ -59,31 +58,31 @@ private fun Summary(
 
     Column(modifier=modifier) {
         Column(
-            modifier = modifier.weight(1f).background(color=Color.Green),
+            modifier = modifier
+                .weight(1f),
             verticalArrangement = Arrangement.spacedBy(
                 dimensionResource(R.dimen.space_arrangement_small)
             )
         ) {
             SummaryCard(
-                icon = ColumnIcon.VectorIcon(Icons.Default.Category),
+                icon1 = ColumnIcon.VectorIcon(Icons.Default.Category),
                 name = "Collection",
                 description = "Made of group of Boxes",
-                badgeCount = collectionCount,
+                badgeCount1 = collectionCount,
             )
             SummaryCard(
                 name = "Box",
                 description = "Made of group of Items",
-                icon = ColumnIcon.VectorIcon(ImageVector.vectorResource(R.drawable.ic_launcher_foreground)),
-                badgeCount = boxCount,
+                icon1 = ColumnIcon.VectorIcon(ImageVector.vectorResource(R.drawable.ic_launcher_foreground)),
+                badgeCount1 = boxCount,
             )
             SummaryCard(
                 name = "Item",
-                description = "Individiual Objects",
-                icon = ColumnIcon.VectorIcon(Icons.Default.Label),
-                badgeCount = itemCount,
+                description = "Individual Objects",
+                icon1 = ColumnIcon.VectorIcon(Icons.Default.Label),
+                badgeCount1 = itemCount,
             )
         }
-        Spacer(modifier = Modifier.weight(1f))
         Row(
             verticalAlignment = Alignment.CenterVertically,
             modifier = Modifier
@@ -96,10 +95,17 @@ private fun Summary(
             Spacer(modifier = Modifier.width(4.dp))
             Text("Fragile")
             Spacer(modifier = Modifier.weight(1f))
-            Text(
-                text = "Total: ${value.asCurrencyString()}",
-                style = MaterialTheme.typography.bodySmall,
-                color = MaterialTheme.colorScheme.secondary
+//            Text(
+//                text = "Total: ${value.asCurrencyString()}",
+//                style = MaterialTheme.typography.bodySmall,
+//                color = MaterialTheme.colorScheme.secondary
+//            )
+            BasicTextField(
+                value = "Total: ${value.asCurrencyString()}",
+                onValueChange = {},
+                textStyle = MaterialTheme.typography.bodySmall,
+                enabled = false,
+                singleLine = true,
             )
         }
     }
@@ -108,7 +114,7 @@ private fun Summary(
 @Composable
 private fun ContentMessage(text: String) {
     Column(
-        modifier = Modifier.background(color = Color.Green),
+        modifier = Modifier,
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {

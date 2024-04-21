@@ -108,7 +108,13 @@ fun<T: BaseCardData> BaseCard(
                 .fillMaxWidth()
                 .padding(dimensionResource(R.dimen.padding_small)),
         ) {
-            IconsColumn(data = data, cardType = cardType)
+            IconsColumn(
+                icon1 = icon1,
+                icon2 = icon2,
+                badgeCount1 = badgeCount1,
+                badgeCount2 = badgeCount2,
+                isShowBadgeCount = cardType !is CardType.Item,
+            )
             DataColumn(
                 modifier = Modifier
                     .fillMaxHeight()
