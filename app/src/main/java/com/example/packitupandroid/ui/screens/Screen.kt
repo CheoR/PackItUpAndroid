@@ -1,6 +1,5 @@
 package com.example.packitupandroid.ui.screens
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.lazy.LazyColumn
@@ -9,7 +8,6 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.dimensionResource
 import com.example.packitupandroid.PackItUpUiState
 import com.example.packitupandroid.R
@@ -60,7 +58,7 @@ fun <T: BaseCardData> Screen(
 @Composable
 private fun ContentMessage(text: String) {
     Column(
-        modifier = Modifier.background(color = Color.Green),
+        modifier = Modifier,
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
