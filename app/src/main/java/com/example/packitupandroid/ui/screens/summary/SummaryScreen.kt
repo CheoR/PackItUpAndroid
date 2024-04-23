@@ -30,6 +30,7 @@ import com.example.packitupandroid.data.model.Summary
 import com.example.packitupandroid.ui.PackItUpViewModelProvider
 import com.example.packitupandroid.ui.components.card.ColumnIcon
 import com.example.packitupandroid.ui.components.card.SummaryCard
+import com.example.packitupandroid.ui.components.spinner.Spinner
 import com.example.packitupandroid.utils.asCurrencyString
 
 @Composable
@@ -40,7 +41,7 @@ fun <T: BaseCardData> SummaryScreen(
     val uiState by viewModel.uiState.collectAsState()
     Column(modifier = modifier) {
         when (uiState.result) {
-            is Result.Loading -> ContentMessage(text = "Loading . .")
+            is Result.Loading -> Spinner()
             is Result.Error -> ContentMessage(text = "Error . . ")
             is Result.Complete -> (uiState.result as Result.Complete).summary?.let { Summary(it) }
         }

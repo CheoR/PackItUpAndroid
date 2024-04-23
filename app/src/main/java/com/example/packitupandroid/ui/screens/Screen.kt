@@ -6,6 +6,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.dimensionResource
@@ -14,6 +15,7 @@ import com.example.packitupandroid.R
 import com.example.packitupandroid.Result
 import com.example.packitupandroid.data.model.BaseCardData
 import com.example.packitupandroid.ui.components.counter.Counter
+import com.example.packitupandroid.ui.components.spinner.Spinner
 
 @Composable
 fun <T: BaseCardData> Screen(
@@ -24,15 +26,17 @@ fun <T: BaseCardData> Screen(
     card: @Composable (T, (T) -> Unit, (T) -> Unit) -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    val elements: List<T>? = when(val result = uiState.result) {
-        is Result.Complete -> result.elements?.map { it as T }
-        else -> emptyList()
+    val rememberedElements: List<T>? = remember(uiState.result) {
+         when(uiState.result) {
+            is Result.Complete -> uiState.result.elements?.map { it as T }
+            else -> emptyList()
+        }
     }
 
     Column(modifier = modifier) {
         when(uiState.result) {
-            is Result.Loading -> ContentMessage(text="Loading . .")
-            is Result.Error ->  ContentMessage(text = "Error . . ")
+            is Result.Loading -> Spinner()
+            is Result.Error ->  Error()
             is Result.Complete -> {
                 LazyColumn(
                     modifier = modifier.weight(1f),
@@ -41,7 +45,7 @@ fun <T: BaseCardData> Screen(
                     )
                 ) {
                     items(
-                        items = elements ?: emptyList(),
+                        items = rememberedElements ?: emptyList(),
                         key = { it.id }
                     ) { element ->
                         card(element, updateElement, destroyElement)
@@ -54,12 +58,13 @@ fun <T: BaseCardData> Screen(
 }
 
 @Composable
-private fun ContentMessage(text: String) {
+private fun Error() {
+    // TODO: move to utils
     Column(
         modifier = Modifier,
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
-        Text(text = text)
+        Text(text = "Screen Error")
     }
 }
