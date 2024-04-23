@@ -13,7 +13,6 @@ import com.example.packitupandroid.R
 import com.example.packitupandroid.data.model.Box
 import com.example.packitupandroid.data.model.Collection
 import com.example.packitupandroid.data.model.Item
-import com.example.packitupandroid.data.model.Summary
 import com.example.packitupandroid.ui.PackItUpViewModelProvider
 import com.example.packitupandroid.ui.screens.ScreenViewModel
 import com.example.packitupandroid.ui.screens.box.BoxesScreen
@@ -65,7 +64,7 @@ fun PackItUpNavHost(
             startDestination = PackItUpRoute.SUMMARY,
         ) {
             composable(route = PackItUpRoute.SUMMARY) {
-                SummaryScreen<Summary>()
+                SummaryScreen()
             }
             composable(route = PackItUpRoute.COLLECTIONS) {
                 CollectionsScreen<Collection>()
