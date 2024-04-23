@@ -25,8 +25,6 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.packitupandroid.R
 import com.example.packitupandroid.Result
-import com.example.packitupandroid.data.model.BaseCardData
-import com.example.packitupandroid.data.model.Summary
 import com.example.packitupandroid.ui.PackItUpViewModelProvider
 import com.example.packitupandroid.ui.components.card.ColumnIcon
 import com.example.packitupandroid.ui.components.card.SummaryCard
@@ -34,7 +32,7 @@ import com.example.packitupandroid.ui.components.spinner.Spinner
 import com.example.packitupandroid.utils.asCurrencyString
 
 @Composable
-fun <T: BaseCardData> SummaryScreen(
+fun SummaryScreen(
     modifier: Modifier = Modifier,
     viewModel: SummaryScreenViewModel = viewModel(factory = PackItUpViewModelProvider.Factory),
 ) {
@@ -43,22 +41,28 @@ fun <T: BaseCardData> SummaryScreen(
         when (uiState.result) {
             is Result.Loading -> Spinner()
             is Result.Error -> ContentMessage(text = "Error . . ")
-            is Result.Complete -> (uiState.result as Result.Complete).summary?.let { Summary(it) }
+            is Result.Complete -> (uiState.result as Result.Complete).summary?.let {
+                Summary(
+                    itemCount = it.itemCount,
+                    boxCount = it.boxCount,
+                    collectionCount = it.collectionCount,
+                    isFragile = it.isFragile,
+                    value = it.value,
+                )
+            }
         }
     }
 }
 
 @Composable
 private fun Summary(
-    summary: Summary,
     modifier: Modifier = Modifier,
+    itemCount: Int = 0,
+    boxCount: Int = 0,
+    collectionCount: Int = 0,
+    isFragile: Boolean = false,
+    value: Double = 0.0,
 ) {
-    val itemCount = summary.itemCount
-    val boxCount = summary.boxCount
-    val collectionCount = summary.collectionCount
-    val isFragile = summary.isFragile
-    val value = summary.value
-
     Column(modifier=modifier) {
         Column(
             modifier = modifier
