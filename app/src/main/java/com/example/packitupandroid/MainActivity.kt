@@ -10,10 +10,16 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.windowsizeclass.ExperimentalMaterial3WindowSizeClassApi
+import androidx.compose.material3.windowsizeclass.WindowSizeClass
 import androidx.compose.material3.windowsizeclass.calculateWindowSizeClass
+import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.DpSize
+import androidx.compose.ui.unit.dp
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import com.example.packitupandroid.data.source.local.LocalDataSource
 import com.example.packitupandroid.ui.PackItUpApp
 import com.example.packitupandroid.ui.theme.PackItUpAndroidTheme
 
@@ -66,29 +72,17 @@ class MainActivity : ComponentActivity() {
     }
 }
 
-// TODO: fix
-//@OptIn(ExperimentalMaterial3WindowSizeClassApi::class)
-//@Preview(showBackground = true)
-//@Composable
-//fun PreviewPackItUp(
-//    localDataSource: LocalDataSource = LocalDataSource(),
-//) {
-//    val items = localDataSource.loadItems()
-//    val boxes = localDataSource.loadBoxes()
-//    val collections = localDataSource.loadCollections()
-//    val currentScreen = PackItUpRoute.SUMMARY
-//
-//    PackItUpAndroidTheme {
-//        Surface {
-//            PackItUpApp(
-//                windowSize = WindowSizeClass.calculateFromSize(DpSize(412.dp, 732.dp)),
-//                uiState = PackItUpUiState(
-//                    items = items,
-//                    boxes = boxes,
-//                    collections = collections,
-//                    currentScreen = currentScreen,
-//                ),
-//            )
-//        }
-//    }
-//}
+@OptIn(ExperimentalMaterial3WindowSizeClassApi::class)
+@Preview(showBackground = true)
+@Composable
+fun PreviewPackItUp(
+    localDataSource: LocalDataSource = LocalDataSource(),
+) {
+    PackItUpAndroidTheme {
+        Surface {
+            PackItUpApp(
+                windowSize = WindowSizeClass.calculateFromSize(DpSize(412.dp, 732.dp)),
+            )
+        }
+    }
+}
