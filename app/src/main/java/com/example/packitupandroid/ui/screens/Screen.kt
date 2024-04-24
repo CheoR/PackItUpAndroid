@@ -10,12 +10,18 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.dimensionResource
+import androidx.compose.ui.tooling.preview.Preview
 import com.example.packitupandroid.PackItUpUiState
 import com.example.packitupandroid.R
 import com.example.packitupandroid.Result
 import com.example.packitupandroid.data.model.BaseCardData
+import com.example.packitupandroid.data.model.Box
+import com.example.packitupandroid.data.source.local.LocalDataSource
+import com.example.packitupandroid.ui.components.card.BaseCard
 import com.example.packitupandroid.ui.components.counter.Counter
 import com.example.packitupandroid.ui.components.spinner.Spinner
+import com.example.packitupandroid.ui.navigation.PackItUpRoute
+import com.example.packitupandroid.utils.CardType
 
 @Composable
 fun <T: BaseCardData> Screen(
@@ -67,4 +73,30 @@ private fun Error() {
     ) {
         Text(text = "Screen Error")
     }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun PreviewScreen(
+    localDataSource: LocalDataSource = LocalDataSource(),
+) {
+    val boxes = localDataSource.loadBoxes()
+    val uiState = PackItUpUiState(
+        currentScreen = PackItUpRoute.BOXES,
+        result = Result.Complete(boxes)
+    )
+    Screen<Box>(
+        uiState = uiState,
+        createElement = {},
+        updateElement = {},
+        destroyElement = {},
+        card = { data, update, destroy ->
+            BaseCard(
+                data = data,
+                onUpdate = update,
+                onDestroy = destroy,
+                cardType = CardType.Box,
+            )
+        },
+    )
 }

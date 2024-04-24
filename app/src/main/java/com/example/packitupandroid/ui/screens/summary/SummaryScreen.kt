@@ -21,10 +21,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.vectorResource
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.packitupandroid.R
 import com.example.packitupandroid.Result
+import com.example.packitupandroid.data.source.local.LocalDataSource
 import com.example.packitupandroid.ui.PackItUpViewModelProvider
 import com.example.packitupandroid.ui.components.card.ColumnIcon
 import com.example.packitupandroid.ui.components.card.SummaryCard
@@ -124,30 +126,20 @@ private fun ContentMessage(text: String) {
     }
 }
 
-//@Preview(showBackground = true)
-//@Composable
-//fun PreviewSummaryScreen(
-//    localDataSource: LocalDataSource = LocalDataSource(),
-//) {
-//    val collections = localDataSource.loadCollections()
-//    val boxes = localDataSource.loadBoxes()
-//    val items = localDataSource.loadItems()
-//    val summary = Summary(
-//        id="summary",
-//        name="summary",
-//        value = items.sumOf { it.value },
-//        isFragile = items.any { it.isFragile },
-//        itemCount = items.size,
-//        boxCount = boxes.size,
-//        collectionCount = collections.size,
-//    )
-//    val uiState = PackItUpUiState(
-//        currentScreen = "Boxes",
-//        result = Result.Complete(
-//            summary = summary,
-//        ),
-//    )
-//    SummaryScreen<Summary>(
-//        uiState = uiState,
-//    )
-//}
+@Preview(showBackground = true)
+@Composable
+fun PreviewSummaryScreen(
+    localDataSource: LocalDataSource = LocalDataSource(),
+) {
+    val collections = localDataSource.loadCollections()
+    val boxes = localDataSource.loadBoxes()
+    val items = localDataSource.loadItems()
+
+    Summary(
+        itemCount = items.size,
+        boxCount = boxes.size,
+        collectionCount =  collections.size,
+        isFragile = items.any { it.isFragile },
+        value = items.sumOf { it.value },
+    )
+}
