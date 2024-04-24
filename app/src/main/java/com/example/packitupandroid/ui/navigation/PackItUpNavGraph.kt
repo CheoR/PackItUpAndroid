@@ -67,13 +67,13 @@ fun PackItUpNavHost(
                 SummaryScreen()
             }
             composable(route = PackItUpRoute.COLLECTIONS) {
-                CollectionsScreen<Collection>()
+                CollectionsScreen()
             }
             composable(route = PackItUpRoute.BOXES) {
-                BoxesScreen<Box>()
+                BoxesScreen()
             }
             composable(route = PackItUpRoute.ITEMS) {
-                ItemsScreen<Item>()
+                ItemsScreen()
             }
         }
     }
