@@ -8,7 +8,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.packitupandroid.PackItUpUiState
 import com.example.packitupandroid.Result
-import com.example.packitupandroid.data.model.BaseCardData
 import com.example.packitupandroid.data.model.Item
 import com.example.packitupandroid.data.source.local.LocalDataSource
 import com.example.packitupandroid.ui.PackItUpViewModelProvider
@@ -18,12 +17,12 @@ import com.example.packitupandroid.ui.screens.Screen
 import com.example.packitupandroid.utils.CardType
 
 @Composable
-fun<T: BaseCardData> ItemsScreen(
+fun ItemsScreen(
     modifier: Modifier = Modifier,
     viewModel: ItemsScreenViewModel = viewModel(factory = PackItUpViewModelProvider.Factory),
 ) {
     val uiState by viewModel.uiState.collectAsState()
-    Screen(
+    Screen<Item>(
         modifier = modifier,
         uiState = uiState,
         card = { data, update, destroy ->
