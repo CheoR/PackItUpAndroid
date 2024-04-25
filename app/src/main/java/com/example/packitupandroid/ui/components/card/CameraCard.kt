@@ -40,7 +40,7 @@ import java.io.ByteArrayOutputStream
 
 @Composable
 fun<T: BaseCardData> CameraCard(
-    data: T,
+    element: T,
     onClick: (T) -> Unit,
     onCancel: () -> Unit,
     modifier: Modifier = Modifier,

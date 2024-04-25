@@ -33,7 +33,7 @@ import com.example.packitupandroid.utils.EditMode
 
 @Composable
 fun<T: BaseCardData> ActionColumn(
-    data: T,
+    element: T,
     isExpanded: MutableState<Boolean>,
     isShowEditCard: MutableState<Boolean>,
     isShowCameraCard: MutableState<Boolean>,
@@ -59,7 +59,7 @@ fun<T: BaseCardData> ActionColumn(
             dismissButton = {},
             text = {
                 EditCard(
-                    data = data,
+                    element = element,
                     onEdit = onEdit,
                     onCancel = onCancel,
                 )
@@ -75,7 +75,7 @@ fun<T: BaseCardData> ActionColumn(
             dismissButton = {},
             text = {
                 DeleteCard(
-                    data = data,
+                    element = element,
                     onDelete = onDelete,
                     onCancel = onCancel
                 )
@@ -91,7 +91,7 @@ fun<T: BaseCardData> ActionColumn(
             dismissButton = {},
             text = {
                 CameraCard(
-                    data = data,
+                    element = element,
                     onClick = onEdit,
                     onCancel = onCancel,
                 )
@@ -221,7 +221,7 @@ fun PreviewActionColumnSummaryCardNoEdit() {
     val isShowDeleteCard = remember { mutableStateOf(false) }
     val isExpanded = remember { mutableStateOf(false) }
     ActionColumn(
-        data = summary,
+        element = summary,
         onClick = {},
         onEdit = {},
         onCancel = {},
@@ -249,7 +249,7 @@ fun PreviewActionColumnSummaryCardNoEdit() {
 //    val isShowDeleteCard = remember { mutableStateOf(false) }
 //    val isExpanded = remember { mutableStateOf(false) }
 //    ActionColumn(
-//        data = collection,
+//        element = collection,
 //        onClick = {},
 //        onEdit = {},
 //        onCancel = {},
@@ -275,7 +275,7 @@ fun PreviewActionColumnSummaryCardNoEdit() {
 //    val isShowDeleteCard = remember { mutableStateOf(false) }
 //    val isExpanded = remember { mutableStateOf(false) }
 //    ActionColumn(
-//        data = collection,
+//        element = collection,
 //        onClick = {},
 //        onEdit = {},
 //        onCancel = {},

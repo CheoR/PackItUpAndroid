@@ -62,7 +62,7 @@ typealias BadgeCountPair = Pair<Int, Int>
 // and to display/hide right column icon
 @Composable
 fun<T: BaseCardData> BaseCard(
-    data: T,
+    element: T,
     onUpdate: (T) -> Unit,
     onDestroy: (T) -> Unit,
     modifier: Modifier = Modifier,
@@ -75,7 +75,7 @@ fun<T: BaseCardData> BaseCard(
     val showCameraCard = remember { mutableStateOf(false) }
     val showDeleteCard = remember { mutableStateOf(false) }
 
-    val (icons, badgeCounts) = getIconsAndBadges(data)
+    val (icons, badgeCounts) = getIconsAndBadges(element)
     val icon1 = icons.first
     val icon2 = icons.second
     val badgeCount1 = badgeCounts.first
@@ -105,12 +105,12 @@ fun<T: BaseCardData> BaseCard(
                     .fillMaxHeight()
                     .weight(2f)
                     .padding(horizontal = 4.dp),
-                data = data,
+                element = element,
                 editMode = editMode,
                 cardType = cardType,
             )
             ActionColumn(
-                data = data,
+                element = element,
                 onClick = {},
                 editMode = editMode,
                 onCancel = {
@@ -129,7 +129,7 @@ fun<T: BaseCardData> BaseCard(
                     expanded.value = false
                     showCameraCard.value = false
                     showDeleteCard.value = false
-                    onDestroy(data)
+                    onDestroy(element)
                 },
                 isExpanded = expanded,
                 isShowEditCard = showEditCard,
