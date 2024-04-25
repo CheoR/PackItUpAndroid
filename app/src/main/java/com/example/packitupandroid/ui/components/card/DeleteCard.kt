@@ -40,14 +40,14 @@ import com.example.packitupandroid.utils.asCurrencyString
 
 @Composable
 fun DeleteCard(
-    data: BaseCardData,
+    element: BaseCardData,
     onDelete: () -> Unit,
     onCancel: () -> Unit,
     modifier: Modifier = Modifier,
     cardType: CardType = CardType.Default,
     // TODO: add dropdown
 ) {
-    val (icons, badgeCounts) = getIconsAndBadges(data)
+    val (icons, badgeCounts) = getIconsAndBadges(element)
     val icon1 = icons.first
     val icon2 = icons.second
     val badgeCount1 = badgeCounts.first
@@ -63,7 +63,7 @@ fun DeleteCard(
         Spacer(modifier = Modifier.weight(1f))
         Text(
             modifier = Modifier.padding(8.dp),
-            text = "Are you sure you want to delete ${data.name}?",
+            text = "Are you sure you want to delete ${element.name}?",
         )
         Spacer(modifier = Modifier.weight(1f))
         Card(
@@ -93,7 +93,7 @@ fun DeleteCard(
                     horizontalAlignment = Alignment.CenterHorizontally,
                 ) {
                     BasicTextField(
-                        value = data.name,
+                        value = element.name,
                         onValueChange = {},
                         textStyle = MaterialTheme.typography.titleSmall,
                         enabled = false,
@@ -104,7 +104,7 @@ fun DeleteCard(
 //                        BasicTextField(
 //                            value = dropdownOptions.first(), // Todo: display selected value if available else first
 //                            onValueChange = {
-//                                data.description = it
+//                                element.description = it
 //                            },
 //                            textStyle = MaterialTheme.typography.bodySmall,
 //                            enabled = isEditable(EditFields.Dropdown),
@@ -115,7 +115,7 @@ fun DeleteCard(
 //                    }
                     BasicTextField(
                         // TODO: fix
-                        value = data.description ?: "missing",
+                        value = element.description ?: "missing",
                         onValueChange = {},
                         textStyle = MaterialTheme.typography.bodySmall,
                         enabled = false,
@@ -124,14 +124,14 @@ fun DeleteCard(
                             .weight(1f)
                             .fillMaxWidth(),
                     )
-                    if(data !is Summary) {
+                    if(element !is Summary) {
                         Row(
                             verticalAlignment = Alignment.CenterVertically,
                             modifier = Modifier
                                 .fillMaxWidth(),
                         ) {
                             Checkbox(
-                                checked = data.isFragile,
+                                checked = element.isFragile,
                                 onCheckedChange = {},
                                 enabled = false,
                             )
@@ -139,7 +139,7 @@ fun DeleteCard(
                             Text("Fragile")
                             Spacer(modifier = Modifier.weight(1f))
                             BasicTextField(
-                                value = data.value.asCurrencyString(),
+                                value = element.value.asCurrencyString(),
                                 onValueChange = {},
                                 textStyle = MaterialTheme.typography.bodySmall,
                                 enabled = false,

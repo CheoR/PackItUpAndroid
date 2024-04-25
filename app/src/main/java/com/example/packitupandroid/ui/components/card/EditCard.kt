@@ -49,7 +49,7 @@ import com.example.packitupandroid.utils.parseCurrencyToDouble
 
 @Composable
 fun<T: BaseCardData> EditCard(
-    data: T,
+    element: T,
     onEdit: (T) -> Unit,
     onCancel: () -> Unit,
     modifier: Modifier = Modifier,
@@ -57,9 +57,9 @@ fun<T: BaseCardData> EditCard(
     cardType: CardType = CardType.Default,
     // TODO: add dropdown
 ) {
-    fun isEditable(field: EditFields) = editMode == EditMode.Edit && data.editFields.contains(field)
-    var localData by remember { mutableStateOf(data) }
-    val (icons, badgeCounts) = getIconsAndBadges(data)
+    fun isEditable(field: EditFields) = editMode == EditMode.Edit && element.editFields.contains(field)
+    var localData by remember { mutableStateOf(element) }
+    val (icons, badgeCounts) = getIconsAndBadges(element)
     val icon1 = icons.first
     val icon2 = icons.second
     val badgeCount1 = badgeCounts.first
@@ -119,7 +119,7 @@ fun<T: BaseCardData> EditCard(
 //                        BasicTextField(
 //                            value = dropdownOptions.first(), // Todo: display selected value if available else first
 //                            onValueChange = {
-//                                data.description = it
+//                                element.description = it
 //                            },
 //                            textStyle = MaterialTheme.typography.bodySmall,
 //                            enabled = isEditable(EditFields.Dropdown),
@@ -146,7 +146,7 @@ fun<T: BaseCardData> EditCard(
                             .weight(1f)
                             .fillMaxWidth(),
                     )
-                    if(data !is Summary) {
+                    if(element !is Summary) {
                         Row(
                             verticalAlignment = Alignment.CenterVertically,
                             modifier = Modifier

@@ -22,8 +22,8 @@ import com.example.packitupandroid.utils.EditMode
 import com.example.packitupandroid.utils.asCurrencyString
 
 @Composable
-fun DataColumn(
-    data: BaseCardData,
+fun<T: BaseCardData> DataColumn(
+    element: T,
     modifier: Modifier = Modifier,
     dropdownOptions: List<String>? = listOf(""),
     editMode: EditMode = EditMode.NoEdit,
@@ -34,7 +34,7 @@ fun DataColumn(
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
         BasicTextField(
-            value = data.name,
+            value = element.name,
             onValueChange = {},
             textStyle = MaterialTheme.typography.titleSmall,
             enabled = editMode == EditMode.Edit,
@@ -54,7 +54,7 @@ fun DataColumn(
         }
         BasicTextField(
             // TODO: fix
-            value = data.description ?: "missing",
+            value = element.description ?: "missing",
             onValueChange = {},
             textStyle = MaterialTheme.typography.bodySmall,
             enabled = editMode == EditMode.Edit,
@@ -71,7 +71,7 @@ fun DataColumn(
                     .fillMaxWidth(),
             ) {
                 Checkbox(
-                    checked = data.isFragile,
+                    checked = element.isFragile,
                     onCheckedChange = {},
                     enabled = editMode == EditMode.Edit,
                 )
@@ -79,7 +79,7 @@ fun DataColumn(
                 Text("Fragile")
                 Spacer(modifier = Modifier.weight(1f))
                 BasicTextField(
-                    value = data.value.asCurrencyString(),
+                    value = element.value.asCurrencyString(),
                     onValueChange = {},
                     textStyle = MaterialTheme.typography.bodySmall,
                     enabled = editMode == EditMode.Edit,
