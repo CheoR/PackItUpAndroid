@@ -34,7 +34,23 @@ class BoxesScreenViewModel(
 
     private suspend fun initializeUIState(isUseMockData: Boolean = USE_MOCK_DATA) {
         if (isUseMockData) {
-            viewModelScope.launch {
+            boxesRepository.getAllBoxesStream().map { boxEntities ->
+                boxEntities.map { it.toBox() }
+            }.map { boxes ->
+                BoxesScreenUiState(
+                    elements = boxes,
+                    result = Result.Complete(boxes),
+                )
+            }.stateIn(
+                scope = viewModelScope,
+                started = SharingStarted.WhileSubscribed(TIMEOUT_MILLIS),
+                initialValue = BoxesScreenUiState()
+            ).collect { newState -> _uiState.value = newState }
+        } else {
+            // TODO - fix user regular db
+            try {
+                // TODO: REPLACE TO USE DIFFERENT DB
+                boxesRepository.clearAllBoxes()
                 boxesRepository.getAllBoxesStream().map { boxEntities ->
                     boxEntities.map { it.toBox() }
                 }.map { boxes ->
@@ -47,32 +63,10 @@ class BoxesScreenViewModel(
                     started = SharingStarted.WhileSubscribed(TIMEOUT_MILLIS),
                     initialValue = BoxesScreenUiState()
                 ).collect { newState -> _uiState.value = newState }
-            }
-        } else {
-            viewModelScope.launch {
-                // TODO - fix user regular db
-                try {
-                    // TODO: REPLACE TO USE DIFFERENT DB
-                    boxesRepository.clearAllBoxes()
-                    viewModelScope.launch {
-                        boxesRepository.getAllBoxesStream().map { boxEntities ->
-                            boxEntities.map { it.toBox() }
-                        }.map { boxes ->
-                            BoxesScreenUiState(
-                                elements = boxes,
-                                result = Result.Complete(boxes),
-                            )
-                        }.stateIn(
-                            scope = viewModelScope,
-                            started = SharingStarted.WhileSubscribed(TIMEOUT_MILLIS),
-                            initialValue = BoxesScreenUiState()
-                        ).collect { newState -> _uiState.value = newState }
-                    }
-                } catch (e: Exception) {
-                    _uiState.value = BoxesScreenUiState(
-                        result = Result.Error(e.message ?: "Unknown error")
-                    )
-                }
+            } catch (e: Exception) {
+                _uiState.value = BoxesScreenUiState(
+                    result = Result.Error(e.message ?: "Unknown error")
+                )
             }
         }
     }
