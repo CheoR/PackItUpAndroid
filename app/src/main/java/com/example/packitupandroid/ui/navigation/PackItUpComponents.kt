@@ -23,8 +23,6 @@ import com.example.packitupandroid.R
 fun PackItUpBottomNavigationBar(
     selectedDestination: String,
     navigateToTopLevelDestination: (PackItUpTopLevelDestination) -> Unit,
-    setCurrentScreen: (String) -> Unit,
-    loadCurrentScreenData: (String) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     NavigationBar(
@@ -41,8 +39,6 @@ fun PackItUpBottomNavigationBar(
 //                    .height(dimensionResource(R.dimen.navigation_bar_item_height))
                 selected = selectedDestination == packItUpDestination.route,
                 onClick = {
-                    setCurrentScreen(packItUpDestination.route)
-                    loadCurrentScreenData(packItUpDestination.route)
                     navigateToTopLevelDestination(packItUpDestination)
                 },
                 icon = {
