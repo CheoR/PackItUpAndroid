@@ -46,8 +46,8 @@ fun<T: BaseCardData> CameraCard(
     modifier: Modifier = Modifier,
     editMode: EditMode = EditMode.Edit,
 ) {
-    fun isEditable(field: EditFields) = editMode == EditMode.Edit && data.editFields.contains(field)
-    var localData by remember { mutableStateOf(data) }
+    fun isEditable(field: EditFields) = editMode == EditMode.Edit && element.editFields.contains(field)
+    var localData by remember { mutableStateOf(element) }
     val context = LocalContext.current
     val controller = remember {
         LifecycleCameraController(context).apply {
