@@ -48,6 +48,7 @@ class SummaryScreenViewModel(
             viewModelScope.launch {
                 try {
                     // TODO: REPLACE TO USE DIFFERENT DB
+                    summaryRepository.clearAllSummary()
                     summaryRepository.getAllSummaryStream().collect { queryResult ->
                         _uiState.value = SummaryScreenUiState(
                             result = Result.Complete(

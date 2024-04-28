@@ -54,6 +54,7 @@ class CollectionsScreenViewModel(
             // TODO - fix user regular db
             try {
                 // TODO: REPLACE TO USE DIFFERENT DB
+                collectionsRepository.clearAllCollections()
                 viewModelScope.launch {
                     collectionsRepository.getAllCollectionsStream().map { collectionEntities ->
                         collectionEntities.map { it.toCollection() }
