@@ -10,6 +10,7 @@ import com.example.packitupandroid.data.database.entities.updateWith
 import com.example.packitupandroid.data.model.Item
 import com.example.packitupandroid.data.model.toEntity
 import com.example.packitupandroid.data.repository.ItemsRepository
+import com.example.packitupandroid.utils.USE_MOCK_DATA
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
@@ -21,8 +22,6 @@ import kotlinx.coroutines.launch
 class ItemsScreenViewModel(
     private val itemsRepository: ItemsRepository,
 ) : ViewModel() {
-    private val isUseMockData = true
-
     private val _uiState = MutableStateFlow(PackItUpUiState())
     val uiState: StateFlow<PackItUpUiState> = _uiState.asStateFlow()
 
@@ -33,11 +32,11 @@ class ItemsScreenViewModel(
 
     init {
         viewModelScope.launch {
-            initializeUIState(isUseMockData)
+            initializeUIState()
         }
     }
 
-    private fun initializeUIState(useMockData: Boolean = false) {
+    private fun initializeUIState(useMockData: Boolean = USE_MOCK_DATA) {
         if (useMockData) {
             // populate data from file for future tutorial
             viewModelScope.launch {

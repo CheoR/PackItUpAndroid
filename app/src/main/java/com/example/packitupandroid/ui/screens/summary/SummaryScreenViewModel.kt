@@ -7,6 +7,7 @@ import com.example.packitupandroid.Result
 import com.example.packitupandroid.data.model.toSummary
 import com.example.packitupandroid.data.repository.SummaryRepository
 import com.example.packitupandroid.ui.navigation.PackItUpRoute
+import com.example.packitupandroid.utils.USE_MOCK_DATA
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -15,18 +16,16 @@ import kotlinx.coroutines.launch
 class SummaryScreenViewModel(
     private val summaryRepository: SummaryRepository,
 ) : ViewModel() {
-    private val isUseMockData = true
-
     private val _uiState = MutableStateFlow(PackItUpUiState())
     val uiState: StateFlow<PackItUpUiState> = _uiState.asStateFlow()
 
     init {
         viewModelScope.launch {
-            initializeUIState(isUseMockData)
+            initializeUIState()
         }
     }
 
-    private suspend fun initializeUIState(isUseMockData: Boolean = false) {
+    private suspend fun initializeUIState(isUseMockData: Boolean = USE_MOCK_DATA) {
         if (isUseMockData) {
             viewModelScope.launch {
                 summaryRepository.getAllSummaryStream().collect { queryResult ->
