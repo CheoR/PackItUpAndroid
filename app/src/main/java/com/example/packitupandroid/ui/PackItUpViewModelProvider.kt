@@ -5,12 +5,10 @@ import androidx.lifecycle.viewmodel.CreationExtras
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import com.example.packitupandroid.PackItUpApplication
-import com.example.packitupandroid.ui.screens.ScreenViewModel
 import com.example.packitupandroid.ui.screens.box.BoxesScreenViewModel
 import com.example.packitupandroid.ui.screens.collection.CollectionsScreenViewModel
 import com.example.packitupandroid.ui.screens.item.ItemsScreenViewModel
 import com.example.packitupandroid.ui.screens.summary.SummaryScreenViewModel
-
 
 /**
  * Provides Factory to create ViewModel instance for entire PackItUp app
@@ -40,17 +38,9 @@ object PackItUpViewModelProvider {
                 summaryRepository = packItUpApplication().container.summaryRepository,
             )
         }
-
-        initializer {
-            ScreenViewModel(
-                itemViewModel = ItemsScreenViewModel(packItUpApplication().container.itemsRepository),
-                boxViewModel = BoxesScreenViewModel(packItUpApplication().container.boxesRepository),
-                collectionViewModel = CollectionsScreenViewModel(packItUpApplication().container.collectionsRepository),
-                summaryScreenViewModel = SummaryScreenViewModel(packItUpApplication().container.summaryRepository)
-            )
-        }
     }
 }
+
 /**
  * Extension function queries for [PackItUpApplication] object and returns [PackItUpApplication] instance.
  */
