@@ -10,7 +10,6 @@ import com.example.packitupandroid.data.model.Box
 import com.example.packitupandroid.data.model.toBox
 import com.example.packitupandroid.data.model.toEntity
 import com.example.packitupandroid.data.repository.BoxesRepository
-import com.example.packitupandroid.ui.navigation.PackItUpRoute
 import com.example.packitupandroid.utils.USE_MOCK_DATA
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -23,8 +22,8 @@ import kotlinx.coroutines.launch
 class BoxesScreenViewModel(
     private val boxesRepository: BoxesRepository,
 ) : ViewModel() {
-    private val _uiState = MutableStateFlow(PackItUpUiState())
-    val uiState: StateFlow<PackItUpUiState> = _uiState.asStateFlow()
+    private val _uiState = MutableStateFlow(BoxesScreenUiState())
+    val uiState: StateFlow<BoxesScreenUiState> = _uiState.asStateFlow()
 
     init {
         viewModelScope.launch {
