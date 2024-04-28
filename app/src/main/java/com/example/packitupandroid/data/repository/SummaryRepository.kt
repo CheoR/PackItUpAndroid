@@ -8,4 +8,9 @@ interface SummaryRepository {
      * Retrieve all the Summary from the given data source.
      */
     fun getAllSummaryStream(): Flow<QuerySummary>
+
+    /**
+     * Clear all summary in the data source
+     */
+    suspend fun clearAllSummary()
 }
