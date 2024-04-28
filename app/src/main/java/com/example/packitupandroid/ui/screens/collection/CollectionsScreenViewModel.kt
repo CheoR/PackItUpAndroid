@@ -17,6 +17,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.flow.toList
 import kotlinx.coroutines.launch
 
 class CollectionsScreenViewModel(
@@ -37,37 +38,40 @@ class CollectionsScreenViewModel(
         if (isUseMockData) {
             viewModelScope.launch {
                 collectionsRepository.getAllCollectionsStream().map { collectionEntities ->
-                    PackItUpUiState(
-                        result = Result.Complete(
-                            elements = collectionEntities.map { it.toCollection() },
-                        )
+                    collectionEntities.map { it.toCollection() }
+                }.map { collections ->
+                    CollectionsScreenUiState(
+                        elements = collections,
+                        result = Result.Complete(collections),
                     )
-                }
-                    .stateIn(
-                        scope = viewModelScope,
-                        started = SharingStarted.WhileSubscribed(TIMEOUT_MILLIS),
-                        initialValue = PackItUpUiState()
-                    )
-                    .collect { newState -> _uiState.value = newState }
+                }.stateIn(
+                    scope = viewModelScope,
+                    started = SharingStarted.WhileSubscribed(TIMEOUT_MILLIS),
+                    initialValue = CollectionsScreenUiState()
+                ).collect { newState -> _uiState.value = newState }
             }
         } else {
-            viewModelScope.launch {
-                try {
-                    // TODO: REPLACE TO USE DIFFERENT DB
-                    collectionsRepository.clearAllCollections()
-                    collectionsRepository.getAllCollectionsStream().collect { collectionEntities ->
-                        _uiState.value = PackItUpUiState(
-                            result = Result.Complete(
-                                elements = collectionEntities.map { it.toCollection() },
-                            ),
-                            currentScreen = PackItUpRoute.COLLECTIONS,
+            // TODO - fix user regular db
+            try {
+                // TODO: REPLACE TO USE DIFFERENT DB
+                viewModelScope.launch {
+                    collectionsRepository.getAllCollectionsStream().map { collectionEntities ->
+                        collectionEntities.map { it.toCollection() }
+                    }.map { collections ->
+                        CollectionsScreenUiState(
+                            elements = collections,
+                            result = Result.Complete(collections),
                         )
-                    }
-                } catch (e: Exception) {
-                    _uiState.value = PackItUpUiState(
-                        result = Result.Error(e.message ?: "Unknown error")
-                    )
+                    }.stateIn(
+                        scope = viewModelScope,
+                        started = SharingStarted.WhileSubscribed(TIMEOUT_MILLIS),
+                        initialValue = CollectionsScreenUiState()
+                    ).collect { newState -> _uiState.value = newState }
                 }
+            } catch (e: Exception) {
+                _uiState.value = CollectionsScreenUiState(
+                    result = Result.Error(e.message ?: "Unknown error")
+                )
             }
         }
     }
@@ -99,7 +103,20 @@ class CollectionsScreenViewModel(
         }
     }
 
-    private suspend fun getCollection(id: String) : CollectionEntity? {
+    fun getAllCollections(): List<Collection> {
+        var collectionList: List<Collection> = emptyList()
+        viewModelScope.launch {
+            collectionList = getCollections()
+        }
+        return collectionList
+    }
+
+    private suspend fun getCollections(): List<Collection> {
+        val collectionEntitiesFlow = collectionsRepository.getAllCollectionsStream().map { list -> list.map { it.toCollection() } }
+        return collectionEntitiesFlow.toList().flatten()
+    }
+
+    suspend fun getCollection(id: String) : CollectionEntity? {
         return collectionsRepository.getCollection(id)
     }
 
@@ -109,21 +126,11 @@ class CollectionsScreenViewModel(
         } else {
             collectionsRepository.insertAll(entities)
         }
-
-        collectionsRepository.getAllCollectionsStream().collect { collectionEntities ->
-            _uiState.value = PackItUpUiState(
-                result = Result.Complete(
-                    elements = collectionEntities.map { it.toCollection() },
-                ),
-                currentScreen = PackItUpRoute.COLLECTIONS,
-            )
-        }
     }
 
     private suspend fun updateCollection(entity: CollectionEntity) {
         collectionsRepository.updateCollection(entity)
     }
-
 
     private suspend fun destroyCollection(entity: CollectionEntity) {
         collectionsRepository.deleteCollection(entity)
@@ -133,3 +140,8 @@ class CollectionsScreenViewModel(
         private const val TIMEOUT_MILLIS = 5_000L
     }
 }
+
+data class CollectionsScreenUiState(
+    override val elements: List<Collection> = emptyList(),
+    override val result: Result = Result.Loading,
+): PackItUpUiState
