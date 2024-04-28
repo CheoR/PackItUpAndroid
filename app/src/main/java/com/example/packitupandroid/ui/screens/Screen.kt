@@ -54,7 +54,10 @@ fun <T: BaseCardData> Screen(
                         items = rememberedElements ?: emptyList(),
                         key = { it.id }
                     ) { element ->
-                        card(element, updateElement, destroyElement)
+                        BaseCard(
+                            element = element,
+                            onUpdate = onUpdate,
+                            onDestroy = onDestroy,
 //                            getParentContainer = ,
 //                            getDropdownOptions = viewModel::getDropdownOptions,
                         )
