@@ -10,7 +10,6 @@ import com.example.packitupandroid.data.model.Collection
 import com.example.packitupandroid.data.model.toCollection
 import com.example.packitupandroid.data.model.toEntity
 import com.example.packitupandroid.data.repository.CollectionsRepository
-import com.example.packitupandroid.ui.navigation.PackItUpRoute
 import com.example.packitupandroid.utils.USE_MOCK_DATA
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -23,8 +22,10 @@ import kotlinx.coroutines.launch
 class CollectionsScreenViewModel(
     private val collectionsRepository: CollectionsRepository,
 ) : ViewModel() {
-    private val _uiState = MutableStateFlow(PackItUpUiState())
-    val uiState: StateFlow<PackItUpUiState> = _uiState.asStateFlow()
+//    private val _uiState = MutableStateFlow(CollectionsScreenUiState())
+//    val uiState: StateFlow<CollectionsScreenUiState> = _uiState.asStateFlow()
+    private val _uiState = MutableStateFlow(CollectionsScreenUiState())
+    val uiState: StateFlow<CollectionsScreenUiState> = _uiState.asStateFlow()
 
     init {
         viewModelScope.launch {

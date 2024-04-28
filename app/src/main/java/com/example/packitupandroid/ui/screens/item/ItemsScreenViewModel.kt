@@ -22,8 +22,8 @@ import kotlinx.coroutines.launch
 class ItemsScreenViewModel(
     private val itemsRepository: ItemsRepository,
 ) : ViewModel() {
-    private val _uiState = MutableStateFlow(PackItUpUiState())
-    val uiState: StateFlow<PackItUpUiState> = _uiState.asStateFlow()
+    private val _uiState = MutableStateFlow(ItemsPackItUpUiState())
+    val uiState: StateFlow<ItemsPackItUpUiState> = _uiState.asStateFlow()
 
 //    private val _entityCache = MutableStateFlow<Map<String, BaseCardData>>(emptyMap())
 //    private val entityCache: StateFlow<Map<String, BaseCardData>> = _entityCache.asStateFlow()

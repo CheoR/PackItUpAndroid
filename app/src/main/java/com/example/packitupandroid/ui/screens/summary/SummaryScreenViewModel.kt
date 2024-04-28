@@ -6,7 +6,6 @@ import com.example.packitupandroid.PackItUpUiState
 import com.example.packitupandroid.Result
 import com.example.packitupandroid.data.model.toSummary
 import com.example.packitupandroid.data.repository.SummaryRepository
-import com.example.packitupandroid.ui.navigation.PackItUpRoute
 import com.example.packitupandroid.utils.USE_MOCK_DATA
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -16,8 +15,8 @@ import kotlinx.coroutines.launch
 class SummaryScreenViewModel(
     private val summaryRepository: SummaryRepository,
 ) : ViewModel() {
-    private val _uiState = MutableStateFlow(PackItUpUiState())
-    val uiState: StateFlow<PackItUpUiState> = _uiState.asStateFlow()
+    private val _uiState = MutableStateFlow(SummaryScreenUiState())
+    val uiState: StateFlow<SummaryScreenUiState> = _uiState.asStateFlow()
 
     init {
         viewModelScope.launch {
