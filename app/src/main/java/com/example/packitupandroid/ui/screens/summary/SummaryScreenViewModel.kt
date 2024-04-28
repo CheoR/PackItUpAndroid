@@ -30,37 +30,33 @@ class SummaryScreenViewModel(
 
     private suspend fun initializeUIState(isUseMockData: Boolean = USE_MOCK_DATA) {
         if (isUseMockData) {
-            viewModelScope.launch {
-                summaryRepository.getAllSummaryStream().map { queryResult ->
-                    SummaryScreenUiState(
-                        elements = emptyList(),
+            summaryRepository.getAllSummaryStream().map { queryResult ->
+                SummaryScreenUiState(
+                    elements = emptyList(),
+                    result = Result.Complete(
+                        summary = queryResult.toSummary("")
+                    ),
+                )
+            }.stateIn(
+                scope = viewModelScope,
+                started = SharingStarted.WhileSubscribed(TIMEOUT_MILLIS),
+                initialValue = SummaryScreenUiState()
+            ).collect { newState -> _uiState.value = newState }
+        } else {
+            try {
+                // TODO: REPLACE TO USE DIFFERENT DB
+                summaryRepository.clearAllSummary()
+                summaryRepository.getAllSummaryStream().collect { queryResult ->
+                    _uiState.value = SummaryScreenUiState(
                         result = Result.Complete(
                             summary = queryResult.toSummary("")
                         ),
                     )
-                }.stateIn(
-                    scope = viewModelScope,
-                    started = SharingStarted.WhileSubscribed(TIMEOUT_MILLIS),
-                    initialValue = SummaryScreenUiState()
-                ).collect { newState -> _uiState.value = newState }
-            }
-        } else {
-            viewModelScope.launch {
-                try {
-                    // TODO: REPLACE TO USE DIFFERENT DB
-                    summaryRepository.clearAllSummary()
-                    summaryRepository.getAllSummaryStream().collect { queryResult ->
-                        _uiState.value = SummaryScreenUiState(
-                            result = Result.Complete(
-                                summary = queryResult.toSummary("")
-                            ),
-                        )
-                    }
-                } catch (e: Exception) {
-                    _uiState.value = SummaryScreenUiState(
-                        result = Result.Error(e.message ?: "Unknown error")
-                    )
                 }
+            } catch (e: Exception) {
+                _uiState.value = SummaryScreenUiState(
+                    result = Result.Error(e.message ?: "Unknown error")
+                )
             }
         }
     }

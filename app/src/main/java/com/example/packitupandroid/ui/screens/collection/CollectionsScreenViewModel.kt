@@ -36,7 +36,23 @@ class CollectionsScreenViewModel(
 
     private suspend fun initializeUIState(isUseMockData: Boolean = USE_MOCK_DATA) {
         if (isUseMockData) {
-            viewModelScope.launch {
+            collectionsRepository.getAllCollectionsStream().map { collectionEntities ->
+                collectionEntities.map { it.toCollection() }
+            }.map { collections ->
+                CollectionsScreenUiState(
+                    elements = collections,
+                    result = Result.Complete(collections),
+                )
+            }.stateIn(
+                scope = viewModelScope,
+                started = SharingStarted.WhileSubscribed(TIMEOUT_MILLIS),
+                initialValue = CollectionsScreenUiState()
+            ).collect { newState -> _uiState.value = newState }
+        } else {
+            // TODO - fix user regular db
+            try {
+                // TODO: REPLACE TO USE DIFFERENT DB
+                collectionsRepository.clearAllCollections()
                 collectionsRepository.getAllCollectionsStream().map { collectionEntities ->
                     collectionEntities.map { it.toCollection() }
                 }.map { collections ->
@@ -49,26 +65,6 @@ class CollectionsScreenViewModel(
                     started = SharingStarted.WhileSubscribed(TIMEOUT_MILLIS),
                     initialValue = CollectionsScreenUiState()
                 ).collect { newState -> _uiState.value = newState }
-            }
-        } else {
-            // TODO - fix user regular db
-            try {
-                // TODO: REPLACE TO USE DIFFERENT DB
-                collectionsRepository.clearAllCollections()
-                viewModelScope.launch {
-                    collectionsRepository.getAllCollectionsStream().map { collectionEntities ->
-                        collectionEntities.map { it.toCollection() }
-                    }.map { collections ->
-                        CollectionsScreenUiState(
-                            elements = collections,
-                            result = Result.Complete(collections),
-                        )
-                    }.stateIn(
-                        scope = viewModelScope,
-                        started = SharingStarted.WhileSubscribed(TIMEOUT_MILLIS),
-                        initialValue = CollectionsScreenUiState()
-                    ).collect { newState -> _uiState.value = newState }
-                }
             } catch (e: Exception) {
                 _uiState.value = CollectionsScreenUiState(
                     result = Result.Error(e.message ?: "Unknown error")
