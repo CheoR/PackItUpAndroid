@@ -20,7 +20,7 @@ interface ItemDao {
     fun getAllItems(): Flow<List<ItemEntity>>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insert(items: ItemEntity)
+    suspend fun insert(item: ItemEntity)
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertAll(items: List<ItemEntity>)
