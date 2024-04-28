@@ -55,26 +55,29 @@ class ItemsScreenViewModel(
                 ).collect { newState -> _uiState.value = newState }
             }
         } else {
-            try {
-                // TODO - fix user regular db
-                viewModelScope.launch {
-                    itemsRepository.getAllItemsStream().map { itemEntities ->
-                        itemEntities.map { it.toItem() }
-                    }.map { items ->
-                        ItemsPackItUpUiState(
-                            elements = items,
-                            result = Result.Complete(items),
-                        )
-                    }.stateIn(
-                        scope = viewModelScope,
-                        started = SharingStarted.WhileSubscribed(TIMEOUT_MILLIS),
-                        initialValue = ItemsPackItUpUiState()
-                    ).collect { newState -> _uiState.value = newState }
+            viewModelScope.launch {
+                try {
+                    // TODO - fix user regular db
+                    itemsRepository.clearAllItems()
+                    viewModelScope.launch {
+                        itemsRepository.getAllItemsStream().map { itemEntities ->
+                            itemEntities.map { it.toItem() }
+                        }.map { items ->
+                            ItemsPackItUpUiState(
+                                elements = items,
+                                result = Result.Complete(items),
+                            )
+                        }.stateIn(
+                            scope = viewModelScope,
+                            started = SharingStarted.WhileSubscribed(TIMEOUT_MILLIS),
+                            initialValue = ItemsPackItUpUiState()
+                        ).collect { newState -> _uiState.value = newState }
+                    }
+                } catch (e: Exception) {
+                    _uiState.value = ItemsPackItUpUiState(
+                        result = Result.Error(e.message ?: "Unknown error")
+                    )
                 }
-            } catch (e: Exception) {
-                _uiState.value = ItemsPackItUpUiState(
-                    result = Result.Error(e.message ?: "Unknown error")
-                )
             }
         }
     }

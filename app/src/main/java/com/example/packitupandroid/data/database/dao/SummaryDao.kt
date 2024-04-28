@@ -2,6 +2,7 @@ package com.example.packitupandroid.data.database.dao
 
 import androidx.room.Dao
 import androidx.room.Query
+import androidx.room.Transaction
 import com.example.packitupandroid.data.model.QuerySummary
 import kotlinx.coroutines.flow.Flow
 
@@ -36,4 +37,21 @@ interface SummaryDao {
         BoxSummary bs ON c.id = bs.collection_id;
     """)
     fun getSummary(): Flow<QuerySummary>
+
+    @Transaction
+    suspend fun clearAllSummary() {
+        // Execute multiple queries within this function
+        deleteItems()
+        deleteBoxes()
+        deleteCollections()
+    }
+
+    @Query("DELETE FROM items")
+    fun deleteItems()
+
+    @Query("DELETE FROM boxes")
+    fun deleteBoxes()
+
+    @Query("DELETE FROM collections")
+    fun deleteCollections()
 }
