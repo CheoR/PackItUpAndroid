@@ -35,7 +35,7 @@ import com.example.packitupandroid.ui.components.common.ButtonType
 
 @Composable
 fun Counter(
-    onClick: (Int) -> Unit,
+    onCreate: (Int) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     var count by remember { mutableIntStateOf(0) }
@@ -85,7 +85,7 @@ fun Counter(
             button = ButtonType.Add,
             enabled = count > 0,
             onClick = {
-                onClick(count)
+                onCreate(count)
                 resetCount()
             },
         )
@@ -96,6 +96,6 @@ fun Counter(
 @Composable
 fun PreviewCounter() {
     Counter(
-        onClick = {}
+        onCreate = {}
     )
 }

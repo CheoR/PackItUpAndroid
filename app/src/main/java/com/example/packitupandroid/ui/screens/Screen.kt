@@ -59,7 +59,7 @@ fun <T: BaseCardData> Screen(
                 }
             }
         }
-        Counter(onClick = createElement)
+        Counter(onCreate = onCreate)
     }
 }
 
