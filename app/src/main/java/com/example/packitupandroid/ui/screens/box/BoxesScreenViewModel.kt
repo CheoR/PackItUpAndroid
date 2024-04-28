@@ -17,6 +17,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.flow.toList
 import kotlinx.coroutines.launch
 
 class BoxesScreenViewModel(
@@ -35,34 +36,40 @@ class BoxesScreenViewModel(
         if (isUseMockData) {
             viewModelScope.launch {
                 boxesRepository.getAllBoxesStream().map { boxEntities ->
-                    PackItUpUiState(
-                        result = Result.Complete(
-                            elements = boxEntities.map { it.toBox() },
-                        )
+                    boxEntities.map { it.toBox() }
+                }.map { boxes ->
+                    BoxesScreenUiState(
+                        elements = boxes,
+                        result = Result.Complete(boxes),
                     )
-                }
-                .stateIn(
+                }.stateIn(
                     scope = viewModelScope,
                     started = SharingStarted.WhileSubscribed(TIMEOUT_MILLIS),
-                    initialValue = PackItUpUiState()
-                )
-                .collect { newState -> _uiState.value = newState }
+                    initialValue = BoxesScreenUiState()
+                ).collect { newState -> _uiState.value = newState }
             }
         } else {
             viewModelScope.launch {
+                // TODO - fix user regular db
                 try {
                     // TODO: REPLACE TO USE DIFFERENT DB
                     boxesRepository.clearAllBoxes()
-                    boxesRepository.getAllBoxesStream().collect { boxEntities ->
-                        _uiState.value = PackItUpUiState(
-                            result = Result.Complete(
-                                elements = boxEntities.map { it.toBox() },
-                            ),
-                            currentScreen = PackItUpRoute.BOXES,
-                        )
+                    viewModelScope.launch {
+                        boxesRepository.getAllBoxesStream().map { boxEntities ->
+                            boxEntities.map { it.toBox() }
+                        }.map { boxes ->
+                            BoxesScreenUiState(
+                                elements = boxes,
+                                result = Result.Complete(boxes),
+                            )
+                        }.stateIn(
+                            scope = viewModelScope,
+                            started = SharingStarted.WhileSubscribed(TIMEOUT_MILLIS),
+                            initialValue = BoxesScreenUiState()
+                        ).collect { newState -> _uiState.value = newState }
                     }
                 } catch (e: Exception) {
-                    _uiState.value = PackItUpUiState(
+                    _uiState.value = BoxesScreenUiState(
                         result = Result.Error(e.message ?: "Unknown error")
                     )
                 }
@@ -97,24 +104,29 @@ class BoxesScreenViewModel(
         }
     }
 
-    private suspend fun getBox(id: String) : BoxEntity? {
+    fun getAllBoxes(): List<Box> {
+        var boxList: List<Box> = emptyList()
+        viewModelScope.launch {
+            boxList = getBoxes()
+        }
+        return boxList
+    }
+
+    private suspend fun getBoxes(): List<Box> {
+        val boxEntitiesFlow =
+            boxesRepository.getAllBoxesStream().map { list -> list.map { it.toBox() } }
+        return boxEntitiesFlow.toList().flatten()
+    }
+
+    suspend fun getBox(id: String) : BoxEntity? {
         return boxesRepository.getBox(id)
     }
 
     private suspend fun saveBox(entities: List<BoxEntity>) {
-        if(entities.size == 1) {
+        if (entities.size == 1) {
             boxesRepository.insertBox(entities.first())
         } else {
             boxesRepository.insertAll(entities)
-        }
-
-        boxesRepository.getAllBoxesStream().collect { boxEntities ->
-            _uiState.value = PackItUpUiState(
-                result = Result.Complete(
-                    elements = boxEntities.map { it.toBox() },
-                ),
-                currentScreen = PackItUpRoute.BOXES,
-            )
         }
     }
 
@@ -131,3 +143,8 @@ class BoxesScreenViewModel(
         private const val TIMEOUT_MILLIS = 5_000L
     }
 }
+
+data class BoxesScreenUiState(
+    override val elements: List<Box> = emptyList(),
+    override val result: Result = Result.Loading,
+): PackItUpUiState

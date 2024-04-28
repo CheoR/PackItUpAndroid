@@ -17,6 +17,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.flow.toList
 import kotlinx.coroutines.launch
 
 class ItemsScreenViewModel(
@@ -41,37 +42,39 @@ class ItemsScreenViewModel(
             // populate data from file for future tutorial
             viewModelScope.launch {
                 itemsRepository.getAllItemsStream().map { itemEntities ->
-                    PackItUpUiState(
-                        result = Result.Complete(
-                            elements = itemEntities.map { it.toItem() },
-                        )
+                    itemEntities.map { it.toItem() }
+                }.map { items ->
+                    ItemsPackItUpUiState(
+                        elements = items,
+                        result = Result.Complete(items),
                     )
-                }
-                .stateIn(
+                }.stateIn(
                     scope = viewModelScope,
                     started = SharingStarted.WhileSubscribed(TIMEOUT_MILLIS),
-                    initialValue = PackItUpUiState()
-                )
-                .collect { newState -> _uiState.value = newState }
+                    initialValue = ItemsPackItUpUiState()
+                ).collect { newState -> _uiState.value = newState }
             }
         } else {
-            // user regular db
-            viewModelScope.launch {
-                try {
-                    // TODO: REPLACE TO USE DIFFERENT DB
-                    itemsRepository.clearAllItems()
-                    itemsRepository.getAllItemsStream().collect { itemEntities ->
-                        _uiState.value = PackItUpUiState(
-                            result = Result.Complete(
-                                elements = itemEntities.map { it.toItem() },
-                            )
+            try {
+                // TODO - fix user regular db
+                viewModelScope.launch {
+                    itemsRepository.getAllItemsStream().map { itemEntities ->
+                        itemEntities.map { it.toItem() }
+                    }.map { items ->
+                        ItemsPackItUpUiState(
+                            elements = items,
+                            result = Result.Complete(items),
                         )
-                    }
-                } catch (e: Exception) {
-                    _uiState.value = PackItUpUiState(
-                        result = Result.Error(e.message ?: "Unknown error")
-                    )
+                    }.stateIn(
+                        scope = viewModelScope,
+                        started = SharingStarted.WhileSubscribed(TIMEOUT_MILLIS),
+                        initialValue = ItemsPackItUpUiState()
+                    ).collect { newState -> _uiState.value = newState }
                 }
+            } catch (e: Exception) {
+                _uiState.value = ItemsPackItUpUiState(
+                    result = Result.Error(e.message ?: "Unknown error")
+                )
             }
         }
     }
@@ -101,6 +104,20 @@ class ItemsScreenViewModel(
         viewModelScope.launch {
             destroyItem(element.toEntity())
         }
+    }
+
+    fun getAllItems(): List<Item> {
+        var itemList: List<Item> = emptyList()
+        viewModelScope.launch {
+            itemList = getItems()
+        }
+        return itemList
+    }
+
+    private suspend fun getItems(): List<Item> {
+        val itemEntitiesFlow =
+            itemsRepository.getAllItemsStream().map { list -> list.map { it.toItem() } }
+        return itemEntitiesFlow.toList().flatten()
     }
 
     private suspend fun getItem(id: String) : ItemEntity? {
@@ -136,4 +153,9 @@ class ItemsScreenViewModel(
         private const val TIMEOUT_MILLIS = 5_000L
     }
 }
+
+data class ItemsPackItUpUiState(
+    override val elements: List<Item> = emptyList(),
+    override val result: Result = Result.Loading,
+): PackItUpUiState
 

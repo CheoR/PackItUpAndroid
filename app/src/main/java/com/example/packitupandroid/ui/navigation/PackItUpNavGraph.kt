@@ -31,7 +31,6 @@ fun PackItUpNavHost(
     navigationType: PackItUpNavigationType,
     navigateToTopLevelDestination: (PackItUpTopLevelDestination) -> Unit,
     modifier: Modifier = Modifier,
-    viewModel: ScreenViewModel = viewModel(factory = PackItUpViewModelProvider.Factory),
 ) {
     Scaffold(
         modifier = modifier,
