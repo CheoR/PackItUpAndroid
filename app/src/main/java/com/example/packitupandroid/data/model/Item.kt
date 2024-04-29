@@ -13,7 +13,7 @@ data class Item(
     override val value: Double  = 0.0,
     override val isFragile: Boolean = false,
     override val lastModified: Date = Date(),
-    val boxId: String?,
+    val boxId: String? = null,
     val imageUri: String? = null,
 ) : BaseCardData {
     companion object {
