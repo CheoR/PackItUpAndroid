@@ -9,38 +9,33 @@ import kotlinx.coroutines.flow.Flow
 @Dao
 interface SummaryDao {
     @Query("""
-    WITH BoxSummary AS (
-        SELECT 
-            b.id,
-            b.last_modified,
-            b.collection_id,
-            SUM(i.value) AS value,
-            MAX(CASE WHEN i.is_fragile = 1 THEN 1 ELSE 0 END) AS is_fragile,
-            COUNT( i.id) AS item_count
-        FROM 
-            boxes b
-        LEFT JOIN 
-            items i ON b.id = i.box_id
-        GROUP BY 
-            b.id
-    )
-    
-    SELECT 
-        COUNT(DISTINCT c.id) AS collection_count,
-        ROUND(SUM(bs.value), 2) AS value,
-        MAX(CASE WHEN bs.is_fragile = 1 THEN 1 ELSE 0 END) AS is_fragile,
-        COUNT( bs.id) AS box_count,
-        SUM(bs.item_count) AS item_count
-    FROM 
-        collections c
-    LEFT JOIN 
-        BoxSummary bs ON c.id = bs.collection_id;
+        WITH boxesData AS (
+            SELECT COUNT(b.id) AS count
+            FROM boxes b
+        ),
+        
+        collectionsData AS (
+            SELECT COUNT(c.id) as count
+            FROM collections c
+        ),
+        
+        itemsData AS (
+            SELECT COUNT(i.id) as count, ROUND(SUM(i.value)) AS value, MAX(CASE WHEN i.is_fragile = 1 THEN 1 ELSE 0 END) AS is_fragile
+            FROM items i
+        )
+        
+        SELECT
+            boxesData.count AS box_count,
+            collectionsData.count AS collection_count,
+            itemsData.count AS item_count,
+            itemsData.value AS value,
+            itemsData.is_fragile AS is_fragile
+        FROM boxesData, collectionsData, itemsData
     """)
     fun getSummary(): Flow<QuerySummary>
 
     @Transaction
     suspend fun clearAllSummary() {
-        // Execute multiple queries within this function
         deleteItems()
         deleteBoxes()
         deleteCollections()
