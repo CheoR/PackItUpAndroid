@@ -1,26 +1,15 @@
 package com.example.packitupandroid
 
-import androidx.compose.ui.test.assertIsEnabled
 import androidx.compose.ui.test.assertTextEquals
-import androidx.compose.ui.test.captureToImage
-import androidx.compose.ui.test.junit4.createAndroidComposeRule
 import androidx.compose.ui.test.junit4.createComposeRule
 import androidx.compose.ui.test.onNodeWithContentDescription
-import androidx.compose.ui.test.onNodeWithTag
-import androidx.compose.ui.test.onNodeWithText
-import androidx.compose.ui.test.onRoot
 import androidx.compose.ui.test.performClick
-import androidx.compose.ui.test.printToLog
-import androidx.test.ext.junit.runners.AndroidJUnit4
-import com.example.packitupandroid.model.Item
-import com.example.packitupandroid.ui.components.common.AddConfirmCancelButton
-import com.example.packitupandroid.ui.components.common.ButtonType
+import com.example.packitupandroid.data.model.Item
 import com.example.packitupandroid.ui.components.counter.Counter
 import com.example.packitupandroid.ui.theme.PackItUpAndroidTheme
-import org.junit.Assert.assertEquals
 import org.junit.Rule
 import org.junit.Test
-import org.junit.runner.RunWith
+import java.util.Date
 
 //class ButtonTest {
 //    @get:Rule
@@ -37,12 +26,14 @@ import org.junit.runner.RunWith
 //}
 class CounterUiTests {
 
-    private val onClick: (Item, Int?) -> Unit = { _, _ -> }
+    private val onCreate: (Int) -> Unit = { _ -> }
     private val item = Item(
         name = "Sample Item",
         description = "This is a sample item",
         value = 10.0,
-        isFragile = false
+        isFragile = false,
+        boxId = "e99a99f8-748d-427a-a305-14bda19d71a0",
+        lastModified = Date(1638912000000L),
     )
 
 
@@ -56,10 +47,7 @@ class CounterUiTests {
 
         composeTestRule.setContent {
             PackItUpAndroidTheme {
-                Counter (
-                    type = item,
-                    onClick = onClick
-                )
+                Counter (onCreate = onCreate)
             }
         }
 
