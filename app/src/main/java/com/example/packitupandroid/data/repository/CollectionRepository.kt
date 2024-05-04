@@ -11,7 +11,7 @@ interface CollectionsRepository {
     suspend fun getCollection(id: String): CollectionEntity?
 
     /**
-     * Retrieve all the Collectiones from the given data source.
+     * Retrieve all the Collections from the given data source.
      */
     fun getAllCollectionsStream(): Flow<List<QueryCollection>>
 

@@ -12,10 +12,8 @@ class OfflineBoxesRepository(private val boxDao: BoxDao) : BoxesRepository {
     override fun getBoxStream(id: String): Flow<BoxEntity?> = boxDao.getBox(id)
     override suspend fun insertBox(box: BoxEntity) = boxDao.insert(box)
     override suspend fun insertAll(boxes: List<BoxEntity>) = boxDao.insertAll(boxes)
-
     override suspend fun updateBox(box: BoxEntity) = boxDao.update(box)
     override suspend fun deleteBox(box: BoxEntity) = boxDao.delete(box)
     override suspend fun deleteAll(boxes: List<BoxEntity>) = boxDao.deleteAll(boxes)
-
     override suspend fun clearAllBoxes() = boxDao.clearAllBoxes()
 }

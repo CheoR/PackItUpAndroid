@@ -12,10 +12,8 @@ class OfflineCollectionsRepository(private val collectionDao: CollectionDao) : C
     override fun getCollectionStream(id: String): Flow<CollectionEntity?> = collectionDao.getCollection(id)
     override suspend fun insertCollection(collection: CollectionEntity) = collectionDao.insert(collection)
     override suspend fun insertAll(collections: List<CollectionEntity>) = collectionDao.insertAll(collections)
-
     override suspend fun updateCollection(collection: CollectionEntity) = collectionDao.update(collection)
     override suspend fun deleteCollection(collection: CollectionEntity) = collectionDao.delete(collection)
     override suspend fun deleteAll(collections: List<CollectionEntity>) = collectionDao.deleteAll(collections)
-
     override suspend fun clearAllCollections() = collectionDao.clearAllCollections()
 }

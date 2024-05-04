@@ -36,7 +36,6 @@ fun <T: BaseCardData> Screen(
             else -> emptyList()
         }
     }
-
     Column(modifier = modifier) {
         when (result) {
             is Result.Loading -> Spinner()
@@ -66,7 +65,6 @@ fun <T: BaseCardData> Screen(
         Counter(onCreate = onCreate)
     }
 }
-
 
 @Composable
 private fun Error() {
