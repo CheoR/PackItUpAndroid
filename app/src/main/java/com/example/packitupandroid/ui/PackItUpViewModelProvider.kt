@@ -5,6 +5,7 @@ import androidx.lifecycle.viewmodel.CreationExtras
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import com.example.packitupandroid.PackItUpApplication
+import com.example.packitupandroid.ui.screens.ScreenViewModel
 import com.example.packitupandroid.ui.screens.box.BoxesScreenViewModel
 import com.example.packitupandroid.ui.screens.collection.CollectionsScreenViewModel
 import com.example.packitupandroid.ui.screens.item.ItemsScreenViewModel
@@ -35,6 +36,12 @@ object PackItUpViewModelProvider {
 
         initializer {
             SummaryScreenViewModel(
+                summaryRepository = packItUpApplication().container.summaryRepository,
+            )
+        }
+
+        initializer {
+            ScreenViewModel(
                 summaryRepository = packItUpApplication().container.summaryRepository,
             )
         }

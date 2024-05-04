@@ -5,10 +5,14 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.example.packitupandroid.R
+import com.example.packitupandroid.ui.PackItUpViewModelProvider
+import com.example.packitupandroid.ui.screens.ScreenViewModel
 import com.example.packitupandroid.ui.screens.box.BoxesScreen
 import com.example.packitupandroid.ui.screens.collection.CollectionsScreen
 import com.example.packitupandroid.ui.screens.item.ItemsScreen
@@ -25,7 +29,9 @@ fun PackItUpNavHost(
     navigationType: PackItUpNavigationType,
     navigateToTopLevelDestination: (PackItUpTopLevelDestination) -> Unit,
     modifier: Modifier = Modifier,
+    viewModel: ScreenViewModel = viewModel(factory = PackItUpViewModelProvider.Factory)
 ) {
+    val navGraphState = viewModel.navGraphState.collectAsStateWithLifecycle().value
     Scaffold(
         modifier = modifier,
         topBar = {
@@ -43,6 +49,7 @@ fun PackItUpNavHost(
         },
         bottomBar = {
             PackItUpBottomNavigationBar(
+                navGraphState = navGraphState,
                 selectedDestination = selectedDestination,
                 navigateToTopLevelDestination = navigateToTopLevelDestination,
             )

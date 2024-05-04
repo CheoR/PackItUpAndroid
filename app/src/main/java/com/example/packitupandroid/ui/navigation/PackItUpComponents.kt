@@ -18,9 +18,11 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.unit.dp
 import com.example.packitupandroid.R
+import com.example.packitupandroid.ui.screens.NavGraphState
 
 @Composable
 fun PackItUpBottomNavigationBar(
+    navGraphState: NavGraphState,
     selectedDestination: String,
     navigateToTopLevelDestination: (PackItUpTopLevelDestination) -> Unit,
     modifier: Modifier = Modifier,
@@ -40,6 +42,11 @@ fun PackItUpBottomNavigationBar(
                 selected = selectedDestination == packItUpDestination.route,
                 onClick = {
                     navigateToTopLevelDestination(packItUpDestination)
+                },
+                enabled = when (packItUpDestination.route) {
+                    PackItUpRoute.BOXES -> navGraphState.canNavigateToBoxesScreen
+                    PackItUpRoute.ITEMS -> navGraphState.canNavigateToItemsScreen
+                    else -> true
                 },
                 icon = {
                     Icon(
