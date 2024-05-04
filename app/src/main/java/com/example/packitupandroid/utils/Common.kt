@@ -38,3 +38,5 @@ fun String.parseCurrencyToDouble(): Double {
     }
     return 0.0
 }
+
+fun Int.toBoolean() = this > 0
