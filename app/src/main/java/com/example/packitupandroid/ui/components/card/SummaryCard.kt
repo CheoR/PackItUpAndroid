@@ -1,5 +1,6 @@
 package com.example.packitupandroid.ui.components.card
 
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -32,6 +33,7 @@ fun SummaryCard(
     modifier: Modifier = Modifier,
     badgeCount1: Int = 0,
     editMode: EditMode = EditMode.NoEdit,
+    canNavigateToScreen: Boolean = false,
 ) {
     val actionIcon: ActionColumnState = ActionColumnState.RightArrow
 
@@ -86,19 +88,26 @@ fun SummaryCard(
                     .fillMaxHeight(),
                 horizontalAlignment = Alignment.CenterHorizontally,
             ) {
-                IconButton(
-                    onClick = {}, // for navigation
+                if(canNavigateToScreen) {
+                    IconButton(
+                        onClick = {}, // for navigation
+                        modifier = Modifier
+                            .fillMaxHeight(),
+                        content = {
+                            Icon(
+                                imageVector = actionIcon.icon,
+                                contentDescription = "Icon Button",
+                                modifier = Modifier
+                                    .size(24.dp),
+                            )
+                        }
+                    )
+                } else {
+                    Box(
                     modifier = Modifier
                         .fillMaxHeight(),
-                    content = {
-                        Icon(
-                            imageVector = actionIcon.icon,
-                            contentDescription = "Icon Button",
-                            modifier = Modifier
-                                .size(24.dp),
-                        )
-                    }
-                )
+                    )
+                }
             }
 
         }

@@ -32,6 +32,7 @@ import com.example.packitupandroid.ui.components.card.ColumnIcon
 import com.example.packitupandroid.ui.components.card.SummaryCard
 import com.example.packitupandroid.ui.components.spinner.Spinner
 import com.example.packitupandroid.utils.asCurrencyString
+import com.example.packitupandroid.utils.toBoolean
 
 @Composable
 fun SummaryScreen(
@@ -78,18 +79,21 @@ private fun Summary(
                 name = "Collection",
                 description = "Made of group of Boxes",
                 badgeCount1 = collectionCount,
+                canNavigateToScreen = true,
             )
             SummaryCard(
                 name = "Box",
                 description = "Made of group of Items",
                 icon1 = ColumnIcon.VectorIcon(ImageVector.vectorResource(R.drawable.ic_launcher_foreground)),
                 badgeCount1 = boxCount,
+                canNavigateToScreen = collectionCount.toBoolean(),
             )
             SummaryCard(
                 name = "Item",
                 description = "Individual Objects",
                 icon1 = ColumnIcon.VectorIcon(Icons.Default.Label),
                 badgeCount1 = itemCount,
+                canNavigateToScreen = boxCount.toBoolean(),
             )
         }
         Row(
