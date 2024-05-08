@@ -2,7 +2,11 @@ package com.example.packitupandroid.ui.navigation
 
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -19,6 +23,7 @@ import com.example.packitupandroid.ui.screens.item.ItemsScreen
 import com.example.packitupandroid.ui.screens.summary.SummaryScreen
 import com.example.packitupandroid.utils.PackItUpContentType
 import com.example.packitupandroid.utils.PackItUpNavigationType
+import kotlinx.coroutines.launch
 
 @Composable
 fun PackItUpNavHost(
@@ -32,6 +37,9 @@ fun PackItUpNavHost(
     viewModel: ScreenViewModel = viewModel(factory = PackItUpViewModelProvider.Factory)
 ) {
     val navGraphState = viewModel.navGraphState.collectAsStateWithLifecycle().value
+    val snackbarHostState = remember { SnackbarHostState() }
+    val scope = rememberCoroutineScope()
+
     Scaffold(
         modifier = modifier,
         topBar = {
@@ -52,8 +60,20 @@ fun PackItUpNavHost(
                 navGraphState = navGraphState,
                 selectedDestination = selectedDestination,
                 navigateToTopLevelDestination = navigateToTopLevelDestination,
+                launchSnackBar = {
+                    scope.launch {
+                        snackbarHostState.showSnackbar(
+                            // TODO - fix with stringResource and maybe LaunchEffect
+                            message = "Create $it first",
+                        )
+                    }
+                },
+                toggleScreenSnackbar = viewModel::toggleScreenSnackbar,
             )
-        }
+        },
+        snackbarHost = {
+            SnackbarHost(hostState = snackbarHostState)
+        },
     ) { innerPadding ->
         NavHost(
             modifier = modifier

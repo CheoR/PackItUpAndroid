@@ -26,6 +26,8 @@ fun PackItUpBottomNavigationBar(
     selectedDestination: String,
     navigateToTopLevelDestination: (PackItUpTopLevelDestination) -> Unit,
     modifier: Modifier = Modifier,
+    launchSnackBar: (instance: String) -> Unit,
+    toggleScreenSnackbar: (route: String) -> Unit,
 ) {
     NavigationBar(
         modifier = modifier,
@@ -36,18 +38,40 @@ fun PackItUpBottomNavigationBar(
                 is ImageVector -> packItUpDestination.selectedIcon
                 else -> ImageVector.vectorResource(id=packItUpDestination.selectedIcon as Int)
             }
+            val isEnabled = when(packItUpDestination.route) {
+                PackItUpRoute.BOXES -> navGraphState.showBoxesScreenSnackBar || navGraphState.canNavigateToBoxesScreen
+                PackItUpRoute.ITEMS -> navGraphState.showItemsScreenSnackBar || navGraphState.canNavigateToItemsScreen
+                else -> true
+            }
+
             NavigationBarItem(
                 modifier = Modifier,
 //                    .height(dimensionResource(R.dimen.navigation_bar_item_height))
                 selected = selectedDestination == packItUpDestination.route,
                 onClick = {
-                    navigateToTopLevelDestination(packItUpDestination)
+                    when(packItUpDestination.route) {
+                        PackItUpRoute.BOXES -> {
+                            if(navGraphState.canNavigateToBoxesScreen) {
+                                navigateToTopLevelDestination(packItUpDestination)
+                            } else {
+                                toggleScreenSnackbar(packItUpDestination.route)
+                                // TODO - fix with stringResource
+                                launchSnackBar("Collection")
+                            }
+                        }
+                        PackItUpRoute.ITEMS -> {
+                            if(navGraphState.canNavigateToItemsScreen) {
+                                navigateToTopLevelDestination(packItUpDestination)
+                            } else {
+                                toggleScreenSnackbar(packItUpDestination.route)
+                                // TODO - fix with stringResource
+                                launchSnackBar("Box")
+                            }
+                        }
+                        else -> navigateToTopLevelDestination(packItUpDestination)
+                    }
                 },
-                enabled = when (packItUpDestination.route) {
-                    PackItUpRoute.BOXES -> navGraphState.canNavigateToBoxesScreen
-                    PackItUpRoute.ITEMS -> navGraphState.canNavigateToItemsScreen
-                    else -> true
-                },
+                enabled = isEnabled,
                 icon = {
                     Icon(
                         imageVector = selectedIcon,

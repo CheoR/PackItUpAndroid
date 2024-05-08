@@ -3,6 +3,7 @@ package com.example.packitupandroid.ui.screens
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.packitupandroid.data.repository.SummaryRepository
+import com.example.packitupandroid.ui.navigation.PackItUpRoute
 import com.example.packitupandroid.utils.toBoolean
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -26,6 +27,19 @@ class ScreenViewModel(
             _navGraphState.value = navGraphState.value.copy(
                 canNavigateToBoxesScreen = summary.collection_count.toBoolean(),
                 canNavigateToItemsScreen = summary.box_count.toBoolean(),
+                showBoxesScreenSnackBar = !summary.collection_count.toBoolean(),
+                showItemsScreenSnackBar = !summary.box_count.toBoolean(),
+            )
+        }
+    }
+
+    fun toggleScreenSnackbar(route: String) {
+        when(route) {
+            PackItUpRoute.BOXES -> _navGraphState.value = navGraphState.value.copy(
+                showBoxesScreenSnackBar = !navGraphState.value.showBoxesScreenSnackBar,
+            )
+            PackItUpRoute.ITEMS -> _navGraphState.value = navGraphState.value.copy(
+                showItemsScreenSnackBar = !navGraphState.value.showItemsScreenSnackBar,
             )
         }
     }
@@ -34,4 +48,6 @@ class ScreenViewModel(
 data class NavGraphState(
     val canNavigateToBoxesScreen: Boolean = false,
     val canNavigateToItemsScreen: Boolean = false,
+    val showBoxesScreenSnackBar: Boolean = true,
+    val showItemsScreenSnackBar: Boolean = true,
 )
