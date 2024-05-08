@@ -77,23 +77,23 @@ private fun Summary(
             SummaryCard(
                 icon1 = ColumnIcon.VectorIcon(Icons.Default.Category),
                 name = "Collection",
-                description = "Made of group of Boxes",
+                description = "Made from group of Boxes",
                 badgeCount1 = collectionCount,
                 canNavigateToScreen = true,
             )
             SummaryCard(
                 name = "Box",
-                description = "Made of group of Items",
+                description = "Made from group of Items",
                 icon1 = ColumnIcon.VectorIcon(ImageVector.vectorResource(R.drawable.ic_launcher_foreground)),
                 badgeCount1 = boxCount,
-                canNavigateToScreen = collectionCount.toBoolean(),
+                canNavigateToScreen = boxCount.toBoolean(),
             )
             SummaryCard(
                 name = "Item",
-                description = "Individual Objects",
+                description = "Individual Item",
                 icon1 = ColumnIcon.VectorIcon(Icons.Default.Label),
                 badgeCount1 = itemCount,
-                canNavigateToScreen = boxCount.toBoolean(),
+                canNavigateToScreen = itemCount.toBoolean(),
             )
         }
         Row(
