@@ -42,7 +42,7 @@
     <string name="confirm_delete">are you sure you want to delete %s?</string>
     <string name="navigation_bottom">navigation bottom</string>
     <string name="back_button">back</string>
-
-
-
+    <string name="collction">Collection</string>
+    <string name="box">Box</string>
+    <string name="snackbar_message_create">Create %s first</string>
 </resources>
