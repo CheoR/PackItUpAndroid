@@ -34,6 +34,7 @@ fun SummaryCard(
     badgeCount1: Int = 0,
     editMode: EditMode = EditMode.NoEdit,
     canNavigateToScreen: Boolean = false,
+    navigateToTopLevelDestination: () -> Unit,
 ) {
     val actionIcon: ActionColumnState = ActionColumnState.RightArrow
 
@@ -90,7 +91,9 @@ fun SummaryCard(
             ) {
                 if(canNavigateToScreen) {
                     IconButton(
-                        onClick = {}, // for navigation
+                        onClick = {
+                            navigateToTopLevelDestination()
+                        },
                         modifier = Modifier
                             .fillMaxHeight(),
                         content = {

@@ -82,7 +82,9 @@ fun PackItUpNavHost(
             startDestination = PackItUpRoute.SUMMARY,
         ) {
             composable(route = PackItUpRoute.SUMMARY) {
-                SummaryScreen()
+                SummaryScreen(
+                    navigateToTopLevelDestination = navigateToTopLevelDestination,
+                )
             }
             composable(route = PackItUpRoute.COLLECTIONS) {
                 CollectionsScreen()

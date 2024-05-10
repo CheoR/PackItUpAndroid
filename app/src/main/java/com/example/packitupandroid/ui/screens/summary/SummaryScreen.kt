@@ -31,12 +31,26 @@ import com.example.packitupandroid.ui.PackItUpViewModelProvider
 import com.example.packitupandroid.ui.components.card.ColumnIcon
 import com.example.packitupandroid.ui.components.card.SummaryCard
 import com.example.packitupandroid.ui.components.spinner.Spinner
+import com.example.packitupandroid.ui.navigation.PackItUpRoute
+import com.example.packitupandroid.ui.navigation.PackItUpTopLevelDestination
+import com.example.packitupandroid.ui.navigation.TOP_LEVEL_DESTINATIONS
 import com.example.packitupandroid.utils.asCurrencyString
 import com.example.packitupandroid.utils.toBoolean
+
+private fun getTopLevelDestination(route: String): PackItUpTopLevelDestination {
+    // TODO - fix - this is ugly
+    return when (route) {
+        PackItUpRoute.COLLECTIONS -> TOP_LEVEL_DESTINATIONS[1]
+        PackItUpRoute.BOXES -> TOP_LEVEL_DESTINATIONS[2]
+        PackItUpRoute.ITEMS -> TOP_LEVEL_DESTINATIONS[3]
+        else -> throw IllegalArgumentException("Invalid PackItUpRoute: $route")
+    }
+}
 
 @Composable
 fun SummaryScreen(
     modifier: Modifier = Modifier,
+    navigateToTopLevelDestination: (PackItUpTopLevelDestination) -> Unit,
     viewModel: SummaryScreenViewModel = viewModel(factory = PackItUpViewModelProvider.Factory),
 ) {
     val uiState by viewModel.uiState.collectAsState()
@@ -51,6 +65,7 @@ fun SummaryScreen(
                     collectionCount = it.collectionCount,
                     isFragile = it.isFragile,
                     value = it.value,
+                    navigateToTopLevelDestination = navigateToTopLevelDestination,
                 )
             }
         }
@@ -59,6 +74,7 @@ fun SummaryScreen(
 
 @Composable
 private fun Summary(
+    navigateToTopLevelDestination: (PackItUpTopLevelDestination) -> Unit,
     modifier: Modifier = Modifier,
     itemCount: Int = 0,
     boxCount: Int = 0,
@@ -80,6 +96,7 @@ private fun Summary(
                 description = "Made from group of Boxes",
                 badgeCount1 = collectionCount,
                 canNavigateToScreen = true,
+                navigateToTopLevelDestination = { navigateToTopLevelDestination(getTopLevelDestination(PackItUpRoute.COLLECTIONS)) },
             )
             SummaryCard(
                 name = "Box",
@@ -87,6 +104,7 @@ private fun Summary(
                 icon1 = ColumnIcon.VectorIcon(ImageVector.vectorResource(R.drawable.ic_launcher_foreground)),
                 badgeCount1 = boxCount,
                 canNavigateToScreen = boxCount.toBoolean(),
+                navigateToTopLevelDestination = { navigateToTopLevelDestination(getTopLevelDestination(PackItUpRoute.BOXES)) }
             )
             SummaryCard(
                 name = "Item",
@@ -94,6 +112,7 @@ private fun Summary(
                 icon1 = ColumnIcon.VectorIcon(Icons.Default.Label),
                 badgeCount1 = itemCount,
                 canNavigateToScreen = itemCount.toBoolean(),
+                navigateToTopLevelDestination = { navigateToTopLevelDestination(getTopLevelDestination(PackItUpRoute.ITEMS)) }
             )
         }
         Row(
@@ -145,5 +164,6 @@ fun PreviewSummaryScreen(
         collectionCount =  collections.size,
         isFragile = items.any { it.isFragile },
         value = items.sumOf { it.value },
+        navigateToTopLevelDestination = {},
     )
 }
