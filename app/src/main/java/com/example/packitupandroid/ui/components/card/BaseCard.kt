@@ -47,10 +47,10 @@ sealed class ColumnIcon {
     data class UriStringIcon(val uri: String?) : ColumnIcon()
 }
 
-sealed class ActionColumnState(val icon: ImageVector) {
-    object RightArrow : ActionColumnState(Icons.Default.ArrowForward)
-    object ThreeDots : ActionColumnState(Icons.Default.MoreVert)
-    object None : ActionColumnState(Icons.Default.CheckBoxOutlineBlank)
+sealed class ActionColumnIcon(val icon: ImageVector) {
+    object RightArrow : ActionColumnIcon(Icons.Default.ArrowForward)
+    object ThreeDots : ActionColumnIcon(Icons.Default.MoreVert)
+    object None : ActionColumnIcon(Icons.Default.CheckBoxOutlineBlank)
 }
 
 typealias IconPair = Pair<ColumnIcon, ColumnIcon?>

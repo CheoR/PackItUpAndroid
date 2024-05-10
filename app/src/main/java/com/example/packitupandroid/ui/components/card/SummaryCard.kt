@@ -36,7 +36,7 @@ fun SummaryCard(
     canNavigateToScreen: Boolean = false,
     navigateToTopLevelDestination: () -> Unit,
 ) {
-    val actionIcon: ActionColumnState = ActionColumnState.RightArrow
+    val actionIcon: ActionColumnIcon = ActionColumnIcon.RightArrow
 
     Card(
         modifier = modifier

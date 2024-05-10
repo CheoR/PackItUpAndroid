@@ -46,9 +46,9 @@ fun<T: BaseCardData> ActionColumn(
     editMode: EditMode = EditMode.NoEdit,
     cardType: CardType = CardType.Default,
 ) {
-    val actionIcon: ActionColumnState = when(cardType) {
-        is CardType.Summary -> ActionColumnState.RightArrow
-        else -> ActionColumnState.ThreeDots
+    val actionIcon: ActionColumnIcon = when(cardType) {
+        is CardType.Summary -> ActionColumnIcon.RightArrow
+        else -> ActionColumnIcon.ThreeDots
     }
 
     if(isShowEditCard.value) {
