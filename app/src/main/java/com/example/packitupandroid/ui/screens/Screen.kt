@@ -17,6 +17,7 @@ import com.example.packitupandroid.data.model.BaseCardData
 import com.example.packitupandroid.ui.components.card.BaseCard
 import com.example.packitupandroid.ui.components.counter.Counter
 import com.example.packitupandroid.ui.components.spinner.Spinner
+import com.example.packitupandroid.utils.CardType
 
 @Composable
 fun <T: BaseCardData> Screen(
@@ -25,6 +26,7 @@ fun <T: BaseCardData> Screen(
     onUpdate: (T) -> Unit,
     onDestroy: (T) -> Unit,
     modifier: Modifier = Modifier,
+    cardType: CardType = CardType.Default,
 ) {
     val result = uiState.result
 
@@ -55,6 +57,8 @@ fun <T: BaseCardData> Screen(
                             element = element,
                             onUpdate = onUpdate,
                             onDestroy = onDestroy,
+                            cardType = cardType,
+                            // TODO: move to utils
 //                            getParentContainer = ,
 //                            getDropdownOptions = viewModel::getDropdownOptions,
                         )

@@ -9,6 +9,7 @@ import com.example.packitupandroid.data.model.Item
 import com.example.packitupandroid.data.source.local.LocalDataSource
 import com.example.packitupandroid.ui.PackItUpViewModelProvider
 import com.example.packitupandroid.ui.screens.Screen
+import com.example.packitupandroid.utils.CardType
 
 @Composable
 fun ItemsScreen(
@@ -20,6 +21,7 @@ fun ItemsScreen(
         onCreate = viewModel::create,
         onUpdate = viewModel::update,
         onDestroy = viewModel::destroy,
+        cardType = CardType.Item,
     )
 }
 
@@ -38,5 +40,6 @@ fun PreviewItemsScreen(
         onCreate = {},
         onUpdate = {},
         onDestroy = {},
+        cardType = CardType.Item,
     )
 }
