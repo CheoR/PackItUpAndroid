@@ -21,7 +21,7 @@ import com.example.packitupandroid.utils.DATABASE_NAME
 
 // version - increase version number whenever database table schema changes.
 // exportSchema - set as false as to not keep schema version history backup
-@Database(entities = [ItemEntity::class, BoxEntity::class, CollectionEntity::class], version = 4, exportSchema = false)
+@Database(entities = [ItemEntity::class, BoxEntity::class, CollectionEntity::class], version = 5, exportSchema = false)
 @TypeConverters(Converters::class)
 abstract class AppDatabase : RoomDatabase() {
 

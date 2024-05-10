@@ -2,14 +2,24 @@ package com.example.packitupandroid.data.database.entities
 
 import androidx.room.ColumnInfo
 import androidx.room.Entity
-import androidx.room.PrimaryKey
+import androidx.room.ForeignKey
 import com.example.packitupandroid.data.model.Item
 import com.example.packitupandroid.utils.Converters
 import java.util.Date
 
-@Entity(tableName = "items")
+@Entity(
+    tableName = "items",
+    primaryKeys = ["id"],
+    foreignKeys = [
+        ForeignKey(
+            entity = BoxEntity::class,
+            parentColumns = ["id"],
+            childColumns = ["box_id"],
+            onDelete = ForeignKey.CASCADE,
+        ),
+    ],
+)
 data class ItemEntity(
-    @PrimaryKey
     val id: String,
     val name: String,
     @ColumnInfo(defaultValue = "null")
