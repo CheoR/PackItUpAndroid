@@ -2,19 +2,25 @@ package com.example.packitupandroid.ui.screens
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.packitupandroid.data.model.QueryDropdownOptions
+import com.example.packitupandroid.data.repository.BoxesRepository
 import com.example.packitupandroid.data.repository.SummaryRepository
 import com.example.packitupandroid.ui.navigation.PackItUpRoute
 import com.example.packitupandroid.utils.toBoolean
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 
 class ScreenViewModel(
+    private val boxesRepository: BoxesRepository,
+    private val collectionsRepository: CollectionsRepository,
     private val summaryRepository: SummaryRepository,
 ) : ViewModel() {
     private val _navGraphState = MutableStateFlow(NavGraphState())
     val navGraphState: StateFlow<NavGraphState> = _navGraphState.asStateFlow()
+    private var optionsList: List<QueryDropdownOptions> = emptyList()
 
     init {
         viewModelScope.launch {
@@ -42,6 +48,16 @@ class ScreenViewModel(
                 showItemsScreenSnackBar = !navGraphState.value.showItemsScreenSnackBar,
             )
         }
+    }
+    fun getBoxDropdownOptions(): List<QueryDropdownOptions> {
+        viewModelScope.launch {
+            optionsList = getDropdownOptions()
+        }
+        return optionsList
+    }
+
+    private suspend fun getDropdownOptions(): List<QueryDropdownOptions> {
+        return boxesRepository.getDropdownSelections().first()
     }
 }
 

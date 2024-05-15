@@ -28,6 +28,7 @@ import com.example.packitupandroid.data.model.BaseCardData
 import com.example.packitupandroid.data.model.Box
 import com.example.packitupandroid.data.model.Collection
 import com.example.packitupandroid.data.model.Item
+import com.example.packitupandroid.data.model.QueryDropdownOptions
 import com.example.packitupandroid.data.model.Summary
 import com.example.packitupandroid.utils.CardType
 import com.example.packitupandroid.utils.EditMode
@@ -63,9 +64,8 @@ fun<T: BaseCardData> BaseCard(
     element: T,
     onUpdate: (T) -> Unit,
     onDestroy: (T) -> Unit,
-//    getParentContainer: (T) -> BaseCardData?,
-//    getDropdownOptions: (T) -> List<BaseCardData>,
     modifier: Modifier = Modifier,
+    getDropdownOptions: (() -> List<QueryDropdownOptions>)? = null,
     editMode: EditMode = EditMode.NoEdit,
     cardType: CardType = CardType.Default,
     // TODO: add dropdown field
@@ -106,8 +106,6 @@ fun<T: BaseCardData> BaseCard(
                     .weight(2f)
                     .padding(horizontal = 4.dp),
                 element = element,
-//                getParentContainer = getParentContainer,
-//                getDropdownOptions = getDropdownOptions,
                 editMode = editMode,
                 cardType = cardType,
             )
@@ -138,6 +136,7 @@ fun<T: BaseCardData> BaseCard(
                 isShowCameraCard = showCameraCard,
                 isShowDeleteCard = showDeleteCard,
                 cardType = cardType,
+                getDropdownOptions = getDropdownOptions,
             )
         }
     }
@@ -196,7 +195,6 @@ fun <T: BaseCardData> getIconsAndBadges(data: T): Pair<IconPair,BadgeCountPair> 
 //        element = item,
 //        onUpdate = {},
 //        onDestroy = {},
-//        getParentContainer = {},
 //    )
 //}
 //
@@ -213,7 +211,6 @@ fun <T: BaseCardData> getIconsAndBadges(data: T): Pair<IconPair,BadgeCountPair> 
 //        element = item,
 //        onUpdate = {},
 //        onDestroy = {},
-//        getParentContainer = {},
 //    )
 //}
 //
@@ -230,7 +227,6 @@ fun <T: BaseCardData> getIconsAndBadges(data: T): Pair<IconPair,BadgeCountPair> 
 //        element = box,
 //        onUpdate = {},
 //        onDestroy = {},
-//        getParentContainer = {},
 //    )
 //}
 //
@@ -248,7 +244,6 @@ fun <T: BaseCardData> getIconsAndBadges(data: T): Pair<IconPair,BadgeCountPair> 
 //        element = collection,
 //        onUpdate = {},
 //        onDestroy = {},
-//        getParentContainer = {},
 //    )
 //}
 //
@@ -267,7 +262,6 @@ fun <T: BaseCardData> getIconsAndBadges(data: T): Pair<IconPair,BadgeCountPair> 
 //        cardType = CardType.Summary,
 //        onUpdate = {},
 //        onDestroy = {},
-//        getParentContainer = {},
 //    )
 //}
 //
@@ -285,7 +279,6 @@ fun <T: BaseCardData> getIconsAndBadges(data: T): Pair<IconPair,BadgeCountPair> 
 //        cardType = CardType.Summary,
 //        onUpdate = {},
 //        onDestroy = {},
-//        getParentContainer = {},
 //    )
 //}
 //
@@ -303,7 +296,6 @@ fun <T: BaseCardData> getIconsAndBadges(data: T): Pair<IconPair,BadgeCountPair> 
 //        cardType = CardType.Summary,
 //        onUpdate = {},
 //        onDestroy = {},
-//        getParentContainer = {},
 //    )
 //}
 //
@@ -321,7 +313,6 @@ fun <T: BaseCardData> getIconsAndBadges(data: T): Pair<IconPair,BadgeCountPair> 
 //        cardType = CardType.Summary,
 //        onUpdate = {},
 //        onDestroy = {},
-//        getParentContainer = {},
 //    )
 //}
 //
@@ -341,7 +332,6 @@ fun <T: BaseCardData> getIconsAndBadges(data: T): Pair<IconPair,BadgeCountPair> 
 //        editMode = EditMode.Edit,
 //        onUpdate = {},
 //        onDestroy = {},
-//        getParentContainer = {},
 //    )
 //}
 //
@@ -359,7 +349,6 @@ fun <T: BaseCardData> getIconsAndBadges(data: T): Pair<IconPair,BadgeCountPair> 
 //        editMode = EditMode.Edit,
 //        onUpdate = {},
 //        onDestroy = {},
-//        getParentContainer = {},
 //    )
 //}
 //
@@ -377,7 +366,6 @@ fun <T: BaseCardData> getIconsAndBadges(data: T): Pair<IconPair,BadgeCountPair> 
 //        editMode = EditMode.Edit,
 //        onUpdate = {},
 //        onDestroy = {},
-//        getParentContainer = {},
 //    )
 //}
 //
@@ -395,6 +383,5 @@ fun <T: BaseCardData> getIconsAndBadges(data: T): Pair<IconPair,BadgeCountPair> 
 //        editMode = EditMode.Edit,
 //        onUpdate = {},
 //        onDestroy = {},
-//        getParentContainer = {},
 //    )
 //}

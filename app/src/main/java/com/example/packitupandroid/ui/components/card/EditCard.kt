@@ -16,9 +16,15 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowDropDown
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Checkbox
+import androidx.compose.material3.DropdownMenu
+import androidx.compose.material3.DropdownMenuItem
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -30,14 +36,17 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.dimensionResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.unit.DpOffset
 import androidx.compose.ui.unit.dp
 import com.example.packitupandroid.R
 import com.example.packitupandroid.data.model.BaseCardData
 import com.example.packitupandroid.data.model.Box
 import com.example.packitupandroid.data.model.Collection
 import com.example.packitupandroid.data.model.Item
+import com.example.packitupandroid.data.model.QueryDropdownOptions
 import com.example.packitupandroid.data.model.Summary
 import com.example.packitupandroid.ui.components.common.AddConfirmCancelButton
 import com.example.packitupandroid.ui.components.common.ButtonType
@@ -53,6 +62,7 @@ fun<T: BaseCardData> EditCard(
     onEdit: (T) -> Unit,
     onCancel: () -> Unit,
     modifier: Modifier = Modifier,
+    getDropdownOptions: (() -> List<QueryDropdownOptions>)? = null,
     editMode: EditMode = EditMode.Edit,
     cardType: CardType = CardType.Default,
     // TODO: add dropdown
@@ -64,6 +74,18 @@ fun<T: BaseCardData> EditCard(
     val icon2 = icons.second
     val badgeCount1 = badgeCounts.first
     val badgeCount2 = badgeCounts.second
+
+    val options: List<QueryDropdownOptions> = getDropdownOptions?.invoke() ?: emptyList()
+    var expanded by remember { mutableStateOf(false) }
+    var selectedOption by remember {
+        mutableStateOf(
+            when (element) {
+                is Box -> options.firstOrNull { it.id == element.collectionId }?.id
+                is Item -> options.firstOrNull { it.id == element.boxId }?.id
+                else -> null
+            }
+        )
+    }
 
     Column(
         modifier = modifier
@@ -115,19 +137,41 @@ fun<T: BaseCardData> EditCard(
                         modifier = Modifier
                             .fillMaxWidth(),
                     )
-//                    dropdownOptions?.let {
-//                        BasicTextField(
-//                            value = dropdownOptions.first(), // Todo: display selected value if available else first
-//                            onValueChange = {
-//                                element.description = it
-//                            },
-//                            textStyle = MaterialTheme.typography.bodySmall,
-//                            enabled = isEditable(EditFields.Dropdown),
-//                            modifier = Modifier
-//                                .fillMaxWidth()
-//                                .padding(4.dp)
-//                        )
-//                    }
+                    Box {
+                        Row(
+                            modifier = Modifier
+                                .fillMaxWidth(),
+                            verticalAlignment = Alignment.CenterVertically,
+                            horizontalArrangement = Arrangement.SpaceBetween,
+                        ) {
+                            Text(text=options.firstOrNull { it.id == selectedOption }?.name ?: "",)
+                            IconButton(onClick = { expanded = !expanded }) {
+                                Icon(Icons.Default.ArrowDropDown, contentDescription = stringResource(R.string.more))
+                            }
+                        }
+
+                        DropdownMenu(
+                            expanded = expanded,
+                            onDismissRequest = { expanded = false },
+                            offset = DpOffset(0.dp, (-150).dp),
+                            modifier = Modifier
+                                .background(MaterialTheme.colorScheme.inversePrimary),
+                        ) {
+                            options.forEach { option ->
+                                DropdownMenuItem(
+                                    text = { Text(text = option.name )},
+                                    onClick = {
+                                        selectedOption = option.id
+                                        localData = when (localData) {
+                                            is Item -> (localData as Item).copy(boxId = option.id) as T
+                                            is Box -> (localData as Box).copy(collectionId = option.id) as T
+                                            else -> throw IllegalStateException("Unsupported type")
+                                        }
+                                        expanded = false
+                                    })
+                            }
+                        }
+                    }
                     BasicTextField(
                         // TODO: fix
                         value = localData.description ?: "missing",

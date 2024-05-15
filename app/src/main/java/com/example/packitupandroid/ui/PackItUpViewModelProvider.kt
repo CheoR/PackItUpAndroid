@@ -42,6 +42,8 @@ object PackItUpViewModelProvider {
 
         initializer {
             ScreenViewModel(
+                boxesRepository = packItUpApplication().container.boxesRepository,
+                collectionsRepository = packItUpApplication().container.collectionsRepository,
                 summaryRepository = packItUpApplication().container.summaryRepository,
             )
         }

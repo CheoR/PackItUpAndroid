@@ -27,6 +27,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.DpOffset
 import androidx.compose.ui.unit.dp
 import com.example.packitupandroid.data.model.BaseCardData
+import com.example.packitupandroid.data.model.QueryDropdownOptions
 import com.example.packitupandroid.data.model.Summary
 import com.example.packitupandroid.utils.CardType
 import com.example.packitupandroid.utils.EditMode
@@ -43,6 +44,7 @@ fun<T: BaseCardData> ActionColumn(
     onDelete: () -> Unit,
     onEdit: (T) -> Unit,
     modifier: Modifier = Modifier,
+    getDropdownOptions: (() -> List<QueryDropdownOptions>)? = null,
     editMode: EditMode = EditMode.NoEdit,
     cardType: CardType = CardType.Default,
 ) {
@@ -62,6 +64,7 @@ fun<T: BaseCardData> ActionColumn(
                     element = element,
                     onEdit = onEdit,
                     onCancel = onCancel,
+                    getDropdownOptions = getDropdownOptions,
                 )
             }
         )
@@ -226,6 +229,7 @@ fun PreviewActionColumnSummaryCardNoEdit() {
         onEdit = {},
         onCancel = {},
         onDelete = {},
+        getDropdownOptions = { emptyList() },
         isShowEditCard = isShowEditCard,
         isShowCameraCard = isShowCameraCard,
         isShowDeleteCard = isShowDeleteCard,

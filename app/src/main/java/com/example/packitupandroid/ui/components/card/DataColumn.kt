@@ -1,5 +1,7 @@
 package com.example.packitupandroid.ui.components.card
 
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -16,6 +18,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.example.packitupandroid.data.model.BaseCardData
+import com.example.packitupandroid.data.model.Box
+import com.example.packitupandroid.data.model.Item
 import com.example.packitupandroid.utils.CardType
 import com.example.packitupandroid.utils.EditMode
 import com.example.packitupandroid.utils.asCurrencyString
@@ -24,16 +28,11 @@ import com.example.packitupandroid.utils.asCurrencyString
 fun<T: BaseCardData> DataColumn(
     element: T,
     modifier: Modifier = Modifier,
-//    getParentContainer: (T) -> BaseCardData?,
-//    getDropdownOptions: (T) -> List<BaseCardData>,
     editMode: EditMode = EditMode.NoEdit,
     cardType: CardType = CardType.Default,
 ) {
 
     val expanded = remember { mutableStateOf(false) }
-//    val parent = getParentContainer(element) // dropdownOptions
-//    val dropdownOptions = getDropdownOptions(element)
-//    var currentSelection by remember { mutableStateOf(parent)}
     Column(
         modifier = modifier,
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -46,36 +45,24 @@ fun<T: BaseCardData> DataColumn(
             modifier = Modifier
                 .fillMaxWidth(),
         )
-//        DropdownMenu(
-//            expanded = expanded.value,
-//            onDismissRequest = { expanded.value = false },
-//            offset = DpOffset(0.dp, (-150).dp),
-//            modifier = Modifier
-//                .background(MaterialTheme.colorScheme.inversePrimary),
-//        ) {
-//            dropdownOptions.forEach { option ->
-//                DropdownMenuItem(text = { Text(text = option.name )}, onClick = { currentSelection = option })
-//            }
-//            LazyColumn {
-//                items(
-//                    items = dropdownOptions,
-//                    key = { it.id },
-//                ) {
-//                    DropdownMenuItem(text = { Text(text = it.name) }, onClick = { currentSelection = it })
-//                }
-//            }
-//        }
-//        dropdownOptions.let {
-//            BasicTextField(
-//                value = currentSelection.name ?: "missing", // Todo: display selected value if available else first
-//                onValueChange = {},
-//                textStyle = MaterialTheme.typography.bodySmall,
-//                enabled = editMode == EditMode.Edit,
-//                modifier = Modifier
-//                    .fillMaxWidth()
-//                    .padding(4.dp)
-//            )
-//        }
+        Box {
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth(),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.Start,
+            ) {
+                // TODO - fix - create func to get object name from id
+                Text(
+                    maxLines = 1,
+                    text = when(element) {
+                        is Item -> element.boxId.toString()
+                        is Box -> element.collectionId.toString()
+                        else -> ""
+                    }
+                )
+            }
+        }
         BasicTextField(
             // TODO: fix
             value = element.description ?: "missing",

@@ -14,6 +14,7 @@ import com.example.packitupandroid.PackItUpUiState
 import com.example.packitupandroid.R
 import com.example.packitupandroid.Result
 import com.example.packitupandroid.data.model.BaseCardData
+import com.example.packitupandroid.data.model.QueryDropdownOptions
 import com.example.packitupandroid.ui.components.card.BaseCard
 import com.example.packitupandroid.ui.components.counter.Counter
 import com.example.packitupandroid.ui.components.spinner.Spinner
@@ -26,6 +27,7 @@ fun <T: BaseCardData> Screen(
     onUpdate: (T) -> Unit,
     onDestroy: (T) -> Unit,
     modifier: Modifier = Modifier,
+    getDropdownOptions: (() -> List<QueryDropdownOptions>)? = null,
     cardType: CardType = CardType.Default,
 ) {
     val result = uiState.result
@@ -57,10 +59,8 @@ fun <T: BaseCardData> Screen(
                             element = element,
                             onUpdate = onUpdate,
                             onDestroy = onDestroy,
+                            getDropdownOptions = getDropdownOptions,
                             cardType = cardType,
-                            // TODO: move to utils
-//                            getParentContainer = ,
-//                            getDropdownOptions = viewModel::getDropdownOptions,
                         )
                     }
                 }
