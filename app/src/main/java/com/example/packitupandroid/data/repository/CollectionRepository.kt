@@ -2,6 +2,7 @@ package com.example.packitupandroid.data.repository
 
 import com.example.packitupandroid.data.database.entities.CollectionEntity
 import com.example.packitupandroid.data.model.QueryCollection
+import com.example.packitupandroid.data.model.QueryDropdownOptions
 import kotlinx.coroutines.flow.Flow
 
 interface CollectionsRepository {
@@ -19,6 +20,11 @@ interface CollectionsRepository {
      * Retrieve a Collection from the given data source that matches with the [id].
      */
     fun getCollectionStream(id: String): Flow<CollectionEntity?>
+
+    /**
+     * Retrieve just @name and @id from all boxes from given data source.
+     */
+    suspend fun getDropdownSelections(): Flow<List<QueryDropdownOptions>>
 
     /**
      * Insert Collection in the data source

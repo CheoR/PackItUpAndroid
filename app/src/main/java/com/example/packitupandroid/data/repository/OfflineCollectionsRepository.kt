@@ -3,6 +3,7 @@ package com.example.packitupandroid.data.repository
 import com.example.packitupandroid.data.database.dao.CollectionDao
 import com.example.packitupandroid.data.database.entities.CollectionEntity
 import com.example.packitupandroid.data.model.QueryCollection
+import com.example.packitupandroid.data.model.QueryDropdownOptions
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.firstOrNull
 
@@ -10,6 +11,7 @@ class OfflineCollectionsRepository(private val collectionDao: CollectionDao) : C
     override suspend fun getCollection(id: String): CollectionEntity? = collectionDao.getCollection(id).firstOrNull()
     override fun getAllCollectionsStream(): Flow<List<QueryCollection>> = collectionDao.getAllCollections()
     override fun getCollectionStream(id: String): Flow<CollectionEntity?> = collectionDao.getCollection(id)
+    override suspend fun getDropdownSelections(): Flow<List<QueryDropdownOptions>> = collectionDao.getDropdownSelections()
     override suspend fun insertCollection(collection: CollectionEntity) = collectionDao.insert(collection)
     override suspend fun insertAll(collections: List<CollectionEntity>) = collectionDao.insertAll(collections)
     override suspend fun updateCollection(collection: CollectionEntity) = collectionDao.update(collection)

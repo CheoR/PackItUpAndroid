@@ -8,6 +8,7 @@ import androidx.room.Query
 import androidx.room.Update
 import com.example.packitupandroid.data.database.entities.CollectionEntity
 import com.example.packitupandroid.data.model.QueryCollection
+import com.example.packitupandroid.data.model.QueryDropdownOptions
 import kotlinx.coroutines.flow.Flow
 
 @Dao
@@ -53,6 +54,9 @@ interface CollectionDao {
         c.last_modified;
     """)
     fun getAllCollections(): Flow<List<QueryCollection>>
+
+    @Query("SELECT b.id, b.name FROM boxes b")
+    fun getDropdownSelections(): Flow<List<QueryDropdownOptions>>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insert(collection: CollectionEntity)
