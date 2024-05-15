@@ -8,6 +8,7 @@ import androidx.room.Query
 import androidx.room.Update
 import com.example.packitupandroid.data.database.entities.BoxEntity
 import com.example.packitupandroid.data.model.QueryBox
+import com.example.packitupandroid.data.model.QueryDropdownOptions
 import kotlinx.coroutines.flow.Flow
 
 @Dao
@@ -30,6 +31,9 @@ interface BoxDao {
     ORDER BY last_modified ASC;
     """)
     fun getAllBoxes(): Flow<List<QueryBox>>
+
+    @Query("SELECT b.id, b.name FROM boxes b")
+    fun getDropdownSelections(): Flow<List<QueryDropdownOptions>>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insert(box: BoxEntity)

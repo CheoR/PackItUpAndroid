@@ -2,6 +2,7 @@ package com.example.packitupandroid.data.repository
 
 import com.example.packitupandroid.data.database.entities.BoxEntity
 import com.example.packitupandroid.data.model.QueryBox
+import com.example.packitupandroid.data.model.QueryDropdownOptions
 import kotlinx.coroutines.flow.Flow
 
 interface BoxesRepository {
@@ -14,6 +15,11 @@ interface BoxesRepository {
      * Retrieve all the boxes from the given data source.
      */
     fun getAllBoxesStream(): Flow<List<QueryBox>>
+
+    /**
+     * Retrieve just @name and @id from all boxes from given data source.
+     */
+    suspend fun getDropdownSelections(): Flow<List<QueryDropdownOptions>>
 
     /**
      * Retrieve a box from the given data source that matches with the [id].
