@@ -115,7 +115,7 @@ fun DeleteCard(
 //                    }
                     BasicTextField(
                         // TODO: fix
-                        value = element.description ?: "missing",
+                        value = element.description ?: "",
                         onValueChange = {},
                         textStyle = MaterialTheme.typography.bodySmall,
                         enabled = false,

@@ -174,7 +174,7 @@ fun<T: BaseCardData> EditCard(
                     }
                     BasicTextField(
                         // TODO: fix
-                        value = localData.description ?: "missing",
+                        value = localData.description ?: "",
                         onValueChange = {
                             localData = when (localData) {
                                 is Item -> (localData as Item).copy(description = it) as T

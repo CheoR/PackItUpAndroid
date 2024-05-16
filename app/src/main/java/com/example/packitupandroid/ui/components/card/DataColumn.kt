@@ -65,7 +65,7 @@ fun<T: BaseCardData> DataColumn(
         }
         BasicTextField(
             // TODO: fix
-            value = element.description ?: "missing",
+            value = element.description ?: "",
             onValueChange = {},
             textStyle = MaterialTheme.typography.bodySmall,
             enabled = editMode == EditMode.Edit,
