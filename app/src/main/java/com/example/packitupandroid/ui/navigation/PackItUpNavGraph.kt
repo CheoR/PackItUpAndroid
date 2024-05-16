@@ -90,7 +90,9 @@ fun PackItUpNavHost(
                 CollectionsScreen()
             }
             composable(route = PackItUpRoute.BOXES) {
-                BoxesScreen()
+                BoxesScreen(
+                    getDropdownOptions = viewModel::getCollectionDropdownOptions,
+                )
             }
             composable(route = PackItUpRoute.ITEMS) {
                 ItemsScreen(

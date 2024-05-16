@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.packitupandroid.data.model.QueryDropdownOptions
 import com.example.packitupandroid.data.repository.BoxesRepository
+import com.example.packitupandroid.data.repository.CollectionsRepository
 import com.example.packitupandroid.data.repository.SummaryRepository
 import com.example.packitupandroid.ui.navigation.PackItUpRoute
 import com.example.packitupandroid.utils.toBoolean
@@ -20,7 +21,8 @@ class ScreenViewModel(
 ) : ViewModel() {
     private val _navGraphState = MutableStateFlow(NavGraphState())
     val navGraphState: StateFlow<NavGraphState> = _navGraphState.asStateFlow()
-    private var optionsList: List<QueryDropdownOptions> = emptyList()
+    private var boxesOptions: List<QueryDropdownOptions> = emptyList()
+    private var collectionsOptions: List<QueryDropdownOptions> = emptyList()
 
     init {
         viewModelScope.launch {
@@ -49,15 +51,27 @@ class ScreenViewModel(
             )
         }
     }
-    fun getBoxDropdownOptions(): List<QueryDropdownOptions> {
+
+    fun getCollectionDropdownOptions(): List<QueryDropdownOptions> {
         viewModelScope.launch {
-            optionsList = getDropdownOptions()
+            collectionsOptions = getCollectionsDropdownOptions()
         }
-        return optionsList
+        return collectionsOptions
     }
 
-    private suspend fun getDropdownOptions(): List<QueryDropdownOptions> {
+    fun getBoxDropdownOptions(): List<QueryDropdownOptions> {
+        viewModelScope.launch {
+            boxesOptions = getBoxesDropdownOptions()
+        }
+        return boxesOptions
+    }
+
+    private suspend fun getBoxesDropdownOptions(): List<QueryDropdownOptions> {
         return boxesRepository.getDropdownSelections().first()
+    }
+
+    private suspend fun getCollectionsDropdownOptions(): List<QueryDropdownOptions> {
+        return collectionsRepository.getDropdownSelections().first()
     }
 }
 

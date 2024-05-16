@@ -28,6 +28,11 @@ fun QueryBox.toBox(): Box = Box(
     collectionId = this.collection_id,
 )
 
+data class QueryDropdownOptions(
+    val id: String,
+    val name: String,
+)
+
 data class Box(
     override val id: String = UUID.randomUUID().toString(),
     override val name: String,

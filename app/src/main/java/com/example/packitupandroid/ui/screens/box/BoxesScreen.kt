@@ -6,6 +6,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.packitupandroid.Result
 import com.example.packitupandroid.data.model.Item
+import com.example.packitupandroid.data.model.QueryDropdownOptions
 import com.example.packitupandroid.data.source.local.LocalDataSource
 import com.example.packitupandroid.ui.PackItUpViewModelProvider
 import com.example.packitupandroid.ui.screens.Screen
@@ -13,6 +14,7 @@ import com.example.packitupandroid.utils.CardType
 
 @Composable
 fun BoxesScreen(
+    getDropdownOptions: () -> List<QueryDropdownOptions>,
     viewModel: BoxesScreenViewModel = viewModel(factory = PackItUpViewModelProvider.Factory),
 ) {
     val uiState = viewModel.uiState.collectAsState().value
@@ -21,6 +23,7 @@ fun BoxesScreen(
         onCreate = viewModel::create,
         onUpdate = viewModel::update,
         onDestroy = viewModel::destroy,
+        getDropdownOptions = getDropdownOptions,
         cardType = CardType.Box,
     )
 }
@@ -40,5 +43,6 @@ fun PreviewItemsScreen(
         onCreate = {},
         onUpdate = {},
         onDestroy = {},
+        getDropdownOptions = { emptyList() },
     )
 }
