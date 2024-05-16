@@ -14,7 +14,7 @@ data class QueryBox(
     val is_fragile: Boolean = false,
     val last_modified: Long,
     val item_count: Int = 0,
-    val collectionId: String? = null,
+    val collection_id: String? = null,
 )
 
 fun QueryBox.toBox(): Box = Box(
@@ -25,7 +25,7 @@ fun QueryBox.toBox(): Box = Box(
     value = this.value,
     isFragile = this.is_fragile,
     lastModified = Converters().fromTimestamp(this.last_modified) ?: Date(),
-    collectionId = this.collectionId,
+    collectionId = this.collection_id,
 )
 
 data class Box(

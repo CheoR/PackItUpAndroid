@@ -22,6 +22,7 @@ interface BoxDao {
         b.name,
         b.description,
         b.last_modified as last_modified,
+        b.collection_id,
         ROUND(SUM(i.value), 2) AS value,
         MAX(CASE WHEN i.is_fragile THEN 1 ELSE 0 END) AS is_fragile,
         COUNT(i.id) AS item_count
