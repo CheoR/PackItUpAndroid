@@ -65,6 +65,7 @@ fun<T: BaseCardData> ActionColumn(
                     onEdit = onEdit,
                     onCancel = onCancel,
                     getDropdownOptions = getDropdownOptions,
+                    cardType = cardType,
                 )
             }
         )
@@ -80,9 +81,10 @@ fun<T: BaseCardData> ActionColumn(
                 DeleteCard(
                     element = element,
                     onDelete = onDelete,
-                    onCancel = onCancel
+                    onCancel = onCancel,
+                    cardType = cardType,
                 )
-                   },
+            },
         )
     }
 
