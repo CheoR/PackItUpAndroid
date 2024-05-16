@@ -55,7 +55,7 @@ interface CollectionDao {
     """)
     fun getAllCollections(): Flow<List<QueryCollection>>
 
-    @Query("SELECT b.id, b.name FROM boxes b")
+    @Query("SELECT c.id, c.name FROM collections c")
     fun getDropdownSelections(): Flow<List<QueryDropdownOptions>>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
