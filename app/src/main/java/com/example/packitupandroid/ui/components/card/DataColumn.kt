@@ -12,14 +12,13 @@ import androidx.compose.material3.Checkbox
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.example.packitupandroid.data.model.BaseCardData
 import com.example.packitupandroid.data.model.Box
 import com.example.packitupandroid.data.model.Item
+import com.example.packitupandroid.data.model.QueryDropdownOptions
 import com.example.packitupandroid.utils.CardType
 import com.example.packitupandroid.utils.EditMode
 import com.example.packitupandroid.utils.asCurrencyString
@@ -28,11 +27,12 @@ import com.example.packitupandroid.utils.asCurrencyString
 fun<T: BaseCardData> DataColumn(
     element: T,
     modifier: Modifier = Modifier,
+    getDropdownOptions: (() -> List<QueryDropdownOptions>)? = null,
     editMode: EditMode = EditMode.NoEdit,
     cardType: CardType = CardType.Default,
 ) {
 
-    val expanded = remember { mutableStateOf(false) }
+    val options: List<QueryDropdownOptions> = getDropdownOptions?.invoke() ?: emptyList()
     Column(
         modifier = modifier,
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -52,12 +52,11 @@ fun<T: BaseCardData> DataColumn(
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.Start,
             ) {
-                // TODO - fix - create func to get object name from id
                 Text(
                     maxLines = 1,
                     text = when(element) {
-                        is Item -> element.boxId.toString()
-                        is Box -> element.collectionId.toString()
+                        is Item -> options.firstOrNull { it.id == element.boxId.toString() }?.name ?: ""
+                        is Box -> options.firstOrNull { it.id == element.collectionId.toString() }?.name ?: ""
                         else -> ""
                     }
                 )

@@ -106,6 +106,7 @@ fun<T: BaseCardData> BaseCard(
                     .weight(2f)
                     .padding(horizontal = 4.dp),
                 element = element,
+                getDropdownOptions = getDropdownOptions,
                 editMode = editMode,
                 cardType = cardType,
             )
