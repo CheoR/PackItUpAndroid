@@ -82,6 +82,7 @@ fun<T: BaseCardData> ActionColumn(
                     element = element,
                     onDelete = onDelete,
                     onCancel = onCancel,
+                    getDropdownOptions = getDropdownOptions,
                     cardType = cardType,
                 )
             },

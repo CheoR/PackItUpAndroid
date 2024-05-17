@@ -22,6 +22,10 @@ import androidx.compose.material3.Checkbox
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -31,6 +35,9 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import com.example.packitupandroid.R
 import com.example.packitupandroid.data.model.BaseCardData
+import com.example.packitupandroid.data.model.Box
+import com.example.packitupandroid.data.model.Item
+import com.example.packitupandroid.data.model.QueryDropdownOptions
 import com.example.packitupandroid.data.model.Summary
 import com.example.packitupandroid.ui.components.common.AddConfirmCancelButton
 import com.example.packitupandroid.ui.components.common.ButtonType
@@ -44,6 +51,7 @@ fun DeleteCard(
     onDelete: () -> Unit,
     onCancel: () -> Unit,
     modifier: Modifier = Modifier,
+    getDropdownOptions: (() -> List<QueryDropdownOptions>)? = null,
     cardType: CardType = CardType.Default,
     // TODO: add dropdown
 ) {
@@ -52,6 +60,17 @@ fun DeleteCard(
     val icon2 = icons.second
     val badgeCount1 = badgeCounts.first
     val badgeCount2 = badgeCounts.second
+
+    val options: List<QueryDropdownOptions> = getDropdownOptions?.invoke() ?: emptyList()
+    var selectedOption by remember {
+        mutableStateOf(
+            when (element) {
+                is Box -> options.firstOrNull { it.id == element.collectionId }?.id
+                is Item -> options.firstOrNull { it.id == element.boxId }?.id
+                else -> null
+            }
+        )
+    }
 
     Column(
         modifier = modifier
@@ -100,19 +119,23 @@ fun DeleteCard(
                         modifier = Modifier
                             .fillMaxWidth(),
                     )
-//                    dropdownOptions?.let {
-//                        BasicTextField(
-//                            value = dropdownOptions.first(), // Todo: display selected value if available else first
-//                            onValueChange = {
-//                                element.description = it
-//                            },
-//                            textStyle = MaterialTheme.typography.bodySmall,
-//                            enabled = isEditable(EditFields.Dropdown),
-//                            modifier = Modifier
-//                                .fillMaxWidth()
-//                                .padding(4.dp)
-//                        )
-//                    }
+                    Box {
+                        Row(
+                            modifier = Modifier
+                                .fillMaxWidth(),
+                            verticalAlignment = Alignment.CenterVertically,
+                            horizontalArrangement = Arrangement.Start,
+                        ) {
+                            Text(
+                                maxLines = 1,
+                                text = when(element) {
+                                    is Item -> options.firstOrNull { it.id == element.boxId.toString() }?.name ?: ""
+                                    is Box -> options.firstOrNull { it.id == element.collectionId.toString() }?.name ?: ""
+                                    else -> ""
+                                }
+                            )
+                        }
+                    }
                     BasicTextField(
                         // TODO: fix
                         value = element.description ?: "",
