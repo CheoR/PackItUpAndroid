@@ -1,5 +1,6 @@
 package com.example.packitupandroid.ui.screens.item
 
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.packitupandroid.PackItUpUiState
@@ -21,8 +22,10 @@ import kotlinx.coroutines.flow.toList
 import kotlinx.coroutines.launch
 
 class ItemsScreenViewModel(
+    savedStateHandle: SavedStateHandle,
     private val itemsRepository: ItemsRepository,
 ) : ViewModel() {
+    private val boxId: String? = savedStateHandle["boxId"]
     private val _uiState = MutableStateFlow(ItemsPackItUpUiState())
     val uiState: StateFlow<ItemsPackItUpUiState> = _uiState.asStateFlow()
 
@@ -51,7 +54,10 @@ class ItemsScreenViewModel(
                 scope = viewModelScope,
                 started = SharingStarted.WhileSubscribed(TIMEOUT_MILLIS),
                 initialValue = ItemsPackItUpUiState()
-            ).collect { newState -> _uiState.value = newState }
+            ).collect { newState ->
+                _uiState.value = newState
+                boxId?.let { filterByBoxId(boxId) }
+            }
         } else {
             try {
                 // TODO - fix user regular db
@@ -67,7 +73,10 @@ class ItemsScreenViewModel(
                     scope = viewModelScope,
                     started = SharingStarted.WhileSubscribed(TIMEOUT_MILLIS),
                     initialValue = ItemsPackItUpUiState()
-                ).collect { newState -> _uiState.value = newState }
+                ).collect { newState ->
+                    _uiState.value = newState
+                    boxId?.let { filterByBoxId(boxId) }
+                }
             } catch (e: Exception) {
                 _uiState.value = ItemsPackItUpUiState(
                     result = Result.Error(e.message ?: "Unknown error")
@@ -135,6 +144,14 @@ class ItemsScreenViewModel(
 
     private suspend fun destroyItem(entity: ItemEntity) {
         itemsRepository.deleteItem(entity)
+    }
+
+    private fun filterByBoxId(boxId: String) {
+        val filteredElement = uiState.value.elements.filter { it.boxId == boxId }
+        _uiState.value = ItemsPackItUpUiState(
+            elements = filteredElement,
+            result = Result.Complete(filteredElement),
+        )
     }
 
     /**

@@ -96,6 +96,9 @@ fun PackItUpNavHost(
             composable(route = PackItUpRoute.BOXES) {
                 BoxesScreen(
                     getDropdownOptions = viewModel::getCollectionDropdownOptions,
+                    filterItemsByBoxId = { id ->
+                        navController.navigate("${PackItUpRoute.ITEMS}/$id")
+                    }
                 )
             }
             composable(route = "${PackItUpRoute.BOXES}/{collectionId}") {
@@ -104,6 +107,11 @@ fun PackItUpNavHost(
                 )
             }
             composable(route = PackItUpRoute.ITEMS) {
+                ItemsScreen(
+                    getDropdownOptions = viewModel::getBoxDropdownOptions,
+                )
+            }
+            composable(route = "${PackItUpRoute.ITEMS}/{boxId}") {
                 ItemsScreen(
                     getDropdownOptions = viewModel::getBoxDropdownOptions,
                 )

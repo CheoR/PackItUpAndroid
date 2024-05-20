@@ -5,6 +5,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.packitupandroid.Result
+import com.example.packitupandroid.data.model.Box
 import com.example.packitupandroid.data.model.Item
 import com.example.packitupandroid.data.model.QueryDropdownOptions
 import com.example.packitupandroid.data.source.local.LocalDataSource
@@ -14,17 +15,19 @@ import com.example.packitupandroid.utils.CardType
 
 @Composable
 fun BoxesScreen(
+    filterItemsByBoxId:((id: String) -> Unit)? = null,
     getDropdownOptions: () -> List<QueryDropdownOptions>,
     viewModel: BoxesScreenViewModel = viewModel(factory = PackItUpViewModelProvider.Factory),
 ) {
     val uiState = viewModel.uiState.collectAsState().value
-    Screen(
+    Screen<Box>(
         uiState = uiState,
         onCreate = viewModel::create,
         onUpdate = viewModel::update,
         onDestroy = viewModel::destroy,
         getDropdownOptions = getDropdownOptions,
         cardType = CardType.Box,
+        filterElements = filterItemsByBoxId,
     )
 }
 

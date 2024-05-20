@@ -19,6 +19,7 @@ object PackItUpViewModelProvider {
     val Factory = viewModelFactory {
         initializer {
             ItemsScreenViewModel(
+                savedStateHandle = createSavedStateHandle(),
                 itemsRepository = packItUpApplication().container.itemsRepository,
             )
         }
