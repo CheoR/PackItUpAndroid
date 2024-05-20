@@ -28,6 +28,7 @@ fun <T: BaseCardData> Screen(
     onDestroy: (T) -> Unit,
     modifier: Modifier = Modifier,
     getDropdownOptions: (() -> List<QueryDropdownOptions>)? = null,
+    filterElements:( (id: String) -> Unit)? = null,
     cardType: CardType = CardType.Default,
 ) {
     val result = uiState.result
@@ -60,6 +61,7 @@ fun <T: BaseCardData> Screen(
                             onUpdate = onUpdate,
                             onDestroy = onDestroy,
                             getDropdownOptions = getDropdownOptions,
+                            filterElements = filterElements,
                             cardType = cardType,
                         )
                     }

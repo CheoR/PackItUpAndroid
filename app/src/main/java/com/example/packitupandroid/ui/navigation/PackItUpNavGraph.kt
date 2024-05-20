@@ -87,9 +87,18 @@ fun PackItUpNavHost(
                 )
             }
             composable(route = PackItUpRoute.COLLECTIONS) {
-                CollectionsScreen()
+                CollectionsScreen(
+                    filterBoxesByCollectionId = { id ->
+                        navController.navigate("${PackItUpRoute.BOXES}/$id")
+                    }
+                )
             }
             composable(route = PackItUpRoute.BOXES) {
+                BoxesScreen(
+                    getDropdownOptions = viewModel::getCollectionDropdownOptions,
+                )
+            }
+            composable(route = "${PackItUpRoute.BOXES}/{collectionId}") {
                 BoxesScreen(
                     getDropdownOptions = viewModel::getCollectionDropdownOptions,
                 )

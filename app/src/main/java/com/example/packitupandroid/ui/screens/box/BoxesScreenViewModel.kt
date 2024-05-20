@@ -1,5 +1,6 @@
 package com.example.packitupandroid.ui.screens.box
 
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.packitupandroid.PackItUpUiState
@@ -21,8 +22,11 @@ import kotlinx.coroutines.flow.toList
 import kotlinx.coroutines.launch
 
 class BoxesScreenViewModel(
+    savedStateHandle: SavedStateHandle,
     private val boxesRepository: BoxesRepository,
 ) : ViewModel() {
+    private val collectionId: String? = savedStateHandle["collectionId"]
+
     private val _uiState = MutableStateFlow(BoxesScreenUiState())
     val uiState: StateFlow<BoxesScreenUiState> = _uiState.asStateFlow()
 
@@ -45,7 +49,10 @@ class BoxesScreenViewModel(
                 scope = viewModelScope,
                 started = SharingStarted.WhileSubscribed(TIMEOUT_MILLIS),
                 initialValue = BoxesScreenUiState()
-            ).collect { newState -> _uiState.value = newState }
+            ).collect {
+                newState -> _uiState.value = newState
+                collectionId?.let { filterByCollectionId(collectionId) }
+            }
         } else {
             // TODO - fix user regular db
             try {
@@ -62,7 +69,10 @@ class BoxesScreenViewModel(
                     scope = viewModelScope,
                     started = SharingStarted.WhileSubscribed(TIMEOUT_MILLIS),
                     initialValue = BoxesScreenUiState()
-                ).collect { newState -> _uiState.value = newState }
+                ).collect {
+                    newState -> _uiState.value = newState
+                    collectionId?.let { filterByCollectionId(collectionId) }
+                }
             } catch (e: Exception) {
                 _uiState.value = BoxesScreenUiState(
                     result = Result.Error(e.message ?: "Unknown error")
@@ -131,6 +141,14 @@ class BoxesScreenViewModel(
 
     private suspend fun destroyBox(entity: BoxEntity) {
         boxesRepository.deleteBox(entity)
+    }
+
+    private fun filterByCollectionId(id: String) {
+        val filteredElements = uiState.value.elements.filter { it.collectionId == id }
+        _uiState.value = BoxesScreenUiState(
+            elements = filteredElements,
+            result = Result.Complete(filteredElements)
+        )
     }
 
     companion object {

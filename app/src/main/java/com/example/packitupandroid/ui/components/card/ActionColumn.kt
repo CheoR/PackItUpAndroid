@@ -19,16 +19,12 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.DpOffset
 import androidx.compose.ui.unit.dp
 import com.example.packitupandroid.data.model.BaseCardData
 import com.example.packitupandroid.data.model.QueryDropdownOptions
-import com.example.packitupandroid.data.model.Summary
 import com.example.packitupandroid.utils.CardType
 import com.example.packitupandroid.utils.EditMode
 
@@ -45,6 +41,7 @@ fun<T: BaseCardData> ActionColumn(
     onEdit: (T) -> Unit,
     modifier: Modifier = Modifier,
     getDropdownOptions: (() -> List<QueryDropdownOptions>)? = null,
+    filterElements:( (id: String) -> Unit)? = null,
     editMode: EditMode = EditMode.NoEdit,
     cardType: CardType = CardType.Default,
 ) {
@@ -158,7 +155,11 @@ fun<T: BaseCardData> ActionColumn(
                                 text = { Text(
                                     "add",
                                 )},
-                                onClick = { /*TODO*/ },
+                                onClick = {
+                                    if (filterElements != null) {
+                                        filterElements(element.id)
+                                    }
+                                },
                                 leadingIcon = {
                                     Icon(
                                         imageVector = Icons.Default.Add,
@@ -208,38 +209,38 @@ fun<T: BaseCardData> ActionColumn(
     }
 }
 
-@Preview(
-    showBackground = true,
-    group="Summary",
-)
-@Composable
-fun PreviewActionColumnSummaryCardNoEdit() {
-    val summary = Summary(
-        id = "summary",
-        name = "summary",
-        description = "summary",
-    )
-
-    // to avoid
-    // Creating a state object during composition without using remember More... (Ctrl+F1)
-    val isShowEditCard = remember { mutableStateOf(false) }
-    val isShowCameraCard = remember { mutableStateOf(false) }
-    val isShowDeleteCard = remember { mutableStateOf(false) }
-    val isExpanded = remember { mutableStateOf(false) }
-    ActionColumn(
-        element = summary,
-        onClick = {},
-        onEdit = {},
-        onCancel = {},
-        onDelete = {},
-        getDropdownOptions = { emptyList() },
-        isShowEditCard = isShowEditCard,
-        isShowCameraCard = isShowCameraCard,
-        isShowDeleteCard = isShowDeleteCard,
-        isExpanded = isExpanded,
-        cardType = CardType.Summary,
-    )
-}
+//@Preview(
+//    showBackground = true,
+//    group="Summary",
+//)
+//@Composable
+//fun PreviewActionColumnSummaryCardNoEdit() {
+//    val summary = Summary(
+//        id = "summary",
+//        name = "summary",
+//        description = "summary",
+//    )
+//
+//    // to avoid
+//    // Creating a state object during composition without using remember More... (Ctrl+F1)
+//    val isShowEditCard = remember { mutableStateOf(false) }
+//    val isShowCameraCard = remember { mutableStateOf(false) }
+//    val isShowDeleteCard = remember { mutableStateOf(false) }
+//    val isExpanded = remember { mutableStateOf(false) }
+//    ActionColumn(
+//        element = summary,
+//        onClick = {},
+//        onEdit = {},
+//        onCancel = {},
+//        onDelete = {},
+//        getDropdownOptions = { emptyList() },
+//        isShowEditCard = isShowEditCard,
+//        isShowCameraCard = isShowCameraCard,
+//        isShowDeleteCard = isShowDeleteCard,
+//        isExpanded = isExpanded,
+//        cardType = CardType.Summary,
+//    )
+//}
 
 // TODO: Fix
 //@Preview(

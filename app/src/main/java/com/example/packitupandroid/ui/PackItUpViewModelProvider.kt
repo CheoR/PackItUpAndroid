@@ -10,6 +10,7 @@ import com.example.packitupandroid.ui.screens.box.BoxesScreenViewModel
 import com.example.packitupandroid.ui.screens.collection.CollectionsScreenViewModel
 import com.example.packitupandroid.ui.screens.item.ItemsScreenViewModel
 import com.example.packitupandroid.ui.screens.summary.SummaryScreenViewModel
+import androidx.lifecycle.createSavedStateHandle
 
 /**
  * Provides Factory to create ViewModel instance for entire PackItUp app
@@ -24,6 +25,7 @@ object PackItUpViewModelProvider {
 
         initializer {
             BoxesScreenViewModel(
+                savedStateHandle = createSavedStateHandle(),
                 boxesRepository = packItUpApplication().container.boxesRepository,
             )
         }

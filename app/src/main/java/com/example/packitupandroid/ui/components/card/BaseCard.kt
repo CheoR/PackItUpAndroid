@@ -66,9 +66,9 @@ fun<T: BaseCardData> BaseCard(
     onDestroy: (T) -> Unit,
     modifier: Modifier = Modifier,
     getDropdownOptions: (() -> List<QueryDropdownOptions>)? = null,
+    filterElements:( (id: String) -> Unit)? = null,
     editMode: EditMode = EditMode.NoEdit,
     cardType: CardType = CardType.Default,
-    // TODO: add dropdown field
 ) {
     val expanded = remember { mutableStateOf(false) }
     val showEditCard = remember { mutableStateOf(false) }
@@ -120,6 +120,7 @@ fun<T: BaseCardData> BaseCard(
                     showCameraCard.value = false
                     showDeleteCard.value = false
                 },
+                filterElements = filterElements,
                 onEdit = {
                     onUpdate(it)
                     expanded.value = false

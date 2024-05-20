@@ -13,15 +13,17 @@ import com.example.packitupandroid.utils.CardType
 
 @Composable
 fun CollectionsScreen(
+    filterBoxesByCollectionId:(id: String) -> Unit,
     viewModel: CollectionsScreenViewModel = viewModel(factory = PackItUpViewModelProvider.Factory),
 ) {
     val uiState = viewModel.uiState.collectAsState().value
-    Screen(
+    Screen<Collection>(
         uiState = uiState,
         onCreate = viewModel::create,
         onUpdate = viewModel::update,
         onDestroy = viewModel::destroy,
         cardType = CardType.Collection,
+        filterElements = filterBoxesByCollectionId,
     )
 }
 
