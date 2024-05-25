@@ -37,20 +37,30 @@ fun PackItUpNavHost(
     viewModel: ScreenViewModel = viewModel(factory = PackItUpViewModelProvider.Factory)
 ) {
     val navGraphState = viewModel.navGraphState.collectAsStateWithLifecycle().value
+    val title = viewModel.title.collectAsStateWithLifecycle().value
     val snackbarHostState = remember { SnackbarHostState() }
     val scope = rememberCoroutineScope()
 
     Scaffold(
         modifier = modifier,
         topBar = {
+            val backStackEntry = navController.currentBackStackEntry
+            val arguments = backStackEntry?.arguments
+            val route = backStackEntry?.destination?.route
+
+            // TODO - ref
+            when {
+                route == PackItUpRoute.SUMMARY -> viewModel.updateTitle(stringResource(R.string.summary))
+                route == PackItUpRoute.COLLECTIONS -> viewModel.updateTitle(stringResource(R.string.collections))
+                route == PackItUpRoute.BOXES -> viewModel.updateTitle(stringResource(R.string.boxes))
+                route == PackItUpRoute.ITEMS -> viewModel.updateTitle(stringResource(R.string.items))
+                route?.contains("Boxes/{collectionId}") == true -> viewModel.getCollectionNameById(arguments?.getString("collectionId"))
+                route?.contains("Items/{boxId}") == true -> viewModel.getBoxNameById(arguments?.getString("boxId"))
+                else -> viewModel.updateTitle(stringResource(R.string.app_name))
+            }
+
             PackItUpAppBar(
-                title = when (navController.currentBackStackEntry?.destination?.route) {
-                    PackItUpRoute.SUMMARY -> stringResource(R.string.summary)
-                    PackItUpRoute.COLLECTIONS -> stringResource(R.string.collections)
-                    PackItUpRoute.BOXES -> stringResource(R.string.boxes)
-                    PackItUpRoute.ITEMS -> stringResource(R.string.items)
-                    else -> stringResource(R.string.app_name)
-                },
+                title = title,
                 canNavigateBack = navController.previousBackStackEntry != null,
                 navigateUp = { navController.navigateUp() },
             )

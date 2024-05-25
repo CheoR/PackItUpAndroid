@@ -23,6 +23,9 @@ class ScreenViewModel(
     val navGraphState: StateFlow<NavGraphState> = _navGraphState.asStateFlow()
     private var boxesOptions: List<QueryDropdownOptions> = emptyList()
     private var collectionsOptions: List<QueryDropdownOptions> = emptyList()
+    private var boxName: String? = null
+    private val _title = MutableStateFlow("")
+    var title: StateFlow<String> = _title.asStateFlow()
 
     init {
         viewModelScope.launch {
@@ -72,6 +75,33 @@ class ScreenViewModel(
 
     private suspend fun getCollectionsDropdownOptions(): List<QueryDropdownOptions> {
         return collectionsRepository.getDropdownSelections().first()
+    }
+
+    fun getCollectionNameById(id: String?) {
+        viewModelScope.launch {
+            collectionNameById(id)?.let {
+                _title.value = it
+            }
+        }
+    }
+
+    fun getBoxNameById(id: String?): String? {
+        viewModelScope.launch {
+            boxName = boxNameById(id)
+        }
+        return boxName
+    }
+
+    private suspend fun collectionNameById(id: String?): String? {
+        return id?.let { collectionsRepository.getCollection(it) }?.name
+    }
+
+    private suspend fun boxNameById(id: String?): String? {
+        return id?.let { boxesRepository.getBox(it) }?.name
+    }
+
+    fun updateTitle(newTitle: String) {
+        _title.value = newTitle
     }
 }
 
