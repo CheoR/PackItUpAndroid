@@ -87,7 +87,7 @@ class ItemsScreenViewModel(
 
     fun create(count: Int = 0) {
         val entities = (0 until count ).mapIndexed { index, _ ->
-            Item(name = "Item ${index + 1}").toEntity()
+            Item(name = "Item ${index + 1}", boxId = boxId).toEntity()
         }
 
         viewModelScope.launch {
