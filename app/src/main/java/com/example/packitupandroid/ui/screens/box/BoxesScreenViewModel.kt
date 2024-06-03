@@ -83,7 +83,7 @@ class BoxesScreenViewModel(
 
     fun create(count: Int = 0) {
         val entities = (0 until count ).mapIndexed { index, _ ->
-            Box(name = "Box ${index + 1}").toEntity()
+            Box(name = "Box ${index + 1}", collectionId = collectionId).toEntity()
         }
 
         viewModelScope.launch {
