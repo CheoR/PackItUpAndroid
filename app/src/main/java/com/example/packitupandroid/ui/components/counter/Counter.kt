@@ -23,7 +23,6 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
@@ -58,7 +57,7 @@ fun Counter(
                 modifier = buttonModifier,
                 onClick = { count = maxOf(0, count - 1) }
             ) {
-                Icon(imageVector = Icons.Default.Remove, contentDescription = "subtract")
+                Icon(imageVector = Icons.Default.Remove, contentDescription = "decrement")
             }
             TextButton(
                 modifier = buttonModifier
@@ -74,11 +73,11 @@ fun Counter(
                 )
             }
             IconButton(
-                modifier = buttonModifier
-                    .testTag("ADD"),
+                modifier = buttonModifier,
+                  //  .testTag("increment"),
                 onClick = { count++ },
             ) {
-                Icon(imageVector = Icons.Default.Add, contentDescription = "add")
+                Icon(imageVector = Icons.Default.Add, contentDescription = "increment")
             }
         }
         AddConfirmCancelButton(
