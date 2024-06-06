@@ -8,6 +8,7 @@ import androidx.compose.ui.test.onNodeWithContentDescription
 import androidx.compose.ui.test.performClick
 import com.example.packitupandroid.ui.components.counter.Counter
 import com.example.packitupandroid.ui.theme.PackItUpAndroidTheme
+import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 
@@ -20,116 +21,72 @@ class CounterTest {
     @get:Rule
     val composeTestRule = createComposeRule()
 
-    @Test
-    fun counter_InitialState_InitialValueIsZero() {
+    private fun incrementCounter(times: Int) {
+        repeat(times) {
+            composeTestRule.onNodeWithContentDescription("increment").performClick()
+        }
+    }
+
+    private fun decrementCounter(times: Int) {
+        repeat(times) {
+            composeTestRule.onNodeWithContentDescription("decrement").performClick()
+        }
+    }
+
+    private fun assertCounterValue(expectedValue: Int) {
+        composeTestRule.onNodeWithContentDescription("Counter Value")
+            .assertTextEquals(expectedValue.toString())
+    }
+
+    @Before
+    fun setUp() {
         composeTestRule.setContent {
             PackItUpAndroidTheme {
                 Counter (onCreate = onCreate)
             }
         }
+    }
 
-        composeTestRule.onNodeWithContentDescription("Counter Value")
-            .assertTextEquals((initialValue).toString())
+    @Test
+    fun counter_InitialState_InitialValueIsZero() {
+        assertCounterValue(initialValue)
     }
 
     @Test
     fun incrementCounterFive() {
-
-        composeTestRule.setContent {
-            PackItUpAndroidTheme {
-                Counter (onCreate = onCreate)
-            }
-        }
-
-        repeat(incrementValueByFive) {
-            composeTestRule.onNodeWithContentDescription("increment").performClick()
-        }
-
-        composeTestRule.onNodeWithContentDescription("Counter Value")
-            .assertTextEquals((incrementValueByFive).toString())
+        incrementCounter(incrementValueByFive)
+        assertCounterValue(incrementValueByFive)
     }
 
     @Test
     fun incrementAndDecrementCounter_ResultIsOne() {
-        composeTestRule.setContent {
-            PackItUpAndroidTheme {
-                Counter (onCreate = onCreate)
-            }
-        }
-
-        repeat(incrementValueByFive) {
-            composeTestRule.onNodeWithContentDescription("increment").performClick()
-        }
-
-        repeat(decrementValueByFour) {
-            composeTestRule.onNodeWithContentDescription("decrement").performClick()
-        }
-
-        composeTestRule.onNodeWithContentDescription("Counter Value")
-            .assertTextEquals((incrementValueByFive - decrementValueByFour).toString())
+        incrementCounter(incrementValueByFive)
+        decrementCounter(decrementValueByFour)
+        assertCounterValue(incrementValueByFive - decrementValueByFour)
     }
 
     @Test
     fun decrementCounterByFour_ResultIsZero() {
-        composeTestRule.setContent {
-            PackItUpAndroidTheme {
-                Counter (onCreate = onCreate)
-            }
-        }
-
-        repeat(decrementValueByFour) {
-            composeTestRule.onNodeWithContentDescription("decrement").performClick()
-        }
-
-        composeTestRule.onNodeWithContentDescription("Counter Value")
-            .assertTextEquals(initialValue.toString())
+        decrementCounter(decrementValueByFour)
+        assertCounterValue(initialValue)
     }
 
     @Test
     fun decrementButton_DisableWhenCounterIsNonPositive() {
-        composeTestRule.setContent {
-            PackItUpAndroidTheme {
-                Counter (onCreate = onCreate)
-            }
-        }
-
-        repeat(decrementValueByFour) {
-            composeTestRule.onNodeWithContentDescription("decrement").performClick()
-        }
-
+        decrementCounter(decrementValueByFour)
         composeTestRule.onNodeWithContentDescription("add").assertIsNotEnabled()
     }
 
     @Test
     fun incrementButton_EnableWhenCounterIsPositive() {
-        composeTestRule.setContent {
-            PackItUpAndroidTheme {
-                Counter (onCreate = onCreate)
-            }
-        }
-
-        repeat(incrementValueByFive) {
-            composeTestRule.onNodeWithContentDescription("increment").performClick()
-        }
-
+        incrementCounter(incrementValueByFive)
         composeTestRule.onNodeWithContentDescription("add").assertIsEnabled()
     }
 
     @Test
     fun addButtonClick_ResetsValueToZero() {
-        composeTestRule.setContent {
-            PackItUpAndroidTheme {
-                Counter (onCreate = onCreate)
-            }
-        }
-
-        repeat(incrementValueByFive) {
-            composeTestRule.onNodeWithContentDescription("increment").performClick()
-        }
-
+        incrementCounter(incrementValueByFive)
         composeTestRule.onNodeWithContentDescription("add").performClick()
-
-        composeTestRule.onNodeWithContentDescription("Counter Value")
-            .assertTextEquals(initialValue.toString())
+        assertCounterValue(initialValue)
     }
 }
