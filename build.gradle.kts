@@ -1,6 +1,9 @@
 // Top-level build file where you can add configuration options common to all sub-projects/modules.
 buildscript {
     extra.apply {
+        // TODO: fix - ref
+        // 2.8.0 break build error with CompositionLocal LocalLifecycleOwner not present
+        // https://developer.android.com/jetpack/androidx/releases/lifecycle#kts
         set("lifecycle_version", "2.7.0")
         set("navigation_version", "2.7.7")
         set("compose_compiler_version", "1.5.10")
