@@ -5,19 +5,19 @@
       <SelectionState runConfigName="app">
         <option name="selectionMode" value="DROPDOWN" />
       </SelectionState>
-      <SelectionState runConfigName="CounterTest">
+      <SelectionState runConfigName="daoDeleteItems_deletesAllItemsFromDB()">
         <option name="selectionMode" value="DROPDOWN" />
       </SelectionState>
-      <SelectionState runConfigName="decrementCounterByFour_ResultIsZero()">
+      <SelectionState runConfigName="daoInsert_insertAllItemIntoDB()">
         <option name="selectionMode" value="DROPDOWN" />
       </SelectionState>
-      <SelectionState runConfigName="decrementButton_DisableWhenCounterIsNonPositive()">
+      <SelectionState runConfigName="daoDeleteItems_deletesAllSelectedItemsFromDB()">
         <option name="selectionMode" value="DROPDOWN" />
       </SelectionState>
-      <SelectionState runConfigName="incrementButton_EnableWhenCounterIsPositive()">
+      <SelectionState runConfigName="daoGetItemWithNonExistingId_returnsNull()">
         <option name="selectionMode" value="DROPDOWN" />
       </SelectionState>
-      <SelectionState runConfigName="addButtonClick_ResetsValueToZero()">
+      <SelectionState runConfigName="updateItemWithNonExistingId_doesNothing()">
         <option name="selectionMode" value="DROPDOWN" />
       </SelectionState>
     </selectionStates>
