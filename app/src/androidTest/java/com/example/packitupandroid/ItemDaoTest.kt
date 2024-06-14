@@ -11,6 +11,7 @@ import com.example.packitupandroid.data.model.Box
 import com.example.packitupandroid.data.model.Item
 import com.example.packitupandroid.data.model.toEntity
 import junit.framework.TestCase.assertEquals
+import junit.framework.TestCase.assertNotSame
 import junit.framework.TestCase.assertNull
 import junit.framework.TestCase.assertTrue
 import kotlinx.coroutines.flow.first
@@ -196,6 +197,26 @@ class ItemDaoTest {
         assertTrue(allItems.size == 1)
         assertEquals(allItems[0], item2)
         assertEquals(allItems[0].id, item2.id)
+    }
+
+    @Test
+    fun itemDao_DeleteBox_AssociatedItemsDeletedFromDB() = runBlocking {
+        addFourItemToDb()
+
+        val numberOfItemsBeforeDeleteBox = itemDao.getAllItems().first().size
+
+        boxDao.delete(box1)
+
+        val numberOfItemsAfterDeleteBox = itemDao.getAllItems().first().size
+
+        assertNotSame(numberOfItemsAfterDeleteBox, numberOfItemsBeforeDeleteBox)
+        assertEquals(numberOfItemsAfterDeleteBox, numberOfItemsBeforeDeleteBox - 2)
+
+        val item1 = itemDao.getItem("1").first()
+        val item2 = itemDao.getItem("2").first()
+
+        assertNull(item1)
+        assertNull(item2)
     }
 }
 
