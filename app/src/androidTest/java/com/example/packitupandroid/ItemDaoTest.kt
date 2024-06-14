@@ -35,7 +35,6 @@ class ItemDaoTest {
     private var item3 = Item("3", "item3", value = 5.0, boxId = box2.id).toEntity()
     private var item4 = Item("4", "item3", value = 5.0).toEntity()
 
-    // utility functions
     private suspend fun addTwoBoxToDb () {
         boxDao.insert(box1)
         boxDao.insert(box2)
@@ -83,7 +82,7 @@ class ItemDaoTest {
 
     @Test
     @Throws(Exception::class)
-    fun daoInsert_insertItemIntoDB() = runBlocking {
+    fun itemDao_InsertItem_ItemInsertedIntoDB() = runBlocking {
         addOneItemToDb()
         val allItems = itemDao.getAllItems().first()
         assertEquals(allItems[0], item1)
@@ -91,7 +90,7 @@ class ItemDaoTest {
 
     @Test
     @Throws(Exception::class)
-    fun daoInsert_insertAllItemIntoDB() = runBlocking {
+    fun itemDao_InsertAllItems_AllItemsInsertedIntoDB() = runBlocking {
         val itemEntities = listOf(item1, item2, item3, item4)
         itemDao.insertAll(itemEntities)
 
@@ -101,7 +100,7 @@ class ItemDaoTest {
 
     @Test
     @Throws(Exception::class)
-    fun daoGetAllItems_returnsAllItemsFromDB() = runBlocking {
+    fun itemDao_GetAllItems_AllItemsReturnedFromDB() = runBlocking {
         addTwoItemToDb()
         // without .first()
         // type is val allItems: Flow<List<Item>>
@@ -114,7 +113,7 @@ class ItemDaoTest {
 
     @Test
     @Throws(Exception::class)
-    fun daoGetItem_returnsItemFromDB() = runBlocking {
+    fun itemDao_GetItem_ItemReturnedFromDB() = runBlocking {
         addOneItemToDb()
         // return flow
         val item = itemDao.getItem("1")
@@ -124,7 +123,7 @@ class ItemDaoTest {
 
     @Test
     @Throws(Exception::class)
-    fun daoGetItem_returnsItemByIdFromDB() = runBlocking {
+    fun itemDao_GetItemById_ItemReturnedFromDB() = runBlocking {
         addFourItemToDb()
         val item = itemDao.getItem("4").first()
         assertEquals(item4.id, item.id)
@@ -132,7 +131,7 @@ class ItemDaoTest {
 
     @Test
     @Throws(Exception::class)
-    fun daoGetItemWithNonExistingId_returnsNull() = runBlocking {
+    fun itemDao_GetItemWithNonExistingId_NullReturned() = runBlocking {
         addFourItemToDb()
         val item = itemDao.getItem("doesNotExist").first()
         assertNull(item)
@@ -140,7 +139,7 @@ class ItemDaoTest {
 
     @Test
     @Throws(Exception::class)
-    fun daoUpdateItems_updatesItemsInDB() = runBlocking {
+    fun itemDao_UpdateItems_ItemsUpdatedInDB() = runBlocking {
         addTwoItemToDb()
         val updatedItem1 = item1.copy(name = "tacos", description = "updated item 1", value = 25.0)
         val updatedItem2 = item2.copy(name = "tacos", description = "updated item 2", value = 10.0)
@@ -157,7 +156,7 @@ class ItemDaoTest {
 
     @Test
     @Throws(Exception::class)
-    fun updateItemWithNonExistingId_doesNothing() = runBlocking {
+    fun itemDao_UpdateItemWithNonExistingId_NoChangesInDB() = runBlocking {
         addFourItemToDb()
         val nonExistingItem = Item(
             id = "doesNotExist",
@@ -176,7 +175,7 @@ class ItemDaoTest {
 
     @Test
     @Throws(Exception::class)
-    fun daoDeleteItems_deletesAllItemsFromDB() = runBlocking {
+    fun itemDao_DeleteItems_AllItemsDeletedFromDB() = runBlocking {
         addFourItemToDb()
 
         itemDao.clearAllItems()
@@ -187,7 +186,7 @@ class ItemDaoTest {
 
     @Test
     @Throws(Exception::class)
-    fun daoDeleteItems_deletesAllSelectedItemsFromDB() = runBlocking {
+    fun itemDao_DeleteSelectedItems_SelectedItemsDeletedFromDB() = runBlocking {
         addFourItemToDb()
         val itemEntities = listOf(item1, item3, item4)
         itemDao.deleteAll(itemEntities)
@@ -199,3 +198,4 @@ class ItemDaoTest {
         assertEquals(allItems[0].id, item2.id)
     }
 }
+
