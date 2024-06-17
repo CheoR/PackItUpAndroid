@@ -5,19 +5,19 @@
       <SelectionState runConfigName="app">
         <option name="selectionMode" value="DROPDOWN" />
       </SelectionState>
-      <SelectionState runConfigName="daoDeleteItems_deletesAllItemsFromDB()">
+      <SelectionState runConfigName="testUpdatingItemValueUpdatesBoxValueProperty()">
         <option name="selectionMode" value="DROPDOWN" />
       </SelectionState>
-      <SelectionState runConfigName="daoInsert_insertAllItemIntoDB()">
+      <SelectionState runConfigName="testUpdatingItemIsFragilePropertyUpdatesBoxIsFragileProperty()">
         <option name="selectionMode" value="DROPDOWN" />
       </SelectionState>
-      <SelectionState runConfigName="daoDeleteItems_deletesAllSelectedItemsFromDB()">
+      <SelectionState runConfigName="boxDao_InsertItem_UpdatesBoxItemCount()">
         <option name="selectionMode" value="DROPDOWN" />
       </SelectionState>
-      <SelectionState runConfigName="daoGetItemWithNonExistingId_returnsNull()">
+      <SelectionState runConfigName="boxDao_DeleteItem_UpdatesBoxItemCount()">
         <option name="selectionMode" value="DROPDOWN" />
       </SelectionState>
-      <SelectionState runConfigName="updateItemWithNonExistingId_doesNothing()">
+      <SelectionState runConfigName="BoxDaoTest">
         <option name="selectionMode" value="DROPDOWN" />
       </SelectionState>
     </selectionStates>
