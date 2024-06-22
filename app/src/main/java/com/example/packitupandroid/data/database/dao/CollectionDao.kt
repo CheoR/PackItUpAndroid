@@ -48,6 +48,47 @@ interface CollectionDao {
         collections c
     LEFT JOIN 
         BoxSummary bs ON c.id = bs.collection_id
+    WHERE
+        c.id = :id
+    GROUP BY 
+        c.id
+    ORDER BY 
+        c.last_modified;
+    """)
+    fun getQueryCollection(id: String): Flow<QueryCollection>
+
+    @Query("""
+    WITH BoxSummary AS (
+        SELECT 
+            b.id,
+            b.name,
+            b.description,
+            b.last_modified,
+            b.collection_id,
+            ROUND(SUM(i.value), 2) AS value,
+            MAX(CASE WHEN i.is_fragile = 1 THEN 1 ELSE 0 END) AS is_fragile,
+            COUNT( i.id) AS item_count
+        FROM 
+            boxes b
+        LEFT JOIN 
+            items i ON b.id = i.box_id
+        GROUP BY 
+            b.id
+    )
+    
+    SELECT 
+        c.id,
+        c.name,
+        c.description,
+        c.last_modified,
+        ROUND(SUM(bs.value), 2) AS value,
+        MAX(CASE WHEN bs.is_fragile = 1 THEN 1 ELSE 0 END) AS is_fragile,
+        COUNT( bs.id) AS box_count,
+        SUM(bs.item_count) AS item_count
+    FROM 
+        collections c
+    LEFT JOIN 
+        BoxSummary bs ON c.id = bs.collection_id
     GROUP BY 
         c.id
     ORDER BY 

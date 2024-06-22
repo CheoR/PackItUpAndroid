@@ -12,6 +12,11 @@ interface CollectionsRepository {
     suspend fun getCollection(id: String): CollectionEntity?
 
     /**
+     * Retrieve a QueryCollection from the given data source that matches with the [id].
+     */
+    suspend fun getQueryCollection(id: String): QueryCollection?
+
+    /**
      * Retrieve all the Collections from the given data source.
      */
     fun getAllCollectionsStream(): Flow<List<QueryCollection>>

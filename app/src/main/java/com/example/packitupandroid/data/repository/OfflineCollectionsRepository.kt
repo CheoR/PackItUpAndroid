@@ -9,6 +9,7 @@ import kotlinx.coroutines.flow.firstOrNull
 
 class OfflineCollectionsRepository(private val collectionDao: CollectionDao) : CollectionsRepository {
     override suspend fun getCollection(id: String): CollectionEntity? = collectionDao.getCollection(id).firstOrNull()
+    override suspend fun getQueryCollection(id: String): QueryCollection? = collectionDao.getQueryCollection(id).firstOrNull()
     override fun getAllCollectionsStream(): Flow<List<QueryCollection>> = collectionDao.getAllCollections()
     override fun getCollectionStream(id: String): Flow<CollectionEntity?> = collectionDao.getCollection(id)
     override suspend fun getDropdownSelections(): Flow<List<QueryDropdownOptions>> = collectionDao.getDropdownSelections()

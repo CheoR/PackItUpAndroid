@@ -1,7 +1,6 @@
 package com.example.packitupandroid.data.model
 
 import com.example.packitupandroid.data.database.entities.CollectionEntity
-import com.example.packitupandroid.utils.Converters
 import com.example.packitupandroid.utils.EditFields
 import java.util.Date
 import java.util.UUID
@@ -12,7 +11,7 @@ data class QueryCollection(
     val description: String? = null,
     val value: Double = 0.0,
     val is_fragile: Boolean = false,
-    val last_modified: Long,
+    val last_modified: Date,
     val item_count: Int = 0,
     val box_count: Int = 0,
 )
@@ -25,7 +24,7 @@ fun QueryCollection.toCollection(): Collection = Collection(
     box_count = this.box_count,
     value = this.value,
     isFragile = this.is_fragile,
-    lastModified = Converters().fromTimestamp(this.last_modified) ?: Date(),
+    lastModified = this.last_modified,  //  Converters().fromTimestamp(this.last_modified) ?: Date(),
 )
 
 data class Collection(
