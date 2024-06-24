@@ -8,13 +8,13 @@
       <SelectionState runConfigName="CollectionDaoTest">
         <option name="selectionMode" value="DROPDOWN" />
       </SelectionState>
-      <SelectionState runConfigName="collectionDao_DeleteCollection_AssociatedBoxesDeleted()">
+      <SelectionState runConfigName="collectionDao_GetAllCollections_AllCollectionsReturned()">
         <option name="selectionMode" value="DROPDOWN" />
       </SelectionState>
-      <SelectionState runConfigName="collectionDao_DeleteAllCollections_AllCollectionsDeleted()">
+      <SelectionState runConfigName="collectionDao_UpdateCollection_CollectionUpdated()">
         <option name="selectionMode" value="DROPDOWN" />
       </SelectionState>
-      <SelectionState runConfigName="collectionDao_DeleteItem_CollectionItemCountUpdated()">
+      <SelectionState runConfigName="collectionDao_GetCollectionById_CollectionReturned()">
         <option name="selectionMode" value="DROPDOWN" />
       </SelectionState>
       <SelectionState runConfigName="collectionDao_DeleteSelectedCollections_SelectedCollectionsDeleted()">
