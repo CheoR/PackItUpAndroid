@@ -6,8 +6,14 @@ import androidx.test.core.app.ApplicationProvider
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.example.packitupandroid.data.database.AppDatabase
 import com.example.packitupandroid.data.database.dao.BoxDao
+import com.example.packitupandroid.data.database.dao.CollectionDao
 import com.example.packitupandroid.data.database.dao.ItemDao
+import com.example.packitupandroid.data.database.entities.BoxEntity
+import com.example.packitupandroid.data.database.entities.CollectionEntity
+import com.example.packitupandroid.data.database.entities.ItemEntity
+import com.example.packitupandroid.data.database.entities.toItem
 import com.example.packitupandroid.data.model.Box
+import com.example.packitupandroid.data.model.Collection
 import com.example.packitupandroid.data.model.Item
 import com.example.packitupandroid.data.model.toEntity
 import junit.framework.TestCase.assertEquals
@@ -24,38 +30,58 @@ import java.io.IOException
 
 @RunWith(AndroidJUnit4::class)
 class ItemDaoTest {
-    private lateinit var itemDao: ItemDao
+    private lateinit var collectionDao: CollectionDao
     private lateinit var boxDao: BoxDao
+    private lateinit var itemDao: ItemDao
     private lateinit var db: AppDatabase
 
-    private var box1 = Box("box1", "box1").toEntity()
-    private var box2 = Box("box2", "box2").toEntity()
 
-    private var item1 = Item("1", "item1", "1", 5.0, true, boxId = box1.id).toEntity()
-    private var item2 = Item("2", "item2", boxId = box1.id).toEntity()
-    private var item3 = Item("3", "item3", value = 5.0, boxId = box2.id).toEntity()
-    private var item4 = Item("4", "item3", value = 5.0).toEntity()
+    private val collections = listOf(
+        Collection("1", "collections1").toEntity(),
+        Collection("2", "collections2").toEntity(),
+        Collection("3", "collections3").toEntity(),
+        Collection("4", "collections4").toEntity(),
+    )
 
-    private suspend fun addTwoBoxToDb () {
-        boxDao.insert(box1)
-        boxDao.insert(box2)
-    }
-    private suspend fun addOneItemToDb() {
-        itemDao.insert(item1)
+    private val boxes = listOf(
+        Box("1", "Box1", "1", collectionId="1").toEntity(),
+        Box("2", "Box2", "1", collectionId="1").toEntity(),
+        Box("3", "Box3", "2", collectionId="2").toEntity(),
+        Box("4", "Box4", "2").toEntity(),
+    )
+
+    private val items = listOf(
+        Item("1", "item1", "1", boxId=boxes[0].id).toEntity(),
+        Item("2", "Item2", "1", boxId=boxes[0].id).toEntity(),
+        Item("3", "Item3", "2", boxId=boxes[0].id).toEntity(),
+        Item("4", "Item4", "2", boxId=boxes[1].id).toEntity(),
+        Item("5", "Item5", "3", boxId=boxes[1].id).toEntity(),
+        Item("6", "Item6", "3", boxId=boxes[2].id).toEntity(),
+        Item("7", "Item7", "4", boxId=boxes[2].id).toEntity(),
+        Item("8", "Item8", "4", boxId=boxes[3].id).toEntity(),
+    )
+
+    private suspend fun insertCollections(collections: List<CollectionEntity>) {
+        collectionDao.insertAll(collections)
     }
 
-    private suspend fun addTwoItemToDb() {
-        addOneItemToDb()
-        itemDao.insert(item2)
+    private suspend fun insertBoxes(boxes: List<BoxEntity>) {
+        boxDao.insertAll(boxes)
     }
-    private suspend fun addThreeItemToDb() {
-        addTwoItemToDb()
-        itemDao.insert(item3)
+    private suspend fun insertItems(items: List<ItemEntity>) {
+        itemDao.insertAll(items)
     }
+    private suspend fun getAllItems() = itemDao.getAllItems().first()
 
-    private suspend fun addFourItemToDb() {
-        addThreeItemToDb()
-        itemDao.insert(item4)
+    private fun assertSameProperties(list1: List<Item>, list2: List<Item>) {
+        for (i in list1.indices) {
+            assertEquals(list1[i].id, list2[i].id)
+            assertEquals(list1[i].name, list2[i].name)
+            assertEquals(list1[i].description, list2[i].description)
+            assertEquals(list1[i].value, list2[i].value)
+            assertEquals(list1[i].isFragile, list2[i].isFragile)
+            assertEquals(list1[i].boxId, list2[i].boxId)
+        }
     }
 
     @Before
@@ -67,11 +93,14 @@ class ItemDaoTest {
             // Allow main thread queries, just for testing.
             .allowMainThreadQueries()
             .build()
-        itemDao = db.itemDao()
+        collectionDao = db.collectionDao()
         boxDao = db.boxDao()
+        itemDao = db.itemDao()
 
         runBlocking {
-            addTwoBoxToDb()
+            insertCollections(collections)
+            insertBoxes(boxes)
+            insertItems(items)
         }
     }
 
@@ -83,57 +112,41 @@ class ItemDaoTest {
 
     @Test
     @Throws(Exception::class)
-    fun itemDao_InsertItem_ItemInsertedIntoDB() = runBlocking {
-        addOneItemToDb()
-        val allItems = itemDao.getAllItems().first()
-        assertEquals(allItems[0], item1)
-    }
-
-    @Test
-    @Throws(Exception::class)
     fun itemDao_InsertAllItems_AllItemsInsertedIntoDB() = runBlocking {
-        val itemEntities = listOf(item1, item2, item3, item4)
+        val itemEntities = listOf(
+            Item("10", "item1", "1", boxId=boxes[0].id).toEntity(),
+            Item("20", "Item2", "1", boxId=boxes[0].id).toEntity(),
+            Item("30", "Item3", "2", boxId=boxes[0].id).toEntity(),
+            Item("40", "Item4", "2", boxId=boxes[1].id).toEntity(),
+        )
         itemDao.insertAll(itemEntities)
 
-        val allItems = itemDao.getAllItems().first()
-        assertEquals(itemEntities.size, allItems.size)
+        val allItems = getAllItems()
+        assertEquals(allItems.size, items.size + itemEntities.size)
     }
 
     @Test
     @Throws(Exception::class)
     fun itemDao_GetAllItems_AllItemsReturnedFromDB() = runBlocking {
-        addTwoItemToDb()
         // without .first()
         // type is val allItems: Flow<List<Item>>
         // .first() turns flow into list.
-        val allItems = itemDao.getAllItems().first()
+        val dbItems = getAllItems()
 
-        assertEquals(allItems[0], item1)
-        assertEquals(allItems[1], item2)
-    }
-
-    @Test
-    @Throws(Exception::class)
-    fun itemDao_GetItem_ItemReturnedFromDB() = runBlocking {
-        addOneItemToDb()
-        // return flow
-        val item = itemDao.getItem("1")
-        // .first() - actual item
-        assertEquals(item.first(), item1)
+        assertSameProperties(dbItems.map { it.toItem() }, items.map { it.toItem() })
     }
 
     @Test
     @Throws(Exception::class)
     fun itemDao_GetItemById_ItemReturnedFromDB() = runBlocking {
-        addFourItemToDb()
         val item = itemDao.getItem("4").first()
-        assertEquals(item4.id, item.id)
+
+        assertSameProperties(listOf(item.toItem()), listOf(items[3].toItem()))
     }
 
     @Test
     @Throws(Exception::class)
     fun itemDao_GetItemWithNonExistingId_NullReturned() = runBlocking {
-        addFourItemToDb()
         val item = itemDao.getItem("doesNotExist").first()
         assertNull(item)
     }
@@ -141,24 +154,18 @@ class ItemDaoTest {
     @Test
     @Throws(Exception::class)
     fun itemDao_UpdateItems_ItemsUpdatedInDB() = runBlocking {
-        addTwoItemToDb()
-        val updatedItem1 = item1.copy(name = "tacos", description = "updated item 1", value = 25.0)
-        val updatedItem2 = item2.copy(name = "tacos", description = "updated item 2", value = 10.0)
-        addTwoItemToDb()
+        val updatedItem = items[0].copy(name = "tacos", description = "updated item 1", value = 25.0)
 
-        itemDao.update(updatedItem1)
-        itemDao.update(updatedItem2)
+        itemDao.update(updatedItem)
 
-        val allItems = itemDao.getAllItems().first()
+        val dbItems = getAllItems()
 
-        assertEquals(allItems[0], updatedItem1)
-        assertEquals(allItems[1], updatedItem2)
+        assertSameProperties(listOf(dbItems[0].toItem()), listOf(updatedItem.toItem()))
     }
 
     @Test
     @Throws(Exception::class)
     fun itemDao_UpdateItemWithNonExistingId_NoChangesInDB() = runBlocking {
-        addFourItemToDb()
         val nonExistingItem = Item(
             id = "doesNotExist",
             name = "Non-Existing Item",
@@ -167,20 +174,16 @@ class ItemDaoTest {
 
         itemDao.update(nonExistingItem)
 
-        val allItems = itemDao.getAllItems().first()
-        assertEquals(allItems[0], item1)
-        assertEquals(allItems[1], item2)
-        assertEquals(allItems[2], item3)
-        assertEquals(allItems[3], item4)
+        val allItems = getAllItems()
+        assertSameProperties(allItems.map { it.toItem() }, items.map { it.toItem() })
     }
 
     @Test
     @Throws(Exception::class)
     fun itemDao_DeleteItems_AllItemsDeletedFromDB() = runBlocking {
-        addFourItemToDb()
-
         itemDao.clearAllItems()
-        val allItems = itemDao.getAllItems().first()
+
+        val allItems = getAllItems()
 
         assertTrue(allItems.isEmpty())
     }
@@ -188,35 +191,29 @@ class ItemDaoTest {
     @Test
     @Throws(Exception::class)
     fun itemDao_DeleteSelectedItems_SelectedItemsDeletedFromDB() = runBlocking {
-        addFourItemToDb()
-        val itemEntities = listOf(item1, item3, item4)
+        val itemEntities = listOf(items[0], items[2], items[3])
         itemDao.deleteAll(itemEntities)
 
-        val allItems = itemDao.getAllItems().first()
+        val allItems = getAllItems()
 
-        assertTrue(allItems.size == 1)
-        assertEquals(allItems[0], item2)
-        assertEquals(allItems[0].id, item2.id)
+        assertEquals(allItems.size, items.size - itemEntities.size)
+        assertSameProperties(listOf(items[1].toItem()), listOf(allItems[0].toItem()))
     }
 
     @Test
     fun itemDao_DeleteBox_AssociatedItemsDeletedFromDB() = runBlocking {
-        addFourItemToDb()
+        val numberOfItemsBeforeDeleteBox = getAllItems().size
 
-        val numberOfItemsBeforeDeleteBox = itemDao.getAllItems().first().size
+        val itemsToDelete = items.filter { it.boxId == boxes[0].id }
+        boxDao.delete(boxes[0])
 
-        boxDao.delete(box1)
+        val numberOfItemsAfterDeleteBox = getAllItems().size
 
-        val numberOfItemsAfterDeleteBox = itemDao.getAllItems().first().size
+        assertNotSame(numberOfItemsBeforeDeleteBox, numberOfItemsAfterDeleteBox)
+        assertEquals(numberOfItemsAfterDeleteBox, numberOfItemsBeforeDeleteBox - itemsToDelete.size)
 
-        assertNotSame(numberOfItemsAfterDeleteBox, numberOfItemsBeforeDeleteBox)
-        assertEquals(numberOfItemsAfterDeleteBox, numberOfItemsBeforeDeleteBox - 2)
+        val item = itemDao.getItem("1").first()
 
-        val item1 = itemDao.getItem("1").first()
-        val item2 = itemDao.getItem("2").first()
-
-        assertNull(item1)
-        assertNull(item2)
+        assertNull(item)
     }
 }
-

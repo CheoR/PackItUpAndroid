@@ -20,7 +20,6 @@ import com.example.packitupandroid.data.model.toEntity
 import junit.framework.TestCase.assertEquals
 import junit.framework.TestCase.assertNull
 import junit.framework.TestCase.assertTrue
-import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.runBlocking
 import org.junit.After
@@ -79,7 +78,7 @@ class CollectionDaoTest {
     private suspend fun getAllFirstCollectionBoxes() =
         getAllBoxes().filter { it.collection_id == collections[0].id }
 
-    private fun <T: Collection> assertSameProperties(list1: List<T>, list2: List<T>) {
+    private fun assertSameProperties(list1: List<Collection>, list2: List<Collection>) {
         for (i in list1.indices) {
             assertEquals(list1[i].id, list2[i].id)
             assertEquals(list1[i].name, list2[i].name)
@@ -96,9 +95,9 @@ class CollectionDaoTest {
             // Allow main thread queries, just for testing.
             .allowMainThreadQueries()
             .build()
-        itemDao = db.itemDao()
-        boxDao = db.boxDao()
         collectionDao = db.collectionDao()
+        boxDao = db.boxDao()
+        itemDao = db.itemDao()
 
         runBlocking {
             insertCollections(collections)
