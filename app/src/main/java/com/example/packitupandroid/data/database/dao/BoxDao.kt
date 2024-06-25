@@ -17,6 +17,24 @@ interface BoxDao {
     fun getBox(id: String): Flow<BoxEntity>
 
     @Query("""
+     SELECT
+        b.id, 
+        b.name,
+        b.description,
+        b.last_modified as last_modified,
+        b.collection_id,
+        ROUND(SUM(i.value), 2) AS value,
+        MAX(CASE WHEN i.is_fragile THEN 1 ELSE 0 END) AS is_fragile,
+        COUNT(i.id) AS item_count
+    FROM boxes b
+    LEFT JOIN items i ON b.id = i.box_id
+    WHERE b.id = :id
+    GROUP BY b.id
+    ORDER BY last_modified ASC;       
+    """)
+    fun getQueryBox(id: String): Flow<QueryBox>
+
+    @Query("""
     SELECT
         b.id, 
         b.name,

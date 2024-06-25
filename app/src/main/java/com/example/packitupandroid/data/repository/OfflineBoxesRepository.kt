@@ -9,6 +9,7 @@ import kotlinx.coroutines.flow.firstOrNull
 
 class OfflineBoxesRepository(private val boxDao: BoxDao) : BoxesRepository {
     override suspend fun getBox(id: String): BoxEntity? = boxDao.getBox(id).firstOrNull()
+    override suspend fun getQueryBox(id: String): QueryBox? = boxDao.getQueryBox(id).firstOrNull()
     override fun getAllBoxesStream(): Flow<List<QueryBox>> = boxDao.getAllBoxes()
     override suspend fun getDropdownSelections(): Flow<List<QueryDropdownOptions>> = boxDao.getDropdownSelections()
     override fun getBoxStream(id: String): Flow<BoxEntity?> = boxDao.getBox(id)

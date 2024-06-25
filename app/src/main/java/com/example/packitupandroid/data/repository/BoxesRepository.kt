@@ -12,6 +12,11 @@ interface BoxesRepository {
     suspend fun getBox(id: String): BoxEntity?
 
     /**
+     * Retrieve a QueryBox from the given data source that matches with the [id].
+     */
+    suspend fun getQueryBox(id: String): QueryBox?
+
+    /**
      * Retrieve all the boxes from the given data source.
      */
     fun getAllBoxesStream(): Flow<List<QueryBox>>
