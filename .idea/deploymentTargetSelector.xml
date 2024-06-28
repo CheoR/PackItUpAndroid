@@ -8,16 +8,13 @@
       <SelectionState runConfigName="ItemDaoTest">
         <option name="selectionMode" value="DROPDOWN" />
       </SelectionState>
-      <SelectionState runConfigName="itemDao_InsertAllItems_AllItemsInsertedIntoDB()">
-        <option name="selectionMode" value="DROPDOWN" />
-      </SelectionState>
       <SelectionState runConfigName="BoxDaoTest">
         <option name="selectionMode" value="DROPDOWN" />
       </SelectionState>
-      <SelectionState runConfigName="boxDao_DeleteItem_BoxItemCountUpdated()">
+      <SelectionState runConfigName="CollectionDaoTest">
         <option name="selectionMode" value="DROPDOWN" />
       </SelectionState>
-      <SelectionState runConfigName="boxDao_DeleteSelectedBoxes_SelectedBoxesDeleted()">
+      <SelectionState runConfigName="Tests in 'com.example.packitupandroid'">
         <option name="selectionMode" value="DROPDOWN" />
       </SelectionState>
     </selectionStates>
