@@ -12,10 +12,11 @@ import com.example.packitupandroid.data.database.entities.BoxEntity
 import com.example.packitupandroid.data.database.entities.CollectionEntity
 import com.example.packitupandroid.data.database.entities.ItemEntity
 import com.example.packitupandroid.data.database.entities.toItem
-import com.example.packitupandroid.data.model.Box
-import com.example.packitupandroid.data.model.Collection
 import com.example.packitupandroid.data.model.Item
 import com.example.packitupandroid.data.model.toEntity
+import com.example.packitupandroid.fake.data.boxes
+import com.example.packitupandroid.fake.data.collections
+import com.example.packitupandroid.fake.data.items
 import junit.framework.TestCase.assertEquals
 import junit.framework.TestCase.assertNotSame
 import junit.framework.TestCase.assertNull
@@ -34,32 +35,6 @@ class ItemDaoTest {
     private lateinit var boxDao: BoxDao
     private lateinit var itemDao: ItemDao
     private lateinit var db: AppDatabase
-
-
-    private val collections = listOf(
-        Collection("1", "collections1").toEntity(),
-        Collection("2", "collections2").toEntity(),
-        Collection("3", "collections3").toEntity(),
-        Collection("4", "collections4").toEntity(),
-    )
-
-    private val boxes = listOf(
-        Box("1", "Box1", "1", collectionId="1").toEntity(),
-        Box("2", "Box2", "1", collectionId="1").toEntity(),
-        Box("3", "Box3", "2", collectionId="2").toEntity(),
-        Box("4", "Box4", "2").toEntity(),
-    )
-
-    private val items = listOf(
-        Item("1", "item1", "1", boxId=boxes[0].id).toEntity(),
-        Item("2", "Item2", "1", boxId=boxes[0].id).toEntity(),
-        Item("3", "Item3", "2", boxId=boxes[0].id).toEntity(),
-        Item("4", "Item4", "2", boxId=boxes[1].id).toEntity(),
-        Item("5", "Item5", "3", boxId=boxes[1].id).toEntity(),
-        Item("6", "Item6", "3", boxId=boxes[2].id).toEntity(),
-        Item("7", "Item7", "4", boxId=boxes[2].id).toEntity(),
-        Item("8", "Item8", "4", boxId=boxes[3].id).toEntity(),
-    )
 
     private suspend fun insertCollections(collections: List<CollectionEntity>) {
         collectionDao.insertAll(collections)
@@ -119,7 +94,7 @@ class ItemDaoTest {
             Item("30", "Item3", "2", boxId=boxes[0].id).toEntity(),
             Item("40", "Item4", "2", boxId=boxes[1].id).toEntity(),
         )
-        itemDao.insertAll(itemEntities)
+        itemDao.insertAll(items)
 
         val allItems = getAllItems()
         assertEquals(allItems.size, items.size + itemEntities.size)
