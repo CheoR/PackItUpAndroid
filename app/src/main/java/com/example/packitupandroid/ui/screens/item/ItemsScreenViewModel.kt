@@ -12,18 +12,21 @@ import com.example.packitupandroid.data.model.Item
 import com.example.packitupandroid.data.model.toEntity
 import com.example.packitupandroid.data.repository.ItemsRepository
 import com.example.packitupandroid.utils.USE_MOCK_DATA
+import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
-import kotlinx.coroutines.flow.toList
 import kotlinx.coroutines.launch
 
 class ItemsScreenViewModel(
     savedStateHandle: SavedStateHandle,
     private val itemsRepository: ItemsRepository,
+    private val defaultDispatcher: CoroutineDispatcher = Dispatchers.Default
 ) : ViewModel() {
     private val boxId: String? = savedStateHandle["boxId"]
     private val _uiState = MutableStateFlow(ItemsPackItUpUiState())
@@ -35,7 +38,7 @@ class ItemsScreenViewModel(
 //    private val entityCache: Map<String, BaseCardData> get() = entityCacheMap
 
     init {
-        viewModelScope.launch {
+        viewModelScope.launch(defaultDispatcher) {
             initializeUIState()
         }
     }
@@ -90,14 +93,14 @@ class ItemsScreenViewModel(
             Item(name = "Item ${index + 1}", boxId = boxId).toEntity()
         }
 
-        viewModelScope.launch {
+        viewModelScope.launch(defaultDispatcher) {
             saveItem(entities)
         }
     }
 
     fun update(element: Item) {
         // TODO: Fix FOR JUST PASSING STRING INSTEAD OF ENTIRE ELEMENT
-        viewModelScope.launch {
+        viewModelScope.launch(defaultDispatcher) {
             val itemEntity = getItem(element.id)
             if (itemEntity != null) {
                 val updatedItemEntity = itemEntity.updateWith(element.toEntity())
@@ -107,27 +110,29 @@ class ItemsScreenViewModel(
     }
 
     fun destroy(element: Item) {
-        viewModelScope.launch {
+        viewModelScope.launch(defaultDispatcher) {
             destroyItem(element.toEntity())
         }
     }
 
+    // TODO: read up on pros/cons of fetching from db vs uiState
     fun getAllItems(): List<Item> {
         var itemList: List<Item> = emptyList()
-        viewModelScope.launch {
+        viewModelScope.launch(defaultDispatcher) {
             itemList = getItems()
         }
         return itemList
     }
 
     private suspend fun getItems(): List<Item> {
-        val itemEntitiesFlow =
-            itemsRepository.getAllItemsStream().map { list -> list.map { it.toItem() } }
-        return itemEntitiesFlow.toList().flatten()
+        return itemsRepository.getAllItemsStream().first().map { it.toItem() }
     }
 
-    private suspend fun getItem(id: String) : ItemEntity? {
-        return itemsRepository.getItem(id)
+//    private suspend fun getItem(id: String) : ItemEntity? {
+//        return itemsRepository.getItem(id)
+//    }
+    private fun getItem(id: String) : ItemEntity? {
+        return uiState.value.elements.find { it.id == id }?.toEntity()
     }
 
     private suspend fun saveItem(entities: List<ItemEntity>) {
