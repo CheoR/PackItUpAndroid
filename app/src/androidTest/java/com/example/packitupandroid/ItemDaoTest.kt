@@ -94,7 +94,7 @@ class ItemDaoTest {
             Item("30", "Item3", "2", boxId=boxes[0].id).toEntity(),
             Item("40", "Item4", "2", boxId=boxes[1].id).toEntity(),
         )
-        itemDao.insertAll(items)
+        itemDao.insertAll(itemEntities)
 
         val allItems = getAllItems()
         assertEquals(allItems.size, items.size + itemEntities.size)
