@@ -60,6 +60,17 @@ fun Box.toEntity(): BoxEntity = BoxEntity(
     collectionId = this.collectionId,
 )
 
+fun Box.toQueryBox(): QueryBox = QueryBox(
+    id = this.id,
+    name = this.name,
+    description = this.description,
+    value = this.value,
+    is_fragile = this.isFragile,
+    last_modified = this.lastModified.time,
+    item_count = this.item_count,
+    collection_id = this.collectionId,
+)
+
 fun Box.updateWith(other: Box) : Box = copy (
     name = other.name,
     description = other.description,
