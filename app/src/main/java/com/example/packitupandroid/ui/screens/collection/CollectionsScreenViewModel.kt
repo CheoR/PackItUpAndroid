@@ -11,6 +11,8 @@ import com.example.packitupandroid.data.model.toCollection
 import com.example.packitupandroid.data.model.toEntity
 import com.example.packitupandroid.data.repository.CollectionsRepository
 import com.example.packitupandroid.utils.USE_MOCK_DATA
+import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
@@ -22,6 +24,7 @@ import kotlinx.coroutines.launch
 
 class CollectionsScreenViewModel(
     private val collectionsRepository: CollectionsRepository,
+    private val defaultDispatcher: CoroutineDispatcher = Dispatchers.Default,
 ) : ViewModel() {
 //    private val _uiState = MutableStateFlow(CollectionsScreenUiState())
 //    val uiState: StateFlow<CollectionsScreenUiState> = _uiState.asStateFlow()
@@ -29,7 +32,7 @@ class CollectionsScreenViewModel(
     val uiState: StateFlow<CollectionsScreenUiState> = _uiState.asStateFlow()
 
     init {
-        viewModelScope.launch {
+        viewModelScope.launch(defaultDispatcher) {
             initializeUIState()
         }
     }
@@ -78,14 +81,14 @@ class CollectionsScreenViewModel(
             Collection(name = "Collection ${index + 1}").toEntity()
         }
 
-        viewModelScope.launch {
+        viewModelScope.launch(defaultDispatcher) {
             saveCollection(entities)
         }
     }
 
     fun update(element: Collection) {
         // TODO: Fix FOR JUST PASSING STRING INSTEAD OF ENTIRE ELEMENT
-        viewModelScope.launch {
+        viewModelScope.launch(defaultDispatcher) {
             val collectionEntity = getCollection(element.id)
             if (collectionEntity != null) {
                 val updatedCollectionEntity = collectionEntity.updateWith(element.toEntity())
@@ -95,14 +98,14 @@ class CollectionsScreenViewModel(
     }
 
     fun destroy(element: Collection) {
-        viewModelScope.launch {
+        viewModelScope.launch(defaultDispatcher) {
             destroyCollection(element.toEntity())
         }
     }
 
     fun getAllCollections(): List<Collection> {
         var collectionList: List<Collection> = emptyList()
-        viewModelScope.launch {
+        viewModelScope.launch(defaultDispatcher) {
             collectionList = getCollections()
         }
         return collectionList
@@ -113,7 +116,7 @@ class CollectionsScreenViewModel(
         return collectionEntitiesFlow.toList().flatten()
     }
 
-    suspend fun getCollection(id: String) : CollectionEntity? {
+    private suspend fun getCollection(id: String) : CollectionEntity? {
         return collectionsRepository.getCollection(id)
     }
 

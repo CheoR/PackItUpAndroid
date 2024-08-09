@@ -53,6 +53,15 @@ fun Collection.toEntity(): CollectionEntity = CollectionEntity(
     lastModified = System.currentTimeMillis(),
 )
 
+fun Collection.toQueryCollection(): QueryCollection = QueryCollection(
+    id = this.id,
+    name = this.name,
+    description = this.description,
+    value = this.value,
+    is_fragile = this.isFragile,
+    last_modified = this.lastModified,
+)
+
 fun Collection.updateWith(other: Collection) : Collection = copy (
     name = other.name,
     description = other.description,
