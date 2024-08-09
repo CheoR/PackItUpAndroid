@@ -97,11 +97,10 @@ class BoxesScreenViewModel(
 
     fun update(element: Box) {
         // TODO: Fix FOR JUST PASSING STRING INSTEAD OF ENTIRE ELEMENT
-        val boxEntity = getBox(element.id)
-
-        if (boxEntity != null) {
-            val updatedBoxEntity = boxEntity.updateWith(element.toEntity())
-            viewModelScope.launch(defaultDispatcher) {
+        viewModelScope.launch(defaultDispatcher) {
+            val boxEntity = getBox(element.id)
+            if (boxEntity != null) {
+                val updatedBoxEntity = boxEntity.updateWith(element.toEntity())
                 updateBox(updatedBoxEntity)
             }
         }
@@ -125,12 +124,8 @@ class BoxesScreenViewModel(
         return boxesRepository.getAllBoxesStream().first().map { it.toBox() }
     }
 
-    private fun getBox(id: String): BoxEntity? {
-        var box: BoxEntity? = null
-        viewModelScope.launch(defaultDispatcher) {
-            box = boxesRepository.getBox(id)
-        }
-        return box
+    private suspend fun getBox(id: String): BoxEntity? {
+        return boxesRepository.getBox(id)
     }
 
     private suspend fun saveBox(entities: List<BoxEntity>) {
