@@ -445,6 +445,19 @@
             </AndroidTestResultsTableState>
           </value>
         </entry>
+        <entry key="554085896">
+          <value>
+            <AndroidTestResultsTableState>
+              <option name="preferredColumnWidths">
+                <map>
+                  <entry key="Duration" value="90" />
+                  <entry key="Pixel_2_API_34" value="120" />
+                  <entry key="Tests" value="360" />
+                </map>
+              </option>
+            </AndroidTestResultsTableState>
+          </value>
+        </entry>
         <entry key="559492256">
           <value>
             <AndroidTestResultsTableState>
@@ -549,7 +562,33 @@
             </AndroidTestResultsTableState>
           </value>
         </entry>
+        <entry key="1030699255">
+          <value>
+            <AndroidTestResultsTableState>
+              <option name="preferredColumnWidths">
+                <map>
+                  <entry key="Duration" value="90" />
+                  <entry key="Pixel_2_API_34" value="120" />
+                  <entry key="Tests" value="360" />
+                </map>
+              </option>
+            </AndroidTestResultsTableState>
+          </value>
+        </entry>
         <entry key="1120816214">
+          <value>
+            <AndroidTestResultsTableState>
+              <option name="preferredColumnWidths">
+                <map>
+                  <entry key="Duration" value="90" />
+                  <entry key="Pixel_2_API_34" value="120" />
+                  <entry key="Tests" value="360" />
+                </map>
+              </option>
+            </AndroidTestResultsTableState>
+          </value>
+        </entry>
+        <entry key="1179385184">
           <value>
             <AndroidTestResultsTableState>
               <option name="preferredColumnWidths">
@@ -576,6 +615,19 @@
           </value>
         </entry>
         <entry key="1287964424">
+          <value>
+            <AndroidTestResultsTableState>
+              <option name="preferredColumnWidths">
+                <map>
+                  <entry key="Duration" value="90" />
+                  <entry key="Pixel_2_API_34" value="120" />
+                  <entry key="Tests" value="360" />
+                </map>
+              </option>
+            </AndroidTestResultsTableState>
+          </value>
+        </entry>
+        <entry key="1370410155">
           <value>
             <AndroidTestResultsTableState>
               <option name="preferredColumnWidths">
@@ -653,6 +705,19 @@
             </AndroidTestResultsTableState>
           </value>
         </entry>
+        <entry key="1699681361">
+          <value>
+            <AndroidTestResultsTableState>
+              <option name="preferredColumnWidths">
+                <map>
+                  <entry key="Duration" value="90" />
+                  <entry key="Pixel_2_API_34" value="120" />
+                  <entry key="Tests" value="360" />
+                </map>
+              </option>
+            </AndroidTestResultsTableState>
+          </value>
+        </entry>
         <entry key="1896498459">
           <value>
             <AndroidTestResultsTableState>
@@ -667,6 +732,19 @@
           </value>
         </entry>
         <entry key="2057339959">
+          <value>
+            <AndroidTestResultsTableState>
+              <option name="preferredColumnWidths">
+                <map>
+                  <entry key="Duration" value="90" />
+                  <entry key="Pixel_2_API_34" value="120" />
+                  <entry key="Tests" value="360" />
+                </map>
+              </option>
+            </AndroidTestResultsTableState>
+          </value>
+        </entry>
+        <entry key="2091070225">
           <value>
             <AndroidTestResultsTableState>
               <option name="preferredColumnWidths">
