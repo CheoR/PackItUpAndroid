@@ -1,19 +1,8 @@
 // Top-level build file where you can add configuration options common to all sub-projects/modules.
-buildscript {
-    extra.apply {
-        // TODO: fix - ref
-        // 2.8.0 break build error with CompositionLocal LocalLifecycleOwner not present
-        // https://developer.android.com/jetpack/androidx/releases/lifecycle#kts
-        set("lifecycle_version", "2.8.2")
-        set("navigation_version", "2.7.7")
-        set("compose_compiler_version", "1.5.10")
-        set("camerax_version", "1.3.4")
-        set("room_version", "2.6.1")
-    }
-}
 
 plugins {
-    id("com.android.library") version "8.5.2" apply false
-    id("com.android.application") version "8.5.2" apply false
-    id("org.jetbrains.kotlin.android") version "1.9.22" apply false
+    alias(libs.plugins.android.application) apply false
+    alias(libs.plugins.jetbrains.kotlin.android) apply false
+    alias(libs.plugins.compose.compiler) apply false
+//    alias(libs.plugins.kps.compiler) apply false
 }
