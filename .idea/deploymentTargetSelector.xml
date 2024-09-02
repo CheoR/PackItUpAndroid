@@ -5,19 +5,19 @@
       <SelectionState runConfigName="app">
         <option name="selectionMode" value="DROPDOWN" />
       </SelectionState>
-      <SelectionState runConfigName="testItemsScreen_increment()">
+      <SelectionState runConfigName="testItemsScreen_cancelDeleteOneItem_FiveItemsRemain()">
         <option name="selectionMode" value="DROPDOWN" />
       </SelectionState>
-      <SelectionState runConfigName="Tests in 'com.example.packitupandroid'">
+      <SelectionState runConfigName="testItemsScreen_cancelDeleteOneItem_tapOffScreen_FiveItemsRemain()">
+        <option name="selectionMode" value="DROPDOWN" />
+      </SelectionState>
+      <SelectionState runConfigName="testItemsScreen_editOneItem_hasEditableFields()">
+        <option name="selectionMode" value="DROPDOWN" />
+      </SelectionState>
+      <SelectionState runConfigName="testItemsScreen_editOneItem_editPersist()">
         <option name="selectionMode" value="DROPDOWN" />
       </SelectionState>
       <SelectionState runConfigName="ItemsScreenUiTests">
-        <option name="selectionMode" value="DROPDOWN" />
-      </SelectionState>
-      <SelectionState runConfigName="testItemsScreen_add5Items()">
-        <option name="selectionMode" value="DROPDOWN" />
-      </SelectionState>
-      <SelectionState runConfigName="testItemsScreen_baseCards()">
         <option name="selectionMode" value="DROPDOWN" />
       </SelectionState>
     </selectionStates>
