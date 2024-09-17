@@ -65,6 +65,13 @@ class ItemsScreenViewModel(
             try {
                 // TODO - fix user regular db
                 itemsRepository.clearAllItems()
+                itemsRepository.getAllItemsStream().collect {newState ->
+                    val items = newState.map { it.toItem() }
+                    _uiState.value = ItemsPackItUpUiState(
+                        elements = items,
+                        result = Result.Complete(items),
+                    )
+                }
                 itemsRepository.getAllItemsStream().map { itemEntities ->
                     itemEntities.map { it.toItem() }
                 }.map { items ->
@@ -140,6 +147,10 @@ class ItemsScreenViewModel(
             itemsRepository.insertItem(entities.first())
         } else {
             itemsRepository.insertAll(entities)
+            _uiState.value = ItemsPackItUpUiState(
+                elements = uiState.value.elements + entities.map { it.toItem() },
+                result = Result.Complete(uiState.value.elements + entities.map { it.toItem() }),
+            )
         }
     }
 
@@ -177,4 +188,3 @@ data class ItemsPackItUpUiState(
     override val elements: List<Item> = emptyList(),
     override val result: Result = Result.Loading,
 ): PackItUpUiState
-
