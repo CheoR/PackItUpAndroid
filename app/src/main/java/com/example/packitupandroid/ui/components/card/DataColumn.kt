@@ -14,6 +14,10 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.semantics.SemanticsProperties
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.unit.dp
 import com.example.packitupandroid.data.model.BaseCardData
 import com.example.packitupandroid.data.model.Box
@@ -43,7 +47,11 @@ fun<T: BaseCardData> DataColumn(
             textStyle = MaterialTheme.typography.titleSmall,
             enabled = editMode == EditMode.Edit,
             modifier = Modifier
-                .fillMaxWidth(),
+                .fillMaxWidth()
+                .semantics {
+                    contentDescription = "Name Field"
+                    this[SemanticsProperties.Text] = listOf(AnnotatedString(element.name))
+                },
         )
         Box {
             Row(
@@ -55,8 +63,8 @@ fun<T: BaseCardData> DataColumn(
                 Text(
                     maxLines = 1,
                     text = when(element) {
-                        is Item -> options.firstOrNull { it.id == element.boxId.toString() }?.name ?: ""
-                        is Box -> options.firstOrNull { it.id == element.collectionId.toString() }?.name ?: ""
+                        is Item -> options.firstOrNull { it.id == element.boxId.toString() }?.name ?: " "
+                        is Box -> options.firstOrNull { it.id == element.collectionId.toString() }?.name ?: " "
                         else -> ""
                     }
                 )
@@ -71,7 +79,11 @@ fun<T: BaseCardData> DataColumn(
             maxLines = 3,
             modifier = Modifier
                 .weight(1f)
-                .fillMaxWidth(),
+                .fillMaxWidth()
+                .semantics {
+                    contentDescription = "Description Field"
+                    this[SemanticsProperties.Text] = listOf(AnnotatedString(element.description ?: ""))
+                },
         )
 
         if(cardType !is CardType.Summary) {
@@ -84,6 +96,10 @@ fun<T: BaseCardData> DataColumn(
                     checked = element.isFragile,
                     onCheckedChange = {},
                     enabled = editMode == EditMode.Edit,
+                    modifier = Modifier
+                        .semantics {
+                            contentDescription = "Fragile Checkbox"
+                        },
                 )
                 Spacer(modifier = Modifier.width(4.dp))
                 Text("Fragile")
@@ -94,6 +110,11 @@ fun<T: BaseCardData> DataColumn(
                     textStyle = MaterialTheme.typography.bodySmall,
                     enabled = editMode == EditMode.Edit,
                     singleLine = true,
+                    modifier = Modifier
+                        .semantics {
+                        contentDescription = "Value Field"
+                        this[SemanticsProperties.Text] = listOf(AnnotatedString(element.value.asCurrencyString() ?: ""))
+                    },
                 )
             }
         }

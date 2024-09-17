@@ -37,6 +37,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.DpOffset
@@ -90,7 +92,10 @@ fun<T: BaseCardData> EditCard(
     Column(
         modifier = modifier
             .fillMaxSize()
-            .background(MaterialTheme.colorScheme.inversePrimary),
+            .background(MaterialTheme.colorScheme.inversePrimary)
+            .semantics {
+                contentDescription = "Edit Card"
+            },
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
@@ -135,7 +140,10 @@ fun<T: BaseCardData> EditCard(
                         textStyle = MaterialTheme.typography.titleSmall,
                         enabled = isEditable(EditFields.Name),
                         modifier = Modifier
-                            .fillMaxWidth(),
+                            .fillMaxWidth()
+                            .semantics {
+                                contentDescription = "Edit Name Field"
+                            },
                     )
                     Box {
                         Row(
@@ -144,8 +152,15 @@ fun<T: BaseCardData> EditCard(
                             verticalAlignment = Alignment.CenterVertically,
                             horizontalArrangement = Arrangement.SpaceBetween,
                         ) {
-                            Text(text=options.firstOrNull { it.id == selectedOption }?.name ?: "",)
-                            IconButton(onClick = { expanded = !expanded }) {
+                            Text(
+                                modifier = Modifier
+                                    .semantics {
+                                        contentDescription = "Edit Dropdown Selection Value"
+                                    },
+//                                component does not display if there is no value
+                                text=options.firstOrNull { it.id == selectedOption }?.name ?: " ",
+                                )
+                            IconButton(onClick = { expanded = !expanded }, modifier = Modifier.semantics { contentDescription = "Icon Selector" }) {
                                 Icon(Icons.Default.ArrowDropDown, contentDescription = stringResource(R.string.more))
                             }
                         }
@@ -155,11 +170,20 @@ fun<T: BaseCardData> EditCard(
                             onDismissRequest = { expanded = false },
                             offset = DpOffset(0.dp, (-150).dp),
                             modifier = Modifier
-                                .background(MaterialTheme.colorScheme.inversePrimary),
+                                .background(MaterialTheme.colorScheme.inversePrimary)
+                                .semantics {
+                                    contentDescription = "Edit Dropdown Menu"
+                                },
                         ) {
                             options.forEach { option ->
                                 DropdownMenuItem(
-                                    text = { Text(text = option.name )},
+                                    modifier = Modifier
+                                        .semantics {
+                                            contentDescription = "Edit Dropdown Menu Selection"
+                                        },
+                                    text = {
+                                        Text(text = option.name?: " " )
+                                           },
                                     onClick = {
                                         selectedOption = option.id
                                         localData = when (localData) {
@@ -174,7 +198,7 @@ fun<T: BaseCardData> EditCard(
                     }
                     BasicTextField(
                         // TODO: fix
-                        value = localData.description ?: "",
+                        value = localData.description ?: " ",
                         onValueChange = {
                             localData = when (localData) {
                                 is Item -> (localData as Item).copy(description = it) as T
@@ -188,7 +212,10 @@ fun<T: BaseCardData> EditCard(
                         maxLines = 3,
                         modifier = Modifier
                             .weight(1f)
-                            .fillMaxWidth(),
+                            .fillMaxWidth()
+                            .semantics {
+                                contentDescription = "Edit Description Field"
+                            },
                     )
                     if(element !is Summary) {
                         Row(
@@ -205,6 +232,10 @@ fun<T: BaseCardData> EditCard(
                                     }
                                 },
                                 enabled = isEditable(EditFields.IsFragile),
+                                modifier = Modifier
+                                    .semantics {
+                                        contentDescription = "Edit Fragile Checkbox"
+                                    },
                             )
                             Spacer(modifier = Modifier.width(4.dp))
                             Text("Fragile")
@@ -226,6 +257,10 @@ fun<T: BaseCardData> EditCard(
                                     imeAction = ImeAction.Done
                                 ),
                                 singleLine = true,
+                                modifier = Modifier
+                                    .semantics {
+                                        contentDescription = "Edit Value Field"
+                                    },
                             )
                         }
                     }

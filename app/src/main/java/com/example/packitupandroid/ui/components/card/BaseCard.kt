@@ -20,6 +20,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.unit.dp
@@ -85,7 +86,8 @@ fun<T: BaseCardData> BaseCard(
         modifier = modifier
             .height(dimensionResource(R.dimen.card_height))
             .fillMaxWidth()
-            .clip(RoundedCornerShape(dimensionResource(R.dimen.roundness_small))),
+            .clip(RoundedCornerShape(dimensionResource(R.dimen.roundness_small)))
+            .testTag("BaseCard ${element.id}"),
         elevation = CardDefaults.cardElevation(defaultElevation = dimensionResource(R.dimen.image_size_medium)),
     ) {
         Row(

@@ -9,6 +9,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.dimensionResource
 import com.example.packitupandroid.PackItUpUiState
 import com.example.packitupandroid.R
@@ -47,7 +48,9 @@ fun <T: BaseCardData> Screen(
             is Result.Error -> Error()
             is Result.Complete -> {
                 LazyColumn(
-                    modifier = modifier.weight(1f),
+                    modifier = modifier
+                        .weight(1f)
+                        .testTag("LazyColumn"),
                     verticalArrangement = Arrangement.spacedBy(
                         dimensionResource(R.dimen.space_arrangement_small)
                     )
@@ -63,6 +66,7 @@ fun <T: BaseCardData> Screen(
                             getDropdownOptions = getDropdownOptions,
                             filterElements = filterElements,
                             cardType = cardType,
+                            modifier = Modifier.testTag("Screen BaseCard ${element.id}")
                         )
                     }
                 }

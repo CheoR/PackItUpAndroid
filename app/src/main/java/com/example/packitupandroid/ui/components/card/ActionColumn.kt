@@ -21,6 +21,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.unit.DpOffset
 import androidx.compose.ui.unit.dp
 import com.example.packitupandroid.data.model.BaseCardData
@@ -118,7 +120,10 @@ fun<T: BaseCardData> ActionColumn(
                     IconButton(
                         onClick = onClick, // for navigation
                         modifier = Modifier
-                            .fillMaxHeight(),
+                            .fillMaxHeight()
+                            .semantics {
+                                contentDescription = "Action Column"
+                            },
                         content = {
                             Icon(
                                 imageVector = actionIcon.icon, // to avoid mismatch error
@@ -133,11 +138,14 @@ fun<T: BaseCardData> ActionColumn(
                     IconButton(
                         onClick = { isExpanded.value = true },
                         modifier = Modifier
-                            .fillMaxHeight(),
+                            .fillMaxHeight() //,
+                            .semantics {
+                                contentDescription = "Open Menu"
+                            },
                         content = {
                             Icon(
                                 imageVector = actionIcon.icon,
-                                contentDescription = "Icon Button",
+                                contentDescription = null,
                                 modifier = Modifier
                                     .size(24.dp)
                             )
@@ -148,7 +156,11 @@ fun<T: BaseCardData> ActionColumn(
                         onDismissRequest = onCancel,
                         offset = DpOffset(0.dp, (-150).dp),
                         modifier = Modifier
-                            .background(MaterialTheme.colorScheme.inversePrimary),
+                            .background(MaterialTheme.colorScheme.inversePrimary)
+                            .semantics {
+                                contentDescription = "Dropdown Menu"
+                            }
+                        ,
                     ) {
                         if(cardType !is CardType.Item) {
                             DropdownMenuItem(

@@ -30,6 +30,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.dimensionResource
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
@@ -89,7 +91,10 @@ fun DeleteCard(
             modifier = modifier
                 .height(dimensionResource(R.dimen.card_height))
                 .fillMaxWidth()
-                .clip(RoundedCornerShape(dimensionResource(R.dimen.roundness_small))),
+                .clip(RoundedCornerShape(dimensionResource(R.dimen.roundness_small)))
+                .semantics {
+                    contentDescription = "Delete Card"
+                },
             elevation = CardDefaults.cardElevation(defaultElevation = dimensionResource(R.dimen.image_size_medium)),
         ) {
             Row(

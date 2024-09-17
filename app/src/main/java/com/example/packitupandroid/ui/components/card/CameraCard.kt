@@ -27,6 +27,8 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.dimensionResource
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.semantics
 import androidx.core.content.ContextCompat
 import com.example.packitupandroid.R
 import com.example.packitupandroid.data.model.BaseCardData
@@ -59,7 +61,10 @@ fun<T: BaseCardData> CameraCard(
     Column(
         modifier = modifier
             .fillMaxSize()
-            .background(MaterialTheme.colorScheme.inversePrimary),
+            .background(MaterialTheme.colorScheme.inversePrimary)
+            .semantics {
+                contentDescription = "Camera Preview"
+            },
     ) {
         Box(
             modifier = Modifier
