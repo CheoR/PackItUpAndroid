@@ -7,6 +7,8 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowForward
+import androidx.compose.material.icons.automirrored.filled.Label
 import androidx.compose.material.icons.filled.ArrowForward
 import androidx.compose.material.icons.filled.Category
 import androidx.compose.material.icons.filled.CheckBoxOutlineBlank
@@ -50,7 +52,7 @@ sealed class ColumnIcon {
 }
 
 sealed class ActionColumnIcon(val icon: ImageVector) {
-    object RightArrow : ActionColumnIcon(Icons.Default.ArrowForward)
+    object RightArrow : ActionColumnIcon(Icons.AutoMirrored.Filled.ArrowForward)
     object ThreeDots : ActionColumnIcon(Icons.Default.MoreVert)
     object None : ActionColumnIcon(Icons.Default.CheckBoxOutlineBlank)
 }
@@ -156,19 +158,19 @@ fun <T: BaseCardData> getIconsAndBadges(data: T): Pair<IconPair,BadgeCountPair> 
 //            val icon = when (val imageUri = data.imageUri) {
 //                is ImageUri.StringUri -> ColumnIcon.UriStringIcon(imageUri.uri)
 //                is ImageUri.ResourceUri -> ColumnIcon.UriIcon(imageUri.resourceId)
-//                null -> ColumnIcon.VectorIcon(Icons.Default.Label)
+//                null -> ColumnIcon.VectorIcon(Icons.AutoMirrored.Filled.Label)
 //            }
-            val icon1 = if(data.imageUri != null) ColumnIcon.UriStringIcon(data.imageUri) else  ColumnIcon.VectorIcon(Icons.Default.Label)
+            val icon1 = if(data.imageUri != null) ColumnIcon.UriStringIcon(data.imageUri) else  ColumnIcon.VectorIcon(Icons.AutoMirrored.Filled.Label)
             Pair(Pair(icon1, null), Pair(0, 0))
         }
         is Box -> {
-            val icon1 = ColumnIcon.VectorIcon(Icons.Default.Label)
+            val icon1 = ColumnIcon.VectorIcon(Icons.AutoMirrored.Filled.Label)
             val badgeCount1 = data.item_count
             Pair(Pair(icon1, null), Pair(badgeCount1, 0))
         }
         is Collection -> {
             val icon1 = ColumnIcon.VectorIcon(ImageVector.vectorResource(R.drawable.ic_launcher_foreground))
-            val icon2 = ColumnIcon.VectorIcon(Icons.Default.Label)
+            val icon2 = ColumnIcon.VectorIcon(Icons.AutoMirrored.Filled.Label)
             val badgeCount1 = data.box_count
             val badgeCount2 = data.item_count
             Pair(Pair(icon1, icon2), Pair(badgeCount1, badgeCount2))
@@ -177,12 +179,12 @@ fun <T: BaseCardData> getIconsAndBadges(data: T): Pair<IconPair,BadgeCountPair> 
             val (icon1, badgeCount1) = when(data.id) {
                 "collections" -> Pair(ColumnIcon.VectorIcon(Icons.Default.Category), data.collectionCount)
                 "boxes" -> Pair(ColumnIcon.VectorIcon(ImageVector.vectorResource(R.drawable.ic_launcher_foreground)), data.boxCount)
-                else -> Pair(ColumnIcon.VectorIcon(Icons.Default.Label), data.itemCount)
+                else -> Pair(ColumnIcon.VectorIcon(Icons.AutoMirrored.Filled.Label), data.itemCount)
             }
             Pair(Pair(icon1, null), Pair(badgeCount1, 0))
         }
 
-       else -> Pair(Pair(ColumnIcon.VectorIcon(Icons.Default.Label), null), Pair(0, 0))
+       else -> Pair(Pair(ColumnIcon.VectorIcon(Icons.AutoMirrored.Filled.Label), null), Pair(0, 0))
    }
 }
 
