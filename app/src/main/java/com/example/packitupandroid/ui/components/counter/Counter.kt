@@ -74,7 +74,6 @@ fun Counter(
             }
             IconButton(
                 modifier = buttonModifier,
-                  //  .testTag("increment"),
                 onClick = { count++ },
             ) {
                 Icon(imageVector = Icons.Default.Add, contentDescription = "increment")
