@@ -10,7 +10,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Label
+import androidx.compose.material.icons.automirrored.filled.Label
 import androidx.compose.material3.Badge
 import androidx.compose.material3.BadgedBox
 import androidx.compose.material3.Icon
@@ -30,7 +30,7 @@ import com.example.packitupandroid.R
 @Composable
 fun IconsColumn(
     modifier: Modifier = Modifier,
-    icon1: ColumnIcon = ColumnIcon.VectorIcon(Icons.Default.Label),
+    icon1: ColumnIcon = ColumnIcon.VectorIcon(Icons.AutoMirrored.Filled.Label),
     icon2: ColumnIcon? = null,
     badgeCount1: Int? = 0,
     badgeCount2: Int? = 0,
@@ -163,7 +163,7 @@ fun PreviewBaseCardBoxIconColumn() {
 fun PreviewBaseCardCollectionIconColumn() {
     IconsColumn(
         icon1 = ColumnIcon.VectorIcon(ImageVector.vectorResource(R.drawable.ic_launcher_foreground)),
-        icon2 = ColumnIcon.VectorIcon(Icons.Default.Label),
+        icon2 = ColumnIcon.VectorIcon(Icons.AutoMirrored.Filled.Label),
         badgeCount1 = 5,
         badgeCount2 = 2,
     )
@@ -177,7 +177,7 @@ fun PreviewBaseCardCollectionIconColumn() {
 @Composable
 fun PreviewBaseCardItemSummaryIconColumn() {
     IconsColumn(
-        icon1 = ColumnIcon.VectorIcon(Icons.Default.Label),
+        icon1 = ColumnIcon.VectorIcon(Icons.AutoMirrored.Filled.Label),
         badgeCount1 = 5,
     )
 }
@@ -202,7 +202,7 @@ fun PreviewBaseCardBoxSummaryIconColumn() {
 fun PreviewBaseCardCollectionSummaryIconColumn() {
     IconsColumn(
         icon1 = ColumnIcon.VectorIcon(ImageVector.vectorResource(R.drawable.ic_launcher_foreground)),
-        icon2 = ColumnIcon.VectorIcon(Icons.Default.Label),
+        icon2 = ColumnIcon.VectorIcon(Icons.AutoMirrored.Filled.Label),
         badgeCount1 = 5,
         badgeCount2 = 2,
     )
