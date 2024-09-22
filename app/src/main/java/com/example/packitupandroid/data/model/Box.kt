@@ -12,7 +12,7 @@ data class QueryBox(
     val description: String? = null,
     val value: Double = 0.0,
     val is_fragile: Boolean = false,
-    val last_modified: Long,
+    val last_modified: Date = Date(), // Long
     val item_count: Int = 0,
     val collection_id: String? = null,
 )
@@ -24,7 +24,7 @@ fun QueryBox.toBox(): Box = Box(
     item_count = this.item_count,
     value = this.value,
     isFragile = this.is_fragile,
-    lastModified = Converters().fromTimestamp(this.last_modified) ?: Date(),
+    lastModified = this.last_modified,
     collectionId = this.collection_id,
 )
 
@@ -56,7 +56,7 @@ fun Box.toEntity(): BoxEntity = BoxEntity(
     id = this.id,
     name = this.name,
     description = this.description,
-    lastModified = System.currentTimeMillis(),
+    lastModified = Converters().dateToTimestamp(this.lastModified) ?: 0L, // System.currentTimeMillis(),
     collectionId = this.collectionId,
 )
 
@@ -66,7 +66,7 @@ fun Box.toQueryBox(): QueryBox = QueryBox(
     description = this.description,
     value = this.value,
     is_fragile = this.isFragile,
-    last_modified = this.lastModified.time,
+    last_modified = this.lastModified, // Date(), // this.lastModified.time,
     item_count = this.item_count,
     collection_id = this.collectionId,
 )
