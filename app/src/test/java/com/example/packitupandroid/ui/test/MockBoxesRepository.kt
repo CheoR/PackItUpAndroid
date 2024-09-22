@@ -54,7 +54,7 @@ class MockBoxesRepository: BoxesRepository {
     }
 
     override suspend fun deleteBox(box: BoxEntity) {
-        this.boxes.removeAll { it.id == box.id}
+        this.boxes.remove(box)
         boxFlow.value = this.boxes
     }
 
