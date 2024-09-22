@@ -24,6 +24,8 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.vectorResource
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.tooling.preview.Preview
 import com.example.packitupandroid.R
 
@@ -66,7 +68,12 @@ fun IconsColumn(
                         if (isShowBadgeCount) Badge(
                             modifier = badgeOffsets,
                         ) {
-                            Text(badgeCount1.toString())
+                            Text(
+                                badgeCount1.toString(),
+                                modifier = Modifier.semantics {
+                                    contentDescription = "Badge1 count"
+                                }
+                                )
                         }
                     },
                 ) {
@@ -100,7 +107,11 @@ fun IconsColumn(
                         if (isShowBadgeCount) Badge(
                             modifier = badgeOffsets,
                         ) {
-                            Text(badgeCount2.toString())
+                            Text(badgeCount2.toString(),
+                                modifier = Modifier.semantics {
+                                    contentDescription = "Badge2 count"
+                                }
+                            )
                         }
                     },
                 ) {
