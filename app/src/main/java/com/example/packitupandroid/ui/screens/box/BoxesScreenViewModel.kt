@@ -6,6 +6,7 @@ import androidx.lifecycle.viewModelScope
 import com.example.packitupandroid.PackItUpUiState
 import com.example.packitupandroid.Result
 import com.example.packitupandroid.data.database.entities.BoxEntity
+import com.example.packitupandroid.data.database.entities.toBox
 import com.example.packitupandroid.data.database.entities.updateWith
 import com.example.packitupandroid.data.model.Box
 import com.example.packitupandroid.data.model.toBox
@@ -60,6 +61,13 @@ class BoxesScreenViewModel(
             try {
                 // TODO: REPLACE TO USE DIFFERENT DB
                 boxesRepository.clearAllBoxes()
+                boxesRepository.getAllBoxesStream().collect { newState ->
+                    val boxes = newState.map { it.toBox() }
+                    _uiState.value = BoxesScreenUiState(
+                        elements = boxes,
+                        result = Result.Complete(boxes),
+                    )
+                }
                 boxesRepository.getAllBoxesStream().map { boxEntities ->
                     boxEntities.map { it.toBox() }
                 }.map { boxes ->
@@ -125,7 +133,8 @@ class BoxesScreenViewModel(
     }
 
     private suspend fun getBox(id: String): BoxEntity? {
-        return boxesRepository.getBox(id)
+//        return boxesRepository.getBox(id)
+        return uiState.value.elements.find { it.id == id }?.toEntity()
     }
 
     private suspend fun saveBox(entities: List<BoxEntity>) {
@@ -133,6 +142,10 @@ class BoxesScreenViewModel(
             boxesRepository.insertBox(entities.first())
         } else {
             boxesRepository.insertAll(entities)
+            _uiState.value = BoxesScreenUiState(
+                elements = uiState.value.elements + entities.map { it.toBox() },
+                result = Result.Complete(uiState.value.elements + entities.map { it.toBox() }),
+            )
         }
     }
 
