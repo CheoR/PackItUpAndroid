@@ -30,29 +30,29 @@ class CollectionsScreenViewModelTest {
     }
 
     @Test
-    fun testGetAllCollections() = runTest {
-        val result = viewModel.getAllCollections()
+    fun testgetAllElements() = runTest {
+        val result = viewModel.getAllElements()
         assertEquals(COUNT, result.size)
     }
 
     @Test
     fun testCreateCollection() = runTest {
-        val initialSize = viewModel.getAllCollections().size
+        val initialSize = viewModel.getAllElements().size
 
         viewModel.create(COUNT)
-        val result = viewModel.getAllCollections()
+        val result = viewModel.getAllElements()
 
         assertEquals(initialSize + COUNT, result.size)
     }
 
     @Test
     fun testUpdateCollection() = runTest {
-        val collection = viewModel.getAllCollections().first()
+        val collection = viewModel.getAllElements().first()
         val updatedCollection = collection.copy(name = "Updated Collection 1")
 
         viewModel.update(updatedCollection)
 
-        val result = viewModel.getAllCollections().first()
+        val result = viewModel.getAllElements().first()
 
         assertEquals(updatedCollection.name, result.name)
         assertSameExcept(updatedCollection, result, "name", "lastModified")
@@ -60,12 +60,12 @@ class CollectionsScreenViewModelTest {
 
     @Test
     fun testDestroyCollection() = runTest {
-        val initialSize = viewModel.getAllCollections().size
-        val collection = viewModel.getAllCollections().first()
+        val initialSize = viewModel.getAllElements().size
+        val collection = viewModel.getAllElements().first()
 
         viewModel.destroy(collection)
 
-        val result = viewModel.getAllCollections()
+        val result = viewModel.getAllElements()
         val deleted = result.find { it.id == collection.id }
 
         assertEquals(initialSize - 1, result.size)

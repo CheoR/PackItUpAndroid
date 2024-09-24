@@ -46,29 +46,29 @@ class ItemScreenViewModelTest {
 //    }
 
     @Test
-    fun testGetAllItems() = runTest { // (UnconfinedTestDispatcher()) {
+    fun testgetAllElements() = runTest { // (UnconfinedTestDispatcher()) {
         // Set Main dispatcher to not run coroutines eagerly, for just this one test
         // Dispatchers.setMain(StandardTestDispatcher())
-        val result = viewModel.getAllItems()
+        val result = viewModel.getAllElements()
         assertEquals(COUNT, result.size)
     }
 
     @Test
     fun testCreateItems() = runTest {
-        val initialSize = viewModel.getAllItems().size
+        val initialSize = viewModel.getAllElements().size
         viewModel.create(COUNT)
-        val result = viewModel.getAllItems()
+        val result = viewModel.getAllElements()
         assertEquals(initialSize + COUNT, result.size)
     }
 
     @Test
     fun testUpdateItem() = runTest {
-        val item = viewModel.getAllItems().first()
+        val item = viewModel.getAllElements().first()
         val updatedItem = item.copy(name = "Updated Item 1")
 
         viewModel.update(updatedItem)
 
-        val result = viewModel.getAllItems().first()
+        val result = viewModel.getAllElements().first()
 
         assertEquals(updatedItem.name, result.name)
         assertSameExcept(updatedItem, result, "name", "lastModified")
@@ -76,12 +76,12 @@ class ItemScreenViewModelTest {
 
     @Test
     fun testDestroyItem() = runTest {
-        val initialSize = viewModel.getAllItems().size
-        val item = viewModel.getAllItems().first()
+        val initialSize = viewModel.getAllElements().size
+        val item = viewModel.getAllElements().first()
 
         viewModel.destroy(item)
 
-        val result = viewModel.getAllItems()
+        val result = viewModel.getAllElements()
         val deleted = result.find { it.id == item.id }
 
         assertEquals(initialSize - 1, result.size)

@@ -1,7 +1,6 @@
 package com.example.packitupandroid.ui.screens.box
 
 import androidx.lifecycle.SavedStateHandle
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.packitupandroid.PackItUpUiState
 import com.example.packitupandroid.Result
@@ -12,13 +11,10 @@ import com.example.packitupandroid.data.model.Box
 import com.example.packitupandroid.data.model.toBox
 import com.example.packitupandroid.data.model.toEntity
 import com.example.packitupandroid.data.repository.BoxesRepository
-import com.example.packitupandroid.utils.USE_MOCK_DATA
+import com.example.packitupandroid.ui.screens.BaseViewModel
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
-import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
@@ -28,10 +24,8 @@ class BoxesScreenViewModel(
     savedStateHandle: SavedStateHandle,
     private val boxesRepository: BoxesRepository,
     private val defaultDispatcher: CoroutineDispatcher = Dispatchers.Default,
-) : ViewModel() {
+) : BaseViewModel<BoxesScreenUiState, Box, BoxEntity>() {
     private val collectionId: String? = savedStateHandle["collectionId"]
-    private val _uiState = MutableStateFlow(BoxesScreenUiState())
-    val uiState: StateFlow<BoxesScreenUiState> = _uiState.asStateFlow()
 
     init {
         viewModelScope.launch(defaultDispatcher) {
@@ -39,8 +33,15 @@ class BoxesScreenViewModel(
         }
     }
 
-    private suspend fun initializeUIState(isUseMockData: Boolean = USE_MOCK_DATA) {
-        if (isUseMockData) {
+    override fun initialState(): BoxesScreenUiState {
+        return BoxesScreenUiState(
+            elements = emptyList(),
+            result = Result.Loading,
+        )
+    }
+
+    override suspend fun initializeUIState(useMockData: Boolean) {
+        if (useMockData) {
             boxesRepository.getAllBoxesStream().map { boxEntities ->
                 boxEntities.map { it.toBox() }
             }.map { boxes ->
@@ -53,7 +54,7 @@ class BoxesScreenViewModel(
                 started = SharingStarted.WhileSubscribed(TIMEOUT_MILLIS),
                 initialValue = BoxesScreenUiState()
             ).collect {
-                newState -> _uiState.value = newState
+                    newState -> _uiState.value = newState
                 collectionId?.let { filterByCollectionId(collectionId) }
             }
         } else {
@@ -80,7 +81,7 @@ class BoxesScreenViewModel(
                     started = SharingStarted.WhileSubscribed(TIMEOUT_MILLIS),
                     initialValue = BoxesScreenUiState()
                 ).collect {
-                    newState -> _uiState.value = newState
+                        newState -> _uiState.value = newState
                     collectionId?.let { filterByCollectionId(collectionId) }
                 }
             } catch (e: Exception) {
@@ -91,7 +92,7 @@ class BoxesScreenViewModel(
         }
     }
 
-    fun create(count: Int = 0) {
+    override fun create(count: Int) {
         val entities = (0 until count ).mapIndexed { index, _ ->
             Box(name = "Box ${index + 1}", collectionId = collectionId).toEntity()
         }
@@ -99,45 +100,36 @@ class BoxesScreenViewModel(
         // when using viewModelScope.launch and don't pass a Dispatcher to launch,
         // any coroutines launched from viewModelScope run in the main thread.
         viewModelScope.launch(defaultDispatcher) {
-            saveBox(entities)
+            createEntity(entities)
         }
     }
 
-    fun update(element: Box) {
+    override fun update(element: Box) {
         // TODO: Fix FOR JUST PASSING STRING INSTEAD OF ENTIRE ELEMENT
         viewModelScope.launch(defaultDispatcher) {
-            val boxEntity = getBox(element.id)
+            val boxEntity = getEntity(element.id)
             if (boxEntity != null) {
                 val updatedBoxEntity = boxEntity.updateWith(element.toEntity())
-                updateBox(updatedBoxEntity)
+                updateEntity(updatedBoxEntity)
             }
         }
     }
 
-    fun destroy(element: Box) {
+    override fun destroy(element: Box) {
         viewModelScope.launch(defaultDispatcher) {
-            destroyBox(element.toEntity())
+            destroyEntity(element.toEntity())
         }
     }
 
-    fun getAllBoxes(): List<Box> {
+    override fun getAllElements(): List<Box> {
         var boxList: List<Box> = emptyList()
         viewModelScope.launch(defaultDispatcher) {
-            boxList = getBoxes()
+            boxList = getElements()
         }
         return boxList
     }
 
-    private suspend fun getBoxes(): List<Box> {
-        return boxesRepository.getAllBoxesStream().first().map { it.toBox() }
-    }
-
-    private suspend fun getBox(id: String): BoxEntity? {
-//        return boxesRepository.getBox(id)
-        return uiState.value.elements.find { it.id == id }?.toEntity()
-    }
-
-    private suspend fun saveBox(entities: List<BoxEntity>) {
+    override suspend fun createEntity(entities: List<BoxEntity>) {
         if (entities.size == 1) {
             boxesRepository.insertBox(entities.first())
         } else {
@@ -149,13 +141,20 @@ class BoxesScreenViewModel(
         }
     }
 
-    private suspend fun updateBox(entity: BoxEntity) {
+    override suspend fun updateEntity(entity: BoxEntity) {
         boxesRepository.updateBox(entity)
     }
 
-
-    private suspend fun destroyBox(entity: BoxEntity) {
+    override suspend fun destroyEntity(entity: BoxEntity) {
         boxesRepository.deleteBox(entity)
+    }
+
+    override suspend fun getElements(): List<Box> {
+        return boxesRepository.getAllBoxesStream().first().map { it.toBox() }
+    }
+
+    override suspend fun getEntity(id: String): BoxEntity? {
+        return boxesRepository.getBox(id)
     }
 
     private fun filterByCollectionId(id: String) {
@@ -164,10 +163,6 @@ class BoxesScreenViewModel(
             elements = filteredElements,
             result = Result.Complete(filteredElements)
         )
-    }
-
-    companion object {
-        private const val TIMEOUT_MILLIS = 5_000L
     }
 }
 

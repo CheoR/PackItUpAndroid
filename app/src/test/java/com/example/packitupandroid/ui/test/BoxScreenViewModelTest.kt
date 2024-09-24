@@ -34,29 +34,29 @@ class BoxScreenViewModelTest {
     }
 
     @Test
-    fun testGetAllBoxes() = runTest {
-        val result = viewModel.getAllBoxes()
+    fun testgetAllElements() = runTest {
+        val result = viewModel.getAllElements()
         assertEquals(COUNT, result.size)
     }
 
     @Test
     fun testCreateBox() = runTest {
-        val initialSize = viewModel.getAllBoxes().size
+        val initialSize = viewModel.getAllElements().size
 
         viewModel.create(COUNT)
-        val result = viewModel.getAllBoxes()
+        val result = viewModel.getAllElements()
 
         assertEquals(initialSize + COUNT, result.size)
     }
 
     @Test
     fun testUpdateBox() = runTest {
-        val box = viewModel.getAllBoxes().first()
+        val box = viewModel.getAllElements().first()
         val updatedBox = box.copy(name = "Updated Box 1")
 
         viewModel.update(updatedBox)
 
-        val result = viewModel.getAllBoxes().first()
+        val result = viewModel.getAllElements().first()
 
         assertEquals(updatedBox.name, result.name)
         assertSameExcept(updatedBox, result, "name", "lastModified")
@@ -64,8 +64,8 @@ class BoxScreenViewModelTest {
 
     @Test
     fun testDestroyBox() = runTest {
-        val initialSize = viewModel.getAllBoxes().size
-        val box = viewModel.getAllBoxes().first()
+        val initialSize = viewModel.getAllElements().size
+        val box = viewModel.getAllElements().first()
 
         viewModel.destroy(box)
 
@@ -73,7 +73,7 @@ class BoxScreenViewModelTest {
 //        coroutineRule.testDispatcher.scheduler.runCurrent()
 //        coroutineRule.testDispatcher.scheduler.advanceTimeBy(initialSize * TIMEOUT_MILLIS)
 
-        val result = viewModel.getAllBoxes()
+        val result = viewModel.getAllElements()
         val deleted = result.find { it.id == box.id }
 
         assertEquals(initialSize - 1, result.size)
@@ -82,7 +82,7 @@ class BoxScreenViewModelTest {
 
 //    @Test
 //    fun testDestroyBox_destroyAssociatedItems() = runTest {
-//        val box = viewModel.getAllBoxes().first()
+//        val box = viewModel.getAllElements().first()
 //
 //    }
 

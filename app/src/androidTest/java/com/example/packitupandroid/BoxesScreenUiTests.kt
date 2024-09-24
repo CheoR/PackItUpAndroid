@@ -428,7 +428,7 @@ class BoxesScreenUiTests {
         println("badge1CountValue: $badge1CountValue.")
 
         itemsViewModel.create(COUNT)
-        val items = itemsViewModel.getAllItems()
+        val items = itemsViewModel.getAllElements()
 
         for (item in items) {
             itemsViewModel.update(
@@ -456,7 +456,7 @@ class BoxesScreenUiTests {
         badge1CountNode.printToLog("badge1CountNode2: ")
         println("badge1CountValue: $badge1CountValue2.")
 
-        assertEquals(badge1CountValue2, initialValue + COUNT)
+        assertEquals(initialValue + COUNT, badge1CountValue2)
 
 //        val count = card
 ////            .fetchSemanticsNode()
