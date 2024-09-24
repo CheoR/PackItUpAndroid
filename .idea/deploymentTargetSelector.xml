@@ -5,19 +5,7 @@
       <SelectionState runConfigName="app">
         <option name="selectionMode" value="DROPDOWN" />
       </SelectionState>
-      <SelectionState runConfigName="testBoxesScreen_cancelDeleteOneItem_fiveBoxesRemain()">
-        <option name="selectionMode" value="DROPDOWN" />
-      </SelectionState>
-      <SelectionState runConfigName="testBoxesScreen_cancelDeleteOneItem_tapOffScreen_FiveBoxesRemain()">
-        <option name="selectionMode" value="DROPDOWN" />
-      </SelectionState>
-      <SelectionState runConfigName="testBoxesScreen_editOneBox_hasEditableFields()">
-        <option name="selectionMode" value="DROPDOWN" />
-      </SelectionState>
-      <SelectionState runConfigName="testBoxesScreen_editOneItem_editPersist()">
-        <option name="selectionMode" value="DROPDOWN" />
-      </SelectionState>
-      <SelectionState runConfigName="boxesScreen_updateItemValue_boxValueUpdated()">
+      <SelectionState runConfigName="Tests in 'com'">
         <option name="selectionMode" value="DROPDOWN" />
       </SelectionState>
     </selectionStates>
