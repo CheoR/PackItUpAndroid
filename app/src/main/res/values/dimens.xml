@@ -1,15 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <dimen name="badge_x_offset">-16dp</dimen>
-    <dimen name="badge_y_offset">16dp</dimen>
-    <dimen name="card_height">148dp</dimen>
+    <dimen name="badge_x_offset">-8dp</dimen>
+    <dimen name="badge_y_offset">8dp</dimen>
     <dimen name="elevation_small">8dp</dimen>
-    <dimen name="image_size_small">24dp</dimen>
-    <dimen name="image_size_medium">48dp</dimen>
-    <dimen name="navigation_bar_item_height">24dp</dimen>
     <dimen name="padding_small">8dp</dimen>
-    <dimen name="padding_medium">16dp</dimen>
     <dimen name="roundness_x_small">8dp</dimen>
     <dimen name="roundness_small">8dp</dimen>
     <dimen name="space_arrangement_small">8dp</dimen>
+    <dimen name="padding_medium">16dp</dimen>
+    <dimen name="image_size_small">24dp</dimen>
+    <dimen name="navigation_bar_item_height">24dp</dimen>
+    <dimen name="icon_size_medium">24dp</dimen>
+    <dimen name="image_size_medium">48dp</dimen>
+    <dimen name="card_height">148dp</dimen>
 </resources>
