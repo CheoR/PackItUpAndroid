@@ -11,6 +11,8 @@ import com.example.packitupandroid.ui.screens.collection.CollectionsScreenViewMo
 import com.example.packitupandroid.ui.screens.item.ItemsScreenViewModel
 import com.example.packitupandroid.ui.screens.summary.SummaryScreenViewModel
 import androidx.lifecycle.createSavedStateHandle
+import com.example.packitupandroid.ui.components.strategyCard.EditCardViewModel
+import com.example.packitupandroid.utils.CardType
 
 /**
  * Provides Factory to create ViewModel instance for entire PackItUp app
@@ -49,6 +51,20 @@ object PackItUpViewModelProvider {
                 collectionsRepository = packItUpApplication().container.collectionsRepository,
                 summaryRepository = packItUpApplication().container.summaryRepository,
             )
+        }
+    }
+    fun editCardViewModelFactory(cardType: CardType, id: String?): ViewModelProvider.Factory {
+        return viewModelFactory {
+            initializer {
+                EditCardViewModel(
+                    savedStateHandle = createSavedStateHandle(),
+                    itemsRepository = packItUpApplication().container.itemsRepository,
+                    boxesRepository = packItUpApplication().container.boxesRepository,
+                    collectionsRepository = packItUpApplication().container.collectionsRepository,
+                    cardType = cardType,
+                    id = id
+                )
+            }
         }
     }
 }
