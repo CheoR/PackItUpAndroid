@@ -12,9 +12,7 @@ import androidx.camera.view.CameraController
 import androidx.camera.view.LifecycleCameraController
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
@@ -34,8 +32,7 @@ import com.example.packitupandroid.R
 import com.example.packitupandroid.data.model.BaseCardData
 import com.example.packitupandroid.data.model.Item
 import com.example.packitupandroid.ui.components.camera.CameraPreview
-import com.example.packitupandroid.ui.components.common.AddConfirmCancelButton
-import com.example.packitupandroid.ui.components.common.ButtonType
+import com.example.packitupandroid.ui.components.layout.ConfirmCancelContainer
 import com.example.packitupandroid.utils.EditFields
 import com.example.packitupandroid.utils.EditMode
 import java.io.ByteArrayOutputStream
@@ -58,46 +55,40 @@ fun<T: BaseCardData> CameraCard(
             )
         }
     }
-    Column(
+    ConfirmCancelContainer(
         modifier = modifier
-            .fillMaxSize()
             .background(MaterialTheme.colorScheme.inversePrimary)
             .semantics {
                 contentDescription = "Camera Preview"
             },
-    ) {
-        Box(
-            modifier = Modifier
-                .weight(1f)
-                .fillMaxWidth()
-                .clip(shape = RoundedCornerShape(dimensionResource(R.dimen.roundness_x_small)))
-                .background(color = Color.Gray),
-        ) {
-            CameraPreview(
+        onConfirm = {
+            takePhoto(
+                context = context,
                 controller = controller,
-                modifier = Modifier.fillMaxSize(),
-            )
-        }
-        AddConfirmCancelButton(
-            button = ButtonType.Confirm,
-            enabled = true,
-            onClick = {
-                takePhoto(
-                    context = context,
-                    controller = controller,
-                    onPhotoTaken = {
-                        if (isEditable(EditFields.ImageUri)) {
-                            localData = (localData as Item).copy(
-                                imageUri = it,
-                            ) as T
-                        }
-                        onClick(localData)
+                onPhotoTaken = {
+                    if (isEditable(EditFields.ImageUri)) {
+                        localData = (localData as Item).copy(
+                            imageUri = it,
+                        ) as T
                     }
+                    onClick(localData)
+                }
+            )
+        },
+        onCancel = onCancel,
+        content = {
+            Box(
+                modifier = Modifier
+                    .clip(shape = RoundedCornerShape(dimensionResource(R.dimen.roundness_x_small)))
+                    .background(color = Color.Gray),
+            ) {
+                CameraPreview(
+                    controller = controller,
+                    modifier = Modifier.fillMaxSize(),
                 )
-            },
-        )
-        AddConfirmCancelButton(button = ButtonType.Cancel, onClick = onCancel, enabled = true)
-    }
+            }
+        }
+    )
 }
 
 private fun takePhoto(

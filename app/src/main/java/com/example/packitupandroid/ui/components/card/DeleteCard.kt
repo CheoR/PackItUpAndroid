@@ -41,8 +41,7 @@ import com.example.packitupandroid.data.model.Box
 import com.example.packitupandroid.data.model.Item
 import com.example.packitupandroid.data.model.QueryDropdownOptions
 import com.example.packitupandroid.data.model.Summary
-import com.example.packitupandroid.ui.components.common.AddConfirmCancelButton
-import com.example.packitupandroid.ui.components.common.ButtonType
+import com.example.packitupandroid.ui.components.layout.ConfirmCancelContainer
 import com.example.packitupandroid.utils.CardType
 import com.example.packitupandroid.utils.asCurrencyString
 
@@ -74,143 +73,132 @@ fun DeleteCard(
         )
     }
 
-    Column(
-        modifier = modifier
-            .fillMaxSize()
-            .background(MaterialTheme.colorScheme.inversePrimary),
-        verticalArrangement = Arrangement.Center,
-        horizontalAlignment = Alignment.CenterHorizontally,
-    ) {
-        Spacer(modifier = Modifier.weight(1f))
-        Text(
-            modifier = Modifier.padding(8.dp),
-            text = "Are you sure you want to delete ${element.name}?",
-        )
-        Spacer(modifier = Modifier.weight(1f))
-        Card(
-            modifier = modifier
-                .height(dimensionResource(R.dimen.card_height))
-                .fillMaxWidth()
-                .clip(RoundedCornerShape(dimensionResource(R.dimen.roundness_small)))
-                .semantics {
-                    contentDescription = "Delete Card"
-                },
-            elevation = CardDefaults.cardElevation(defaultElevation = dimensionResource(R.dimen.image_size_medium)),
-        ) {
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(dimensionResource(R.dimen.padding_small)),
+    ConfirmCancelContainer(
+        onConfirm = onDelete,
+        onCancel = onCancel,
+        content = {
+            Column(
+                modifier = modifier
+                    .fillMaxSize()
+                    .background(MaterialTheme.colorScheme.inversePrimary),
+                verticalArrangement = Arrangement.Center,
+                horizontalAlignment = Alignment.CenterHorizontally,
             ) {
-                IconsColumn(
-                    icon1 = icon1,
-                    icon2 = icon2,
-                    badgeCount1 = badgeCount1,
-                    badgeCount2 = badgeCount2,
-                    isShowBadgeCount = cardType !is CardType.Item,
+                Text(
+                    modifier = Modifier.padding(8.dp),
+                    text = "Are you sure you want to delete ${element.name}?",
                 )
-                Column(
-                    modifier = Modifier
-                        .fillMaxHeight()
-                        .weight(2f)
-                        .padding(horizontal = 4.dp),
-                    horizontalAlignment = Alignment.CenterHorizontally,
+                Card(
+                    modifier = modifier
+                        .height(dimensionResource(R.dimen.card_height))
+                        .fillMaxWidth()
+                        .clip(RoundedCornerShape(dimensionResource(R.dimen.roundness_small)))
+                        .semantics {
+                            contentDescription = "Delete Card"
+                        },
+                    elevation = CardDefaults.cardElevation(defaultElevation = dimensionResource(R.dimen.image_size_medium)),
                 ) {
-                    BasicTextField(
-                        value = element.name,
-                        onValueChange = {},
-                        textStyle = MaterialTheme.typography.titleSmall,
-                        enabled = false,
+                    Row(
                         modifier = Modifier
-                            .fillMaxWidth(),
-                    )
-                    Box {
-                        Row(
+                            .fillMaxWidth()
+                            .padding(dimensionResource(R.dimen.padding_small)),
+                    ) {
+                        IconsColumn(
+                            icon1 = icon1,
+                            icon2 = icon2,
+                            badgeCount1 = badgeCount1,
+                            badgeCount2 = badgeCount2,
+                            isShowBadgeCount = cardType !is CardType.Item,
+                        )
+                        Column(
                             modifier = Modifier
-                                .fillMaxWidth(),
-                            verticalAlignment = Alignment.CenterVertically,
-                            horizontalArrangement = Arrangement.Start,
+                                .fillMaxHeight()
+                                .weight(2f)
+                                .padding(horizontal = 4.dp),
+                            horizontalAlignment = Alignment.CenterHorizontally,
                         ) {
-                            Text(
-                                maxLines = 1,
-                                text = when(element) {
-                                    is Item -> options.firstOrNull { it.id == element.boxId.toString() }?.name ?: ""
-                                    is Box -> options.firstOrNull { it.id == element.collectionId.toString() }?.name ?: ""
-                                    else -> ""
-                                }
-                            )
-                        }
-                    }
-                    BasicTextField(
-                        // TODO: fix
-                        value = element.description ?: "",
-                        onValueChange = {},
-                        textStyle = MaterialTheme.typography.bodySmall,
-                        enabled = false,
-                        maxLines = 3,
-                        modifier = Modifier
-                            .weight(1f)
-                            .fillMaxWidth(),
-                    )
-                    if(element !is Summary) {
-                        Row(
-                            verticalAlignment = Alignment.CenterVertically,
-                            modifier = Modifier
-                                .fillMaxWidth(),
-                        ) {
-                            Checkbox(
-                                checked = element.isFragile,
-                                onCheckedChange = {},
-                                enabled = false,
-                            )
-                            Spacer(modifier = Modifier.width(4.dp))
-                            Text("Fragile")
-                            Spacer(modifier = Modifier.weight(1f))
                             BasicTextField(
-                                value = element.value.asCurrencyString(),
+                                value = element.name,
+                                onValueChange = {},
+                                textStyle = MaterialTheme.typography.titleSmall,
+                                enabled = false,
+                                modifier = Modifier
+                                    .fillMaxWidth(),
+                            )
+                            Box {
+                                Row(
+                                    modifier = Modifier
+                                        .fillMaxWidth(),
+                                    verticalAlignment = Alignment.CenterVertically,
+                                    horizontalArrangement = Arrangement.Start,
+                                ) {
+                                    Text(
+                                        maxLines = 1,
+                                        text = when (element) {
+                                            is Item -> options.firstOrNull { it.id == element.boxId.toString() }?.name
+                                                ?: ""
+
+                                            is Box -> options.firstOrNull { it.id == element.collectionId.toString() }?.name
+                                                ?: ""
+
+                                            else -> ""
+                                        }
+                                    )
+                                }
+                            }
+                            BasicTextField(
+                                // TODO: fix
+                                value = element.description ?: "",
                                 onValueChange = {},
                                 textStyle = MaterialTheme.typography.bodySmall,
                                 enabled = false,
-                                keyboardOptions = KeyboardOptions.Default.copy(
-                                    keyboardType = KeyboardType.Number,
-                                    imeAction = ImeAction.Done
-                                ),
-                                singleLine = true,
+                                maxLines = 3,
+                                modifier = Modifier
+                                    .weight(1f)
+                                    .fillMaxWidth(),
                             )
+                            if (element !is Summary) {
+                                Row(
+                                    verticalAlignment = Alignment.CenterVertically,
+                                    modifier = Modifier
+                                        .fillMaxWidth(),
+                                ) {
+                                    Checkbox(
+                                        checked = element.isFragile,
+                                        onCheckedChange = {},
+                                        enabled = false,
+                                    )
+                                    Spacer(modifier = Modifier.width(4.dp))
+                                    Text("Fragile")
+                                    Spacer(modifier = Modifier.weight(1f))
+                                    BasicTextField(
+                                        value = element.value.asCurrencyString(),
+                                        onValueChange = {},
+                                        textStyle = MaterialTheme.typography.bodySmall,
+                                        enabled = false,
+                                        keyboardOptions = KeyboardOptions.Default.copy(
+                                            keyboardType = KeyboardType.Number,
+                                            imeAction = ImeAction.Done
+                                        ),
+                                        singleLine = true,
+                                    )
+                                }
+                            }
+                        }
+                        Column(
+                            modifier = modifier
+                                .fillMaxHeight(),
+                            horizontalAlignment = Alignment.CenterHorizontally,
+                        ) {
+                            Box(
+                                modifier = Modifier
+                                    .fillMaxHeight()
+                                    .size(24.dp)
+                            ) {}
                         }
                     }
                 }
-                Column(
-                    modifier = modifier
-                        .fillMaxHeight(),
-                    horizontalAlignment = Alignment.CenterHorizontally,
-                ) {
-                    Box(modifier = Modifier
-                        .fillMaxHeight()
-                        .size(24.dp)){}
-                }
             }
         }
-        Spacer(modifier = Modifier.weight(1f))
-        AddConfirmCancelButton(button = ButtonType.Confirm, onClick = onDelete, enabled = true)
-        AddConfirmCancelButton(button = ButtonType.Cancel, onClick = onCancel, enabled = true)
-    }
+    )
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
