@@ -15,6 +15,7 @@ abstract class BaseViewModel<UiState, Data, Entity> : ViewModel() {
     abstract fun update(element: Data)
     abstract fun destroy(element: Data)
     abstract fun getAllElements(): List<Data>
+    abstract fun getElementById(id: String): Data?
 
     protected abstract suspend fun getEntity(id: String): Entity?
     protected abstract suspend fun initializeUIState(useMockData: Boolean = USE_MOCK_DATA)
