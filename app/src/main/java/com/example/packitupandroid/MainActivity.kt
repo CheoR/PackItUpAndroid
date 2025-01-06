@@ -23,10 +23,9 @@ import com.example.packitupandroid.data.source.local.LocalDataSource
 import com.example.packitupandroid.ui.PackItUpApp
 import com.example.packitupandroid.ui.theme.PackItUpAndroidTheme
 
+
 class MainActivity : ComponentActivity() {
-//    private val viewModel: ItemsScreenViewModel by viewModels {
-//        PackItUpViewModelProvider.Factory
-//    }
+
     @OptIn(ExperimentalMaterial3WindowSizeClassApi::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         enableEdgeToEdge()
@@ -41,7 +40,6 @@ class MainActivity : ComponentActivity() {
         setContent {
             PackItUpAndroidTheme {
                 val windowSize = calculateWindowSizeClass(this)
-//                val uiState by viewModel.uiState.collectAsStateWithLifecycle()
                 // A surface container using the 'background' color from the theme
                 Surface(
                     modifier = Modifier.fillMaxSize(),
@@ -49,7 +47,6 @@ class MainActivity : ComponentActivity() {
                 ) {
                     PackItUpApp(
                         windowSize = windowSize,
-//                        uiState = uiState,
                     )
                 }
             }
@@ -71,6 +68,7 @@ class MainActivity : ComponentActivity() {
         )
     }
 }
+
 
 @OptIn(ExperimentalMaterial3WindowSizeClassApi::class)
 @Preview(showBackground = true)
