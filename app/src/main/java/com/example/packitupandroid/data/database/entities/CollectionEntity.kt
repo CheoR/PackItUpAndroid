@@ -7,20 +7,37 @@ import com.example.packitupandroid.data.model.Collection
 import com.example.packitupandroid.utils.Converters
 import java.util.Date
 
+
+/**
+ * Represents a collection entity in the database.
+ *
+ * @property id The unique identifier for the collection.
+ * @property name The name of the collection.
+ * @property description An optional description of the collection. Defaults to null.
+ * @property lastModified The timestamp of the last modification. Defaults to 0.
+ */
 @Entity(tableName = "collections")
 data class CollectionEntity(
     @PrimaryKey
-    val id: String,
-    val name: String,
+    override val id: String,
+    override val name: String,
     @ColumnInfo(defaultValue = "null")
-    val description: String?,
+    override val description: String? = null,
     @ColumnInfo(
         name = "last_modified",
         defaultValue = "0"
     )
-    val lastModified: Long,
-)
+    override val lastModified: Long = 0,
+) : BaseEntity
 
+/**
+ * Converts a [CollectionEntity] to a [Collection].
+ *
+ * This function takes a [CollectionEntity] and maps its properties to a new [Collection] object.
+ * It also converts the `lastModified` timestamp to a `Date` object using the [Converters] class.
+ *
+ * @return The converted [Collection].
+ */
 fun CollectionEntity.toCollection(): Collection = Collection(
     id = this.id,
     name = this.name,
@@ -28,11 +45,21 @@ fun CollectionEntity.toCollection(): Collection = Collection(
     lastModified = Converters().fromTimestamp(this.lastModified) ?: Date(),
 )
 
+/**
+ * Updates a [CollectionEntity] with the values from another [CollectionEntity].
+ *
+ * This function takes another [CollectionEntity] and copies its properties to the current [CollectionEntity],
+ * updating the `lastModified` timestamp to the current time.
+ *
+ * @param other The [CollectionEntity] to update with.
+ * @return The updated [CollectionEntity].
+ */
 fun CollectionEntity.updateWith(other: CollectionEntity) : CollectionEntity = copy (
     name = other.name,
     description = other.description,
     lastModified = System.currentTimeMillis(),
 )
+
 
 //fun CollectionEntity.toQueryCollection(collectionRepository: CollectionsRepository): QueryCollection {
 //    val queryCollection: QueryCollection
