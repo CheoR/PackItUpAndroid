@@ -1,20 +1,30 @@
 package com.example.packitupandroid.data.database.dao
 
 import androidx.room.Dao
-import androidx.room.Delete
-import androidx.room.Insert
-import androidx.room.OnConflictStrategy
 import androidx.room.Query
-import androidx.room.Update
 import com.example.packitupandroid.data.database.entities.BoxEntity
 import com.example.packitupandroid.data.model.QueryBox
 import com.example.packitupandroid.data.model.QueryDropdownOptions
 import kotlinx.coroutines.flow.Flow
 
+
+/**
+ * Data Access Object (DAO) for interacting with the 'boxes' table in the database.
+ *
+ * This interface provides methods for retrieving and deleting boxes.
+ * It extends both [BaseDao] and [CommonDao] to inherit common data access operations.
+ */
 @Dao
-interface BoxDao {
+interface BoxDao : BaseDao<BoxEntity>, CommonDao<BoxEntity> {
+
+    /**
+     * Retrieves a box from the database by its unique ID.
+     *
+     * @param id The ID of the box to retrieve.
+     * @return A [Flow] emitting the [BoxEntity] with the given ID, or null if not found.
+     */
     @Query("SELECT * FROM boxes WHERE id = :id")
-    fun getBox(id: String): Flow<BoxEntity>
+    override fun get(id: String): Flow<BoxEntity?>
 
     @Query("""
      SELECT
@@ -54,21 +64,17 @@ interface BoxDao {
     @Query("SELECT b.id, b.name FROM boxes b")
     fun getDropdownSelections(): Flow<List<QueryDropdownOptions>>
 
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insert(box: BoxEntity)
+    /**
+     * Retrieves all boxes from the database, ordered by last modified timestamp in ascending order.
+     *
+     * @return A [Flow] emitting a list of all [BoxEntity] objects, or an empty list if none are found.
+     */
+    @Query("SELECT * FROM boxes ORDER BY last_modified ASC")
+    override fun getAll(): Flow<List<BoxEntity?>>
 
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertAll(boxes: List<BoxEntity>)
-
-    @Update
-    suspend fun update(box: BoxEntity)
-
-    @Delete
-    suspend fun delete(box: BoxEntity)
-
-    @Delete
-    suspend fun deleteAll(boxes: List<BoxEntity>)
-
+    /**
+     * Deletes all boxes from the database.
+     */
     @Query("DELETE FROM boxes")
-    suspend fun clearAllBoxes()
+    override suspend fun clear()
 }

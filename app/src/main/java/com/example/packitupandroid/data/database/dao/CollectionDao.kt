@@ -1,20 +1,30 @@
 package com.example.packitupandroid.data.database.dao
 
 import androidx.room.Dao
-import androidx.room.Delete
-import androidx.room.Insert
-import androidx.room.OnConflictStrategy
 import androidx.room.Query
-import androidx.room.Update
 import com.example.packitupandroid.data.database.entities.CollectionEntity
 import com.example.packitupandroid.data.model.QueryCollection
 import com.example.packitupandroid.data.model.QueryDropdownOptions
 import kotlinx.coroutines.flow.Flow
 
+
+/**
+ * Data Access Object (DAO) for interacting with the 'collections' table in the database.
+ *
+ * This interface provides methods for retrieving and deleting collections.
+ * It extends both [BaseDao] and [CommonDao] to inherit common data access operations.
+ */
 @Dao
-interface CollectionDao {
+interface CollectionDao : BaseDao<CollectionEntity>, CommonDao<CollectionEntity> {
+
+    /**
+     * Retrieves a collection from the database by its unique ID.
+     *
+     * @param id The ID of the collection to retrieve.
+     * @return A [Flow] emitting the [CollectionEntity] with the given ID, or null if not found.
+     */
     @Query("SELECT * FROM collections WHERE id = :id")
-    fun getCollection(id: String): Flow<CollectionEntity>
+    override fun get(id: String): Flow<CollectionEntity?>
 
     @Query("""
     WITH BoxSummary AS (
@@ -99,21 +109,17 @@ interface CollectionDao {
     @Query("SELECT c.id, c.name FROM collections c")
     fun getDropdownSelections(): Flow<List<QueryDropdownOptions>>
 
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insert(collection: CollectionEntity)
+    /**
+     * Retrieves all collections from the database, ordered by last modified timestamp in ascending order.
+     *
+     * @return A [Flow] emitting a list of all [CollectionEntity] objects, or an empty list if none are found.
+     */
+    @Query("SELECT * FROM collections ORDER BY last_modified ASC")
+    override fun getAll(): Flow<List<CollectionEntity?>>
 
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertAll(collections: List<CollectionEntity>)
-
-    @Update
-    suspend fun update(collection: CollectionEntity)
-
-    @Delete
-    suspend fun delete(collection: CollectionEntity)
-
-    @Delete
-    suspend fun deleteAll(collections: List<CollectionEntity>)
-
+    /**
+     * Deletes all collections from the database.
+     */
     @Query("DELETE FROM collections")
-    suspend fun clearAllCollections()
+    override suspend fun clear()
 }
