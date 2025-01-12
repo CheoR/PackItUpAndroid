@@ -49,4 +49,7 @@
     <string name="total_value">total value</string>
     <string name="username">username</string>
     <string name="value">$ %f</string>
+    <string name="decrement">decrement</string>
+    <string name="counter_value">counter value</string>
+    <string name="increment">increment</string>
 </resources>

@@ -24,24 +24,41 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.dimensionResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.example.packitupandroid.R
-import com.example.packitupandroid.ui.components.common.AddConfirmCancelButton
-import com.example.packitupandroid.ui.components.common.ButtonType
+import com.example.packitupandroid.ui.components.common.ActionButton
+import com.example.packitupandroid.ui.components.common.ButtonAction
 
+
+/**
+ * A composable function that displays a counter with increment, decrement, and reset functionality.
+ *
+ * @param onCreate A callback that is invoked when the counter is created.
+ * @param modifier The modifier to be applied to the counter.
+ * @param initialCount The initial value of the counter.
+ * @param buttonSize The size of the increment and decrement buttons.
+ * @param buttonShape The shape of the increment and decrement buttons.
+ * @param buttonColor The color of the increment and decrement buttons.
+ */
 @Composable
 fun Counter(
     onCreate: (Int) -> Unit,
     modifier: Modifier = Modifier,
+    initialCount: Int = 0,
+    buttonSize: Dp = 40.dp,
+    buttonShape: RoundedCornerShape = RoundedCornerShape(dimensionResource(R.dimen.roundness_small)),
+    buttonColor: Color = Color.Gray,
 ) {
-    var count by remember { mutableIntStateOf(0) }
+    var count by remember { mutableIntStateOf(initialCount  ) }
     val buttonModifier = Modifier
-        .size(40.dp)
-        .clip(RoundedCornerShape(dimensionResource(R.dimen.roundness_small)))
-        .background(Color.Gray)
+        .size(buttonSize)
+        .clip(buttonShape)
+        .background(buttonColor)
 
     fun resetCount() {
         count = 0
@@ -57,12 +74,12 @@ fun Counter(
                 modifier = buttonModifier,
                 onClick = { count = maxOf(0, count - 1) }
             ) {
-                Icon(imageVector = Icons.Default.Remove, contentDescription = "decrement")
+                Icon(imageVector = Icons.Default.Remove, contentDescription = stringResource(R.string.decrement))
             }
             TextButton(
                 modifier = buttonModifier
                     .semantics {
-                        contentDescription = "Counter Value"
+                        contentDescription = R.string.counter_value.toString()
                     },
                 onClick = {},
                 enabled = false,
@@ -76,11 +93,11 @@ fun Counter(
                 modifier = buttonModifier,
                 onClick = { count++ },
             ) {
-                Icon(imageVector = Icons.Default.Add, contentDescription = "increment")
+                Icon(imageVector = Icons.Default.Add, contentDescription = stringResource(R.string.increment))
             }
         }
-        AddConfirmCancelButton(
-            button = ButtonType.Add,
+        ActionButton(
+            action = ButtonAction.Add,
             enabled = count > 0,
             onClick = {
                 onCreate(count)
