@@ -23,23 +23,29 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.packitupandroid.R
 
-sealed class ButtonType {
-    object Add : ButtonType()
-    object Cancel : ButtonType()
-    object Confirm : ButtonType()
-}
 
+/**
+ * A composable function that renders a button with a Add, Confirm, or Cancel action.
+ *
+ * This button displays a label, an icon, and has a specific color based on the provided [ButtonAction].
+ *
+ * @param action The [ButtonAction] to perform.
+ * @param enabled Whether the button is enabled or not.
+ * @param onClick The callback to be invoked when the button is clicked.
+ * @param modifier The modifier to be applied to the button.
+ */
 @Composable
-fun AddConfirmCancelButton(
-    button: ButtonType,
+fun ActionButton(
+    action: ButtonAction,
+    enabled: Boolean,
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
-    enabled: Boolean = false,
+    //     contentPadding: Int = 8,
 ) {
-    val (label, icon, color) = when(button) {
-        is ButtonType.Add -> Triple("add", Icons.Default.Add, MaterialTheme.colorScheme.onPrimaryContainer)
-        is ButtonType.Confirm ->  Triple("confirm", Icons.Default.Check, MaterialTheme.colorScheme.onSecondaryContainer)
-        else ->  Triple("cancel", Icons.Default.Cancel, MaterialTheme.colorScheme.error) // is ButtonType.Cancel
+    val (label, icon, color) = when(action) {
+        is ButtonAction.Add -> Triple("add", Icons.Default.Add, MaterialTheme.colorScheme.onPrimaryContainer)
+        is ButtonAction.Confirm ->  Triple("confirm", Icons.Default.Check, MaterialTheme.colorScheme.onSecondaryContainer)
+        else ->  Triple("cancel", Icons.Default.Cancel, MaterialTheme.colorScheme.error) // is ButtonAction.Cancel
     }
 
     Row(
@@ -48,7 +54,7 @@ fun AddConfirmCancelButton(
         verticalAlignment = Alignment.CenterVertically,
     ) {
         Button(
-            modifier = modifier
+            modifier = Modifier
                 .fillMaxWidth(),
             enabled = enabled,
             onClick = onClick,
@@ -65,7 +71,7 @@ fun AddConfirmCancelButton(
                     contentDescription = label,
                     tint = MaterialTheme.colorScheme.onPrimary,
                 )
-                Spacer(modifier = Modifier.width(8.dp))
+                Spacer(modifier = Modifier.width(8.dp)) // .width(    contentPadding) instead?
                 Text(
                     text = label,
                     style = MaterialTheme.typography.labelSmall,
@@ -76,11 +82,30 @@ fun AddConfirmCancelButton(
     }
 }
 
+/**
+ * Sealed class representing the different actions a button can perform.
+ */
+sealed class ButtonAction {
+    /**
+     * Represents the "Add" action.
+     */
+    object Add : ButtonAction()
+    /**
+     * Represents the "Cancel" action.
+     */
+    object Cancel : ButtonAction()
+    /**
+     * Represents the "Confirm" action.
+     */
+    object Confirm : ButtonAction()
+}
+
+
 @Preview(showBackground = true)
 @Composable
-fun PreviewAddConfirmCancelButtonAddEnabled() {
-    AddConfirmCancelButton(
-        button = ButtonType.Add,
+fun PreviewActionButtonAddEnabled() {
+    ActionButton(
+        action = ButtonAction.Add,
         onClick = {},
         enabled = true,
     )
@@ -88,9 +113,9 @@ fun PreviewAddConfirmCancelButtonAddEnabled() {
 
 @Preview(showBackground = true)
 @Composable
-fun PreviewAddConfirmCancelButtonAddDisabled() {
-    AddConfirmCancelButton(
-        button = ButtonType.Add,
+fun PreviewActionButtonAddDisabled() {
+    ActionButton(
+        action = ButtonAction.Add,
         onClick = {},
         enabled = false,
     )
@@ -98,9 +123,9 @@ fun PreviewAddConfirmCancelButtonAddDisabled() {
 
 @Preview(showBackground = true)
 @Composable
-fun PreviewAddConfirmCancelButtonConfirmEnabled() {
-    AddConfirmCancelButton(
-        button = ButtonType.Confirm,
+fun PreviewActionButtonConfirmEnabled() {
+    ActionButton(
+        action = ButtonAction.Confirm,
         onClick = {},
         enabled = true,
     )
@@ -108,9 +133,9 @@ fun PreviewAddConfirmCancelButtonConfirmEnabled() {
 
 @Preview(showBackground = true)
 @Composable
-fun PreviewAddConfirmCancelButtonConfirmDisabled() {
-    AddConfirmCancelButton(
-        button = ButtonType.Confirm,
+fun PreviewActionButtonConfirmDisabled() {
+    ActionButton(
+        action = ButtonAction.Confirm,
         onClick = {},
         enabled = false,
     )
@@ -118,9 +143,9 @@ fun PreviewAddConfirmCancelButtonConfirmDisabled() {
 
 @Preview(showBackground = true)
 @Composable
-fun PreviewAddConfirmCancelButtonCancelEnabled() {
-    AddConfirmCancelButton(
-        button = ButtonType.Cancel,
+fun PreviewActionButtonCancelEnabled() {
+    ActionButton(
+        action = ButtonAction.Cancel,
         onClick = {},
         enabled = true,
     )
@@ -128,9 +153,9 @@ fun PreviewAddConfirmCancelButtonCancelEnabled() {
 
 @Preview(showBackground = true)
 @Composable
-fun PreviewAddConfirmCancelButtonCancelDisabled() {
-    AddConfirmCancelButton(
-        button = ButtonType.Cancel,
+fun PreviewActionButtonCancelDisabled() {
+    ActionButton(
+        action = ButtonAction.Cancel,
         onClick = {},
         enabled = false,
     )
