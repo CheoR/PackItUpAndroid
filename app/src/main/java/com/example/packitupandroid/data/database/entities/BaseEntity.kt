@@ -2,29 +2,30 @@ package com.example.packitupandroid.data.database.entities
 
 
 /**
- * A sealed interface representing a domain entity that can be used in Composables.
+ * Sealed interface representing a base entity with common properties.
  *
- * [BaseEntity] defines the common properties that all domain entities should have,
- * such as an ID, a name, an optional description, and a last modified timestamp.
- *
- * Implementing this interface allows for consistent handling of entities in the UI layer,
- * particularly when using Jetpack Compose.
+ * This interface defines the basic structure for all entities in the application.
+ * It includes properties for a unique identifier, a name, an optional description,
+ * and a timestamp for the last modification.
  */
 sealed interface BaseEntity {
     /**
      * The unique identifier of the entity.
      */
     val id: String
+
     /**
      * The name of the entity.
      */
     val name: String
+
     /**
-     * An optional description of the entity.
+     * A description of the entity.
      */
     val description: String?
+
     /**
-     * The timestamp of when the entity was last modified.
+     * The timestamp of the last modification to the entity.
      */
     val lastModified: Long
 }

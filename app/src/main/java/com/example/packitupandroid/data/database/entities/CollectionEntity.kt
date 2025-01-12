@@ -6,20 +6,25 @@ import androidx.room.PrimaryKey
 import com.example.packitupandroid.data.model.Collection
 import com.example.packitupandroid.utils.Converters
 import java.util.Date
+import java.util.UUID
 
 
 /**
  * Represents a collection entity in the database.
  *
- * @property id The unique identifier for the collection.
+ * This data class is used to store information about a collection in the database.
+ * It includes properties such as the collection's ID, name, description, and last
+ * modification timestamp.
+ *
+ * @property id The unique identifier for the collection, generated using UUID.randomUUID().
  * @property name The name of the collection.
  * @property description An optional description of the collection. Defaults to null.
- * @property lastModified The timestamp of the last modification. Defaults to 0.
+ * @property lastModified The timestamp of the last modification of the collection. Defaults to 0.
  */
 @Entity(tableName = "collections")
 data class CollectionEntity(
     @PrimaryKey
-    override val id: String,
+    override val id: String = UUID.randomUUID().toString(),
     override val name: String,
     @ColumnInfo(defaultValue = "null")
     override val description: String? = null,

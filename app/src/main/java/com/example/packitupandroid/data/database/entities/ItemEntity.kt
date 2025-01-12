@@ -8,17 +8,22 @@ import androidx.room.PrimaryKey
 import com.example.packitupandroid.data.model.Item
 import com.example.packitupandroid.utils.Converters
 import java.util.Date
+import java.util.UUID
 
 
 /**
  * Represents an item entity in the database.
  *
- * @property id The unique identifier for the item.
+ * This data class is used to store information about an item in the database.
+ * It includes properties such as the item's ID, name, description, value, fragility,
+ * last modification timestamp, associated box ID, and image URI.
+ *
+ * @property id The unique identifier for the item, generated using UUID.randomUUID().
  * @property name The name of the item.
  * @property description An optional description of the item. Defaults to null.
  * @property value The monetary value of the item. Defaults to 0.0.
  * @property isFragile Indicates whether the item is fragile. Defaults to false.
- * @property lastModified The timestamp of the last modification. Defaults to 0.
+ * @property lastModified The timestamp of the last modification of the item. Defaults to 0.
  * @property boxId The identifier of the box containing the item. Defaults to null.
  * @property imageUri The URI of the item's image. Defaults to null.
  */
@@ -36,7 +41,7 @@ import java.util.Date
 )
 data class ItemEntity(
     @PrimaryKey
-    override val id: String,
+    override val id: String = UUID.randomUUID().toString(),
     override val name: String,
     @ColumnInfo(defaultValue = "null")
     override val description: String? = null,
