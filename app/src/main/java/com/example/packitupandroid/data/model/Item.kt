@@ -1,10 +1,10 @@
 package com.example.packitupandroid.data.model
 
-import com.example.packitupandroid.data.database.entities.ItemEntity
-import com.example.packitupandroid.utils.Converters
+import androidx.compose.runtime.Composable
 import com.example.packitupandroid.utils.EditFields
 import java.util.Date
 import java.util.UUID
+
 
 data class Item(
     override val id: String = UUID.randomUUID().toString(),
@@ -15,6 +15,7 @@ data class Item(
     override val lastModified: Date = Date(),
     val boxId: String? = null,
     val imageUri: String? = null,
+    val iconsContent: @Composable (() -> Unit)? = null,
 ) : BaseCardData {
     companion object {
         val EDIT_FIELDS = setOf(
@@ -28,24 +29,3 @@ data class Item(
     }
     override val editFields get() = EDIT_FIELDS
 }
-
-fun Item.toEntity(): ItemEntity = ItemEntity(
-    id = this.id,
-    name = this.name,
-    description = this.description,
-    value = this.value,
-    isFragile = this.isFragile,
-    lastModified = Converters().dateToTimestamp(this.lastModified) ?: 0L,
-    boxId = this.boxId,
-    imageUri = this.imageUri,
-)
-
-fun Item.updateWith(other: Item) : Item = copy (
-    name = other.name,
-    description = other.description,
-    value = other.value,
-    isFragile = other.isFragile,
-    lastModified = Date(),
-    boxId = other.boxId,
-    imageUri = other.imageUri,
-)

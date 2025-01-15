@@ -1,10 +1,10 @@
 package com.example.packitupandroid.data.model
 
-import com.example.packitupandroid.data.database.entities.BoxEntity
-import com.example.packitupandroid.utils.Converters
+import androidx.compose.runtime.Composable
 import com.example.packitupandroid.utils.EditFields
 import java.util.Date
 import java.util.UUID
+
 
 data class QueryBox(
     val id: String = UUID.randomUUID().toString(),
@@ -51,32 +51,3 @@ data class Box(
     }
     override val editFields get() = EDIT_FIELDS
 }
-
-fun Box.toEntity(): BoxEntity = BoxEntity(
-    id = this.id,
-    name = this.name,
-    description = this.description,
-    lastModified = Converters().dateToTimestamp(this.lastModified) ?: 0L, // System.currentTimeMillis(),
-    collectionId = this.collectionId,
-)
-
-fun Box.toQueryBox(): QueryBox = QueryBox(
-    id = this.id,
-    name = this.name,
-    description = this.description,
-    value = this.value,
-    is_fragile = this.isFragile,
-    last_modified = this.lastModified, // Date(), // this.lastModified.time,
-    item_count = this.item_count,
-    collection_id = this.collectionId,
-)
-
-fun Box.updateWith(other: Box) : Box = copy (
-    name = other.name,
-    description = other.description,
-    value = other.value,
-    isFragile = other.isFragile,
-    item_count = other.item_count,
-    lastModified = Date(),
-    collectionId = other.collectionId,
-)
