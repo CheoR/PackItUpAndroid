@@ -1,174 +1,130 @@
 package com.example.packitupandroid.ui.screens.item
 
+import androidx.compose.runtime.MutableState
 import androidx.lifecycle.SavedStateHandle
-import androidx.lifecycle.viewModelScope
-import com.example.packitupandroid.PackItUpUiState
-import com.example.packitupandroid.Result
 import com.example.packitupandroid.data.database.entities.ItemEntity
-import com.example.packitupandroid.data.database.entities.toItem
-import com.example.packitupandroid.data.database.entities.updateWith
 import com.example.packitupandroid.data.model.Item
-import com.example.packitupandroid.data.model.toEntity
 import com.example.packitupandroid.data.repository.ItemsRepository
 import com.example.packitupandroid.ui.screens.BaseViewModel
+import com.example.packitupandroid.utils.EditFields
+import com.example.packitupandroid.utils.parseCurrencyToDouble
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.SharingStarted
-import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.flow.stateIn
-import kotlinx.coroutines.launch
 
-class ItemsScreenViewModel (
+
+/**
+ * ViewModel for the Items screen.
+ *
+ * This ViewModel is responsible for managing the data and state of the Items screen,
+ * using the [ItemsRepository] to access item data.
+ *
+ * @param savedStateHandle The SavedStateHandle to preserve state across configuration changes.
+ * @param repository The repository used to access item data.
+ * @param defaultDispatcher The coroutine dispatcher to use for background tasks (defaults to [Dispatchers.Default]).
+ */
+class ItemsScreenViewModel(
     savedStateHandle: SavedStateHandle,
-    private val itemsRepository: ItemsRepository,
+    private val repository: ItemsRepository,
     private val defaultDispatcher: CoroutineDispatcher = Dispatchers.Default
-) : BaseViewModel<ItemsPackItUpUiState, Item, ItemEntity>() {
+) : BaseViewModel<Item>(repository) {
     private val boxId: String? = savedStateHandle["boxId"]
+
+    init {
+        initialize()
+    }
 
 //    private val _entityCache = MutableStateFlow<Map<String, BaseCardData>>(emptyMap())
 //    private val entityCache: StateFlow<Map<String, BaseCardData>> = _entityCache.asStateFlow()
 //    private val entityCacheMap = mutableMapOf<String, BaseCardData>()
 //    private val entityCache: Map<String, BaseCardData> get() = entityCacheMap
 
-    init {
-        viewModelScope.launch(defaultDispatcher) {
-            initializeUIState()
-        }
-    }
+    // note: this approach may lead to IllegalStateException
+    // because the ViewModel might not be fully initialized when the coroutine starts
+    // TODO: refactor to call initializeUIState() from method in a LaunchedEffect in screen that uses vw
+//    init {
+//        viewModelScope.launch(defaultDispatcher) {
+//            initializeUIState()
+//        }
+//    }
 
-    override fun initialState(): ItemsPackItUpUiState {
-        return  ItemsPackItUpUiState(
-            elements = emptyList(),
-            result = Result.Loading,
-        )
-    }
-
-    override suspend fun initializeUIState(useMockData: Boolean) {
-        if (useMockData) {
-            itemsRepository.getAllItemsStream().map { itemEntities ->
-                itemEntities.map { it.toItem() }
-            }.map { items ->
-                ItemsPackItUpUiState(
-                    elements = items,
-                    result = Result.Complete(items),
-                )
-            }.stateIn(
-                scope = viewModelScope,
-                started = SharingStarted.WhileSubscribed(TIMEOUT_MILLIS),
-                initialValue = ItemsPackItUpUiState()
-            ).collect { newState ->
-                _uiState.value = newState
-                boxId?.let { filterByBoxId(boxId) }
-            }
-        } else {
-            try {
-                // TODO - fix user regular db
-                itemsRepository.clearAllItems()
-                itemsRepository.getAllItemsStream().collect {newState ->
-                    val items = newState.map { it.toItem() }
-                    _uiState.value = ItemsPackItUpUiState(
-                        elements = items,
-                        result = Result.Complete(items),
-                    )
-                }
-                itemsRepository.getAllItemsStream().map { itemEntities ->
-                    itemEntities.map { it.toItem() }
-                }.map { items ->
-                    ItemsPackItUpUiState(
-                        elements = items,
-                        result = Result.Complete(items),
-                    )
-                }.stateIn(
-                    scope = viewModelScope,
-                    started = SharingStarted.WhileSubscribed(TIMEOUT_MILLIS),
-                    initialValue = ItemsPackItUpUiState()
-                ).collect { newState ->
-                    _uiState.value = newState
-                    boxId?.let { filterByBoxId(boxId) }
-                }
-            } catch (e: Exception) {
-                _uiState.value = ItemsPackItUpUiState(
-                    result = Result.Error(e.message ?: "Unknown error")
-                )
-            }
-        }
-    }
-
+    /**
+     * Creates and inserts a specified number of `Item` objects into the data store.
+     *
+     * This function generates a list of `Item` objects, each with a unique name based on its index,
+     * and then inserts them into the underlying data storage mechanism (likely a database or repository).
+     *
+     * The `Item` names are formatted as "Item {index + 1}", where the index starts from 0.
+     *
+     * Example:
+     * If `count` is 3, the function will create three items named:
+     *   - "Item 1"
+     *   - "Item 2"
+     *   - "Item 3"
+     *
+     * Note: This function is currently marked as a TODO for refactoring into a `BaseViewModel`. This suggests
+     * that the functionality might be more generally applicable and could be moved to a shared base class
+     * in the future.
+     *
+     * @param count The number of `Item` objects to create and insert. Must be a non-negative integer.
+     * @throws IllegalArgumentException if `count` is negative.
+     */// TODO: refactor into BaseViewModel
     override fun create(count: Int) {
-        val entities = (0 until count ).mapIndexed { index, _ ->
-            Item(name = "Item ${index + 1}", boxId = boxId).toEntity()
-        }
-
-        viewModelScope.launch(defaultDispatcher) {
-            createEntity(entities)
-        }
+        val data = List(count) { index -> Item(name = "Item ${index + 1}") }
+        insert(data)
     }
 
-    override fun update(element: Item) {
-        // TODO: Fix FOR JUST PASSING STRING INSTEAD OF ENTIRE ELEMENT
-        viewModelScope.launch(defaultDispatcher) {
-            val itemEntity = getEntity(element.id)
-            if (itemEntity != null) {
-                val updatedItemEntity = itemEntity.updateWith(element.toEntity())
-                updateEntity(updatedItemEntity)
+    /**
+     * Provides mock data for items.
+     *
+     * @return A list of mock [ItemEntity] objects.
+     */
+    override fun getMockData(): List<Item> {
+        return emptyList<Item>()
+    }
+
+    /**
+     * Updates a specific field of an Item based on user input.
+     *
+     * This function takes a MutableState holding an optional Item, the field to be modified,
+     * and the new value for that field. It then creates a copy of the current Item, updates
+     * the specified field with the new value, and updates the MutableState with the modified Item.
+     * If the `item.value` is null, it does nothing.
+     *
+     * @param card A MutableState object that holds an Item? (nullable Item). This represents the item
+     *             being edited and will be updated in place.
+     * @param field An EditFields enum value specifying which field of the Item should be modified.
+     * @param value A String representing the new value for the specified field.
+     *              The format of the string depends on the `field` type, see below for the details.
+     *
+     * Fields Handling:
+     *  - **EditFields.Description:** `value` directly sets the `description` of the Item.
+     *  - **EditFields.Dropdown:** `value` is used as the new value.
+     *     **Note**: "TODO: add dropdown" - this comment is left in the code, as it's a feature to implement.
+     *  - **EditFields.ImageUri:** `value` directly sets the `imageUri` of the Item.
+     *  - **EditFields.IsFragile:** `value` is parsed to a Boolean using `toBoolean()`. Common cases: "true", "false".
+     *  - **EditFields.Name:** `value` directly sets the `name` of the Item.
+     *  - **EditFields.Value:** `value` is parsed to a Double using `parseCurrencyToDouble()`, representing a numerical value.
+     *
+     * Example usage:
+     * ```kotlin
+     * val itemState = remember { mutableStateOf<Item?>(Item(name = "Old Item", description = "Initial", ...)) }
+     * onFieldChange(itemState, EditFields.Name, "New Item Name")
+     * // itemState.value will now hold an Item with name = "New Item Name"
+     *
+     * onFieldChange(itemState, EditFields.Value, "$12.99")
+     * // itemState.value will now hold an item with the */
+    override fun onFieldChange(element: MutableState<Item?>, field: EditFields, value: String) {
+        val editableFields = element.value?.editFields ?: emptyList<EditFields>()
+        element.value?.let { currentBox ->
+            val updatedElement = when(field) {
+                EditFields.Description -> if(editableFields.contains(field)) currentBox.copy(description = value) else currentBox
+                EditFields.Dropdown -> currentBox //  if(editableFields.contains(field))  currentBox.copy(dropdown = value) else currentBox
+                EditFields.ImageUri -> if(editableFields.contains(field))  currentBox.copy(imageUri = value) else currentBox
+                EditFields.IsFragile -> if(editableFields.contains(field))  currentBox.copy(isFragile = value.toBoolean()) else currentBox
+                EditFields.Name -> if(editableFields.contains(field))  currentBox.copy(name = value) else currentBox
+                EditFields.Value -> if(editableFields.contains(field))  currentBox.copy(value = value.parseCurrencyToDouble()) else currentBox
             }
+            element.value = updatedElement
         }
-    }
-
-    override fun destroy(element: Item) {
-        viewModelScope.launch(defaultDispatcher) {
-            destroyEntity(element.toEntity())
-        }
-    }
-
-    // TODO: read up on pros/cons of fetching from db vs uiState
-    override fun getAllElements(): List<Item> {
-        var itemList: List<Item> = emptyList()
-        viewModelScope.launch(defaultDispatcher) {
-            itemList = getElements()
-        }
-        return itemList
-    }
-
-    override suspend fun createEntity(entities: List<ItemEntity>) {
-        if(entities.size == 1) {
-            itemsRepository.insertItem(entities.first())
-        } else {
-            itemsRepository.insertAll(entities)
-            _uiState.value = ItemsPackItUpUiState(
-                elements = uiState.value.elements + entities.map { it.toItem() },
-                result = Result.Complete(uiState.value.elements + entities.map { it.toItem() }),
-            )
-        }
-    }
-
-    override suspend fun updateEntity(entity: ItemEntity) {
-        itemsRepository.updateItem(entity)
-    }
-
-    override suspend fun destroyEntity(entity: ItemEntity) {
-        itemsRepository.deleteItem(entity)
-    }
-
-    override suspend fun getElements(): List<Item> {
-        return itemsRepository.getAllItemsStream().first().map { it.toItem() }
-    }
-
-    override suspend fun getEntity(id: String): ItemEntity? {
-        return uiState.value.elements.find { it.id == id }?.toEntity()
-    }
-
-    private fun filterByBoxId(boxId: String) {
-        val filteredElement = uiState.value.elements.filter { it.boxId == boxId }
-        _uiState.value = ItemsPackItUpUiState(
-            elements = filteredElement,
-            result = Result.Complete(filteredElement),
-        )
     }
 }
-
-data class ItemsPackItUpUiState(
-    override val elements: List<Item> = emptyList(),
-    override val result: Result = Result.Loading,
-): PackItUpUiState

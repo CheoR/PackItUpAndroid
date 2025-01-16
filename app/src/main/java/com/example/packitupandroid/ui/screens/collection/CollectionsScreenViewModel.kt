@@ -1,144 +1,95 @@
 package com.example.packitupandroid.ui.screens.collection
 
-import androidx.lifecycle.viewModelScope
-import com.example.packitupandroid.PackItUpUiState
-import com.example.packitupandroid.Result
+import androidx.compose.runtime.MutableState
+import androidx.lifecycle.SavedStateHandle
 import com.example.packitupandroid.data.database.entities.CollectionEntity
-import com.example.packitupandroid.data.database.entities.updateWith
 import com.example.packitupandroid.data.model.Collection
-import com.example.packitupandroid.data.model.toCollection
-import com.example.packitupandroid.data.model.toEntity
 import com.example.packitupandroid.data.repository.CollectionsRepository
 import com.example.packitupandroid.ui.screens.BaseViewModel
+import com.example.packitupandroid.utils.EditFields
+import com.example.packitupandroid.utils.parseCurrencyToDouble
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.SharingStarted
-import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.flow.stateIn
-import kotlinx.coroutines.flow.toList
-import kotlinx.coroutines.launch
 
+
+/**
+ * ViewModel for the Collections screen.
+ *
+ * This ViewModel is responsible for managing the data and state of the Collections screen,
+ * using the [CollectionsRepository] to access collection data.
+ *
+ * @param savedStateHandle The SavedStateHandle to preserve state across configuration changes.
+ * @param repository The repository used to access item data.
+ * @param defaultDispatcher The coroutine dispatcher to use for background tasks (defaults to [Dispatchers.Default]).
+ */
 class CollectionsScreenViewModel(
-    private val collectionsRepository: CollectionsRepository,
-    private val defaultDispatcher: CoroutineDispatcher = Dispatchers.Default,
-): BaseViewModel<CollectionsScreenUiState, Collection, CollectionEntity>() {
+    savedStateHandle: SavedStateHandle,
+    private val repository: CollectionsRepository,
+    private val defaultDispatcher: CoroutineDispatcher = Dispatchers.Default
+) : BaseViewModel<Collection>(repository) {
 
     init {
-        viewModelScope.launch(defaultDispatcher) {
-            initializeUIState()
-        }
+        initialize()
     }
 
-    override fun initialState(): CollectionsScreenUiState {
-        return CollectionsScreenUiState(
-            elements = emptyList(),
-            result = Result.Loading,
-        )
-    }
-
-    override suspend fun initializeUIState(useMockData: Boolean) {
-        if (useMockData) {
-            collectionsRepository.getAllCollectionsStream().map { collectionEntities ->
-                collectionEntities.map { it.toCollection() }
-            }.map { collections ->
-                CollectionsScreenUiState(
-                    elements = collections,
-                    result = Result.Complete(collections),
-                )
-            }.stateIn(
-                scope = viewModelScope,
-                started = SharingStarted.WhileSubscribed(TIMEOUT_MILLIS),
-                initialValue = CollectionsScreenUiState()
-            ).collect { newState -> _uiState.value = newState }
-        } else {
-            // TODO - fix user regular db
-            try {
-                // TODO: REPLACE TO USE DIFFERENT DB
-                collectionsRepository.clearAllCollections()
-                collectionsRepository.getAllCollectionsStream().map { collectionEntities ->
-                    collectionEntities.map { it.toCollection() }
-                }.map { collections ->
-                    CollectionsScreenUiState(
-                        elements = collections,
-                        result = Result.Complete(collections),
-                    )
-                }.stateIn(
-                    scope = viewModelScope,
-                    started = SharingStarted.WhileSubscribed(TIMEOUT_MILLIS),
-                    initialValue = CollectionsScreenUiState()
-                ).collect { newState -> _uiState.value = newState }
-            } catch (e: Exception) {
-                _uiState.value = CollectionsScreenUiState(
-                    result = Result.Error(e.message ?: "Unknown error")
-                )
-            }
-        }
-    }
-
+    // TODO: refactor into BaseViewModel
     override fun create(count: Int) {
-        val entities = (0 until count ).mapIndexed { index, _ ->
-            Collection(name = "Collection ${index + 1}").toEntity()
-        }
-
-        viewModelScope.launch(defaultDispatcher) {
-            createEntity(entities)
-        }
+        val data = List(count) { index -> Collection(name = "Collection ${index + 1}") }
+        insert(data)
     }
 
-    override fun update(element: Collection) {
-        // TODO: Fix FOR JUST PASSING STRING INSTEAD OF ENTIRE ELEMENT
-        viewModelScope.launch(defaultDispatcher) {
-            val collectionEntity = getEntity(element.id)
-            if (collectionEntity != null) {
-                val updatedCollectionEntity = collectionEntity.updateWith(element.toEntity())
-                updateEntity(updatedCollectionEntity)
+    /**
+     * Provides mock data for collections.
+     *
+     * @return A list of mock [CollectionEntity] objects.
+     */
+    override fun getMockData(): List<Collection> {
+        return emptyList<Collection>()
+    }
+
+    /**
+     * Updates a specific field of an Item based on user input.
+     *
+     * This function takes a MutableState holding an optional Item, the field to be modified,
+     * and the new value for that field. It then creates a copy of the current Item, updates
+     * the specified field with the new value, and updates the MutableState with the modified Item.
+     * If the `item.value` is null, it does nothing.
+     *
+     * @param item A MutableState object that holds an Item? (nullable Item). This represents the item
+     *             being edited and will be updated in place.
+     * @param field An EditFields enum value specifying which field of the Item should be modified.
+     * @param value A String representing the new value for the specified field.
+     *              The format of the string depends on the `field` type, see below for the details.
+     *
+     * Fields Handling:
+     *  - **EditFields.Description:** `value` directly sets the `description` of the Item.
+     *  - **EditFields.Dropdown:** `value` is used as the new value.
+     *     **Note**: "TODO: add dropdown" - this comment is left in the code, as it's a feature to implement.
+     *  - **EditFields.ImageUri:** `value` directly sets the `imageUri` of the Item.
+     *  - **EditFields.IsFragile:** `value` is parsed to a Boolean using `toBoolean()`. Common cases: "true", "false".
+     *  - **EditFields.Name:** `value` directly sets the `name` of the Item.
+     *  - **EditFields.Value:** `value` is parsed to a Double using `parseCurrencyToDouble()`, representing a numerical value.
+     *
+     * Example usage:
+     * ```kotlin
+     * val itemState = remember { mutableStateOf<Item?>(Item(name = "Old Item", description = "Initial", ...)) }
+     * onFieldChange(itemState, EditFields.Name, "New Item Name")
+     * // itemState.value will now hold an Item with name = "New Item Name"
+     *
+     * onFieldChange(itemState, EditFields.Value, "$12.99")
+     * // itemState.value will now hold an item with the */
+    override fun onFieldChange(element: MutableState<Collection?>, field: EditFields, value: String) {
+        val editableFields = element.value?.editFields ?: emptyList<EditFields>()
+        element.value?.let { currentBox ->
+            val updatedElement = when(field) {
+                EditFields.Description -> if(editableFields.contains(field)) currentBox.copy(description = value) else currentBox
+                EditFields.Dropdown -> currentBox //  if(editableFields.contains(field))  currentBox.copy(dropdown = value) else currentBox
+                EditFields.ImageUri -> currentBox // if(editableFields.contains(field))  currentBox.copy(imageUri = value) else currentBox
+                EditFields.IsFragile -> if(editableFields.contains(field))  currentBox.copy(isFragile = value.toBoolean()) else currentBox
+                EditFields.Name -> if(editableFields.contains(field))  currentBox.copy(name = value) else currentBox
+                EditFields.Value -> if(editableFields.contains(field))  currentBox.copy(value = value.parseCurrencyToDouble()) else currentBox
             }
+            element.value = updatedElement
         }
     }
-
-    override fun destroy(element: Collection) {
-        viewModelScope.launch(defaultDispatcher) {
-            destroyEntity(element.toEntity())
-        }
-    }
-
-    override fun getAllElements(): List<Collection> {
-        var collectionList: List<Collection> = emptyList()
-        viewModelScope.launch(defaultDispatcher) {
-            collectionList = getElements()
-        }
-        return collectionList
-    }
-
-    override suspend fun createEntity(entities: List<CollectionEntity>) {
-        if(entities.size == 1) {
-            collectionsRepository.insertCollection(entities.first())
-        } else {
-            collectionsRepository.insertAll(entities)
-        }
-    }
-
-    override suspend fun updateEntity(entity: CollectionEntity) {
-        collectionsRepository.updateCollection(entity)
-    }
-
-    override suspend fun destroyEntity(entity: CollectionEntity) {
-        collectionsRepository.deleteCollection(entity)
-    }
-
-    override suspend fun getElements(): List<Collection> {
-        val collectionEntitiesFlow = collectionsRepository
-            .getAllCollectionsStream().map { list -> list.map { it.toCollection() } }
-        return collectionEntitiesFlow.toList().flatten()
-    }
-
-    override suspend fun getEntity(id: String): CollectionEntity? {
-        return collectionsRepository.getCollection(id)
-    }
-
 }
-
-data class CollectionsScreenUiState(
-    override val elements: List<Collection> = emptyList(),
-    override val result: Result = Result.Loading,
-): PackItUpUiState
