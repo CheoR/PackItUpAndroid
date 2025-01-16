@@ -2,51 +2,32 @@ package com.example.packitupandroid.data.database.dao
 
 import androidx.room.Dao
 import androidx.room.Query
-import androidx.room.Transaction
-import com.example.packitupandroid.data.model.QuerySummary
+import com.example.packitupandroid.data.model.Summary
 import kotlinx.coroutines.flow.Flow
 
+
+/**
+ * Data Access Object (DAO) for the Summary table.
+ *
+ * This interface provides a method to get a stream of Summary objects.
+ */
 @Dao
 interface SummaryDao {
+    /**
+     * Queries the database to get a stream of Summary objects.
+     *
+     * The query uses subqueries to calculate the total number of items, boxes, collections, the total value of items,
+     * and whether there are any fragile items.
+     *
+     * @return A Flow of Summary objects.
+     */
     @Query("""
-        WITH boxesData AS (
-            SELECT COUNT(b.id) AS count
-            FROM boxes b
-        ),
-        
-        collectionsData AS (
-            SELECT COUNT(c.id) as count
-            FROM collections c
-        ),
-        
-        itemsData AS (
-            SELECT COUNT(i.id) as count, ROUND(SUM(i.value)) AS value, MAX(CASE WHEN i.is_fragile = 1 THEN 1 ELSE 0 END) AS is_fragile
-            FROM items i
-        )
-        
-        SELECT
-            boxesData.count AS box_count,
-            collectionsData.count AS collection_count,
-            itemsData.count AS item_count,
-            itemsData.value AS value,
-            itemsData.is_fragile AS is_fragile
-        FROM boxesData, collectionsData, itemsData
+        SELECT 
+            (SELECT COUNT(*) FROM items) AS itemCount,
+            (SELECT COUNT(*) FROM boxes) AS boxCount,
+            (SELECT COUNT(*) FROM collections) AS collectionCount,
+            (SELECT SUM(value) FROM items) AS value,
+            (SELECT EXISTS(SELECT 1 FROM items WHERE is_fragile = 1)) AS isFragile
     """)
-    fun getSummary(): Flow<QuerySummary>
-
-    @Transaction
-    suspend fun clearAllSummary() {
-        deleteItems()
-        deleteBoxes()
-        deleteCollections()
-    }
-
-    @Query("DELETE FROM items")
-    fun deleteItems()
-
-    @Query("DELETE FROM boxes")
-    fun deleteBoxes()
-
-    @Query("DELETE FROM collections")
-    fun deleteCollections()
+    fun observe(): Flow<Summary>
 }
