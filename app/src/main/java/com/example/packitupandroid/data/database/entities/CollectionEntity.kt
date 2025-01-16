@@ -3,9 +3,6 @@ package com.example.packitupandroid.data.database.entities
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import com.example.packitupandroid.data.model.Collection
-import com.example.packitupandroid.utils.Converters
-import java.util.Date
 import java.util.UUID
 
 
@@ -34,36 +31,6 @@ data class CollectionEntity(
     )
     override val lastModified: Long = 0,
 ) : BaseEntity
-
-/**
- * Converts a [CollectionEntity] to a [Collection].
- *
- * This function takes a [CollectionEntity] and maps its properties to a new [Collection] object.
- * It also converts the `lastModified` timestamp to a `Date` object using the [Converters] class.
- *
- * @return The converted [Collection].
- */
-fun CollectionEntity.toCollection(): Collection = Collection(
-    id = this.id,
-    name = this.name,
-    description = this.description,
-    lastModified = Converters().fromTimestamp(this.lastModified) ?: Date(),
-)
-
-/**
- * Updates a [CollectionEntity] with the values from another [CollectionEntity].
- *
- * This function takes another [CollectionEntity] and copies its properties to the current [CollectionEntity],
- * updating the `lastModified` timestamp to the current time.
- *
- * @param other The [CollectionEntity] to update with.
- * @return The updated [CollectionEntity].
- */
-fun CollectionEntity.updateWith(other: CollectionEntity) : CollectionEntity = copy (
-    name = other.name,
-    description = other.description,
-    lastModified = System.currentTimeMillis(),
-)
 
 
 //fun CollectionEntity.toQueryCollection(collectionRepository: CollectionsRepository): QueryCollection {

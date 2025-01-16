@@ -5,9 +5,6 @@ import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.Index
 import androidx.room.PrimaryKey
-import com.example.packitupandroid.data.model.Item
-import com.example.packitupandroid.utils.Converters
-import java.util.Date
 import java.util.UUID
 
 
@@ -17,6 +14,9 @@ import java.util.UUID
  * This data class is used to store information about an item in the database.
  * It includes properties such as the item's ID, name, description, value, fragility,
  * last modification timestamp, associated box ID, and image URI.
+ *
+ * This entity is mapped to the "items" table in the database and includes a foreign
+ * key relationship with the [BoxEntity].
  *
  * @property id The unique identifier for the item, generated using UUID.randomUUID().
  * @property name The name of the item.
@@ -68,41 +68,3 @@ data class ItemEntity(
     )
     val imageUri: String? = null,
 ): BaseEntity
-
-/**
- * Converts an [ItemEntity] to an [Item].
- *
- * This function takes an [ItemEntity] and maps its properties to a new [Item] object.
- * It also converts the `lastModified` timestamp to a `Date` object using the [Converters] class.
- *
- * @return The converted [Item].
- */
-fun ItemEntity.toItem(): Item = Item(
-    id = this.id,
-    name = this.name,
-    description = this.description,
-    value = this.value,
-    isFragile = this.isFragile,
-    lastModified = Converters().fromTimestamp(this.lastModified) ?: Date(),
-    boxId = this.boxId,
-    imageUri = this.imageUri
-)
-
-/**
- * Updates an [ItemEntity] with the values from another [ItemEntity].
- *
- * This function takes another [ItemEntity] and copies its properties to the current [ItemEntity],
- * updating the `lastModified` timestamp to the current time.
- *
- * @param other The [ItemEntity] to update with.
- * @return The updated [ItemEntity].
- */
-fun ItemEntity.updateWith(other: ItemEntity) : ItemEntity = copy (
-    name = other.name,
-    description = other.description,
-    value = other.value,
-    isFragile = other.isFragile,
-    lastModified = System.currentTimeMillis(),
-    imageUri = other.imageUri,
-    boxId = other.boxId,
-)
