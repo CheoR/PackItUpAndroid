@@ -34,10 +34,10 @@ import com.example.packitupandroid.ui.components.common.ButtonAction
 fun ConfirmCancelContainer(
     onCancel: () -> Unit,
     onConfirm: () -> Unit,
-    content: @Composable () -> Unit,
     modifier: Modifier = Modifier,
     confirmButtonEnabled: Boolean = false,
     cancelButtonEnabled: Boolean = false,
+    content: @Composable () -> Unit,
 ) {
     Column(
         modifier = modifier
