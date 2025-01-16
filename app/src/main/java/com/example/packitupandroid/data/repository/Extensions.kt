@@ -346,3 +346,23 @@ fun QuerySummary.toSummary(
     boxCount = this.box_count,
     collectionCount = this.collection_count,
 )
+
+/**
+ * Converts a QueryBox object to a Box object.
+ *
+ * This function takes a QueryBox instance and maps its properties to a new Box instance.
+ * It's essentially a data transformation function, ensuring that the data from QueryBox
+ * is properly represented in the Box data structure.
+ *
+ * @return A new Box object with the data from the QueryBox.
+ */
+fun QueryBox.toBox(): Box = Box(
+    id = this.id,
+    name = this.name,
+    description = this.description,
+    item_count = this.item_count,
+    value = this.value,
+    isFragile = this.is_fragile,
+    lastModified = this.last_modified,
+    collectionId = this.collection_id,
+)
