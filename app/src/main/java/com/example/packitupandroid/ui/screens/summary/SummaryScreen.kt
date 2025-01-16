@@ -4,6 +4,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.text.BasicTextField
@@ -25,18 +26,33 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.packitupandroid.R
-import com.example.packitupandroid.Result
+import com.example.packitupandroid.data.model.Summary
 import com.example.packitupandroid.data.source.local.LocalDataSource
 import com.example.packitupandroid.ui.PackItUpViewModelProvider
 import com.example.packitupandroid.ui.components.card.ColumnIcon
 import com.example.packitupandroid.ui.components.card.SummaryCard
-import com.example.packitupandroid.ui.components.spinner.Spinner
 import com.example.packitupandroid.ui.navigation.PackItUpRoute
 import com.example.packitupandroid.ui.navigation.PackItUpTopLevelDestination
 import com.example.packitupandroid.ui.navigation.TOP_LEVEL_DESTINATIONS
+import com.example.packitupandroid.utils.Result
 import com.example.packitupandroid.utils.asCurrencyString
 import com.example.packitupandroid.utils.toBoolean
 
+
+/**
+ * Determines the top-level destination associated with a given route.
+ *
+ * This function maps a string representation of a route (e.g., "collections", "boxes", "items")
+ * to its corresponding [PackItUpTopLevelDestination] enum value. It utilizes a `when` statement
+ * for routing based on [PackItUpRoute] constants.
+ *
+ * **Note:** The current implementation uses hardcoded indices into the [TOP_LEVEL_DESTINATIONS]
+ * list, which is marked as a TODO and needs to be improved for better maintainability and clarity.
+ *
+ * @param route The string representation of the route (e.g., PackItUpRoute.COLLECTIONS).
+ * @return The [PackItUpTopLevelDestination] enum value associated with the given route.
+ * @throws IllegalArgumentException If the provided route is not a valid [PackItUpRoute].
+ */
 private fun getTopLevelDestination(route: String): PackItUpTopLevelDestination {
     // TODO - fix - this is ugly
     return when (route) {
@@ -47,31 +63,73 @@ private fun getTopLevelDestination(route: String): PackItUpTopLevelDestination {
     }
 }
 
+/**
+ * Composable function for displaying the summary screen.
+ *
+ * This composable displays the summary of collections, boxes, and items,
+ * including their counts, total value, and whether there are fragile items.
+ *
+ * @param viewModel The [SummaryScreenViewModel] instance to use for data.
+ *                  Defaults to a new instance created using [PackItUpViewModelProvider.Factory].
+ */
 @Composable
 fun SummaryScreen(
     modifier: Modifier = Modifier,
     navigateToTopLevelDestination: (PackItUpTopLevelDestination) -> Unit,
-    viewModel: SummaryScreenViewModel = viewModel(factory = PackItUpViewModelProvider.Factory),
+    viewModel: SummaryScreenViewModel = viewModel(factory = PackItUpViewModelProvider.Factory)
 ) {
-    val uiState by viewModel.uiState.collectAsState()
-    Column(modifier = modifier) {
-        when (uiState.result) {
-            is Result.Loading -> Spinner()
-            is Result.Error -> ContentMessage(text = "Error . . ")
-            is Result.Complete -> (uiState.result as Result.Complete).summary?.let {
-                Summary(
-                    itemCount = it.itemCount,
-                    boxCount = it.boxCount,
-                    collectionCount = it.collectionCount,
-                    isFragile = it.isFragile,
-                    value = it.value,
-                    navigateToTopLevelDestination = navigateToTopLevelDestination,
-                )
-            }
+    val result by viewModel.elements.collectAsState()
+    /**
+     *  A [Summary] object that is derived from the [result] state.
+     *  If the result is an error or loading, a default [Summary] object is created.
+     */
+    val summary = when (result) {
+        is Result.Error -> Summary(0,0,0,0.0,false)
+        is Result.Loading -> Summary(0,0,0,0.0,false)
+        is Result.Success -> (result as Result.Success<Summary?>).data
+    }
+    Column(
+        modifier = Modifier.fillMaxSize(),
+        verticalArrangement = Arrangement.spacedBy(
+            dimensionResource(R.dimen.space_arrangement_small)
+        ),
+        horizontalAlignment = Alignment.CenterHorizontally,
+    ) {
+//        Text("Total Collections: ${summary?.collectionCount}")
+//        Text("Total Boxes: ${summary?.boxCount}")
+//        Text("Total Items: ${summary?.itemCount}")
+//        Text("Total Value: ${summary?.value}")
+//        Text("Has Fragile Items: ${summary?.isFragile}")
+        // TODO: on error display a message ContentMessage(text = "Error . . ")
+        if (summary != null) {
+            Summary(
+                itemCount = summary.itemCount,
+                boxCount = summary.boxCount,
+                collectionCount = summary.collectionCount,
+                isFragile = summary.isFragile,
+                value = summary.value,
+                navigateToTopLevelDestination = navigateToTopLevelDestination,
+            )
         }
     }
 }
 
+/**
+ * Composable for displaying a summary of the current data.
+ *
+ * This composable displays a summary of collections, boxes, and items,
+ * including their counts, total value, and whether there are fragile items.
+ * It also provides navigation to the respective screens for collections, boxes, and items.
+ *
+ * @param navigateToTopLevelDestination The lambda function to navigate to a top-level destination.
+ *   It takes a [PackItUpTopLevelDestination] as a parameter.
+ * @param modifier The modifier to be applied to the composable.
+ * @param itemCount The number of items.
+ * @param boxCount The number of boxes.
+ * @param collectionCount The number of collections.
+ * @param isFragile Whether the items are fragile or not.
+ * @param value The total value of the items.
+ */
 @Composable
 private fun Summary(
     navigateToTopLevelDestination: (PackItUpTopLevelDestination) -> Unit,
@@ -138,6 +196,14 @@ private fun Summary(
     }
 }
 
+/**
+ * Displays a simple text message centered within a Column.
+ *
+ * This composable function takes a string as input and displays it within a centered
+ * column. It's useful for showing simple messages or placeholder content.
+ *
+ * @param text The text content to be displayed.
+ */
 @Composable
 private fun ContentMessage(text: String) {
     Column(

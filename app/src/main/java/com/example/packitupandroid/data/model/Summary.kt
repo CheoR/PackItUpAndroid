@@ -1,8 +1,5 @@
 package com.example.packitupandroid.data.model
 
-import com.example.packitupandroid.utils.EditFields
-import java.util.Date
-
 
 /**
  * Represents a summary of a query result, providing aggregated information about the data.
@@ -35,36 +32,22 @@ data class QuerySummary(
 )
 
 /**
- * Represents a summary of data, providing aggregated counts and general information.
+ * Data class to hold the summary information from the database.
  *
- * This data class encapsulates a summary view of underlying data, such as items, boxes, and collections.
- * It extends [BaseCardData] and provides properties for describing the summary, along with
- * counts for related entities.
+ * This class represents a summary of the inventory data, including the total
+ * number of items, boxes, and collections, the total value of all items, and
+ * whether any item is marked as fragile.
  *
- * @property id The unique identifier for this summary. Inherited from [BaseCardData].
- * @property name The name or title of this summary. Inherited from [BaseCardData].
- * @property description An optional description providing more context for this summary. Inherited from [BaseCardData].
- * @property isFragile Indicates if the data represented by this summary is considered fragile or sensitive. Inherited from [BaseCardData].
- * @property value A numerical value associated with this summary, such as a total cost or score. Inherited from [BaseCardData].
- * @property editFields A set of [EditFields] indicating which fields of the underlying data can be edited. Inherited from [BaseCardData].
- * @property lastModified The date and time when this summary was last modified. Inherited from [BaseCardData].
- *                      **Note:** This field might be removed or adjusted in future versions (see TODO).
- * @property itemCount The total number of items included in this summary.
- * @property boxCount The total number of boxes associated with this summary.
- * @property collectionCount The total number of collections represented in this summary.
- *
- * **TODO:** Update the interface [BaseCardData] to remove unneeded fields, such as `lastModified`, if they are not relevant for all implementations.
+ * @property itemCount The total number of items.
+ * @property boxCount The total number of boxes.
+ * @property collectionCount The total number of collections.
+ * @property value The total sum of all item values.
+ * @property isFragile Whether any item is fragile.
  */
-data class Summary (
-    override val id: String,
-    override val name: String,
-    override val description: String? = null,
-    override val isFragile: Boolean = false,
-    override val value: Double = 0.0,
-    override val editFields: Set<EditFields> = emptySet(),
-    override val lastModified: Date = Date(),
-    // TODO: Fix - update interface to remove unneeded fields e.g. lastModified
-    val itemCount: Int = 0,
-    val boxCount: Int = 0,
-    val collectionCount: Int = 0,
-) : BaseCardData
+data class Summary(
+    val itemCount: Int,
+    val boxCount: Int,
+    val collectionCount: Int,
+    val value: Double,
+    val isFragile: Boolean
+)
