@@ -28,12 +28,13 @@ interface ItemDao : EntityDao<ItemEntity>, DataDao<Item> {
     @Query("""
         SELECT
             i.*,
+            i.box_id as boxId,
+            i.image_uri as imageUri,
             i.is_fragile AS isFragile,
             i.last_modified AS lastModified
         FROM items i
         WHERE id = :id
-    """)
-    override fun get(id: String): Item?
+    """)    override fun get(id: String): Item?
 
     /**
      * Observes an item from the database by its unique ID.
@@ -48,6 +49,8 @@ interface ItemDao : EntityDao<ItemEntity>, DataDao<Item> {
     @Query("""
         SELECT
             i.*,
+            i.box_id as boxId,
+            i.image_uri as imageUri,
             i.is_fragile AS isFragile,
             i.last_modified AS lastModified
         FROM items i
@@ -66,6 +69,8 @@ interface ItemDao : EntityDao<ItemEntity>, DataDao<Item> {
     @Query("""
         SELECT
             i.*,
+            i.box_id as boxId,
+            i.image_uri as imageUri,
             i.is_fragile AS isFragile,
             i.last_modified AS lastModified
         FROM items i

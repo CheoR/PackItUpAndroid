@@ -32,6 +32,7 @@ interface BoxDao : EntityDao<BoxEntity>, DataDao<Box> {
         b.id, 
         b.name,
         b.description,
+        b.collection_id AS collectionId,
         b.last_modified AS lastModified,
         ROUND(SUM(i.value), 2) AS value, /* total sum of item values in given box */
         MAX(CASE WHEN i.is_fragile THEN 1 ELSE 0 END) AS isFragile,
@@ -59,6 +60,7 @@ interface BoxDao : EntityDao<BoxEntity>, DataDao<Box> {
         b.id, 
         b.name,
         b.description,
+        b.collection_id AS collectionId,
         b.last_modified AS lastModified,
         ROUND(SUM(i.value), 2) AS value, /* total sum of item values in given box */
         MAX(CASE WHEN i.is_fragile THEN 1 ELSE 0 END) AS isFragile,
@@ -86,6 +88,7 @@ interface BoxDao : EntityDao<BoxEntity>, DataDao<Box> {
         b.name,
         b.description,
         b.last_modified AS lastModified,
+        b.collection_id AS collectionId,
         ROUND(SUM(i.value), 2) AS value,
         MAX(CASE WHEN i.is_fragile THEN 1 ELSE 0 END) AS isFragile,
         COUNT(i.id) AS itemCount
