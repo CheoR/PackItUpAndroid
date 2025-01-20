@@ -37,7 +37,6 @@ fun PackItUpNavHost(
     viewModel: ScreenViewModel = viewModel(factory = PackItUpViewModelProvider.Factory)
 ) {
     val navGraphState = viewModel.navGraphState.collectAsStateWithLifecycle().value
-    val title = viewModel.title.collectAsStateWithLifecycle().value
     val snackbarHostState = remember { SnackbarHostState() }
     val scope = rememberCoroutineScope()
 
@@ -50,17 +49,12 @@ fun PackItUpNavHost(
 
             // TODO - ref
             when {
-                route == PackItUpRoute.SUMMARY -> viewModel.updateTitle(stringResource(R.string.summary))
-                route == PackItUpRoute.COLLECTIONS -> viewModel.updateTitle(stringResource(R.string.collections))
-                route == PackItUpRoute.BOXES -> viewModel.updateTitle(stringResource(R.string.boxes))
-                route == PackItUpRoute.ITEMS -> viewModel.updateTitle(stringResource(R.string.items))
                 route?.contains("Boxes/{collectionId}") == true -> viewModel.getCollectionNameById(arguments?.getString("collectionId"))
                 route?.contains("Items/{boxId}") == true -> viewModel.getBoxNameById(arguments?.getString("boxId"))
-                else -> viewModel.updateTitle(stringResource(R.string.app_name))
             }
 
             PackItUpAppBar(
-                title = title,
+                title = selectedDestination,
                 canNavigateBack = navController.previousBackStackEntry != null,
                 navigateUp = { navController.navigateUp() },
             )

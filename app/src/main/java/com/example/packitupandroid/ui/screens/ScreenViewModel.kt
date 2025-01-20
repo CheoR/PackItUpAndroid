@@ -24,7 +24,6 @@ class ScreenViewModel(
     private var boxesOptions: List<QueryDropdownOptions> = emptyList()
     private var collectionsOptions: List<QueryDropdownOptions> = emptyList()
     private val _title = MutableStateFlow("")
-    var title: StateFlow<String> = _title.asStateFlow()
 
     init {
         viewModelScope.launch {
@@ -98,10 +97,6 @@ class ScreenViewModel(
 
     private suspend fun boxNameById(id: String?): String? {
         return id?.let { boxesRepository.getBox(it) }?.name
-    }
-
-    fun updateTitle(newTitle: String) {
-        _title.value = newTitle
     }
 }
 
