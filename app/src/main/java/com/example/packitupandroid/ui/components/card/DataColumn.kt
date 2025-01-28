@@ -18,11 +18,13 @@ import androidx.compose.ui.semantics.SemanticsProperties
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.AnnotatedString
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.packitupandroid.data.model.BaseCardData
 import com.example.packitupandroid.data.model.Box
 import com.example.packitupandroid.data.model.Item
 import com.example.packitupandroid.data.model.QueryDropdownOptions
+import com.example.packitupandroid.data.source.local.LocalDataSource
 import com.example.packitupandroid.utils.CardType
 import com.example.packitupandroid.utils.EditMode
 import com.example.packitupandroid.utils.asCurrencyString
@@ -76,7 +78,6 @@ fun<T: BaseCardData> DataColumn(
             onValueChange = {},
             textStyle = MaterialTheme.typography.bodySmall,
             enabled = editMode == EditMode.Edit,
-            maxLines = 3,
             modifier = Modifier
                 .weight(1f)
                 .fillMaxWidth()
@@ -123,87 +124,88 @@ fun<T: BaseCardData> DataColumn(
 
 // TODO: fix
 
-//@Preview(
-//    showBackground = true,
-//    group = "Default",
-//)
-//@Composable
-//fun PreviewItemViewCardDataColumn(
-//    localDataSource: LocalDataSource = LocalDataSource(),
-//) {
-//    val item = localDataSource.loadItems().first()
-//    DataColumn(
-//        element = item,
-//    )
-//}
-//
-//@Preview(
-//    showBackground = true,
-//    group = "Default",
-//)
-//@Composable
-//fun PreviewBoxViewCardDataColumn(
-//    localDataSource: LocalDataSource = LocalDataSource(),
-//) {
-//    val box = localDataSource.loadBoxes().first()
-//    DataColumn(
-//        element = box,
-//    )
-//}
-//@Preview(
-//    showBackground = true,
-//    group = "Default",
-//)
-//@Composable
-//fun PreviewCollectionViewCardDataColumn(
-//    localDataSource: LocalDataSource = LocalDataSource(),
-//) {
-//    val collection = localDataSource.loadCollections().first()
-//    DataColumn(
-//        element = collection,
-//    )
-//}
+@Preview(
+    showBackground = true,
+    group = "Default",
+)
+@Composable
+fun PreviewItemViewCardDataColumn(
+    localDataSource: LocalDataSource = LocalDataSource(),
+) {
+    val item = localDataSource.loadItems().first()
+    DataColumn(
+        element = item,
+    )
+}
 
-//@Preview(
-//    showBackground = true,
-//    group = "Summary",
-//)
-//@Composable
-//fun PreviewItemSummaryCardDataColumn(
-//    localDataSource: LocalDataSource = LocalDataSource(),
-//) {
-//    val item = localDataSource.loadItems().first()
-//    DataColumn(
-//        element = item,
-//        cardType = CardType.Summary,
-//    )
-//}
-//
-//@Preview(
-//    showBackground = true,
-//    group = "Summary",
-//)
-//@Composable
-//fun PreviewBoxSummaryCardDataColumn(
-//    localDataSource: LocalDataSource = LocalDataSource(),
-//) {
-//    val box = localDataSource.loadBoxes().first()
-//    DataColumn(
-//        element = box,
-//        cardType = CardType.Summary,
-//    )
-//}
-//@Preview(
-//    showBackground = true,
-//    group = "Summary",
-//)
-//@Composable
-//fun PreviewCollectionSummaryCardDataColumn(
-//    localDataSource: LocalDataSource = LocalDataSource(),
-//) {
-//    val collection = localDataSource.loadCollections().first()
-//    DataColumn(
-//        element = collection,
-//        cardType = CardType.Summary,
-//    )
-//}
+@Preview(
+    showBackground = true,
+    group = "Default",
+)
+@Composable
+fun PreviewBoxViewCardDataColumn(
+    localDataSource: LocalDataSource = LocalDataSource(),
+) {
+    val box = localDataSource.loadBoxes().first()
+    DataColumn(
+        element = box,
+    )
+}
+
+@Preview(
+    showBackground = true,
+    group = "Default",
+)
+@Composable
+fun PreviewCollectionViewCardDataColumn(
+    localDataSource: LocalDataSource = LocalDataSource(),
+) {
+    val collection = localDataSource.loadCollections().first()
+    DataColumn(
+        element = collection,
+    )
+}
+
+@Preview(
+    showBackground = true,
+    group = "Summary",
+)
+@Composable
+fun PreviewItemSummaryCardDataColumn(
+    localDataSource: LocalDataSource = LocalDataSource(),
+) {
+    val item = localDataSource.loadItems().first()
+    DataColumn(
+        element = item,
+        cardType = CardType.Summary,
+    )
+}
+
+@Preview(
+    showBackground = true,
+    group = "Summary",
+)
+@Composable
+fun PreviewBoxSummaryCardDataColumn(
+    localDataSource: LocalDataSource = LocalDataSource(),
+) {
+    val box = localDataSource.loadBoxes().first()
+    DataColumn(
+        element = box,
+        cardType = CardType.Summary,
+    )
+}
+@Preview(
+    showBackground = true,
+    group = "Summary",
+)
+@Composable
+fun PreviewCollectionSummaryCardDataColumn(
+    localDataSource: LocalDataSource = LocalDataSource(),
+) {
+    val collection = localDataSource.loadCollections().first()
+    DataColumn(
+        element = collection,
+        cardType = CardType.Summary,
+    )
+}

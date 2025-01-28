@@ -133,77 +133,77 @@ private fun base64ToBitmap(base64Image: String): Bitmap? {
 }
 
 
-@Preview(
-    group="Default",
-    showBackground = true,
-)
-@Composable
-fun PreviewBaseCardItemWithImageUriIconColumn() {
-    IconsColumn(
-        icon1 = ColumnIcon.UriIcon(R.drawable.pug)
-    )
-}
-
-@Preview(
-    group="Default",
-    showBackground = true,
-)
-@Composable
-fun PreviewBaseCardItemWithOutImageUriIconColumn() {
-    IconsColumn()
-}
-
-@Preview(
-    group="Default",
-    showBackground = true,
-)
-@Composable
-fun PreviewBaseCardBoxIconColumn() {
-    IconsColumn(
-        icon1 = ColumnIcon.VectorIcon(ImageVector.vectorResource(R.drawable.ic_launcher_foreground)),
-        badgeCount1 = 5,
-    )
-}
-
-
-@Preview(
-    group="Default",
-    showBackground = true,
-)
-@Composable
-fun PreviewBaseCardCollectionIconColumn() {
-    IconsColumn(
-        icon1 = ColumnIcon.VectorIcon(ImageVector.vectorResource(R.drawable.ic_launcher_foreground)),
-        icon2 = ColumnIcon.VectorIcon(Icons.AutoMirrored.Filled.Label),
-        badgeCount1 = 5,
-        badgeCount2 = 2,
-    )
-}
-
-
-@Preview(
-    group="Summary",
-    showBackground = true,
-)
-@Composable
-fun PreviewBaseCardItemSummaryIconColumn() {
-    IconsColumn(
-        icon1 = ColumnIcon.VectorIcon(Icons.AutoMirrored.Filled.Label),
-        badgeCount1 = 5,
-    )
-}
-
-@Preview(
-    group="Summary",
-    showBackground = true,
-)
-@Composable
-fun PreviewBaseCardBoxSummaryIconColumn() {
-    IconsColumn(
-        icon1 = ColumnIcon.VectorIcon(ImageVector.vectorResource(R.drawable.ic_launcher_foreground)),
-        badgeCount1 = 5,
-    )
-}
+//@Preview(
+//    group="Default",
+//    showBackground = true,
+//)
+//@Composable
+//fun PreviewBaseCardItemWithImageUriIconColumn() {
+//    IconsColumn(
+//        icon1 = ColumnIcon.UriIcon(R.drawable.pug)
+//    )
+//}
+//
+//@Preview(
+//    group="Default",
+//    showBackground = true,
+//)
+//@Composable
+//fun PreviewBaseCardItemWithOutImageUriIconColumn() {
+//    IconsColumn()
+//}
+//
+//@Preview(
+//    group="Default",
+//    showBackground = true,
+//)
+//@Composable
+//fun PreviewBaseCardBoxIconColumn() {
+//    IconsColumn(
+//        icon1 = ColumnIcon.VectorIcon(ImageVector.vectorResource(R.drawable.ic_launcher_foreground)),
+//        badgeCount1 = 5,
+//    )
+//}
+//
+//
+//@Preview(
+//    group="Default",
+//    showBackground = true,
+//)
+//@Composable
+//fun PreviewBaseCardCollectionIconColumn() {
+//    IconsColumn(
+//        icon1 = ColumnIcon.VectorIcon(ImageVector.vectorResource(R.drawable.ic_launcher_foreground)),
+//        icon2 = ColumnIcon.VectorIcon(Icons.AutoMirrored.Filled.Label),
+//        badgeCount1 = 5,
+//        badgeCount2 = 2,
+//    )
+//}
+//
+//
+//@Preview(
+//    group="Summary",
+//    showBackground = true,
+//)
+//@Composable
+//fun PreviewBaseCardItemSummaryIconColumn() {
+//    IconsColumn(
+//        icon1 = ColumnIcon.VectorIcon(Icons.AutoMirrored.Filled.Label),
+//        badgeCount1 = 5,
+//    )
+//}
+//
+//@Preview(
+//    group="Summary",
+//    showBackground = true,
+//)
+//@Composable
+//fun PreviewBaseCardBoxSummaryIconColumn() {
+//    IconsColumn(
+//        icon1 = ColumnIcon.VectorIcon(ImageVector.vectorResource(R.drawable.ic_launcher_foreground)),
+//        badgeCount1 = 5,
+//    )
+//}
 
 @Preview(
     group="Summary",

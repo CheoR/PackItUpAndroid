@@ -14,6 +14,7 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 
+
 class ScreenViewModel(
     private val boxesRepository: BoxesRepository,
     private val collectionsRepository: CollectionsRepository,
@@ -32,7 +33,7 @@ class ScreenViewModel(
     }
 
     private suspend fun initializeNavGraphState() {
-        summaryRepository.getAllSummaryStream().collect { summary ->
+        summaryRepository.observe().collect { summary ->
             _navGraphState.value = navGraphState.value.copy(
                 canNavigateToBoxesScreen = summary.collection_count.toBoolean(),
                 canNavigateToItemsScreen = summary.box_count.toBoolean(),

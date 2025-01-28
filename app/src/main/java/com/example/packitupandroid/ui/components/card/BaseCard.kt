@@ -1,5 +1,8 @@
 package com.example.packitupandroid.ui.components.card
 
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -14,23 +17,27 @@ import androidx.compose.material.icons.filled.CheckBoxOutlineBlank
 import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.ElevatedCard
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.vectorResource
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.packitupandroid.R
 import com.example.packitupandroid.data.model.BaseCardData
 import com.example.packitupandroid.data.model.Box
 import com.example.packitupandroid.data.model.Collection
 import com.example.packitupandroid.data.model.Item
-import com.example.packitupandroid.data.model.QueryDropdownOptions
 import com.example.packitupandroid.data.model.Summary
+import com.example.packitupandroid.data.source.local.LocalDataSource
 import com.example.packitupandroid.utils.CardType
 import com.example.packitupandroid.utils.EditMode
 
@@ -58,6 +65,83 @@ sealed class ActionColumnIcon(val icon: ImageVector) {
 typealias IconPair = Pair<ColumnIcon, ColumnIcon?>
 typealias BadgeCountPair = Pair<Int, Int>
 
+/**
+ * A base composable card that displays information from a [BaseCardData] object.
+ *
+ * This card is designed to be a foundation for displaying various types of data in a card format.
+ * It includes basic UI elements like ID and name, and provides callbacks for expanding and closing the card.
+ *
+ * @param data The [BaseCardData] object containing the data to display in the card.
+ * @param onExpandCard A callback function that is invoked when the user clicks on the card to expand it.
+ * @param onCloseCard A callback function that is invoked when the user clicks on the card to close it. (Not implemented in this example but included for potential future use).
+ * @param modifier Modifier to be applied to the card. Defaults to filling the maximum width and setting a fixed height.
+ *
+ * @param D the type of data that the card will display. It must inherit from BaseCardData
+ *
+ * Example usage:
+ * ```
+ * data class MyCardData(override val id: String, override val name: String, val extraInfo: String) : BaseCardData
+ *
+ * @Composable
+ * fun MyCard(data: MyCardData) {
+ *     BaseCard(
+ *         data = data,
+ *         onExpandCard = { println("Card expanded") },
+ *         onCloseCard = { println("Card closed") }
+ */
+@Composable
+fun <D: BaseCardData>BaseCard(
+    data: D,
+    onExpandCard: () -> Unit,
+    onCloseCard: () -> Unit,
+    modifier: Modifier = Modifier,
+) {
+    ElevatedCard(
+        elevation = CardDefaults.cardElevation(defaultElevation = dimensionResource(R.dimen.elevation_small)),
+        modifier = modifier
+            .fillMaxWidth()
+            .height(dimensionResource(R.dimen.card_height)),
+    ) {
+        Row(
+            modifier = Modifier
+                .background(Color.LightGray)
+        ) {
+            Column(
+                modifier = columnModifier,
+                verticalArrangement = Arrangement.Center
+            ) {
+                Text(
+                    text = data.id,
+                    style = MaterialTheme.typography.titleLarge,
+                    modifier = Modifier.padding(bottom = 8.dp)
+                )
+            }
+            Column(
+                modifier = Modifier
+                    .fillMaxHeight()
+                    .weight(1f)
+            ) {
+                Text(
+                    text = data.name,
+                    style = MaterialTheme.typography.titleLarge,
+                    modifier = Modifier.padding(bottom = 8.dp)
+                )
+            }
+
+            Column(
+                modifier = columnModifier,
+                verticalArrangement = Arrangement.Center
+            ) {
+                Text(
+                    text = data.id,
+                    style = MaterialTheme.typography.titleLarge,
+                    modifier = Modifier.padding(bottom = 8.dp)
+                )
+            }
+        }
+    }
+}
+
 // TODO: FIx - look into compound pattern to hide/display bottom part of data column
 // and to display/hide right column icon
 @Composable
@@ -66,7 +150,7 @@ fun<T: BaseCardData> BaseCard(
     onUpdate: (T) -> Unit,
     onDestroy: (T) -> Unit,
     modifier: Modifier = Modifier,
-    getDropdownOptions: (() -> List<QueryDropdownOptions>)? = null,
+//    getDropdownOptions: (() -> List<QueryDropdownOptions>)? = null,
     filterElements:( (id: String) -> Unit)? = null,
     editMode: EditMode = EditMode.NoEdit,
     cardType: CardType = CardType.Default,
@@ -108,7 +192,7 @@ fun<T: BaseCardData> BaseCard(
                     .weight(2f)
                     .padding(horizontal = 4.dp),
                 element = element,
-                getDropdownOptions = getDropdownOptions,
+//                getDropdownOptions = getDropdownOptions,
                 editMode = editMode,
                 cardType = cardType,
             )
@@ -140,7 +224,7 @@ fun<T: BaseCardData> BaseCard(
                 isShowCameraCard = showCameraCard,
                 isShowDeleteCard = showDeleteCard,
                 cardType = cardType,
-                getDropdownOptions = getDropdownOptions,
+//                getDropdownOptions = getDropdownOptions,
             )
         }
     }
@@ -186,206 +270,206 @@ fun <T: BaseCardData> getIconsAndBadges(data: T): Pair<IconPair,BadgeCountPair> 
    }
 }
 
-//@Preview(
-//    showBackground = true,
-//    group = "Default",
-//)
-//@Composable
-//fun PreviewItemBaseCardWithImage(
-//    localDataSource: LocalDataSource = LocalDataSource(),
-//) {
-//    val item = localDataSource.loadItems().first()
-//    BaseCard(
-//        element = item,
-//        onUpdate = {},
-//        onDestroy = {},
-//    )
-//}
-//
-//@Preview(
-//    showBackground = true,
-//    group = "Default",
-//)
-//@Composable
-//fun PreviewItemBaseCardWithoutImage(
-//    localDataSource: LocalDataSource = LocalDataSource(),
-//) {
-//    val item = localDataSource.loadItems()[1]
-//    BaseCard(
-//        element = item,
-//        onUpdate = {},
-//        onDestroy = {},
-//    )
-//}
-//
-//@Preview(
-//    showBackground = true,
-//    group = "Default",
-//)
-//@Composable
-//fun PreviewBoxBaseCard(
-//    localDataSource: LocalDataSource = LocalDataSource(),
-//) {
-//    val box = localDataSource.loadBoxes().first()
-//    BaseCard(
-//        element = box,
-//        onUpdate = {},
-//        onDestroy = {},
-//    )
-//}
-//
-//// TODO: Fix - look up previews and how to get variations
-//@Preview(
-//    showBackground = true,
-//    group = "Default",
-//)
-//@Composable
-//fun PreviewCollectionBaseCard(
-//    localDataSource: LocalDataSource = LocalDataSource(),
-//) {
-//    val collection = localDataSource.loadCollections().first()
-//    BaseCard(
-//        element = collection,
-//        onUpdate = {},
-//        onDestroy = {},
-//    )
-//}
-//
-//// Summary
-//@Preview(
-//    showBackground = true,
-//    group = "Summary",
-//)
-//@Composable
-//fun PreviewSummaryItemBaseCardWithImage(
-//    localDataSource: LocalDataSource = LocalDataSource(),
-//) {
-//    val item = localDataSource.loadItems().first()
-//    BaseCard(
-//        element = item,
-//        cardType = CardType.Summary,
-//        onUpdate = {},
-//        onDestroy = {},
-//    )
-//}
-//
-//@Preview(
-//    showBackground = true,
-//    group = "Summary",
-//)
-//@Composable
-//fun PreviewSummaryItemBaseCardWithoutImage(
-//    localDataSource: LocalDataSource = LocalDataSource(),
-//) {
-//    val item = localDataSource.loadItems()[1]
-//    BaseCard(
-//        element = item,
-//        cardType = CardType.Summary,
-//        onUpdate = {},
-//        onDestroy = {},
-//    )
-//}
-//
-//@Preview(
-//    showBackground = true,
-//    group = "Summary",
-//)
-//@Composable
-//fun PreviewSummaryBoxBaseCard(
-//    localDataSource: LocalDataSource = LocalDataSource(),
-//) {
-//    val box = localDataSource.loadBoxes().first()
-//    BaseCard(
-//        element = box,
-//        cardType = CardType.Summary,
-//        onUpdate = {},
-//        onDestroy = {},
-//    )
-//}
-//
-//@Preview(
-//    showBackground = true,
-//    group = "Summary",
-//)
-//@Composable
-//fun PreviewSummaryCollectionBaseCard(
-//    localDataSource: LocalDataSource = LocalDataSource(),
-//) {
-//    val collection = localDataSource.loadCollections().first()
-//    BaseCard(
-//        element = collection,
-//        cardType = CardType.Summary,
-//        onUpdate = {},
-//        onDestroy = {},
-//    )
-//}
-//
-//// Editable
-//
-//@Preview(
-//    showBackground = true,
-//    group = "Edit",
-//)
-//@Composable
-//fun PreviewEditItemBaseCardWithImage(
-//    localDataSource: LocalDataSource = LocalDataSource(),
-//) {
-//    val item = localDataSource.loadItems().first()
-//    BaseCard(
-//        element = item,
-//        editMode = EditMode.Edit,
-//        onUpdate = {},
-//        onDestroy = {},
-//    )
-//}
-//
-//@Preview(
-//    showBackground = true,
-//    group = "Edit",
-//)
-//@Composable
-//fun PreviewEditItemBaseCardWithoutImage(
-//    localDataSource: LocalDataSource = LocalDataSource(),
-//) {
-//    val item = localDataSource.loadItems()[1]
-//    BaseCard(
-//        element = item,
-//        editMode = EditMode.Edit,
-//        onUpdate = {},
-//        onDestroy = {},
-//    )
-//}
-//
-//@Preview(
-//    showBackground = true,
-//    group = "Edit",
-//)
-//@Composable
-//fun PreviewEditBoxBaseCard(
-//    localDataSource: LocalDataSource = LocalDataSource(),
-//) {
-//    val box = localDataSource.loadBoxes().first()
-//    BaseCard(
-//        element = box,
-//        editMode = EditMode.Edit,
-//        onUpdate = {},
-//        onDestroy = {},
-//    )
-//}
-//
-//@Preview(
-//    showBackground = true,
-//    group = "Edit",
-//)
-//@Composable
-//fun PreviewEditCollectionBaseCard(
-//    localDataSource: LocalDataSource = LocalDataSource(),
-//) {
-//    val collection = localDataSource.loadCollections().first()
-//    BaseCard(
-//        element = collection,
-//        editMode = EditMode.Edit,
-//        onUpdate = {},
-//        onDestroy = {},
-//    )
-//}
+@Preview(
+    showBackground = true,
+    group = "Default",
+)
+@Composable
+fun PreviewItemBaseCardWithImage(
+    localDataSource: LocalDataSource = LocalDataSource(),
+) {
+    val item = localDataSource.loadItems().first()
+    BaseCard(
+        element = item,
+        onUpdate = {},
+        onDestroy = {},
+    )
+}
+
+@Preview(
+    showBackground = true,
+    group = "Default",
+)
+@Composable
+fun PreviewItemBaseCardWithoutImage(
+    localDataSource: LocalDataSource = LocalDataSource(),
+) {
+    val item = localDataSource.loadItems()[1]
+    BaseCard(
+        element = item,
+        onUpdate = {},
+        onDestroy = {},
+    )
+}
+
+@Preview(
+    showBackground = true,
+    group = "Default",
+)
+@Composable
+fun PreviewBoxBaseCard(
+    localDataSource: LocalDataSource = LocalDataSource(),
+) {
+    val box = localDataSource.loadBoxes().first()
+    BaseCard(
+        element = box,
+        onUpdate = {},
+        onDestroy = {},
+    )
+}
+
+// TODO: Fix - look up previews and how to get variations
+@Preview(
+    showBackground = true,
+    group = "Default",
+)
+@Composable
+fun PreviewCollectionBaseCard(
+    localDataSource: LocalDataSource = LocalDataSource(),
+) {
+    val collection = localDataSource.loadCollections().first()
+    BaseCard(
+        element = collection,
+        onUpdate = {},
+        onDestroy = {},
+    )
+}
+
+// Summary
+@Preview(
+    showBackground = true,
+    group = "Summary",
+)
+@Composable
+fun PreviewSummaryItemBaseCardWithImage(
+    localDataSource: LocalDataSource = LocalDataSource(),
+) {
+    val item = localDataSource.loadItems().first()
+    BaseCard(
+        element = item,
+        cardType = CardType.Summary,
+        onUpdate = {},
+        onDestroy = {},
+    )
+}
+
+@Preview(
+    showBackground = true,
+    group = "Summary",
+)
+@Composable
+fun PreviewSummaryItemBaseCardWithoutImage(
+    localDataSource: LocalDataSource = LocalDataSource(),
+) {
+    val item = localDataSource.loadItems()[1]
+    BaseCard(
+        element = item,
+        cardType = CardType.Summary,
+        onUpdate = {},
+        onDestroy = {},
+    )
+}
+
+@Preview(
+    showBackground = true,
+    group = "Summary",
+)
+@Composable
+fun PreviewSummaryBoxBaseCard(
+    localDataSource: LocalDataSource = LocalDataSource(),
+) {
+    val box = localDataSource.loadBoxes().first()
+    BaseCard(
+        element = box,
+        cardType = CardType.Summary,
+        onUpdate = {},
+        onDestroy = {},
+    )
+}
+
+@Preview(
+    showBackground = true,
+    group = "Summary",
+)
+@Composable
+fun PreviewSummaryCollectionBaseCard(
+    localDataSource: LocalDataSource = LocalDataSource(),
+) {
+    val collection = localDataSource.loadCollections().first()
+    BaseCard(
+        element = collection,
+        cardType = CardType.Summary,
+        onUpdate = {},
+        onDestroy = {},
+    )
+}
+
+// Editable
+
+@Preview(
+    showBackground = true,
+    group = "Edit",
+)
+@Composable
+fun PreviewEditItemBaseCardWithImage(
+    localDataSource: LocalDataSource = LocalDataSource(),
+) {
+    val item = localDataSource.loadItems().first()
+    BaseCard(
+        element = item,
+        editMode = EditMode.Edit,
+        onUpdate = {},
+        onDestroy = {},
+    )
+}
+
+@Preview(
+    showBackground = true,
+    group = "Edit",
+)
+@Composable
+fun PreviewEditItemBaseCardWithoutImage(
+    localDataSource: LocalDataSource = LocalDataSource(),
+) {
+    val item = localDataSource.loadItems()[1]
+    BaseCard(
+        element = item,
+        editMode = EditMode.Edit,
+        onUpdate = {},
+        onDestroy = {},
+    )
+}
+
+@Preview(
+    showBackground = true,
+    group = "Edit",
+)
+@Composable
+fun PreviewEditBoxBaseCard(
+    localDataSource: LocalDataSource = LocalDataSource(),
+) {
+    val box = localDataSource.loadBoxes().first()
+    BaseCard(
+        element = box,
+        editMode = EditMode.Edit,
+        onUpdate = {},
+        onDestroy = {},
+    )
+}
+
+@Preview(
+    showBackground = true,
+    group = "Edit",
+)
+@Composable
+fun PreviewEditCollectionBaseCard(
+    localDataSource: LocalDataSource = LocalDataSource(),
+) {
+    val collection = localDataSource.loadCollections().first()
+    BaseCard(
+        element = collection,
+        editMode = EditMode.Edit,
+        onUpdate = {},
+        onDestroy = {},
+    )
+}
