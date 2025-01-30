@@ -2,7 +2,6 @@ package com.example.packitupandroid.ui.screens.box
 
 import androidx.compose.runtime.MutableState
 import androidx.lifecycle.SavedStateHandle
-import com.example.packitupandroid.data.database.entities.BoxEntity
 import com.example.packitupandroid.data.model.Box
 import com.example.packitupandroid.data.repository.BoxesRepository
 import com.example.packitupandroid.ui.screens.BaseViewModel
@@ -29,23 +28,10 @@ class BoxesScreenViewModel(
 ) : BaseViewModel<Box>(repository) {
     private val collectionId: String? = savedStateHandle["collectionId"]
 
-    init {
-        initialize()
-    }
-
     // TODO: refactor into BaseViewModel
     override fun create(count: Int) {
         val data = List(count) { index -> Box(name = "Box ${index + 1}") }
         insert(data)
-    }
-
-    /**
-     * Provides mock data for boxes.
-     *
-     * @return A list of mock [BoxEntity] objects.
-     */
-    override fun getMockData(): List<Box> {
-        return emptyList<Box>()
     }
 
     /**

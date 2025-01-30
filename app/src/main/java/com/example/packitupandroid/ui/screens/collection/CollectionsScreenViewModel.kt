@@ -2,7 +2,6 @@ package com.example.packitupandroid.ui.screens.collection
 
 import androidx.compose.runtime.MutableState
 import androidx.lifecycle.SavedStateHandle
-import com.example.packitupandroid.data.database.entities.CollectionEntity
 import com.example.packitupandroid.data.model.Collection
 import com.example.packitupandroid.data.repository.CollectionsRepository
 import com.example.packitupandroid.ui.screens.BaseViewModel
@@ -28,23 +27,10 @@ class CollectionsScreenViewModel(
     private val defaultDispatcher: CoroutineDispatcher = Dispatchers.Default
 ) : BaseViewModel<Collection>(repository) {
 
-    init {
-        initialize()
-    }
-
     // TODO: refactor into BaseViewModel
     override fun create(count: Int) {
         val data = List(count) { index -> Collection(name = "Collection ${index + 1}") }
         insert(data)
-    }
-
-    /**
-     * Provides mock data for collections.
-     *
-     * @return A list of mock [CollectionEntity] objects.
-     */
-    override fun getMockData(): List<Collection> {
-        return emptyList<Collection>()
     }
 
     /**

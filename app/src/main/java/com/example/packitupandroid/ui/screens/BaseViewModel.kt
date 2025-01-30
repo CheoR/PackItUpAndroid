@@ -6,15 +6,13 @@ import androidx.lifecycle.viewModelScope
 import com.example.packitupandroid.data.model.BaseCardData
 import com.example.packitupandroid.data.repository.BaseRepository
 import com.example.packitupandroid.utils.EditFields
-import com.example.packitupandroid.utils.USE_MOCK_DATA
+import com.example.packitupandroid.utils.Result
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
-import com.example.packitupandroid.utils.Result
-import kotlinx.coroutines.flow.firstOrNull
 
 
 /**
@@ -46,25 +44,45 @@ abstract class BaseViewModel<D: BaseCardData>(
     }
 
     /**
-     * Initializes the ViewModel, loading mock data if [USE_MOCK_DATA] is true and the database is empty.
+     * Initializes the data stream from the repository and updates the _elements LiveData.
      *
-     * This function is called in the `init` block.
+     * This function observes all data from the repository using `repository.observeAll()`.
+     * It then processes the received `Result` and updates the `_elements` LiveData accordingly.
+     *
+     * The function handles three types of `Result`:
+     * - `Result.Success`: Maps the received data (list) to the correct format.
+     *    If the list is empty , it will not map it.
+     * - `Result.Error`: Propagates the error to `_elements`.
+     * - `Result.Loading`: Indicates that data is being loaded and updates `_elements` with a loading state.
+     *
+     * The operation is performed in the `defaultDispatcher` to avoid blocking the main thread.
+     *
+     * **Note:**
+     * - `_elements` is a MutableLiveData that holds the current state of the data.
+     * - `repository` is an instance of a repository class that provides access to the data.
+     * - `defaultDispatcher` is a CoroutineDispatcher used for background tasks.
+     * - `viewModelScope` is a coroutine scope tied to the lifecycle of the ViewModel.
+     * - `mapNotNull` function is used for filtering null values of list after mapping.
+     * - The function doesn't return a value, it updates `_elements` internally.
+     * - The TODO comment indicates a future improvement to return null if data is empty instead of an empty list.
+     *
+     * @see Result
+     * @see repository.observeAll()
+     * @see _elements
+     * @see viewModelScope
+     * @see CoroutineDispatcher
      */
     protected fun initialize() {
         viewModelScope.launch(defaultDispatcher) {
-            if (USE_MOCK_DATA) {
-                val currentItemsResult = repository.observeAll().firstOrNull()
-                if (currentItemsResult is Result.Success && currentItemsResult.data.isEmpty()) {
-                    repository.clear()
-                    try {
-                        repository.insert(getMockData())
-                    } catch (e: Exception) {
-                        _elements.value = Result.Error(e)
-                    }
+            repository.observeAll().collect { result ->
+                // TODO: update mapToDataClass to return null if empty
+                // and do the when expresssion in the mapping
+                _elements.value = when (result) {
+                    is Result.Success -> Result.Success(result.data.mapNotNull { it })
+                    is Result.Error -> Result.Error(result.exception)
+                    is Result.Loading -> Result.Loading
                 }
-                load()
             }
-            load()
         }
     }
 
@@ -74,13 +92,6 @@ abstract class BaseViewModel<D: BaseCardData>(
      * @param count The number of entities to create.
      */
     abstract fun create(count: Int)
-
-    /**
-     * Abstract function to provide mock data for the entity type [T].
-     *
-     * @return A list of mock entities.
-     */
-    abstract fun getMockData(): List<D>
 
     /**
      * Abstract function to handle changes in a specific field of a card.
@@ -126,25 +137,6 @@ abstract class BaseViewModel<D: BaseCardData>(
     abstract fun onFieldChange(element: MutableState<D?>, field: EditFields, value: String)
 
     /**
-     * Loads all entities from the repository and updates the [_elements] state.
-     *
-     * This function is called in the `init` block and after data modifications.
-     */
-    private fun load() {
-        viewModelScope.launch(defaultDispatcher) {
-            repository.observeAll().collect { result ->
-                // TODO: update mapToDataClass to return null if empty
-                // and do the when expresssion in the mapping
-                _elements.value = when (result) {
-                    is Result.Success -> Result.Success(result.data.mapNotNull { it })
-                    is Result.Error -> Result.Error(result.exception)
-                    is Result.Loading -> Result.Loading
-                }
-            }
-        }
-    }
-
-    /**
      * Retrieves a specific entity by its ID and returns it as a [StateFlow].
      *
      * @param id The ID of the entity to retrieve.
@@ -173,7 +165,6 @@ abstract class BaseViewModel<D: BaseCardData>(
         viewModelScope.launch(defaultDispatcher) {
             try {
                 repository.insert(data)
-                load() // Reload data after insertion
             } catch (e: Exception) {
                 _elements.value = Result.Error(e)
             }
@@ -189,7 +180,6 @@ abstract class BaseViewModel<D: BaseCardData>(
         viewModelScope.launch(defaultDispatcher) {
             try {
                 repository.update(data)
-                load() // Reload data after update
             } catch (e: Exception) {
                 _elements.value = Result.Error(e)
             }
@@ -205,7 +195,6 @@ abstract class BaseViewModel<D: BaseCardData>(
         viewModelScope.launch(defaultDispatcher) {
             try {
                 repository.delete(data)
-                load() // Reload data after deletion
             } catch (e: Exception) {
                 _elements.value = Result.Error(e)
             }

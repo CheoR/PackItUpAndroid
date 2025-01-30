@@ -2,7 +2,6 @@ package com.example.packitupandroid.ui.screens.item
 
 import androidx.compose.runtime.MutableState
 import androidx.lifecycle.SavedStateHandle
-import com.example.packitupandroid.data.database.entities.ItemEntity
 import com.example.packitupandroid.data.model.Item
 import com.example.packitupandroid.data.repository.ItemsRepository
 import com.example.packitupandroid.ui.screens.BaseViewModel
@@ -29,9 +28,6 @@ class ItemsScreenViewModel(
 ) : BaseViewModel<Item>(repository) {
     private val boxId: String? = savedStateHandle["boxId"]
 
-    init {
-        initialize()
-    }
 
 //    private val _entityCache = MutableStateFlow<Map<String, BaseCardData>>(emptyMap())
 //    private val entityCache: StateFlow<Map<String, BaseCardData>> = _entityCache.asStateFlow()
@@ -71,15 +67,6 @@ class ItemsScreenViewModel(
     override fun create(count: Int) {
         val data = List(count) { index -> Item(name = "Item ${index + 1}") }
         insert(data)
-    }
-
-    /**
-     * Provides mock data for items.
-     *
-     * @return A list of mock [ItemEntity] objects.
-     */
-    override fun getMockData(): List<Item> {
-        return emptyList<Item>()
     }
 
     /**

@@ -5,7 +5,6 @@ import androidx.lifecycle.viewModelScope
 import com.example.packitupandroid.data.model.Summary
 import com.example.packitupandroid.data.repository.SummaryRepository
 import com.example.packitupandroid.utils.Result
-import com.example.packitupandroid.utils.USE_MOCK_DATA
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -43,22 +42,32 @@ class SummaryScreenViewModel (
     }
 
     /**
-     * Initializes the ViewModel, loading mock data if [USE_MOCK_DATA] is true and the database is empty.
+     * Initializes the data observation process.
      *
-     * This function is called in the `init` block.
-     */
-    protected fun initialize() {
-        viewModelScope.launch(defaultDispatcher) {
-            load()
-        }
-    }
-
-    /**
-     * Loads all data from the repository and updates the [_elements] state.
+     * This function starts a coroutine within the ViewModel's scope to observe changes
+     * from the repository. When new data is emitted by the repository, it updates the
+     * `_elements` LiveData/StateFlow/MutableStateFlow (depending on the actual implementation of _elements).
      *
-     * This function is called in the `init` block and after data modifications.
+     * The coroutine is launched on the `defaultDispatcher` to avoid blocking the main thread
+     * during potentially long-running operations.
+     *
+     * The `repository.observe()` method is expected to return a Flow that emits data updates.
+     * The `collect` method then listens to this Flow and triggers the update of `_elements`.
+     *
+     * Note: This function should typically be called once, preferably during the initialization
+     * of the ViewModel.
+     *
+     * @param viewModelScope The coroutine scope associated with the ViewModel. This is used to launch
+     *        the observation coroutine and will automatically be cancelled when the ViewModel is cleared.
+     * @param repository The data repository that provides the data to be observed. It is expected to
+     *        have an `observe()` method that returns a Flow.
+     * @param defaultDispatcher The coroutine dispatcher to be used for observing data from the repository
+     *        (e.g., Dispatchers.Default, Dispatchers.IO). This is passed in as a parameter
+     *        to allow for easier testing and flexibility.
+     * @param _elements The MutableStateFlow/LiveData/MutableLiveData  that will hold the data coming from the
+     *        repository. It will be updated each time the repository emits a new result.
      */
-    private fun load() {
+    private fun initialize() {
         viewModelScope.launch(defaultDispatcher) {
             repository.observe().collect { result ->
                 _elements.value = result
