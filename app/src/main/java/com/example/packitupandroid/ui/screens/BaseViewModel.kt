@@ -1,5 +1,7 @@
 package com.example.packitupandroid.ui.screens
 
+import androidx.compose.foundation.layout.ColumnScope
+import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -40,8 +42,11 @@ abstract class BaseViewModel<D: BaseCardData>(
     val elements: StateFlow<Result<List<D?>>> = _elements.asStateFlow()
 
     init {
-        initialize()
+        viewModelScope.launch(defaultDispatcher) {
+            initialize()
+        }
     }
+
 
     /**
      * Initializes the data stream from the repository and updates the _elements LiveData.
@@ -72,19 +77,102 @@ abstract class BaseViewModel<D: BaseCardData>(
      * @see viewModelScope
      * @see CoroutineDispatcher
      */
-    protected fun initialize() {
-        viewModelScope.launch(defaultDispatcher) {
-            repository.observeAll().collect { result ->
-                // TODO: update mapToDataClass to return null if empty
-                // and do the when expresssion in the mapping
-                _elements.value = when (result) {
-                    is Result.Success -> Result.Success(result.data.mapNotNull { it })
-                    is Result.Error -> Result.Error(result.exception)
-                    is Result.Loading -> Result.Loading
-                }
+    private suspend fun initialize() {
+        repository.observeAll().collect { result ->
+            // TODO: update mapToDataClass to return null if empty
+            // and do the when expresssion in the mapping
+            _elements.value = when (result) {
+                is Result.Success -> Result.Success(result.data.mapNotNull { it })
+                is Result.Error -> Result.Error(result.exception)
+                is Result.Loading -> Result.Loading
             }
         }
     }
+
+    /**
+     * Filters the elements in the underlying data list based on the provided callback function.
+     *
+     * This function retrieves the current list of elements stored in the `_elements` LiveData.
+     * If the current value of `_elements` is a `Result.Success`, it extracts the data list from it.
+     * Otherwise, it uses an empty list as the starting point.
+     *
+     * It then applies the provided `callback` function to this data list. The `callback` is responsible
+     * for filtering, transforming, or otherwise modifying the list of `D?` elements.
+     *
+     * Finally, it updates the `_elements` LiveData with a new `Result.Success` object containing the
+     * modified list returned by the `callback`.
+     *
+     * @param callback A lambda function that takes a `List<D?>` as input and returns a modified `List<D?>`.
+     *                 This function is responsible for the actual filtering or transformation logic.
+     *                 It receives the current data list (or an empty list if no data is available).
+     *                 It should return the filtered/modified list.
+     *
+     * Example Usage:
+     *
+     * ```kotlin
+     * filterElements { list ->
+     *     list.filterNotNull().filter { it.someProperty > 5 } // Filters out nulls and keeps elements where someProperty > 5
+     * }
+     *
+     * filterElements { list ->
+     *   list.map { it?.copy(name = "Updated ${it.name}") } // Updates the name property of non-null elements
+     * }
+     * ```
+     *
+     * Note:
+     * - If `_elements` is not `Result.Success`, the callback will be called with an empty list.
+     * - This function operates on a copy of the data list. The original list is not modified directly.
+     * - The type `D` can be any type. `D?` means that the list can contain nullable elements.
+     * - The function ensures the `_elements` is always in `Result.Success` state after execution.
+     */
+    protected fun filterElements(callback: (List<D?>) -> List<D?>) {
+        val currentData = when(_elements.value) {
+            is Result.Success -> (_elements.value as Result.Success<List<D?>>).data
+            else -> emptyList()
+        }
+        val result = Result.Success(callback(currentData))
+        _elements.value = result
+    }
+
+    /**
+     * Generates a composable function representing a column of icons.
+     *
+     * This function is an abstract method that should be implemented by concrete classes.
+     * It is responsible for defining the content of a vertical column, typically containing
+     * a series of icons. The implementation will determine the specific icons and their
+     * arrangement within the column based on the provided data element.
+     *
+     * @param element The data element (of type D) that will be used to determine the icons
+     *                to be displayed and their properties. This element provides the necessary
+     *                information to customize the icons in the column.
+     * @return A composable lambda function ([@Composable] ColumnScope.() -> Unit) that defines
+     *         the UI content of the column. The lambda is executed within a ColumnScope, allowing
+     *         the use of Column composable functions like `Arrangement` and `Alignment` modifiers.
+     *         The returned composable function will generate the column layout containing icons.
+     *
+     * @see androidx.compose.foundation.layout.Column
+     * @see androidx.compose.foundation.layout.ColumnScope
+     * @see androidx.compose.runtime.Composable
+     *
+     * Example usage (hypothetical concrete implementation):
+     * ```kotlin
+     * data class MyData(val hasStar: Boolean, val hasHeart: Boolean)
+     *
+     * class MyIconGenerator : IconGenerator<MyData> {
+     *     override fun generateIconsColumn(element: MyData): @Composable ColumnScope.() -> Unit = {
+     *         if (element.itemCount) {
+     *             Icon(imageVector = Icons.Filled.Star, contentDescription = "${element.itemCount} Item")
+     *         }
+     *         if (element.boxCount) {
+     *             Icon(imageVector = Icons.Filled.Star, contentDescription = "${element.itemCount} Item")
+     *
+     *             Icon(imageVector = Icons.Filled.Favorite, contentDescription = "${element.boxCount} Boxes")
+     *         }
+     *     }
+     * }
+     * ```
+     */
+    abstract fun generateIconsColumn(element: D) : @Composable ColumnScope.() -> Unit
 
     /**
      * Abstract function to create a specified number of entities.
@@ -199,19 +287,5 @@ abstract class BaseViewModel<D: BaseCardData>(
                 _elements.value = Result.Error(e)
             }
         }
-    }
-
-    /**
-     * A companion object helps us by having a single instance of an object that is used by everyone
-     * without needing to create a new instance of an expensive object. This is an implementation
-     * detail, and separating it lets us make changes without impacting other parts of the app's code.
-     *
-     * The APPLICATION_KEY is part of the ViewModelProvider.AndroidViewModelFactory.Companion object
-     * and is used to find the app's MarsPhotosApplication object, which has the container property
-     * used to retrieve the repository used for dependency injection.
-     */
-    companion object {
-        @JvmStatic
-        protected val TIMEOUT_MILLIS = 5_000L
     }
 }

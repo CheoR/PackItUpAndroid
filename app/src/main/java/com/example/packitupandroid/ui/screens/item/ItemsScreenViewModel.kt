@@ -1,14 +1,28 @@
 package com.example.packitupandroid.ui.screens.item
 
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.ColumnScope
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.Label
+import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
 import androidx.lifecycle.SavedStateHandle
+import androidx.lifecycle.viewModelScope
+import com.example.packitupandroid.data.model.BoxIdAndName
 import com.example.packitupandroid.data.model.Item
 import com.example.packitupandroid.data.repository.ItemsRepository
+import com.example.packitupandroid.ui.components.strategyCard.IconBadge
+import com.example.packitupandroid.ui.components.strategyCard.ImageContent
 import com.example.packitupandroid.ui.screens.BaseViewModel
 import com.example.packitupandroid.utils.EditFields
 import com.example.packitupandroid.utils.parseCurrencyToDouble
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import com.example.packitupandroid.utils.Result
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.stateIn
 
 
 /**
@@ -27,7 +41,13 @@ class ItemsScreenViewModel(
     private val defaultDispatcher: CoroutineDispatcher = Dispatchers.Default
 ) : BaseViewModel<Item>(repository) {
     private val boxId: String? = savedStateHandle["boxId"]
-
+    val dropdownOptions: StateFlow<Result<List<BoxIdAndName?>>> =
+        repository.listOfBoxIdsAndNames()
+            .stateIn(
+                scope = viewModelScope,
+                started = SharingStarted.WhileSubscribed(5000),
+                initialValue = Result.Loading,
+            )
 
 //    private val _entityCache = MutableStateFlow<Map<String, BaseCardData>>(emptyMap())
 //    private val entityCache: StateFlow<Map<String, BaseCardData>> = _entityCache.asStateFlow()
@@ -42,6 +62,29 @@ class ItemsScreenViewModel(
 //            initializeUIState()
 //        }
 //    }
+
+    init {
+        /*
+         * TODO: Review `ItemsScreenViewModel`'s `init` block.
+         * - **Reminder:** current approach breaks encapsulation by directly observing `BaseViewModel`'s `elements` in `ItemsScreenViewModel`.
+         *   This should be fixed for better design and maintainability or keep as is beause I'm already observing elements in *Screens, so heh?
+         * - **Reason for Current Approach:**
+         *   - To address a race condition that occurred when applying filtering based on `boxId` in the previous implementation.
+         *   - The current approach ensures that filtering is applied when `elements` emits `Result.Success`, indicating that the data is available.
+         * - **Recommended Solution:**
+         *   - Move the filtering logic to `load()` in `BaseViewModel` to avoid the race condition and maintain encapsulation.
+         *   - Use a callback mechanism to allow subclasses to define the filtering logic.
+         * - **Priority:** High. This issue should be addressed to improve the design and maintainability of the code.
+         *      or come back to it when i get the time
+         */
+        viewModelScope.launch(defaultDispatcher) {
+            elements.collect { result ->
+                if (boxId != null && result is Result.Success) {
+                    filterElements { elements -> elements.filter { it?.boxId == boxId } }
+                }
+            }
+        }
+    }
 
     /**
      * Creates and inserts a specified number of `Item` objects into the data store.
@@ -101,17 +144,40 @@ class ItemsScreenViewModel(
      * onFieldChange(itemState, EditFields.Value, "$12.99")
      * // itemState.value will now hold an item with the */
     override fun onFieldChange(element: MutableState<Item?>, field: EditFields, value: String) {
-        val editableFields = element.value?.editFields ?: emptyList<EditFields>()
+        val editableFields = element.value?.editFields ?: emptyList()
         element.value?.let { currentBox ->
             val updatedElement = when(field) {
                 EditFields.Description -> if(editableFields.contains(field)) currentBox.copy(description = value) else currentBox
-                EditFields.Dropdown -> currentBox //  if(editableFields.contains(field))  currentBox.copy(dropdown = value) else currentBox
+                EditFields.Dropdown -> if(editableFields.contains(field))  currentBox.copy(boxId = value) else currentBox
                 EditFields.ImageUri -> if(editableFields.contains(field))  currentBox.copy(imageUri = value) else currentBox
                 EditFields.IsFragile -> if(editableFields.contains(field))  currentBox.copy(isFragile = value.toBoolean()) else currentBox
                 EditFields.Name -> if(editableFields.contains(field))  currentBox.copy(name = value) else currentBox
                 EditFields.Value -> if(editableFields.contains(field))  currentBox.copy(value = value.parseCurrencyToDouble()) else currentBox
             }
             element.value = updatedElement
+        }
+    }
+
+    /**
+     * Generates the content for the icons column for an Item.
+     *
+     * This function returns a composable lambda that, when invoked, displays a column containing an IconBadge.
+     * The IconBadge is configured with a default label icon and a badge count of 0.
+     *
+     * @param element The Item object for which to generate the icons. This parameter is not used in the current implementation but is included for potential future use.
+     * @return A composable lambda that, when invoked, displays the icons column. The lambda uses a [ColumnScope] to allow for column-based layout of the icons.
+     */
+    override fun generateIconsColumn(element: Item): @Composable (ColumnScope.() -> Unit) {
+        val image = if(element.imageUri != null) ImageContent.BitmapStringImage(element.imageUri) else ImageContent.VectorImage(Icons.AutoMirrored.Filled.Label)
+
+        return {
+            Column {
+                IconBadge(
+                    image = image,
+                    badgeContentDescription = "Default Item Badge",
+                    badgeCount = 0,
+                )
+            }
         }
     }
 }

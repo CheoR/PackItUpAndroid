@@ -1,9 +1,17 @@
 package com.example.packitupandroid.ui.screens.collection
 
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.ColumnScope
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.Label
+import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
 import androidx.lifecycle.SavedStateHandle
+import com.example.packitupandroid.R
 import com.example.packitupandroid.data.model.Collection
 import com.example.packitupandroid.data.repository.CollectionsRepository
+import com.example.packitupandroid.ui.components.strategyCard.IconBadge
+import com.example.packitupandroid.ui.components.strategyCard.ImageContent
 import com.example.packitupandroid.ui.screens.BaseViewModel
 import com.example.packitupandroid.utils.EditFields
 import com.example.packitupandroid.utils.parseCurrencyToDouble
@@ -65,7 +73,7 @@ class CollectionsScreenViewModel(
      * onFieldChange(itemState, EditFields.Value, "$12.99")
      * // itemState.value will now hold an item with the */
     override fun onFieldChange(element: MutableState<Collection?>, field: EditFields, value: String) {
-        val editableFields = element.value?.editFields ?: emptyList<EditFields>()
+        val editableFields = element.value?.editFields ?: emptyList()
         element.value?.let { currentBox ->
             val updatedElement = when(field) {
                 EditFields.Description -> if(editableFields.contains(field)) currentBox.copy(description = value) else currentBox
@@ -76,6 +84,47 @@ class CollectionsScreenViewModel(
                 EditFields.Value -> if(editableFields.contains(field))  currentBox.copy(value = value.parseCurrencyToDouble()) else currentBox
             }
             element.value = updatedElement
+        }
+    }
+
+    /**
+     * Generates a Composable column containing icon badges representing box and item counts.
+     *
+     * This function creates a vertical layout (Column) with two [IconBadge] composables.
+     * The first [IconBadge] displays a drawable icon (ic_launcher_foreground) with the box count.
+     * The second [IconBadge] displays a vector icon (Label) with the item count.
+     *
+     * @param element A collection object that provides the box count and item count.
+     *        It is assumed that the `element` object has `boxCount` and `itemCount` properties (e.g. `data class Collection(val boxCount: Int, val itemCount: Int)`)
+     * @return A Composable lambda function that represents the column of icon badges.
+     *          This can be used within a Compose layout to embed the generated column.
+     *
+     * Example Usage:
+     * ```
+     * val myCollection = Collection(boxCount = 5, itemCount = 10)
+     * val iconsColumn = generateIconsColumn(myCollection)
+     *
+     * Column {
+     *     iconsColumn()
+     * }
+     * ```
+     *
+     * The example above generates a column containing two IconBadges based on the data provided by myCollection
+     */
+    override fun generateIconsColumn(element: Collection): @Composable (ColumnScope.() -> Unit) {
+        return {
+            Column {
+                IconBadge(
+                    image = ImageContent.DrawableImage(R.drawable.ic_launcher_foreground),
+                    badgeContentDescription = "${element.boxCount} Boxes",
+                    badgeCount = element.boxCount,
+                )
+                IconBadge(
+                    image = ImageContent.VectorImage(Icons.AutoMirrored.Filled.Label),
+                    badgeContentDescription = "${element.itemCount} Items",
+                    badgeCount = element.itemCount,
+                )
+            }
         }
     }
 }
