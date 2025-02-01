@@ -31,21 +31,3 @@ data class CollectionEntity(
     )
     override val lastModified: Long = 0,
 ) : BaseEntity
-
-
-//fun CollectionEntity.toQueryCollection(collectionRepository: CollectionsRepository): QueryCollection {
-//    val queryCollection: QueryCollection
-//
-//        collectionRepository.getQueryCollection(this.id)
-//    return QueryCollection(
-//        id = this.id,
-//        name = this.name,
-//        description = this.description,
-//        last_modified = Converters().fromTimestamp(this.lastModified) ?: Date(),
-//        value = queryCollection.value,
-//        is_fragile = queryCollection.is_fragile,
-//        item_count = queryCollection.item_count,
-//        box_count = queryCollection.box_count,
-//
-//    )
-//}
