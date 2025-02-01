@@ -1,8 +1,8 @@
 package com.example.packitupandroid.data.repository
 
 import com.example.packitupandroid.data.model.Box
-import com.example.packitupandroid.data.model.QueryBox
-import com.example.packitupandroid.data.model.QueryDropdownOptions
+import com.example.packitupandroid.data.model.CollectionIdAndName
+import com.example.packitupandroid.utils.Result
 import kotlinx.coroutines.flow.Flow
 
 
@@ -14,14 +14,5 @@ import kotlinx.coroutines.flow.Flow
  * updating, deleting, and retrieving [Box] data from a given data source.
  */
 interface BoxesRepository : BaseRepository<Box> {
-
-    /**
-     * Retrieve a QueryBox from the given data source that matches with the [id].
-     */
-    suspend fun getQueryBox(id: String): QueryBox?
-
-    /**
-     * Retrieve just @name and @id from all boxes from given data source.
-     */
-    suspend fun getDropdownSelections(): Flow<List<QueryDropdownOptions>>
+    fun listOfCollectionIdsAndNames(): Flow<Result<List<CollectionIdAndName?>>>
 }

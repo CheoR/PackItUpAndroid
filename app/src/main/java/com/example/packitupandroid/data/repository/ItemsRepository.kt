@@ -1,6 +1,9 @@
 package com.example.packitupandroid.data.repository
 
+import com.example.packitupandroid.data.model.BoxIdAndName
 import com.example.packitupandroid.data.model.Item
+import com.example.packitupandroid.utils.Result
+import kotlinx.coroutines.flow.Flow
 
 
 /**
@@ -10,4 +13,6 @@ import com.example.packitupandroid.data.model.Item
  * functionalities for [Item] entities. It includes operations for inserting,
  * updating, deleting, and retrieving [Item] data from a given data source.
  */
-interface ItemsRepository : BaseRepository<Item>
+interface ItemsRepository : BaseRepository<Item> {
+    fun listOfBoxIdsAndNames(): Flow<Result<List<BoxIdAndName?>>>
+}

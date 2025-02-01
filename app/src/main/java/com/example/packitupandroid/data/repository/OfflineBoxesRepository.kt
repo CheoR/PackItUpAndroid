@@ -2,9 +2,7 @@ package com.example.packitupandroid.data.repository
 
 import com.example.packitupandroid.data.database.dao.BoxDao
 import com.example.packitupandroid.data.model.Box
-import com.example.packitupandroid.data.model.QueryBox
-import com.example.packitupandroid.data.model.QueryDropdownOptions
-import kotlinx.coroutines.flow.firstOrNull
+import com.example.packitupandroid.data.model.CollectionIdAndName
 import com.example.packitupandroid.utils.Result
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
@@ -116,32 +114,26 @@ class OfflineBoxesRepository(private val boxDao: BoxDao) : BoxesRepository {
     }
 
     /**
-     * Retrieves a QueryBox from the database by its ID.
+     * Retrieves a list of collection IDs and their corresponding names.
      *
-     * This function fetches a QueryBox entity from the underlying data source (likely a Room database)
-     * using the provided ID. It returns the QueryBox if found, or null if no QueryBox with the given
-     * ID exists.  The function is a suspending function, meaning it must be called within a coroutine.
-     * It uses `firstOrNull()` to retrieve the first matching QueryBox (if any) and handle cases where
-     * the query might return no results.
+     * This function queries the underlying data source (represented by `boxDao`) to fetch
+     * a list of collections. Each collection is represented by a [CollectionIdAndName] object,
+     * which contains the ID and the name of the collection.
      *
-     * @param id The unique identifier of the QueryBox to retrieve.
-     * @return The QueryBox associated with the given ID, or null if no such QueryBox exists.
+     * The function returns a [Flow] that emits a [Result] object. This allows for asynchronous
+     * and reactive handling of the data.
+     *
+     * - **Success:** If the data is successfully retrieved, the [Result] will be a [Result.Success]
+     *   containing a [List] of [CollectionIdAndName?] objects. The list may contain null elements if
+     *   the underlying data allows for it.
+     * - **Failure:** If any error occurs during data retrieval, the [Result] will be a [Result.Failure]
+     *   containing the [Throwable] that caused the error.
+     *
+     * @return A [Flow] emitting a [Result] containing a [List] of [CollectionIdAndName?] objects, or an error.
+     *
+     * @throws Any exception that `boxDao.listOfCollectionIdsAndNames()` throws will be propagated within Result.Failure.
      */
-    override suspend fun getQueryBox(id: String): QueryBox? = boxDao.getQueryBox(id).firstOrNull()
-
-    /**
-     * Retrieves a list of dropdown selection options from the data source.
-     *
-     * This function queries the underlying `boxDao` to fetch a list of `QueryDropdownOptions`.
-     * It returns a `Flow` that emits the list of options, allowing for reactive handling
-     * of changes to the dropdown selections.  This function is marked as `suspend` as the
-     * underlying data access might require a database query or other long-running operation.
-     *
-     * @return A `Flow` that emits a list of `QueryDropdownOptions`. Each emission represents the
-     *         current set of available dropdown options.
-     *
-     * @throws Exception Any exceptions thrown by `boxDao.getDropdownSelections()` will propagate
-     *         through the `Flow`.
-     */
-    override suspend fun getDropdownSelections(): Flow<List<QueryDropdownOptions>> = boxDao.getDropdownSelections()
+    override fun listOfCollectionIdsAndNames(): Flow<Result<List<CollectionIdAndName?>>> {
+        return boxDao.listOfCollectionIdsAndNames().map { Result.Success(it) }
+    }
 }

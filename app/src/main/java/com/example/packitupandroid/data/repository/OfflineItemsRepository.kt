@@ -1,6 +1,7 @@
 package com.example.packitupandroid.data.repository
 
 import com.example.packitupandroid.data.database.dao.ItemDao
+import com.example.packitupandroid.data.model.BoxIdAndName
 import com.example.packitupandroid.data.model.Item
 import com.example.packitupandroid.utils.Result
 import kotlinx.coroutines.flow.Flow
@@ -110,5 +111,53 @@ class OfflineItemsRepository(private val itemDao: ItemDao) : ItemsRepository {
         } catch (e: Exception) {
             Result.Error(e)
         }
+    }
+
+    /**
+     * Retrieves a list of box IDs and their corresponding names.
+     *
+     * This function queries the underlying data source (e.g., a database) via the `itemDao`
+     * to fetch a list of `BoxIdAndName` objects. Each `BoxIdAndName` represents a single box
+     * and contains its unique identifier (ID) and associated name.
+     *
+     * The function returns a `Flow` of `Result` that either:
+     *  - Emits a `Result.Success` containing a list of `BoxIdAndName?` objects.
+     *  - Emits an appropriate `Result.Failure` if any error occurs during data retrieval
+     *
+     * The `BoxIdAndName?` type allows for null values within the list, meaning that a box might exist without a name, if supported by the data model.
+     * The result list can be empty if no boxes are available.
+     *
+     * @return A `Flow` emitting a `Result` containing a list of `BoxIdAndName?` objects.
+     *         The `Flow` may emit multiple times as the underlying data changes, if the
+     *         data source supports it.
+     *         It can also emit a failure if an exception is thrown.
+     *
+     * @throws Any exceptions that might be thrown by the underlying data access layer (e.g., database).
+     *
+     * @sample
+     * // Example usage within a coroutine scope:
+     * launch {
+     *     listOfBoxIdsAndNames().collect { result ->
+     *         when (result) {
+     *             is Result.Success -> {
+     *                 val boxes = result.data
+     *                 if (boxes.isEmpty()) {
+     *                     println("No boxes found.")
+     *                 } else {
+     *                     boxes.forEach { box ->
+     *                        println("Box ID: ${box?.boxId}, Name: ${box?.name}")
+     *                     }
+     *                  }
+     *             }
+     *             is Result.Failure -> {
+     *                 println("Error fetching boxes: ${result.exception}")
+     *             }
+     *         }
+     *     }
+     * }
+     *
+     */
+    override fun listOfBoxIdsAndNames(): Flow<Result<List<BoxIdAndName?>>> {
+        return itemDao.listOfBoxIdsAndNames().map { Result.Success(it) }
     }
 }

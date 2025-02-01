@@ -2,11 +2,8 @@ package com.example.packitupandroid.data.repository
 
 import com.example.packitupandroid.data.database.dao.CollectionDao
 import com.example.packitupandroid.data.model.Collection
-import com.example.packitupandroid.data.model.QueryCollection
-import com.example.packitupandroid.data.model.QueryDropdownOptions
 import com.example.packitupandroid.utils.Result
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.map
 
 
@@ -114,44 +111,4 @@ class OfflineCollectionsRepository(private val collectionDao: CollectionDao) : C
             Result.Error(e)
         }
     }
-
-    /**
-     * Retrieves a QueryCollection from the data source by its ID.
-     *
-     * This function accesses the underlying data source (likely a database or local storage)
-     * through the `collectionDao` to fetch a QueryCollection based on the provided ID.
-     * It utilizes Kotlin coroutines and Flow to handle asynchronous operations efficiently.
-     *
-     * @param id The unique identifier of the QueryCollection to retrieve.
-     * @return The QueryCollection associated with the given ID, or `null` if no such collection is found.
-     *
-     * @throws Exception if any error occurs during the data retrieval process.
-     */
-    override suspend fun getQueryCollection(id: String): QueryCollection? = collectionDao.getQueryCollection(id).firstOrNull()
-
-    /**
-     * Retrieves a list of dropdown selection options from the data source.
-     *
-     * This function is a suspend function that fetches the available options for dropdowns,
-     * likely used to populate UI elements like selection lists or filters. It retrieves
-     * these options from the `collectionDao`, which represents the data access layer.
-     *
-     * The function returns a `Flow` of `List<QueryDropdownOptions>`, enabling reactive
-     * updates to the UI whenever the dropdown options change in the data source.
-     *
-     * @return A [Flow] emitting a [List] of [QueryDropdownOptions]. Each [QueryDropdownOptions]
-     *         represents a single option available for selection in a dropdown. The flow
-     *         will emit a new list whenever the underlying data source changes.
-     *
-     * Example Usage:
-     * ```
-     * lifecycleScope.launch {
-     *   viewModel.getDropdownSelections().collect { dropdownOptions ->
-     *     // Update the UI with the new dropdown options
-     *     myDropdown.setOptions(dropdownOptions)
-     *   }
-     * }
-     * ```
-     */
-    override suspend fun getDropdownSelections(): Flow<List<QueryDropdownOptions>> = collectionDao.getDropdownSelections()
 }

@@ -73,4 +73,3 @@ interface BaseRepository<D: BaseCardData> {
      */
     suspend fun clear(): Result<Unit>
 }
-
