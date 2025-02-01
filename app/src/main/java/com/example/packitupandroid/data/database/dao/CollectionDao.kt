@@ -3,10 +3,8 @@ package com.example.packitupandroid.data.database.dao
 import androidx.room.Dao
 import androidx.room.Query
 import com.example.packitupandroid.data.database.entities.CollectionEntity
-import com.example.packitupandroid.data.model.QueryCollection
-import com.example.packitupandroid.data.model.QueryDropdownOptions
-import kotlinx.coroutines.flow.Flow
 import com.example.packitupandroid.data.model.Collection
+import kotlinx.coroutines.flow.Flow
 
 
 /**
@@ -160,134 +158,21 @@ interface CollectionDao : EntityDao<CollectionEntity>, DataDao<Collection> {
     override fun observeAll(): Flow<List<Collection?>>
 
     /**
-     * Retrieves detailed information about a specific collection, including aggregated data from its boxes and items.
+     * Deletes all collections from the database.
      *
-     * This query performs the following operations:
-     * 1. **Calculates Box Summary (BoxSummary CTE):**
-     *    - For each box, it calculates the sum of item values (`value`).
-     *    - Determines if any item in the box is fragile (`is_fragile` - 1 if any item is fragile, 0 otherwise).
-     *    - Counts the number of items in each box (`item_count`).
-     * 2. **Joins with Collections:**
-     *    - Joins the `BoxSummary` with the `collections` table to associate box summaries with their respective collections.
-     * 3. **Aggregates Collection Data:**
-     *    - For the specified collection, it calculates the total value of all items in all its boxes (`value`).
-     *    - Determines if any item in any of the collection's boxes is fragile (`is_fragile`).
-     *    - Counts the number of boxes in the collection (`box_count`).
-     *    - Sums the total item count across all boxes in the collection (`item_count`).
-     * 4. **Filters by Collection ID:**
-     *    - Filters the results to only include the collection with the provided `id`.
-     * 5. **Groups by Collection ID:**
-     *    - Groups the results by collection ID to aggregate data for each collection.
-     * 6. **Orders by Last Modified:**
-     *    - Orders the results by the `last_modified` timestamp of the collection.
-     *
-     * @param id The unique identifier of the collection to retrieve.
-     * @return A Flow emitting a single [QueryCollection] object containing the aggregated data for the specified collection.
-     *         The Flow will emit any time the data in the database that affects this query changes.
-     *
-     * The [QueryCollection] object will contain:
-     * - `id`: The ID of the collection.
-     * - `name`: The name of the collection.
-     * - `description`: The description of the collection.
-     * - `last_modified`: The last */
-    @Query("""
-    WITH BoxSummary AS (
-        SELECT 
-            b.id,
-            b.name,
-            b.description,
-            b.last_modified,
-            b.collection_id,
-            ROUND(SUM(i.value), 2) AS value,
-            MAX(CASE WHEN i.is_fragile = 1 THEN 1 ELSE 0 END) AS is_fragile,
-            COUNT( i.id) AS item_count
-        FROM 
-            boxes b
-        LEFT JOIN 
-            items i ON b.id = i.box_id
-        GROUP BY 
-            b.id
-    )
-    
-    SELECT 
-        c.id,
-        c.name,
-        c.description,
-        c.last_modified,
-        ROUND(SUM(bs.value), 2) AS value,
-        MAX(CASE WHEN bs.is_fragile = 1 THEN 1 ELSE 0 END) AS is_fragile,
-        COUNT( bs.id) AS box_count,
-        SUM(bs.item_count) AS item_count
-    FROM 
-        collections c
-    LEFT JOIN 
-        BoxSummary bs ON c.id = bs.collection_id
-    WHERE
-        c.id = :id
-    GROUP BY 
-        c.id
-    ORDER BY 
-        c.last_modified;
-    """)
-    fun getQueryCollection(id: String): Flow<QueryCollection>
+     * This function removes all records from the 'collections' table.
+     */
+    @Query("DELETE FROM collections")
+    override suspend fun clear()
 
     /**
-     * Represents a collection with aggregated data from associated boxes and items.
+     * Deletes collections from the database based on their unique IDs.
      *
-     * @property id The unique identifier of the collection.
-     * @property name The name of the collection.
-     * @property description A description of the collection.
-     * @property last_modified The timestamp of the last modification of the collection.
-     * @property value The total value of all items in all boxes within the collection.
-     * @property is_fragile Indicates if any item in any box within the collection is fragile (1 if yes, 0 if no).
-     * @property box_count The total number of boxes within the collection.
-     * @property item_count The total number of items in all boxes within the collection.
-     */
-    @Query("""
-    WITH BoxSummary AS (
-        SELECT 
-            b.id,
-            b.name,
-            b.description,
-            b.last_modified,
-            b.collection_id,
-            ROUND(SUM(i.value), 2) AS value,
-            MAX(CASE WHEN i.is_fragile = 1 THEN 1 ELSE 0 END) AS is_fragile,
-            COUNT( i.id) AS item_count
-        FROM 
-            boxes b
-        LEFT JOIN 
-            items i ON b.id = i.box_id
-        GROUP BY 
-            b.id
-    )
-    
-    SELECT 
-        c.id,
-        c.name,
-        c.description,
-        c.last_modified,
-        ROUND(SUM(bs.value), 2) AS value,
-        MAX(CASE WHEN bs.is_fragile = 1 THEN 1 ELSE 0 END) AS is_fragile,
-        COUNT( bs.id) AS box_count,
-        SUM(bs.item_count) AS item_count
-    FROM 
-        collections c
-    LEFT JOIN 
-        BoxSummary bs ON c.id = bs.collection_id
-    GROUP BY 
-        c.id
-    ORDER BY 
-        c.last_modified;
-    """)
-    fun getAllQueryCollections(): Flow<List<QueryCollection>>
-
-    /**
-     * Represents the options for a dropdown selection, containing an ID and a name.
+     * This function removes records from the 'collections' table where the ID matches
+     * one of the IDs in the provided list.
      *
-     * @property id The unique identifier of the option.
-     * @property name The display name of the option.
+     * @param ids A list of IDs of the collections to delete.
      */
-    @Query("SELECT c.id, c.name FROM collections c")
-    fun getDropdownSelections(): Flow<List<QueryDropdownOptions>>
+    @Query("DELETE FROM collections WHERE id IN (:ids)")
+    override suspend fun delete(ids: List<String>)
 }

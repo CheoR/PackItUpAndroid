@@ -4,8 +4,7 @@ import androidx.room.Dao
 import androidx.room.Query
 import com.example.packitupandroid.data.database.entities.BoxEntity
 import com.example.packitupandroid.data.model.Box
-import com.example.packitupandroid.data.model.QueryBox
-import com.example.packitupandroid.data.model.QueryDropdownOptions
+import com.example.packitupandroid.data.model.CollectionIdAndName
 import kotlinx.coroutines.flow.Flow
 
 
@@ -119,79 +118,11 @@ interface BoxDao : EntityDao<BoxEntity>, DataDao<Box> {
     override suspend fun delete(ids: List<String>)
 
     /**
-     * Data class representing a box with aggregated item data.
+     * Data class representing a collection's ID and name.
      *
-     * @property id The unique identifier of the box.
-     * @property name The name of the box.
-     * @property description The description of the box.
-     * @property last_modified The timestamp of the last modification to the box.
-     * @property collection_id The id of the collection to which this box belongs.
-     * @property value The sum of the values of all items in the box, rounded to 2 decimal places.
-     * @property is_fragile A flag indicating if any item in the box is fragile (1 if true, 0 otherwise).
-     * @property item_count The total number of items in the box.
+     * @property id The unique identifier of the collection.
+     * @property name The name of the collection.
      */
-    @Query("""
-     SELECT
-        b.id, 
-        b.name,
-        b.description,
-        b.last_modified as last_modified,
-        b.collection_id,
-        ROUND(SUM(i.value), 2) AS value,
-        MAX(CASE WHEN i.is_fragile THEN 1 ELSE 0 END) AS is_fragile,
-        COUNT(i.id) AS item_count
-    FROM boxes b
-    LEFT JOIN items i ON b.id = i.box_id
-    WHERE b.id = :id
-    GROUP BY b.id
-    ORDER BY last_modified ASC;       
-    """)
-    fun getQueryBox(id: String): Flow<QueryBox>
-
-    /**
-     * Data class representing a box with aggregated item information.
-     *
-     * @property id The unique identifier of the box.
-     * @property name The name of the box.
-     * @property description A description of the box.
-     * @property last_modified The timestamp of the last modification of the box.
-     * @property collection_id The ID of the collection the box belongs to.
-     * @property value The sum of the values of all items in the box, rounded to 2 decimal places.
-     * @property is_fragile A flag indicating if any item in the box is fragile (1 if true, 0 if false).
-     * @property item_count The number of items in the box.
-     */
-    @Query("""
-    SELECT
-        b.id, 
-        b.name,
-        b.description,
-        b.last_modified as last_modified,
-        b.collection_id,
-        ROUND(SUM(i.value), 2) AS value,
-        MAX(CASE WHEN i.is_fragile THEN 1 ELSE 0 END) AS is_fragile,
-        COUNT(i.id) AS item_count
-    FROM boxes b    
-    LEFT JOIN items i ON b.id = i.box_id    
-    GROUP BY b.id
-    ORDER BY last_modified ASC;
-    """)
-    fun getAllQueryBoxes(): Flow<List<QueryBox>>
-
-    /**
-     * Data class representing the options for a dropdown selection.
-     *
-     * @property id The unique identifier of the option.
-     * @property name The display name of the option.
-     */
-    @Query("SELECT b.id, b.name FROM boxes b")
-    fun getDropdownSelections(): Flow<List<QueryDropdownOptions>>
-
-    /**
-     * Retrieves all boxes from the database, ordered by last modified timestamp in ascending order.
-     *
-     * @return A [Flow] emitting a list of all [Box] objects, or an empty list if none are found.
-     */
-    @Query("SELECT * FROM boxes ORDER BY last_modified ASC")
-    fun getAll(): Flow<List<Box?>>
-
+    @Query("SELECT id, name FROM collections")
+    fun listOfCollectionIdsAndNames(): Flow<List<CollectionIdAndName?>>
 }

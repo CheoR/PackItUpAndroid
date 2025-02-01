@@ -3,6 +3,7 @@ package com.example.packitupandroid.data.database.dao
 import androidx.room.Dao
 import androidx.room.Query
 import com.example.packitupandroid.data.database.entities.ItemEntity
+import com.example.packitupandroid.data.model.BoxIdAndName
 import com.example.packitupandroid.data.model.Item
 import kotlinx.coroutines.flow.Flow
 
@@ -95,4 +96,13 @@ interface ItemDao : EntityDao<ItemEntity>, DataDao<Item> {
      */
     @Query("DELETE FROM items WHERE id IN (:ids)")
     override suspend fun delete(ids: List<String>)
+
+    /**
+     * Data class representing a box's ID and name.
+     *
+     * @property id The unique identifier of the box.
+     * @property name The name of the box.
+     */
+    @Query("SELECT id, name FROM boxes")
+    fun listOfBoxIdsAndNames(): Flow<List<BoxIdAndName?>>
 }
