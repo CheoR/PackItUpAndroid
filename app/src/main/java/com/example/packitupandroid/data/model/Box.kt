@@ -1,51 +1,10 @@
 package com.example.packitupandroid.data.model
 
-import androidx.compose.runtime.Composable
+import com.example.packitupandroid.utils.DropdownOptions
 import com.example.packitupandroid.utils.EditFields
 import java.util.Date
 import java.util.UUID
 
-
-/**
- * Represents a query box, which is a container for storing and managing data related to a specific query.
- *
- * @property id The unique identifier of the query box. Defaults to a randomly generated UUID.
- * @property name The name of the query box. This is a required field.
- * @property description An optional description of the query box's purpose or content.
- * @property value A numerical value associated with the query box, often used for aggregated or calculated data. Defaults to 0.0.
- * @property is_fragile Indicates whether the query box's data is sensitive or prone to invalidation. Defaults to false.
- * @property last_modified The timestamp indicating the last time the query box was modified. Defaults to the current date and time.
- * @property item_count The number of items or data points associated with the query box. Defaults to 0.
- * @property collection_id An optional identifier of the collection that this query box belongs to. If null, it doesn't belong to any specific collection.
- */
-data class QueryBox(
-    val id: String = UUID.randomUUID().toString(),
-    val name: String,
-    val description: String? = null,
-    val value: Double = 0.0,
-    val is_fragile: Boolean = false,
-    val last_modified: Date = Date(), // Long
-    val item_count: Int = 0,
-    val collection_id: String? = null,
-)
-
-/**
- * Represents a single option in a dropdown list for a query.
- *
- * This data class is used to define an option that can be selected within a dropdown
- * that is used for filtering or searching. Each option has a unique identifier and a
- * displayable name.
- *
- * @property id A unique identifier for the option. This is typically used internally
- *             to represent the selected option in a structured way. It should be
- *             unique within the context of the dropdown.
- * @property name The name of the option that is displayed to the user in the dropdown.
- *              This is the human-readable label for the option.
- */
-data class QueryDropdownOptions(
-    val id: String,
-    val name: String,
-)
 
 /**
  * Represents a Box, a container for holding items with specific properties.
@@ -61,10 +20,8 @@ data class QueryDropdownOptions(
  * @property value The monetary value of the box or its contents. Defaults to 0.0.
  * @property isFragile Indicates whether the box's contents are fragile. Defaults to false.
  * @property lastModified The date and time when the box was last modified. Defaults to the current date and time.
- * @property item_count The number of items currently contained within the box. Defaults to 0.
+ * @property itemCount The number of items currently contained within the box. Defaults to 0.
  * @property collectionId An optional identifier of the collection this box belongs to.
- * @property currentSelection An optional identifier of the item currently selected within the box.
- * @property iconsContent An optional composable function used to render custom icons related to the box.
  * @property editFields A set of fields that can be edited for this Box.
  *
  * @see BaseCardData
@@ -76,21 +33,20 @@ data class Box(
     override val value: Double = 0.0,
     override val isFragile: Boolean = false,
     override val lastModified: Date = Date(),
-    val item_count: Int = 0,
+    val itemCount: Int = 0,
     val collectionId: String? = null,
-    val currentSelection: String? = null,
-    val iconsContent: @Composable (() -> Unit)? = null,
 ) : BaseCardData {
     companion object {
         /**
-         * Defines the set of fields that are editable for a particular entity.
+         * Set of editable fields for a Box.
          *
-         * This set specifies which properties can be modified through an edit operation.
-         * Currently, it includes the 'Name' and 'Description' fields.
+         * This set defines which [EditFields] of a [Box] can be edited. It includes
+         * fields such as name and description.
          */
         val EDIT_FIELDS = setOf(
             EditFields.Name,
             EditFields.Description,
+            EditFields.Dropdown,
         )
     }
     /**
@@ -109,3 +65,21 @@ data class Box(
      */
     override val editFields get() = EDIT_FIELDS
 }
+
+/**
+ * Represents a box with an ID and a name, suitable for use in dropdown options.
+ *
+ * This data class implements the [DropdownOptions] interface, making it compatible with
+ * components that require a list of selectable options with an ID and a display name.
+ *
+ * @property id The unique identifier for the box. This is typically a string value.
+ * @property name The display name of the box, intended for presentation to the user.
+ *
+ * @constructor Creates a new BoxIdAndName instance with the specified ID and name.
+ *
+ * @see DropdownOptions
+ */
+data class BoxIdAndName(
+    override val id: String,
+    override val name: String
+) : DropdownOptions

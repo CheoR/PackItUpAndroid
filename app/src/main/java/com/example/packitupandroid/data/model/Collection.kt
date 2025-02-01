@@ -1,6 +1,6 @@
 package com.example.packitupandroid.data.model
 
-import androidx.compose.runtime.Composable
+import com.example.packitupandroid.utils.DropdownOptions
 import com.example.packitupandroid.utils.EditFields
 import java.util.Date
 import java.util.UUID
@@ -51,10 +51,8 @@ data class QueryCollection(
  * @property value The monetary or assigned value of the collection. Defaults to 0.0.
  * @property isFragile Indicates whether the collection contains fragile items. Defaults to false.
  * @property lastModified The date and time when the collection was last modified. Defaults to the current date and time.
- * @property item_count The number of items contained within the collection. Defaults to 0.
- * @property box_count The number of boxes or containers used to store the items in this collection. Defaults to 0.
- * @property currentSelection The currently selected item or category within the collection. Can be null.
- * @property iconsContent An optional composable function that provides custom icons to be displayed alongside the collection. Can be null.
+ * @property itemCount The number of items contained within the collection. Defaults to 0.
+ * @property boxCount The number of boxes or containers used to store the items in this collection. Defaults to 0.
  *
  * @property editFields A set of fields that can be edited for this collection.
  *
@@ -68,10 +66,8 @@ data class Collection(
     override val value: Double = 0.0,
     override val isFragile: Boolean = false,
     override val lastModified: Date = Date(),
-    val item_count: Int = 0,
-    val box_count: Int = 0,
-    val currentSelection: String? = null,
-    val iconsContent: @Composable (() -> Unit)? = null,
+    val boxCount: Int = 0,
+    val itemCount: Int = 0,
 ) : BaseCardData {
     companion object {
         /**
@@ -101,3 +97,17 @@ data class Collection(
      */
     override val editFields get() = EDIT_FIELDS
 }
+
+/**
+ * Represents a collection's ID and name, suitable for use in dropdown menus or lists.
+ *
+ * This data class implements the [DropdownOptions] interface, allowing it to be used
+ * where a list of selectable options with an ID and a display name are required.
+ *
+ * @property id The unique identifier of the collection.
+ * @property name The human-readable name of the collection.
+ */
+data class CollectionIdAndName(
+    override val id: String,
+    override val name: String
+) : DropdownOptions

@@ -1,6 +1,5 @@
 package com.example.packitupandroid.data.model
 
-import androidx.compose.runtime.Composable
 import com.example.packitupandroid.utils.EditFields
 import java.util.Date
 import java.util.UUID
@@ -35,9 +34,7 @@ data class Item(
     override val isFragile: Boolean = false,
     override val lastModified: Date = Date(),
     val boxId: String? = null,
-    val currentSelection: String? = null,
     val imageUri: String? = null,
-    val iconsContent: @Composable (() -> Unit)? = null,
 ) : BaseCardData {
     companion object {
         /**
