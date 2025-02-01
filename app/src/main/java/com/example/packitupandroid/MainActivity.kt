@@ -53,6 +53,19 @@ class MainActivity : ComponentActivity() {
         }
     }
 
+    /**
+     * Checks if the application has all the required permissions defined in [CAMERAX_PERMISSIONS].
+     *
+     * This function iterates through each permission in the [CAMERAX_PERMISSIONS] array and checks if it's
+     * granted using [ContextCompat.checkSelfPermission]. It returns true only if all permissions are granted;
+     * otherwise, it returns false.
+     *
+     * @return `true` if all required permissions are granted, `false` otherwise.
+     *
+     * @see CAMERAX_PERMISSIONS
+     * @see ContextCompat.checkSelfPermission
+     * @see PackageManager.PERMISSION_GRANTED
+     */
     private fun hasRequiredPermissions(): Boolean {
         return CAMERAX_PERMISSIONS.all {
             ContextCompat.checkSelfPermission(
@@ -63,6 +76,16 @@ class MainActivity : ComponentActivity() {
     }
 
     companion object {
+        /**
+         * An array of permissions required for CameraX functionality.
+         *
+         * This array contains the `Manifest.permission.CAMERA` permission, which is essential
+         * for accessing the device's camera and capturing images or videos.
+         *
+         * When using CameraX, you must request these permissions from the user before
+         * attempting to initialize or use the camera. Failure to do so will result in
+         * security exceptions.
+         */
         private val CAMERAX_PERMISSIONS = arrayOf(
             Manifest.permission.CAMERA,
         )
