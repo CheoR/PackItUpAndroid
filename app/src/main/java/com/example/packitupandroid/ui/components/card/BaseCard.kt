@@ -1,81 +1,90 @@
 package com.example.packitupandroid.ui.components.card
 
+import androidx.compose.animation.animateColorAsState
+import androidx.compose.animation.core.exponentialDecay
+import androidx.compose.animation.core.tween
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
+import androidx.compose.foundation.gestures.AnchoredDraggableState
+import androidx.compose.foundation.gestures.DraggableAnchors
+import androidx.compose.foundation.gestures.Orientation
+import androidx.compose.foundation.gestures.anchoredDraggable
+import androidx.compose.foundation.gestures.animateTo
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.layout.offset
+import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.ArrowForward
-import androidx.compose.material.icons.automirrored.filled.Label
-import androidx.compose.material.icons.filled.Category
-import androidx.compose.material.icons.filled.CheckBoxOutlineBlank
-import androidx.compose.material.icons.filled.MoreVert
-import androidx.compose.material3.Card
+import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.ArrowBackIosNew
+import androidx.compose.material.icons.filled.CameraAlt
+import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.Checkbox
+import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ElevatedCard
+import androidx.compose.material3.ExposedDropdownMenuBox
+import androidx.compose.material3.ExposedDropdownMenuDefaults
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.LocalTextStyle
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
+import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.SideEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.compose.ui.platform.testTag
+import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.dimensionResource
-import androidx.compose.ui.res.vectorResource
-import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import com.example.packitupandroid.R
 import com.example.packitupandroid.data.model.BaseCardData
 import com.example.packitupandroid.data.model.Box
-import com.example.packitupandroid.data.model.Collection
 import com.example.packitupandroid.data.model.Item
-import com.example.packitupandroid.data.model.Summary
-import com.example.packitupandroid.data.source.local.LocalDataSource
-import com.example.packitupandroid.utils.CardType
-import com.example.packitupandroid.utils.EditMode
+import com.example.packitupandroid.utils.DropdownOptions
+import com.example.packitupandroid.utils.Result
+import com.example.packitupandroid.utils.asCurrencyString
+import kotlinx.coroutines.launch
+import kotlin.math.roundToInt
 
-sealed class ElementType {
-    object Summary : ElementType()
-    object Collection : ElementType()
-    object Box : ElementType()
-    object Item : ElementType()
-}
 
-sealed class ColumnIcon {
-    // since can’t have property be either String or ImageVector type because Kotlin's
-    // statically typed language, to know variable type at compile time.
-    data class VectorIcon(val imageVector: ImageVector) : ColumnIcon()
-    data class UriIcon(val uri: Int?) : ColumnIcon()
-    data class UriStringIcon(val uri: String?) : ColumnIcon()
-}
-
-sealed class ActionColumnIcon(val icon: ImageVector) {
-    object RightArrow : ActionColumnIcon(Icons.AutoMirrored.Filled.ArrowForward)
-    object ThreeDots : ActionColumnIcon(Icons.Default.MoreVert)
-    object None : ActionColumnIcon(Icons.Default.CheckBoxOutlineBlank)
-}
-
-typealias IconPair = Pair<ColumnIcon, ColumnIcon?>
-typealias BadgeCountPair = Pair<Int, Int>
+private enum class HorizontalDragValue { START, END }
 
 /**
  * A base composable card that displays information from a [BaseCardData] object.
  *
  * This card is designed to be a foundation for displaying various types of data in a card format.
- * It includes basic UI elements like ID and name, and provides callbacks for expanding and closing the card.
+ * It includes basic UI elements like ID and name, and provides callbacks for expanding, closing, deleting, and updating the card.
  *
  * @param data The [BaseCardData] object containing the data to display in the card.
- * @param onExpandCard A callback function that is invoked when the user clicks on the card to expand it.
- * @param onCloseCard A callback function that is invoked when the user clicks on the card to close it. (Not implemented in this example but included for potential future use).
+ * @param iconsContent A composable function to display icons within the card.
+ * @param onDelete A callback function that is invoked when the user clicks on the delete button.
+ * @param onUpdate A callback function that is invoked when the user clicks on the edit button.
  * @param modifier Modifier to be applied to the card. Defaults to filling the maximum width and setting a fixed height.
- *
+ * @param onAdd A callback function that is invoked when the user clicks on the add button. User is
+ *  navigated to sub element filtered by data.id e.g. User selects `add` on a Box element, user then
+ *  is redirected to ItemsScreen with only items filtered by Box.id that equals the Box user clicked on.
+ * @param dropdownOptions A [Result] object representing the state of the dropdown options [DropdownOptions].
  * @param D the type of data that the card will display. It must inherit from BaseCardData
  *
  * Example usage:
@@ -89,13 +98,61 @@ typealias BadgeCountPair = Pair<Int, Int>
  *         onExpandCard = { println("Card expanded") },
  *         onCloseCard = { println("Card closed") }
  */
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun <D: BaseCardData>BaseCard(
     data: D,
-    onExpandCard: () -> Unit,
-    onCloseCard: () -> Unit,
+    iconsContent: @Composable ColumnScope.() -> Unit,
+    onCamera: () -> Unit,
+    onDelete: () -> Unit,
+    onUpdate: () -> Unit,
+    dropdownOptions: Result<List<DropdownOptions?>>,
     modifier: Modifier = Modifier,
+    onAdd: () -> Unit = {},
 ) {
+    val dropdownOptionsList = when (dropdownOptions) {
+        is Result.Success -> dropdownOptions.data
+        is Result.Error -> emptyList()
+        is Result.Loading -> emptyList()
+    }
+    val selectedBox: DropdownOptions? = when(data) {
+        is Item -> dropdownOptionsList.find { it?.id == data.boxId }
+        is Box -> dropdownOptionsList.find { it?.id == data.collectionId }
+        else -> null
+    }
+
+
+    val scope = rememberCoroutineScope()
+    var boxSize by remember { mutableFloatStateOf(0F) }
+    val density = LocalDensity.current
+
+    val anchors = DraggableAnchors {
+        HorizontalDragValue.START at 0f
+        HorizontalDragValue.END at -boxSize /100
+    }
+
+    val state = remember {
+        AnchoredDraggableState(
+            initialValue = HorizontalDragValue.START,
+            positionalThreshold = { distance: Float -> distance * 0.5f },
+            velocityThreshold = { with(density) { 100.dp.toPx() } },
+            snapAnimationSpec = tween(durationMillis = 500),
+            decayAnimationSpec = exponentialDecay(),
+        )
+    }
+
+    val iconsBackgroundColor by animateColorAsState(
+        when (state.targetValue) {
+            HorizontalDragValue.START -> MaterialTheme.colorScheme.surfaceBright
+            HorizontalDragValue.END -> MaterialTheme.colorScheme.tertiary
+        },
+        label = "change color"
+    )
+
+    SideEffect {
+        state.updateAnchors(anchors)
+    }
+
     ElevatedCard(
         elevation = CardDefaults.cardElevation(defaultElevation = dimensionResource(R.dimen.elevation_small)),
         modifier = modifier
@@ -103,373 +160,157 @@ fun <D: BaseCardData>BaseCard(
             .height(dimensionResource(R.dimen.card_height)),
     ) {
         Row(
-            modifier = Modifier
-                .background(Color.LightGray)
+            modifier = Modifier,
         ) {
-            Column(
-                modifier = columnModifier,
-                verticalArrangement = Arrangement.Center
-            ) {
-                Text(
-                    text = data.id,
-                    style = MaterialTheme.typography.titleLarge,
-                    modifier = Modifier.padding(bottom = 8.dp)
-                )
+            Column {
+                iconsContent()
             }
             Column(
                 modifier = Modifier
-                    .fillMaxHeight()
                     .weight(1f)
+                    .fillMaxHeight(),
             ) {
-                Text(
-                    text = data.name,
-                    style = MaterialTheme.typography.titleLarge,
-                    modifier = Modifier.padding(bottom = 8.dp)
+                // TODO: combine with [EditCard] to remove duplication and use flag to
+                // display [DataColumn] in edit mode or not
+                BasicTextField(
+                    value = data.name,
+                    onValueChange = {},
+                    textStyle = MaterialTheme.typography.titleLarge,
+                    maxLines = 1,
+                    enabled = false,
+                    modifier = Modifier
+                        .fillMaxWidth(),
                 )
-            }
+                ExposedDropdownMenuBox(
+                    expanded = false,
+                    onExpandedChange = {},
+                ) {
+                    TextField(
+                        readOnly = true,
+                        value = selectedBox?.name ?: "",
+                        onValueChange = {},
+                        trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = false) },
+                        modifier = Modifier.menuAnchor(),
+                    )
 
+                    ExposedDropdownMenu(
+                        expanded = false,
+                        onDismissRequest = {},
+                    ) {
+                        dropdownOptionsList.forEach { option ->
+                            DropdownMenuItem(
+                                text = {
+                                    if (option != null) {
+                                        Text(text = option.name)
+                                    }
+                                },
+                                onClick = {},
+                            )
+                        }
+                    }
+                }
+                BasicTextField(
+                    value = data.description ?: "",
+                    onValueChange = {},
+                    textStyle = MaterialTheme.typography.bodyMedium,
+                    minLines = 3,
+                    maxLines = 3,
+                    enabled = false,
+                    modifier = modifier
+                        .fillMaxWidth()
+                        .weight(1f),
+                )
+                Row(
+                    modifier = modifier,
+                    verticalAlignment = Alignment.CenterVertically,
+                ) {
+                    Checkbox(
+                        checked = data.isFragile,
+                        onCheckedChange = {},
+                        enabled = false,
+                        modifier = Modifier
+                            .semantics {
+                                contentDescription = "Fragile Checkbox"
+                            },
+                    )
+                    Text(stringResource(R.string.fragile))
+                    Spacer(modifier = Modifier.weight(1f))
+                    BasicTextField(
+                        value = data.value.asCurrencyString(),
+                        onValueChange = {},
+                        // TODO: merge MaterialTheme.typeograph and TextAlign.Right
+                        textStyle = LocalTextStyle.current.copy(
+                            textAlign = TextAlign.Right,
+                        ),
+//                        textStyle = MaterialTheme.typography.bodySmall,
+                        enabled = false,
+                        modifier = Modifier.semantics { contentDescription = "Value Field" },
+                    )
+                }
+            }
             Column(
-                modifier = columnModifier,
-                verticalArrangement = Arrangement.Center
-            ) {
-                Text(
-                    text = data.id,
-                    style = MaterialTheme.typography.titleLarge,
-                    modifier = Modifier.padding(bottom = 8.dp)
-                )
-            }
-        }
-    }
-}
-
-// TODO: FIx - look into compound pattern to hide/display bottom part of data column
-// and to display/hide right column icon
-@Composable
-fun<T: BaseCardData> BaseCard(
-    element: T,
-    onUpdate: (T) -> Unit,
-    onDestroy: (T) -> Unit,
-    modifier: Modifier = Modifier,
-//    getDropdownOptions: (() -> List<QueryDropdownOptions>)? = null,
-    filterElements:( (id: String) -> Unit)? = null,
-    editMode: EditMode = EditMode.NoEdit,
-    cardType: CardType = CardType.Default,
-) {
-    val expanded = remember { mutableStateOf(false) }
-    val showEditCard = remember { mutableStateOf(false) }
-    val showCameraCard = remember { mutableStateOf(false) }
-    val showDeleteCard = remember { mutableStateOf(false) }
-
-    val (icons, badgeCounts) = getIconsAndBadges(element)
-    val icon1 = icons.first
-    val icon2 = icons.second
-    val badgeCount1 = badgeCounts.first
-    val badgeCount2 = badgeCounts.second
-
-    Card(
-        modifier = modifier
-            .height(dimensionResource(R.dimen.card_height))
-            .fillMaxWidth()
-            .clip(RoundedCornerShape(dimensionResource(R.dimen.roundness_small)))
-            .testTag("BaseCard ${element.id}"),
-        elevation = CardDefaults.cardElevation(defaultElevation = dimensionResource(R.dimen.image_size_medium)),
-    ) {
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(dimensionResource(R.dimen.padding_small)),
-        ) {
-            IconsColumn(
-                icon1 = icon1,
-                icon2 = icon2,
-                badgeCount1 = badgeCount1,
-                badgeCount2 = badgeCount2,
-                isShowBadgeCount = cardType !is CardType.Item,
-            )
-            DataColumn(
                 modifier = Modifier
                     .fillMaxHeight()
-                    .weight(2f)
-                    .padding(horizontal = 4.dp),
-                element = element,
-//                getDropdownOptions = getDropdownOptions,
-                editMode = editMode,
-                cardType = cardType,
-            )
-            ActionColumn(
-                element = element,
-                onClick = {},
-                editMode = editMode,
-                onCancel = {
-                    expanded.value = false
-                    showEditCard.value = false
-                    showCameraCard.value = false
-                    showDeleteCard.value = false
-                },
-                filterElements = filterElements,
-                onEdit = {
-                    onUpdate(it)
-                    expanded.value = false
-                    showCameraCard.value = false
-                    showEditCard.value = false
-                },
-                onDelete = {
-                    expanded.value = false
-                    showCameraCard.value = false
-                    showDeleteCard.value = false
-                    onDestroy(element)
-                },
-                isExpanded = expanded,
-                isShowEditCard = showEditCard,
-                isShowCameraCard = showCameraCard,
-                isShowDeleteCard = showDeleteCard,
-                cardType = cardType,
-//                getDropdownOptions = getDropdownOptions,
-            )
+                    .graphicsLayer { boxSize = size.width }
+                    .offset {
+                        IntOffset(
+                            x = state
+                                .requireOffset()
+                                .roundToInt(),
+                            y = 0,
+                        )
+                    }
+                    .anchoredDraggable(state, Orientation.Horizontal)
+                    .background(iconsBackgroundColor),
+                verticalArrangement = Arrangement.Center,
+            ) {
+                when(state.targetValue) {
+                    HorizontalDragValue.START -> {
+                        IconButton(onClick = {} ) {
+                            Icon(
+                                Icons.Default.ArrowBackIosNew,
+                                contentDescription = "Favorite",
+                                tint = MaterialTheme.colorScheme.tertiary,
+                            )
+                        }
+                    }
+                    HorizontalDragValue.END -> {
+                        if(data is Item) {
+                            IconButton(onClick = {
+                                scope.launch {
+                                    onCamera()
+                                    state.animateTo(HorizontalDragValue.START)
+                                } }) {
+                                Icon(Icons.Default.CameraAlt, contentDescription = "Camera", tint = Color.White)
+                            }
+                        } else {
+                            IconButton(onClick = {
+                                scope.launch {
+                                    onAdd()
+                                    state.animateTo(HorizontalDragValue.START)
+                                } }) {
+                                Icon(Icons.Default.Add, contentDescription = "Add", tint = Color.White)
+                            }
+                        }
+                        IconButton(onClick = {
+                            scope.launch {
+                                onUpdate()
+                                state.animateTo(HorizontalDragValue.START)
+                            } }) {
+                            Icon(Icons.Default.Edit, contentDescription = "Edit", tint = Color.White)
+                        }
+                        IconButton(
+                            onClick = {
+                                scope.launch {
+                                    onDelete()
+                                    state.animateTo(HorizontalDragValue.START)
+                                }
+                            }) {
+                            Icon(Icons.Default.Delete, contentDescription = "Delete", tint = Color.White)
+                        }
+                    }
+                }
+            }
         }
     }
-}
-
-
-
-@Composable
-fun <T: BaseCardData> getIconsAndBadges(data: T): Pair<IconPair,BadgeCountPair> {
-   return when(data) {
-        is Item -> {
-            // TODO: FIX
-//            val icon = when (val imageUri = data.imageUri) {
-//                is ImageUri.StringUri -> ColumnIcon.UriStringIcon(imageUri.uri)
-//                is ImageUri.ResourceUri -> ColumnIcon.UriIcon(imageUri.resourceId)
-//                null -> ColumnIcon.VectorIcon(Icons.AutoMirrored.Filled.Label)
-//            }
-            val icon1 = if(data.imageUri != null) ColumnIcon.UriStringIcon(data.imageUri) else  ColumnIcon.VectorIcon(Icons.AutoMirrored.Filled.Label)
-            Pair(Pair(icon1, null), Pair(0, 0))
-        }
-        is Box -> {
-            val icon1 = ColumnIcon.VectorIcon(Icons.AutoMirrored.Filled.Label)
-            val badgeCount1 = data.item_count
-            Pair(Pair(icon1, null), Pair(badgeCount1, 0))
-        }
-        is Collection -> {
-            val icon1 = ColumnIcon.VectorIcon(ImageVector.vectorResource(R.drawable.ic_launcher_foreground))
-            val icon2 = ColumnIcon.VectorIcon(Icons.AutoMirrored.Filled.Label)
-            val badgeCount1 = data.box_count
-            val badgeCount2 = data.item_count
-            Pair(Pair(icon1, icon2), Pair(badgeCount1, badgeCount2))
-        }
-        is Summary -> {
-            val (icon1, badgeCount1) = when(data.id) {
-                "collections" -> Pair(ColumnIcon.VectorIcon(Icons.Default.Category), data.collectionCount)
-                "boxes" -> Pair(ColumnIcon.VectorIcon(ImageVector.vectorResource(R.drawable.ic_launcher_foreground)), data.boxCount)
-                else -> Pair(ColumnIcon.VectorIcon(Icons.AutoMirrored.Filled.Label), data.itemCount)
-            }
-            Pair(Pair(icon1, null), Pair(badgeCount1, 0))
-        }
-
-       else -> Pair(Pair(ColumnIcon.VectorIcon(Icons.AutoMirrored.Filled.Label), null), Pair(0, 0))
-   }
-}
-
-@Preview(
-    showBackground = true,
-    group = "Default",
-)
-@Composable
-fun PreviewItemBaseCardWithImage(
-    localDataSource: LocalDataSource = LocalDataSource(),
-) {
-    val item = localDataSource.loadItems().first()
-    BaseCard(
-        element = item,
-        onUpdate = {},
-        onDestroy = {},
-    )
-}
-
-@Preview(
-    showBackground = true,
-    group = "Default",
-)
-@Composable
-fun PreviewItemBaseCardWithoutImage(
-    localDataSource: LocalDataSource = LocalDataSource(),
-) {
-    val item = localDataSource.loadItems()[1]
-    BaseCard(
-        element = item,
-        onUpdate = {},
-        onDestroy = {},
-    )
-}
-
-@Preview(
-    showBackground = true,
-    group = "Default",
-)
-@Composable
-fun PreviewBoxBaseCard(
-    localDataSource: LocalDataSource = LocalDataSource(),
-) {
-    val box = localDataSource.loadBoxes().first()
-    BaseCard(
-        element = box,
-        onUpdate = {},
-        onDestroy = {},
-    )
-}
-
-// TODO: Fix - look up previews and how to get variations
-@Preview(
-    showBackground = true,
-    group = "Default",
-)
-@Composable
-fun PreviewCollectionBaseCard(
-    localDataSource: LocalDataSource = LocalDataSource(),
-) {
-    val collection = localDataSource.loadCollections().first()
-    BaseCard(
-        element = collection,
-        onUpdate = {},
-        onDestroy = {},
-    )
-}
-
-// Summary
-@Preview(
-    showBackground = true,
-    group = "Summary",
-)
-@Composable
-fun PreviewSummaryItemBaseCardWithImage(
-    localDataSource: LocalDataSource = LocalDataSource(),
-) {
-    val item = localDataSource.loadItems().first()
-    BaseCard(
-        element = item,
-        cardType = CardType.Summary,
-        onUpdate = {},
-        onDestroy = {},
-    )
-}
-
-@Preview(
-    showBackground = true,
-    group = "Summary",
-)
-@Composable
-fun PreviewSummaryItemBaseCardWithoutImage(
-    localDataSource: LocalDataSource = LocalDataSource(),
-) {
-    val item = localDataSource.loadItems()[1]
-    BaseCard(
-        element = item,
-        cardType = CardType.Summary,
-        onUpdate = {},
-        onDestroy = {},
-    )
-}
-
-@Preview(
-    showBackground = true,
-    group = "Summary",
-)
-@Composable
-fun PreviewSummaryBoxBaseCard(
-    localDataSource: LocalDataSource = LocalDataSource(),
-) {
-    val box = localDataSource.loadBoxes().first()
-    BaseCard(
-        element = box,
-        cardType = CardType.Summary,
-        onUpdate = {},
-        onDestroy = {},
-    )
-}
-
-@Preview(
-    showBackground = true,
-    group = "Summary",
-)
-@Composable
-fun PreviewSummaryCollectionBaseCard(
-    localDataSource: LocalDataSource = LocalDataSource(),
-) {
-    val collection = localDataSource.loadCollections().first()
-    BaseCard(
-        element = collection,
-        cardType = CardType.Summary,
-        onUpdate = {},
-        onDestroy = {},
-    )
-}
-
-// Editable
-
-@Preview(
-    showBackground = true,
-    group = "Edit",
-)
-@Composable
-fun PreviewEditItemBaseCardWithImage(
-    localDataSource: LocalDataSource = LocalDataSource(),
-) {
-    val item = localDataSource.loadItems().first()
-    BaseCard(
-        element = item,
-        editMode = EditMode.Edit,
-        onUpdate = {},
-        onDestroy = {},
-    )
-}
-
-@Preview(
-    showBackground = true,
-    group = "Edit",
-)
-@Composable
-fun PreviewEditItemBaseCardWithoutImage(
-    localDataSource: LocalDataSource = LocalDataSource(),
-) {
-    val item = localDataSource.loadItems()[1]
-    BaseCard(
-        element = item,
-        editMode = EditMode.Edit,
-        onUpdate = {},
-        onDestroy = {},
-    )
-}
-
-@Preview(
-    showBackground = true,
-    group = "Edit",
-)
-@Composable
-fun PreviewEditBoxBaseCard(
-    localDataSource: LocalDataSource = LocalDataSource(),
-) {
-    val box = localDataSource.loadBoxes().first()
-    BaseCard(
-        element = box,
-        editMode = EditMode.Edit,
-        onUpdate = {},
-        onDestroy = {},
-    )
-}
-
-@Preview(
-    showBackground = true,
-    group = "Edit",
-)
-@Composable
-fun PreviewEditCollectionBaseCard(
-    localDataSource: LocalDataSource = LocalDataSource(),
-) {
-    val collection = localDataSource.loadCollections().first()
-    BaseCard(
-        element = collection,
-        editMode = EditMode.Edit,
-        onUpdate = {},
-        onDestroy = {},
-    )
 }
