@@ -3,13 +3,9 @@ package com.example.packitupandroid.ui.screens.box
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.example.packitupandroid.data.model.Box
-import com.example.packitupandroid.data.source.local.LocalDataSource
 import com.example.packitupandroid.ui.PackItUpViewModelProvider
-import com.example.packitupandroid.ui.screens.Screen
-import com.example.packitupandroid.utils.Result
+import com.example.packitupandroid.ui.common.Screen
 
 
 /**
@@ -35,41 +31,27 @@ import com.example.packitupandroid.utils.Result
  */
 @Composable
 fun BoxesScreen(
-//    filterItemsByBoxId:((id: String) -> Unit)? = null,
-//    getDropdownOptions: () -> List<QueryDropdownOptions>,
-    viewModel: BoxesScreenViewModel = viewModel(factory = PackItUpViewModelProvider.Factory)
+    viewModel: BoxesScreenViewModel = viewModel(factory = PackItUpViewModelProvider.Factory),
+    addElements: ((id: String) -> Unit) = {},
 ) {
     val result by viewModel.elements.collectAsState()
+    val dropdownOptions by viewModel.dropdownOptions.collectAsState()
+
     val onCreate = viewModel::create
+    val onDelete = viewModel::delete
     val onFieldChange = viewModel::onFieldChange
     val onUpdate = viewModel::update
+    val generateIconsColumn = viewModel::generateIconsColumn
 
-    Screen<Box>(
+    Screen(
         result = result,
         key = { it?.id as String },
+        addElements = addElements,
+        generateIconsColumn = generateIconsColumn,
         onCreate = onCreate,
+        onDelete = onDelete,
         onFieldChange = onFieldChange,
         onUpdate = onUpdate,
-//        onDestroy = viewModel::destroy,
-//        getDropdownOptions = getDropdownOptions,
-//        filterElements = filterItemsByBoxId,
-//        cardType = CardType.Box,
-    )
-}
-
-@Preview(showBackground = true)
-@Composable
-fun PreviewItemsScreen(
-    localDataSource: LocalDataSource = LocalDataSource(),
-) {
-    val boxes = localDataSource.loadBoxes()
-    Screen<Box>(
-        key = { it?.id as String },
-        result = Result.Success(boxes),
-        onCreate = {},
-        onUpdate = {},
-        onFieldChange = {_, _, _ -> Unit},
-//        onDestroy = {},
-//        getDropdownOptions = { emptyList() },
+        dropdownOptions = dropdownOptions,
     )
 }

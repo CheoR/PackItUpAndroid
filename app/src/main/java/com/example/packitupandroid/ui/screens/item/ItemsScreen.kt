@@ -3,13 +3,9 @@ package com.example.packitupandroid.ui.screens.item
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.example.packitupandroid.data.model.Item
-import com.example.packitupandroid.data.source.local.LocalDataSource
 import com.example.packitupandroid.ui.PackItUpViewModelProvider
-import com.example.packitupandroid.ui.screens.Screen
-import com.example.packitupandroid.utils.Result
+import com.example.packitupandroid.ui.common.Screen
 
 
 /**
@@ -35,43 +31,25 @@ import com.example.packitupandroid.utils.Result
  */
 @Composable
 fun ItemsScreen(
-//    getDropdownOptions: () -> List<QueryDropdownOptions>,
     viewModel: ItemsScreenViewModel = viewModel(factory = PackItUpViewModelProvider.Factory),
 ) {
     val result by viewModel.elements.collectAsState()
+    val dropdownOptions by viewModel.dropdownOptions.collectAsState()
+
     val onCreate = viewModel::create
+    val onDelete = viewModel::delete
     val onUpdate = viewModel::update
     val onFieldChange = viewModel::onFieldChange
+    val generateIconsColumn = viewModel::generateIconsColumn
 
-//        onDestroy = viewModel::destroy,
-//        getDropdownOptions = getDropdownOptions,
-
-    Screen<Item>(
+    Screen(
         result = result,
         key = { it?.id as String },
+        generateIconsColumn = generateIconsColumn,
         onCreate = onCreate,
+        onDelete = onDelete,
         onFieldChange = onFieldChange,
         onUpdate = onUpdate,
-        //        cardType = CardType.Box,
-    )
-}
-
-
-@Preview(showBackground = true)
-@Composable
-fun PreviewItemsScreen(
-    localDataSource: LocalDataSource = LocalDataSource(),
-) {
-    val items = localDataSource.loadItems()
-
-    Screen<Item>(
-        key = { it?.id as String },
-        result = Result.Success(items),
-        onCreate = {},
-        onUpdate = {},
-        onFieldChange = {_, _, _ -> Unit},
-//        onDestroy = {},
-//        getDropdownOptions = { emptyList() },
-//        cardType = CardType.Item,
+        dropdownOptions = dropdownOptions,
     )
 }

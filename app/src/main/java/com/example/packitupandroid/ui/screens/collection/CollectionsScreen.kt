@@ -3,13 +3,9 @@ package com.example.packitupandroid.ui.screens.collection
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.example.packitupandroid.data.model.Collection
-import com.example.packitupandroid.data.source.local.LocalDataSource
 import com.example.packitupandroid.ui.PackItUpViewModelProvider
-import com.example.packitupandroid.ui.screens.Screen
-import com.example.packitupandroid.utils.Result
+import com.example.packitupandroid.ui.common.Screen
 
 
 /**
@@ -36,39 +32,24 @@ import com.example.packitupandroid.utils.Result
  */
 @Composable
 fun CollectionsScreen(
-//    filterBoxesByCollectionId:(id: String) -> Unit,
-    viewModel: CollectionsScreenViewModel = viewModel(factory = PackItUpViewModelProvider.Factory)
+    viewModel: CollectionsScreenViewModel = viewModel(factory = PackItUpViewModelProvider.Factory),
+    addElements: ((id: String) -> Unit) = {},
 ) {
     val result by viewModel.elements.collectAsState()
     val onCreate = viewModel::create
+    val onDelete = viewModel::delete
     val onFieldChange = viewModel::onFieldChange
     val onUpdate = viewModel::update
+    val generateIconsColumn = viewModel::generateIconsColumn
 
-    Screen<Collection>(
+    Screen(
         result = result,
+        addElements = addElements,
         key = { it?.id as String },
+        generateIconsColumn = generateIconsColumn,
         onCreate = onCreate,
+        onDelete = onDelete,
         onFieldChange = onFieldChange,
         onUpdate = onUpdate,
-//        onDestroy = viewModel::destroy,
-//        cardType = CardType.Collection,
-//        filterElements = filterBoxesByCollectionId,
-    )
-}
-
-@Preview(showBackground = true)
-@Composable
-fun PreviewItemsScreen(
-    localDataSource: LocalDataSource = LocalDataSource(),
-) {
-    val collections = localDataSource.loadCollections()
-
-    Screen<Collection>(
-        key = { it?.id as String },
-       result = Result.Success(collections),
-        onCreate = {},
-        onUpdate = {},
-        onFieldChange = {_, _, _ -> Unit},
-//        onDestroy = {},
     )
 }
