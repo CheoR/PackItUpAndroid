@@ -1,6 +1,7 @@
 package com.example.packitupandroid.ui.components.dialog
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.requiredWidth
 import androidx.compose.material3.BasicAlertDialog
 import androidx.compose.material3.MaterialTheme
@@ -12,7 +13,9 @@ import androidx.compose.ui.unit.Dp
 import com.example.packitupandroid.data.model.BaseCardData
 import com.example.packitupandroid.ui.components.card.EditCard
 import com.example.packitupandroid.ui.components.layout.ConfirmCancelContainer
+import com.example.packitupandroid.utils.DropdownOptions
 import com.example.packitupandroid.utils.EditFields
+import com.example.packitupandroid.utils.Result
 
 
 /**
@@ -22,26 +25,33 @@ import com.example.packitupandroid.utils.EditFields
  * It includes a confirm and cancel button. The content of the dialog is generated based on the
  * `selectedCard`'s data and its defined editable fields.
  *
- * @param onConfirm Callback function to be executed when the user confirms the changes.
- *                  This function typically handles saving the updated card data.
+ * @param dialogWidth The desired width of the dialog.
  * @param onCancel Callback function to be executed when the user cancels the edit operation.
  *                 This function typically handles discarding the changes.
- * @param selectedCard MutableState holding the currently selected card data. The type of the card data must
- *                     extend `BaseCardData`. This state will be updated if the user changes the data in the Edit Dialog.
- *                     If null no EditCard is displayed.
+ * @param onConfirm Callback function to be executed when the user confirms the changes.
+ *                  This function typically handles saving the updated card data.
  * @param onFieldChange Callback function invoked when a field value within the card is modified.
  *                      It receives the `selectedCard` MutableState, the `EditFields` enum representing the field,
  *                      and the new value as a String.
- * @param dialogWidth The desired width of the dialog.
+ * @param iconsContent A composable lambda that provides the content for the card's icon area.
+ *                     It uses a [ColumnScope] to allow for column-based layout of the icons.
+ * @param selectedCard MutableState holding the currently selected card data. The type of the card data must
+ *                     extend `BaseCardData`. This state will be updated if the user changes the data in the Edit Dialog.
+ *                     If null no EditCard is displayed.
  * @param D The type of the card data, which must extend `BaseCardData`.
+ *
+ * @param dropdownOptions A [Result] object representing the state of the dropdown options [DropdownOptions].
+ *
  */
 @Composable
 fun <D: BaseCardData> EditDialog(
-    onConfirm: () -> Unit,
-    onCancel: () -> Unit,
-    selectedCard: MutableState<D?>,
-    onFieldChange: (MutableState<D?>, EditFields, String) -> Unit,
     dialogWidth: Dp,
+    onCancel: () -> Unit,
+    onConfirm: () -> Unit,
+    onFieldChange: (MutableState<D?>, EditFields, String) -> Unit,
+    iconsContent: @Composable ColumnScope.() -> Unit,
+    selectedCard: MutableState<D?>,
+    dropdownOptions: Result<List<DropdownOptions?>>,
 ) {
     BasicAlertDialog(
         onDismissRequest = onCancel,
@@ -58,8 +68,10 @@ fun <D: BaseCardData> EditDialog(
                 EditCard(
                     selectedCard = selectedCard,
                     editableFields = it.editFields,
+                    iconsContent = iconsContent,
                     onFieldChange = onFieldChange,
-                    modifier = Modifier.testTag("EditCard")
+                    dropdownOptions = dropdownOptions,
+                    modifier = Modifier.testTag("EditCard"),
                 )
             }
         }
