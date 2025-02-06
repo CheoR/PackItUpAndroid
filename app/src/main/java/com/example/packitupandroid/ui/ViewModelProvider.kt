@@ -5,7 +5,7 @@ import androidx.lifecycle.createSavedStateHandle
 import androidx.lifecycle.viewmodel.CreationExtras
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
-import com.example.packitupandroid.PackItUpApplication
+import com.example.packitupandroid.AppApplication
 import com.example.packitupandroid.ui.navigation.NavHostViewModel
 import com.example.packitupandroid.ui.screens.box.BoxesScreenViewModel
 import com.example.packitupandroid.ui.screens.collection.CollectionsScreenViewModel
@@ -19,7 +19,7 @@ import com.example.packitupandroid.ui.screens.summary.SummaryScreenViewModel
  * This object defines a [viewModelFactory] that creates instances of various ViewModels,
  * injecting their required dependencies.
  */
-object PackItUpViewModelProvider {
+object ViewModelProvider {
     /**
      * The [ViewModelProvider.Factory] used to create ViewModel instances.
      *
@@ -61,12 +61,12 @@ object PackItUpViewModelProvider {
 
 
 /**
- * Extension function to retrieve the [PackItUpApplication] instance from [CreationExtras].
+ * Extension function to retrieve the [AppApplication] instance from [CreationExtras].
  *
  * This function is used to access the application's dependency container, which holds
  * the repositories needed by the ViewModels.
  *
- * @return The [PackItUpApplication] instance.
+ * @return The [AppApplication] instance.
  */
-fun CreationExtras.packItUpApplication(): PackItUpApplication =
-    (this[ViewModelProvider.AndroidViewModelFactory.APPLICATION_KEY] as PackItUpApplication)
+fun CreationExtras.packItUpApplication(): AppApplication =
+    (this[ViewModelProvider.AndroidViewModelFactory.APPLICATION_KEY] as AppApplication)

@@ -25,7 +25,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.packitupandroid.R
 import com.example.packitupandroid.data.model.Summary
-import com.example.packitupandroid.ui.PackItUpViewModelProvider
+import com.example.packitupandroid.ui.ViewModelProvider
 import com.example.packitupandroid.ui.components.card.SummaryCard
 import com.example.packitupandroid.ui.components.strategyCard.IconBadge
 import com.example.packitupandroid.ui.components.strategyCard.ImageContent
@@ -37,6 +37,22 @@ import com.example.packitupandroid.utils.Result
 import com.example.packitupandroid.utils.asCurrencyString
 
 
+/**
+ * Determines the top-level destination associated with a given route.
+ *
+ * This function maps a navigation route string to its corresponding [TopLevelDestination].
+ * It's used to identify the main screen or section that a particular route belongs to.
+ *
+ * Currently, the mapping is based on predefined constants for collections, boxes, and items.
+ * If a route is not recognized as one of these top-level destinations, an exception is thrown.
+ *
+ * @param route The navigation route string (e.g., Route.COLLECTIONS, Route.BOXES, Route.ITEMS).
+ * @return The [TopLevelDestination] enum value associated with the provided route.
+ * @throws IllegalArgumentException If the provided route is not a recognized top-level destination.
+ *
+ * @see TopLevelDestination
+ * @see Route
+ */
 private fun getTopLevelDestination(route: String): TopLevelDestination {
     // TODO - fix - this is ugly
     return when (route) {
@@ -56,7 +72,7 @@ private fun getTopLevelDestination(route: String): TopLevelDestination {
  */
 @Composable
 fun SummaryScreen(
-    viewModel: SummaryScreenViewModel = viewModel(factory = PackItUpViewModelProvider.Factory),
+    viewModel: SummaryScreenViewModel = viewModel(factory = ViewModelProvider.Factory),
     navigateToTopLevelDestination: (TopLevelDestination) -> Unit,
 ) {
     val result by viewModel.elements.collectAsState()

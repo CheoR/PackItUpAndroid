@@ -59,7 +59,7 @@ data class TopLevelDestination(
     val iconTextId: Int,
 )
 
-class PackItUpNavigationActions(private val navController: NavHostController) {
+class NavigationActions(private val navController: NavHostController) {
 
     fun navigateTo(destination: TopLevelDestination) {
         navController.navigate(destination.route) {

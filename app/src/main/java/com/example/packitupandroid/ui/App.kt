@@ -9,11 +9,11 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.example.packitupandroid.ui.navigation.AppNavHost
-import com.example.packitupandroid.ui.navigation.PackItUpNavigationActions
+import com.example.packitupandroid.ui.navigation.NavigationActions
 import com.example.packitupandroid.ui.navigation.Route
 import com.example.packitupandroid.ui.navigation.TopLevelDestination
-import com.example.packitupandroid.utils.PackItUpContentType
-import com.example.packitupandroid.utils.PackItUpNavigationType
+import com.example.packitupandroid.utils.ContentType
+import com.example.packitupandroid.utils.NavigationType
 
 
 @Composable
@@ -23,22 +23,22 @@ fun PackItUpApp(
     /*
         To implement navigation drawer, determine navigation type based on app's window size.
      */
-    val navigationType: PackItUpNavigationType
+    val navigationType: NavigationType
 
     /*
         For various window sizes to help determine appropriate content type selection,
         depending on screen size
      */
-    val contentType: PackItUpContentType
+    val contentType: ContentType
 
     when (windowSize.widthSizeClass) {
         WindowWidthSizeClass.Compact -> {
-            navigationType = PackItUpNavigationType.BOTTOM_NAVIGATION
-            contentType = PackItUpContentType.LIST_ONLY
+            navigationType = NavigationType.BOTTOM_NAVIGATION
+            contentType = ContentType.LIST_ONLY
         }
         else -> {
-            navigationType = PackItUpNavigationType.BOTTOM_NAVIGATION
-            contentType = PackItUpContentType.LIST_ONLY
+            navigationType = NavigationType.BOTTOM_NAVIGATION
+            contentType = ContentType.LIST_ONLY
         }
     }
 
@@ -51,12 +51,12 @@ fun PackItUpApp(
 
 @Composable
 private fun PackItUpNavigationWrapper(
-    navigationType: PackItUpNavigationType,
-    contentType: PackItUpContentType,
+    navigationType: NavigationType,
+    contentType: ContentType,
 ) {
     val navController = rememberNavController()
     val navigationActions = remember(navController) {
-        PackItUpNavigationActions(navController)
+        NavigationActions(navController)
     }
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val selectedDestination = navBackStackEntry?.destination?.route ?: Route.SUMMARY
@@ -73,8 +73,8 @@ private fun PackItUpNavigationWrapper(
 
 @Composable
 fun PackItUpContent(
-    navigationType: PackItUpNavigationType,
-    contentType: PackItUpContentType,
+    navigationType: NavigationType,
+    contentType: ContentType,
     navController: NavHostController,
     selectedDestination: String,
     navigateToTopLevelDestination: (TopLevelDestination) -> Unit,

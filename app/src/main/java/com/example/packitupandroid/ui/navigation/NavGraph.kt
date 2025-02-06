@@ -14,13 +14,13 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import com.example.packitupandroid.ui.PackItUpViewModelProvider
+import com.example.packitupandroid.ui.ViewModelProvider
 import com.example.packitupandroid.ui.screens.box.BoxesScreen
 import com.example.packitupandroid.ui.screens.collection.CollectionsScreen
 import com.example.packitupandroid.ui.screens.item.ItemsScreen
 import com.example.packitupandroid.ui.screens.summary.SummaryScreen
-import com.example.packitupandroid.utils.PackItUpContentType
-import com.example.packitupandroid.utils.PackItUpNavigationType
+import com.example.packitupandroid.utils.ContentType
+import com.example.packitupandroid.utils.NavigationType
 import kotlinx.coroutines.launch
 
 
@@ -29,7 +29,7 @@ import kotlinx.coroutines.launch
  * This function uses a `NavController` to manage navigation between different screens.
  * It includes a `Scaffold` with a top app bar, bottom navigation bar, and a snackbar host.
  *
- * @param selectedDestination The currently selected destination PackItUpRoute.
+ * @param selectedDestination The currently selected destination Route.
  * @param navController The NavController used for navigation.
  * @param navigateToTopLevelDestination Lambda function to navigate to a top-level destination.
  * @param modifier Modifier to be applied to the navigation host.
@@ -37,12 +37,12 @@ import kotlinx.coroutines.launch
 @Composable
 fun AppNavHost(
     selectedDestination: String,
-    contentType: PackItUpContentType,
-    navigationType: PackItUpNavigationType,
+    contentType: ContentType,
+    navigationType: NavigationType,
     navController: NavHostController,
     navigateToTopLevelDestination: (TopLevelDestination) -> Unit,
     modifier: Modifier = Modifier,
-    viewModel: NavHostViewModel = viewModel(factory = PackItUpViewModelProvider.Factory)
+    viewModel: NavHostViewModel = viewModel(factory = ViewModelProvider.Factory)
 ) {
     val navHostState by viewModel.navHoseState.collectAsState()
     val toggleScreenSnackbar = viewModel::toggleScreenSnackbar
@@ -68,7 +68,7 @@ fun AppNavHost(
  * @param modifier Modifier to apply to the overall layout.
  * @param navHostState State holder for the navigation host.
  * @param navController Controller for navigation within the app.
- * @param toggleScreenSnackbar Callback to trigger a snackbar with a specific PackItUpRoute.
+ * @param toggleScreenSnackbar Callback to trigger a snackbar with a specific Route.
  * @param setTitle Callback to set the title of the screen.
  * @param selectedDestination Currently selected top-level destination.
  * @param navigateToTopLevelDestination Callback to navigate to a top-level destination.

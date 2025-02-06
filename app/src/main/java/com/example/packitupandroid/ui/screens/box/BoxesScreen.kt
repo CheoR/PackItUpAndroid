@@ -4,7 +4,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.example.packitupandroid.ui.PackItUpViewModelProvider
+import com.example.packitupandroid.ui.ViewModelProvider
 import com.example.packitupandroid.ui.common.Screen
 
 
@@ -25,13 +25,13 @@ import com.example.packitupandroid.ui.common.Screen
 + * 4. **FieldChange Handler:** Passes the `viewModel::onFieldChange` function to the `Screen` composable to handle changes to edit fields in [EditCard].
 + * 5. **State Observation:**  Reactively updates the UI whenever the `viewModel.elements` StateFlow emits a new list of boxes.
  *
- * @param viewModel The [BoxesScreenViewModel] used to manage the data and state. Defaults to a ViewModel provided by the [PackItUpViewModelProvider].Factory.
+ * @param viewModel The [BoxesScreenViewModel] used to manage the data and state. Defaults to a ViewModel provided by the [ViewModelProvider].Factory.
 + * @see Screen
 + * @see BoxesScreenViewModel
  */
 @Composable
 fun BoxesScreen(
-    viewModel: BoxesScreenViewModel = viewModel(factory = PackItUpViewModelProvider.Factory),
+    viewModel: BoxesScreenViewModel = viewModel(factory = ViewModelProvider.Factory),
     addElements: ((id: String) -> Unit) = {},
 ) {
     val result by viewModel.elements.collectAsState()

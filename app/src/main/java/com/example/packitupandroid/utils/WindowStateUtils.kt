@@ -4,7 +4,7 @@ package com.example.packitupandroid.utils
 /**
  * Enum class representing different types of navigation in the application.
  */
-enum class PackItUpNavigationType {
+enum class NavigationType {
     /**
      * Bottom navigation type commonly used in mobile applications.
      */
@@ -24,7 +24,7 @@ enum class PackItUpNavigationType {
 /**
  * Enum class representing different content layouts for the application.
  */
-enum class PackItUpContentType {
+enum class ContentType {
     /**
      * Layout displaying only a list of items.
      */
