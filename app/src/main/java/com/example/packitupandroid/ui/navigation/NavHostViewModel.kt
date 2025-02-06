@@ -255,5 +255,5 @@ data class NavHostState(
     val canNavigateToItemsScreen: Boolean = false,
     val showBoxesScreenSnackBar: Boolean = true,
     val showItemsScreenSnackBar: Boolean = true,
-    val title: String = "MoveHaul"
+    val title: String = "PackItUp"
 )

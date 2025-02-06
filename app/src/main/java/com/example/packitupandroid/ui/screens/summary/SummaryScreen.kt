@@ -52,7 +52,7 @@ private fun getTopLevelDestination(route: String): TopLevelDestination {
  *
  * This function fetches data from a [SummaryScreenViewModel] and displays it using a [Summary] composable.
  *
- * @param viewModel The [SummaryScreenViewModel] to fetch data from. Defaults to a new instance from the MoveHaulViewModelProvider.
+ * @param viewModel The [SummaryScreenViewModel] to fetch data from. Defaults to a new instance from the PackItUpViewModelProvider.
  */
 @Composable
 fun SummaryScreen(

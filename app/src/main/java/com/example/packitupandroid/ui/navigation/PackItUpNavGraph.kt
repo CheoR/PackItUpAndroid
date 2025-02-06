@@ -25,7 +25,7 @@ import kotlinx.coroutines.launch
 
 
 /**
- * Composable function that sets up the navigation host for the MoveHaul application.
+ * Composable function that sets up the navigation host for the PackItUp application.
  * This function uses a `NavController` to manage navigation between different screens.
  * It includes a `Scaffold` with a top app bar, bottom navigation bar, and a snackbar host.
  *
@@ -60,7 +60,7 @@ fun AppNavHost(
 }
 
 /**
- * Composable function that sets up the navigation host and UI structure for the MoveHaul application.
+ * Composable function that sets up the navigation host and UI structure for the PackItUp application.
  *
  * This function utilizes a [Scaffold] to arrange the app's layout, including a top bar,
  * bottom navigation bar, and a [AppNavHost] for handling navigation between different screens.
