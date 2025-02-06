@@ -8,10 +8,10 @@ import androidx.compose.runtime.remember
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
-import com.example.packitupandroid.ui.navigation.PackItUpNavHost
+import com.example.packitupandroid.ui.navigation.AppNavHost
 import com.example.packitupandroid.ui.navigation.PackItUpNavigationActions
-import com.example.packitupandroid.ui.navigation.PackItUpRoute
-import com.example.packitupandroid.ui.navigation.PackItUpTopLevelDestination
+import com.example.packitupandroid.ui.navigation.Route
+import com.example.packitupandroid.ui.navigation.TopLevelDestination
 import com.example.packitupandroid.utils.PackItUpContentType
 import com.example.packitupandroid.utils.PackItUpNavigationType
 
@@ -59,7 +59,7 @@ private fun PackItUpNavigationWrapper(
         PackItUpNavigationActions(navController)
     }
     val navBackStackEntry by navController.currentBackStackEntryAsState()
-    val selectedDestination = navBackStackEntry?.destination?.route ?: PackItUpRoute.SUMMARY
+    val selectedDestination = navBackStackEntry?.destination?.route ?: Route.SUMMARY
 
     PackItUpContent(
         navigationType = navigationType,
@@ -77,9 +77,9 @@ fun PackItUpContent(
     contentType: PackItUpContentType,
     navController: NavHostController,
     selectedDestination: String,
-    navigateToTopLevelDestination: (PackItUpTopLevelDestination) -> Unit,
+    navigateToTopLevelDestination: (TopLevelDestination) -> Unit,
 ) {
-    PackItUpNavHost(
+    AppNavHost(
         navController = navController,
         contentType = contentType,
         navigationType = navigationType,
