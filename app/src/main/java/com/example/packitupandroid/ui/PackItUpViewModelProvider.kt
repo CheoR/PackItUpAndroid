@@ -19,7 +19,7 @@ import com.example.packitupandroid.ui.screens.summary.SummaryScreenViewModel
  * This object defines a [viewModelFactory] that creates instances of various ViewModels,
  * injecting their required dependencies.
  */
-object MoveHaulViewModelProvider {
+object PackItUpViewModelProvider {
     /**
      * The [ViewModelProvider.Factory] used to create ViewModel instances.
      *
