@@ -5,7 +5,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.packitupandroid.ui.ViewModelProvider
-import com.example.packitupandroid.ui.common.Screen
+import com.example.packitupandroid.ui.common.layout.Screen
 
 
 /**

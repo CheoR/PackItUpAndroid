@@ -6,7 +6,7 @@ import androidx.compose.ui.test.assertTextEquals
 import androidx.compose.ui.test.junit4.createComposeRule
 import androidx.compose.ui.test.onNodeWithContentDescription
 import androidx.compose.ui.test.performClick
-import com.example.packitupandroid.ui.components.counter.Counter
+import com.example.packitupandroid.ui.common.component.Counter
 import com.example.packitupandroid.ui.theme.PackItUpAndroidTheme
 import org.junit.Before
 import org.junit.Rule

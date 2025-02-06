@@ -1,4 +1,4 @@
-package com.example.packitupandroid.ui.components.dialog
+package com.example.packitupandroid.ui.common.component
 
 import android.content.Context
 import android.graphics.Bitmap
@@ -34,8 +34,6 @@ import androidx.core.content.ContextCompat
 import com.example.packitupandroid.R
 import com.example.packitupandroid.data.model.BaseCardData
 import com.example.packitupandroid.data.model.Item
-import com.example.packitupandroid.ui.components.camera.CameraPreview
-import com.example.packitupandroid.ui.components.layout.ConfirmCancelContainer
 import com.example.packitupandroid.utils.EditFields
 import java.io.ByteArrayOutputStream
 

@@ -1,4 +1,4 @@
-package com.example.packitupandroid.ui.components.counter
+package com.example.packitupandroid.ui.common.component
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -31,8 +31,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.example.packitupandroid.R
-import com.example.packitupandroid.ui.components.common.ActionButton
-import com.example.packitupandroid.ui.components.common.ButtonAction
 
 
 /**

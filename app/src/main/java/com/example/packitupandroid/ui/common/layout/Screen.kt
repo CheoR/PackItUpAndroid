@@ -1,4 +1,4 @@
-package com.example.packitupandroid.ui.common
+package com.example.packitupandroid.ui.common.layout
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -20,11 +20,11 @@ import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.unit.dp
 import com.example.packitupandroid.R
 import com.example.packitupandroid.data.model.BaseCardData
-import com.example.packitupandroid.ui.components.card.BaseCard
-import com.example.packitupandroid.ui.components.counter.Counter
-import com.example.packitupandroid.ui.components.dialog.CameraDialog
-import com.example.packitupandroid.ui.components.dialog.EditDialog
-import com.example.packitupandroid.ui.components.spinner.Spinner
+import com.example.packitupandroid.ui.common.component.card.BaseCard
+import com.example.packitupandroid.ui.common.component.Counter
+import com.example.packitupandroid.ui.common.component.CameraDialog
+import com.example.packitupandroid.ui.common.component.EditDialog
+import com.example.packitupandroid.ui.common.component.Spinner
 import com.example.packitupandroid.utils.DropdownOptions
 import com.example.packitupandroid.utils.EditFields
 import kotlinx.coroutines.launch

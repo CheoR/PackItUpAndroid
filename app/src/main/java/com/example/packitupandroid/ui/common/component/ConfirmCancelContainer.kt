@@ -1,4 +1,4 @@
-package com.example.packitupandroid.ui.components.layout
+package com.example.packitupandroid.ui.common.component
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
@@ -14,8 +14,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.example.packitupandroid.ui.components.common.ActionButton
-import com.example.packitupandroid.ui.components.common.ButtonAction
 
 
 /**

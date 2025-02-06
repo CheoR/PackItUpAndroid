@@ -1,4 +1,4 @@
-package com.example.packitupandroid.ui.components.card
+package com.example.packitupandroid.ui.common.component.card
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -39,10 +39,8 @@ import com.example.packitupandroid.R
 import com.example.packitupandroid.data.model.BaseCardData
 import com.example.packitupandroid.data.model.Box
 import com.example.packitupandroid.data.model.Item
-import com.example.packitupandroid.data.model.QueryDropdownOptions
 import com.example.packitupandroid.data.model.Summary
-import com.example.packitupandroid.ui.components.layout.ConfirmCancelContainer
-import com.example.packitupandroid.utils.CardType
+import com.example.packitupandroid.ui.common.component.ConfirmCancelContainer
 import com.example.packitupandroid.utils.asCurrencyString
 
 

@@ -1,4 +1,4 @@
-package com.example.packitupandroid.ui.components.card
+package com.example.packitupandroid.ui.common.component.card
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -28,8 +28,6 @@ import androidx.compose.ui.unit.dp
 import com.example.packitupandroid.R
 import com.example.packitupandroid.data.model.BaseCardData
 import com.example.packitupandroid.data.model.Item
-import com.example.packitupandroid.ui.components.strategyCard.IconBadge
-import com.example.packitupandroid.ui.components.strategyCard.ImageContent
 import com.example.packitupandroid.utils.DropdownOptions
 import com.example.packitupandroid.utils.EditFields
 import com.example.packitupandroid.utils.Result

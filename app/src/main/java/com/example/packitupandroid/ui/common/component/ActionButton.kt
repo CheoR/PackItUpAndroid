@@ -1,4 +1,4 @@
-package com.example.packitupandroid.ui.components.common
+package com.example.packitupandroid.ui.common.component
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row

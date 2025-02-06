@@ -26,7 +26,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.packitupandroid.R
 import com.example.packitupandroid.data.model.Summary
 import com.example.packitupandroid.ui.ViewModelProvider
-import com.example.packitupandroid.ui.components.card.SummaryCard
+import com.example.packitupandroid.ui.common.component.card.SummaryCard
 import com.example.packitupandroid.ui.components.strategyCard.IconBadge
 import com.example.packitupandroid.ui.components.strategyCard.ImageContent
 import com.example.packitupandroid.ui.navigation.Route

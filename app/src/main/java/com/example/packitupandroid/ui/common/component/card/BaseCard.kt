@@ -1,4 +1,4 @@
-package com.example.packitupandroid.ui.components.card
+package com.example.packitupandroid.ui.common.component.card
 
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.exponentialDecay

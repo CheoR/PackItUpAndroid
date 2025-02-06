@@ -1,4 +1,4 @@
-package com.example.packitupandroid.ui.components.camera
+package com.example.packitupandroid.ui.common.component
 
 import androidx.camera.view.LifecycleCameraController
 import androidx.camera.view.PreviewView

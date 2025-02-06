@@ -1,4 +1,4 @@
-package com.example.packitupandroid.ui.components.card
+package com.example.packitupandroid.ui.common.component.card
 
 import android.content.Context
 import android.graphics.Bitmap
@@ -31,8 +31,8 @@ import androidx.core.content.ContextCompat
 import com.example.packitupandroid.R
 import com.example.packitupandroid.data.model.BaseCardData
 import com.example.packitupandroid.data.model.Item
-import com.example.packitupandroid.ui.components.camera.CameraPreview
-import com.example.packitupandroid.ui.components.layout.ConfirmCancelContainer
+import com.example.packitupandroid.ui.common.component.CameraPreview
+import com.example.packitupandroid.ui.common.component.ConfirmCancelContainer
 import com.example.packitupandroid.utils.EditFields
 import com.example.packitupandroid.utils.EditMode
 import java.io.ByteArrayOutputStream
