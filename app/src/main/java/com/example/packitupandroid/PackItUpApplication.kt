@@ -11,7 +11,7 @@ import com.example.packitupandroid.utils.USE_MOCK_DATA
  *
  * This class initializes the dependency injection container for the app.
  */
-class MoveHaulApplication : Application() {
+class PackItUpApplication : Application() {
 
     /**
      * The AppContainer instance that holds the application's dependencies.
