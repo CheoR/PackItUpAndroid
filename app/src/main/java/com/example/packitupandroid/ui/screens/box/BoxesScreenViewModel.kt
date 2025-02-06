@@ -11,8 +11,8 @@ import androidx.lifecycle.viewModelScope
 import com.example.packitupandroid.data.model.Box
 import com.example.packitupandroid.data.model.CollectionIdAndName
 import com.example.packitupandroid.data.repository.BoxesRepository
-import com.example.packitupandroid.ui.components.strategyCard.IconBadge
-import com.example.packitupandroid.ui.components.strategyCard.ImageContent
+import com.example.packitupandroid.ui.common.component.card.IconBadge
+import com.example.packitupandroid.ui.common.component.card.ImageContent
 import com.example.packitupandroid.ui.screens.BaseViewModel
 import com.example.packitupandroid.utils.EditFields
 import com.example.packitupandroid.utils.parseCurrencyToDouble
