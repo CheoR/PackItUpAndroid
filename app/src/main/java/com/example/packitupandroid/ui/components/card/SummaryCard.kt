@@ -1,87 +1,86 @@
 package com.example.packitupandroid.ui.components.card
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.text.BasicTextField
-import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.unit.dp
 import com.example.packitupandroid.R
-import com.example.packitupandroid.utils.EditMode
+import com.example.packitupandroid.utils.ActionColumnIcon
 
+
+/**
+ * A composable function that displays a summary card with a name, description, and icons.
+ *
+ * @param name The name displayed on the card.
+ * @param description The description displayed on the card.
+ * @param iconsContent A composable lambda that defines the content of the icons column.
+ * @param modifier Modifier to be applied to the card.
+ */
 @Composable
 fun SummaryCard(
     name: String,
+    actionIcon: ActionColumnIcon,
+    canNavigateToScreen: Boolean,
     description: String,
-    icon1: ColumnIcon,
-    modifier: Modifier = Modifier,
-    badgeCount1: Int = 0,
-    editMode: EditMode = EditMode.NoEdit,
-    canNavigateToScreen: Boolean = false,
+    iconsContent: @Composable ColumnScope.() -> Unit,
     navigateToTopLevelDestination: () -> Unit,
+    modifier: Modifier = Modifier,
 ) {
-    val actionIcon: ActionColumnIcon = ActionColumnIcon.RightArrow
-
-    Card(
+    ElevatedCard(
+        elevation = CardDefaults.cardElevation(defaultElevation = dimensionResource(R.dimen.elevation_small)),
         modifier = modifier
-            .height(dimensionResource(R.dimen.card_height))
             .fillMaxWidth()
-            .clip(RoundedCornerShape(dimensionResource(R.dimen.roundness_small))),
-        elevation = CardDefaults.cardElevation(defaultElevation = dimensionResource(R.dimen.image_size_medium)),
+            .height(dimensionResource(R.dimen.card_height)),
     ) {
         Row(
             modifier = Modifier
-                .fillMaxWidth()
-                .padding(dimensionResource(R.dimen.padding_small)),
+                .background(Color.LightGray)
         ) {
-            IconsColumn(
-                icon1 = icon1,
-                badgeCount1 = badgeCount1,
-            )
+            Column {
+                iconsContent()
+            }
             Column(
                 modifier = Modifier
                     .fillMaxHeight()
-                    .weight(2f)
-                    .padding(horizontal = 4.dp),
-                horizontalAlignment = Alignment.CenterHorizontally,
+                    .weight(2f),
             ) {
+                // TODO: combine with [EditCard] to remove duplication and use flag to
+                // display [DataColumn] in edit mode or not
                 BasicTextField(
                     value = name,
                     onValueChange = {},
-                    textStyle = MaterialTheme.typography.titleSmall,
-                    enabled = editMode == EditMode.Edit,
+                    textStyle = MaterialTheme.typography.titleLarge,
+                    maxLines = 1,
+                    enabled = false,
                     modifier = Modifier
-                        .fillMaxWidth(),
+                        .fillMaxWidth()
                 )
-
-                Spacer(modifier = Modifier.height(24.dp))
-
                 BasicTextField(
-                    // TODO: fix
                     value = description,
                     onValueChange = {},
-                    textStyle = MaterialTheme.typography.bodySmall,
-                    enabled = editMode == EditMode.Edit,
+                    textStyle = MaterialTheme.typography.bodyMedium,
+                    minLines = 3,
                     maxLines = 3,
-                    modifier = Modifier
-                        .weight(1f)
-                        .fillMaxWidth(),
+                    enabled = false,
+                    modifier = modifier
                 )
             }
             Column(
@@ -107,12 +106,12 @@ fun SummaryCard(
                     )
                 } else {
                     Box(
-                    modifier = Modifier
-                        .fillMaxHeight(),
+                        modifier = Modifier
+                            .width(48.dp)
+                            .fillMaxHeight(),
                     )
                 }
             }
-
         }
     }
 }

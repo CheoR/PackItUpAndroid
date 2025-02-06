@@ -23,4 +23,40 @@ interface SummaryRepository {
      * @return A [Flow] that emits the current [Summary], wrapped in a [Result].
      */
     fun observe(): Flow<Result<Summary?>>
+
+    /**
+     * Retrieves the collection name associated with the given ID.
+     *
+     * The mapping from ID to collection name is implementation-specific.
+     *
+     * @param id The ID to look up.
+     * @return A `Result` containing:
+     *   - `Success(String?)`: The collection name, or `null` if no collection is found for the ID.
+     *   - `Error(Throwable)`: An error that occurred during lookup.
+     */
+    fun getCollectionName(id: String) : Result<String?>
+
+    /**
+     * Retrieves the box name associated with the given ID.
+     *
+     * The mapping from ID to box name is implementation-specific.
+     *
+     * @param id The ID to look up.
+     * @return A `Result` containing:
+     *   - `Success(String?)`: The box name, or `null` if no box is found for the ID.
+     *   - `Error(Throwable)`: An error that occurred during lookup.
+     */
+    fun getBoxName(id: String) : Result<String?>
+
+    /**
+     * Retrieves the item name associated with the given ID.
+     *
+     * The mapping from ID to item name is implementation-specific.
+     *
+     * @param id The ID to look up.
+     * @return A `Result` containing:
+     *   - `Success(String?)`: The item name, or `null` if no item is found for the ID.
+     *   - `Error(Throwable)`: An error that occurred during lookup.
+     */
+    fun getItemName(id: String) : Result<String?>
 }
