@@ -21,6 +21,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.Label
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.ArrowBackIosNew
 import androidx.compose.material.icons.filled.CameraAlt
@@ -28,10 +29,8 @@ import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Checkbox
-import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.ExposedDropdownMenuBox
-import androidx.compose.material3.ExposedDropdownMenuDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.LocalTextStyle
@@ -55,6 +54,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import com.example.packitupandroid.R
@@ -106,21 +106,26 @@ fun <D: BaseCardData>BaseCard(
     onCamera: () -> Unit,
     onDelete: () -> Unit,
     onUpdate: () -> Unit,
-    dropdownOptions: Result<List<DropdownOptions?>>,
+    dropdownOptions: Result<List<DropdownOptions?>>? = null,
     modifier: Modifier = Modifier,
     onAdd: () -> Unit = {},
 ) {
-    val dropdownOptionsList = when (dropdownOptions) {
-        is Result.Success -> dropdownOptions.data
-        is Result.Error -> emptyList()
-        is Result.Loading -> emptyList()
-    }
-    val selectedBox: DropdownOptions? = when(data) {
-        is Item -> dropdownOptionsList.find { it?.id == data.boxId }
-        is Box -> dropdownOptionsList.find { it?.id == data.collectionId }
-        else -> null
-    }
+    val dropdownOptionsList = if(dropdownOptions != null) {
+        when (dropdownOptions) {
+            is Result.Success -> dropdownOptions.data
+            is Result.Error -> emptyList()
+            is Result.Loading -> emptyList()
+        }
+    } else { emptyList() }
 
+    val selectedBox: DropdownOptions? = if (dropdownOptions != null) {
+        // TODO: try to clean this up so don't nee to do checks against model data class
+        when (data) {
+            is Item -> dropdownOptionsList.find { it?.id == data.boxId }
+            is Box -> dropdownOptionsList.find { it?.id == data.collectionId }
+            else -> null
+        }
+    } else { null }
 
     val scope = rememberCoroutineScope()
     var boxSize by remember { mutableFloatStateOf(0F) }
@@ -159,9 +164,7 @@ fun <D: BaseCardData>BaseCard(
             .fillMaxWidth()
             .height(dimensionResource(R.dimen.card_height)),
     ) {
-        Row(
-            modifier = Modifier,
-        ) {
+        Row {
             Column {
                 iconsContent()
             }
@@ -181,32 +184,17 @@ fun <D: BaseCardData>BaseCard(
                     modifier = Modifier
                         .fillMaxWidth(),
                 )
-                ExposedDropdownMenuBox(
-                    expanded = false,
-                    onExpandedChange = {},
-                ) {
-                    TextField(
-                        readOnly = true,
-                        value = selectedBox?.name ?: "",
-                        onValueChange = {},
-                        trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = false) },
-                        modifier = Modifier.menuAnchor(),
-                    )
-
-                    ExposedDropdownMenu(
+                if(dropdownOptions != null) {
+                    ExposedDropdownMenuBox(
                         expanded = false,
-                        onDismissRequest = {},
+                        onExpandedChange = {},
                     ) {
-                        dropdownOptionsList.forEach { option ->
-                            DropdownMenuItem(
-                                text = {
-                                    if (option != null) {
-                                        Text(text = option.name)
-                                    }
-                                },
-                                onClick = {},
-                            )
-                        }
+                        TextField(
+                            readOnly = true,
+                            value = selectedBox?.name ?: "",
+                            onValueChange = {},
+                            modifier = Modifier.fillMaxWidth(),
+                        )
                     }
                 }
                 BasicTextField(
@@ -216,12 +204,12 @@ fun <D: BaseCardData>BaseCard(
                     minLines = 3,
                     maxLines = 3,
                     enabled = false,
-                    modifier = modifier
+                    modifier = Modifier
                         .fillMaxWidth()
                         .weight(1f),
                 )
                 Row(
-                    modifier = modifier,
+                    modifier = Modifier,
                     verticalAlignment = Alignment.CenterVertically,
                 ) {
                     Checkbox(
@@ -313,4 +301,32 @@ fun <D: BaseCardData>BaseCard(
             }
         }
     }
+}
+
+
+@Preview(showBackground = true)
+@Composable
+fun PreviewBaseCard() {
+    val card = Item(
+        id = "1",
+        name = "Box 1",
+        description = "Box  moo 1",
+        value = 10.0,
+        isFragile = true,
+    )
+
+    BaseCard(
+        data = card,
+        iconsContent = {
+            IconBadge(
+                image = ImageContent.VectorImage(Icons.AutoMirrored.Filled.Label),
+                badgeContentDescription = "Default Item Badge",
+                badgeCount = 0,
+            )
+        },
+        onCamera = {},
+        onDelete = {},
+        onUpdate = {},
+        dropdownOptions = Result.Success(emptyList()),
+    )
 }
