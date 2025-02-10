@@ -1,34 +1,54 @@
 package com.example.packitupandroid.ui.common.layout
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.text.BasicTextField
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.SnackbarHostState
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.dimensionResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.example.packitupandroid.R
 import com.example.packitupandroid.data.model.BaseCardData
-import com.example.packitupandroid.ui.common.component.card.BaseCard
-import com.example.packitupandroid.ui.common.component.Counter
 import com.example.packitupandroid.ui.common.component.CameraDialog
+import com.example.packitupandroid.ui.common.component.Counter
+import com.example.packitupandroid.ui.common.component.DeleteDialog
 import com.example.packitupandroid.ui.common.component.EditDialog
 import com.example.packitupandroid.ui.common.component.Spinner
+import com.example.packitupandroid.ui.common.component.card.BaseCard
 import com.example.packitupandroid.utils.DropdownOptions
 import com.example.packitupandroid.utils.EditFields
-import kotlinx.coroutines.launch
 import com.example.packitupandroid.utils.Result
+import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 
 /**
@@ -69,22 +89,52 @@ fun <D : BaseCardData> Screen(
     modifier: Modifier = Modifier,
     addElements: (id: String) -> Unit = {},
 ) {
-    val elements = when (result) {
-        is Result.Success -> result.data
-        is Result.Error -> emptyList()
-        is Result.Loading -> {
-            Spinner()
-            emptyList()
-        }
-    }
+    var elements by remember { mutableStateOf(emptyList<D?>()) }
+    var filteredElements by remember { mutableStateOf(emptyList<D?>()) }
+    var isLoading by remember { mutableStateOf(false) }
 
     val dialogIsExpanded = remember { mutableStateOf(false) }
     val cameraDialogIsExpanded = remember { mutableStateOf(false) }
     val selectedCard = remember { mutableStateOf<D?>(null) }
+
     val configuration = LocalConfiguration.current
     val screenWidth = configuration.screenWidthDp.dp
     val dialogWidth = screenWidth * 0.95f
-    val coroutineScope = rememberCoroutineScope()
+
+    var searchQuery by remember { mutableStateOf("") }
+
+    val debounce = remember {
+        Debounce<String>(300L, coroutineScope) { query ->
+            filteredElements = if (query.isBlank()) {
+                elements
+            } else {
+                elements.filter {
+                    it?.name?.contains(query, ignoreCase = true) == true
+                }
+            }
+        }
+    }
+
+    LaunchedEffect(result) {
+        isLoading = true
+        when (result) {
+            is Result.Success -> {
+                elements = result.data
+                filteredElements = result.data
+            }
+
+            is Result.Error -> {
+                elements = emptyList()
+                filteredElements = emptyList()
+            }
+
+            is Result.Loading -> {
+                elements = emptyList()
+                filteredElements = emptyList()
+            }
+        }
+        isLoading = false
+    }
 
     Column(
         modifier = modifier.fillMaxSize()
@@ -129,6 +179,67 @@ fun <D : BaseCardData> Screen(
             }
         }
         Spacer(modifier = Modifier.height(dimensionResource(R.dimen.space_arrangement_small)))
+        BasicTextField(
+            value = searchQuery,
+            onValueChange = {
+                searchQuery = it
+                debounce.invoke(it)
+            },
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(8.dp)
+                .testTag("SearchTextField"),
+            decorationBox = { innerTextField ->
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .background(Color.Gray.copy(alpha = 0.1f))
+                        .padding(8.dp)
+                ) {
+                    if (searchQuery.isEmpty()) {
+                        Text("Search", color = Color.Gray)
+                    }
+                    innerTextField()
+                }
+            }
+        )
+
+        if (isLoading) {
+            Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+                Spinner()
+            }
+        } else if (elements.isEmpty()) {
+            Box(modifier = Modifier
+                .weight(1f)
+                .fillMaxWidth(),
+                contentAlignment = Alignment.Center,
+            ){
+                Text(
+                    text = stringResource(R.string.empty_list, emptyListPlaceholder),
+                    style = MaterialTheme.typography.bodyLarge,
+                )
+            }
+        } else {
+            LazyColumn(
+                modifier = Modifier
+                    .weight(1f)
+                    .testTag("LazyColumn"),
+                verticalArrangement = Arrangement.spacedBy(
+                    dimensionResource(R.dimen.space_arrangement_small)
+                )
+            ) {
+                items(
+                    items = filteredElements,
+                    key = key
+                ) { element ->
+                    element?.let {
+                        BaseCard(
+                            data = it,
+                            onAdd = {
+                                selectedCard.value = it
+                                val selection = selectedCard.value
+                                selection?.let { addTo -> addElements(addTo.id) }
+                            },
         Counter(onCreate = onCreate)
 
         if (dialogIsExpanded.value) {
@@ -176,6 +287,27 @@ fun <D : BaseCardData> Screen(
                     dialogWidth = dialogWidth,
                 )
             }
+        }
+    }
+}
+
+/**
+ * Debounce class allows you to delay the execution of a given action until a certain amount of time has passed since the last invocation.
+ * This is useful for scenarios like filtering user input, where you don't want to react to every keystroke, but only after the user has stopped typing for a while.
+ *
+ * @param T The type of the value that will be passed to the `onDebounce` function.
+ * @param delayMillis The delay in milliseconds before the `onDebounce` function is executed.
+ * @param coroutineScope The CoroutineScope within which the debounced action will be executed.
+ * @param onDebounce The function to be executed after the delay has passed. This function receives the last emitted value of type T.
+ */
+private class Debounce<T>(private val delayMillis: Long, private val coroutineScope: CoroutineScope, private val onDebounce: (T) -> Unit) {
+    private var debounceJob: Job? = null
+
+    fun invoke(value: T) {
+        debounceJob?.cancel()
+        debounceJob = coroutineScope.launch {
+            delay(delayMillis)
+            onDebounce(value)
         }
     }
 }
