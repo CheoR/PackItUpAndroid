@@ -4,15 +4,9 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material3.Checkbox
-import androidx.compose.material3.DropdownMenuItem
-import androidx.compose.material3.ExposedDropdownMenuBox
-import androidx.compose.material3.ExposedDropdownMenuDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
@@ -32,11 +26,11 @@ import com.example.packitupandroid.R
 import com.example.packitupandroid.data.model.BaseCardData
 import com.example.packitupandroid.data.model.Box
 import com.example.packitupandroid.data.model.Item
-import com.example.packitupandroid.utils.EditFields
-import com.example.packitupandroid.utils.asCurrencyString
-import com.example.packitupandroid.utils.Result
-import com.example.packitupandroid.utils.parseCurrencyToDouble
 import com.example.packitupandroid.utils.DropdownOptions
+import com.example.packitupandroid.utils.EditFields
+import com.example.packitupandroid.utils.Result
+import com.example.packitupandroid.utils.asCurrencyString
+import com.example.packitupandroid.utils.parseCurrencyToDouble
 
 
 /**
@@ -54,26 +48,29 @@ import com.example.packitupandroid.utils.DropdownOptions
  * @param modifier A Modifier for styling and layout of the DataColumn.
  * @param editableFields A Set of `EditFields` that specifies which fields are editable.
  *                       If a field'
- * @param dropdownOptions A [Result] object representing the state of the dropdown options [DropdownOptions].
- */
+ * @param dropdownOptions An optional [Result] object representing the state of the dropdown options.
+ *                        If provided, a dropdown menu will be displayed, allowing the user to select from the options.
+ *                        If `null`, no dropdown menu will be displayed. * @param D the type of data that the card will display. It must inherit from BaseCardData
+ * */
 @Composable
 fun <D: BaseCardData>DataColumn(
     onFieldChange: (MutableState<D?>, EditFields, String) -> Unit,
     selectedCard: MutableState<D?>,
     modifier: Modifier = Modifier,
     editableFields: Set<EditFields> = emptySet(),
-    dropdownOptions: Result<List<DropdownOptions?>>,
+    dropdownOptions: Result<List<DropdownOptions?>>? = null,
 ) {
     fun isEditable(field: EditFields) = editableFields.contains(field)
 
-    val dropdownOptionsList = when (dropdownOptions) {
-        is Result.Success -> dropdownOptions.data
-        is Result.Error -> emptyList()
-        is Result.Loading -> emptyList()
-    }
+    val dropdownOptionsList = if(dropdownOptions != null) {
+        when (dropdownOptions) {
+            is Result.Success -> dropdownOptions.data
+            is Result.Error -> emptyList()
+            is Result.Loading -> emptyList()
+        }
+    } else { emptyList() }
 
-    var expanded by remember { mutableStateOf(false) }
-    var selectedBox by remember { mutableStateOf<DropdownOptions?>(
+    var selectedBox by remember { mutableStateOf(
         when(selectedCard.value) {
             is Item -> dropdownOptionsList.find { it?.id == (selectedCard.value as Item).boxId }
             is Box -> dropdownOptionsList.find { it?.id == (selectedCard.value as Box).collectionId }
@@ -87,101 +84,79 @@ fun <D: BaseCardData>DataColumn(
     val isFragile = remember { mutableStateOf(selectedCard.value!!.isFragile) }
 
     Column(
-        modifier = Modifier
-            .fillMaxWidth()
+        modifier = modifier,
     ) {
-        BasicTextField(
+        EditableField(
             value = name.value,
             onValueChange = {
                 name.value = it
                 onFieldChange(selectedCard, EditFields.Name, it)
-
             },
+            isEditable = isEditable(EditFields.Name),
             textStyle = MaterialTheme.typography.titleLarge,
-            maxLines = 1,
-            enabled = isEditable(EditFields.Name),
-            modifier = Modifier
-                .fillMaxWidth()
+            modifier = Modifier.fillMaxWidth(),
         )
-        ExposedDropdownMenuBox(
-            expanded = expanded,
-            onExpandedChange = { expanded = !expanded },
-        ) {
-            TextField(
-                readOnly = true,
-                value = selectedBox?.name ?: "Select Options",
-                onValueChange = {},
-                trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded) },
-                modifier = Modifier.menuAnchor(),
-            )
 
-            ExposedDropdownMenu(
-                expanded = expanded,
-                onDismissRequest = { expanded = false },
-            ) {
-                dropdownOptionsList.forEach { option ->
-                    DropdownMenuItem(
-                        text = {
-                            if (option != null) {
-                                Text(text = option.name)
-                            }
-                        },
-                        onClick = {
-                            selectedBox = option
-                            expanded = false
-                            if (option != null) {
-                                onFieldChange(selectedCard, EditFields.Dropdown, option.id)
-                            }
-                        },
-                    )
-                }
-            }
+        if (dropdownOptions != null) {
+            EditableDropdown(
+                options = dropdownOptionsList,
+                selectedOption = selectedBox,
+                onOptionSelected = { option ->
+                    selectedBox = option
+                    onFieldChange(selectedCard, EditFields.Dropdown, option?.id ?: "")
+                },
+                isEditable = isEditable(EditFields.Dropdown),
+                modifier = Modifier
+                    .fillMaxWidth()
+            )
         }
-        BasicTextField(
+
+        EditableField(
             value = description.value ?: "",
             onValueChange = {
                 description.value = it
                 onFieldChange(selectedCard, EditFields.Description, it)
-
             },
+            isEditable = isEditable(EditFields.Description),
             textStyle = MaterialTheme.typography.bodyMedium,
+            modifier = Modifier
+                .fillMaxWidth()
+                .weight(1f),
             minLines = 3,
             maxLines = 3,
-            enabled = isEditable(EditFields.Description),
-            modifier = modifier
         )
+
         Row(
-            modifier = modifier,
+            modifier = Modifier
+                .fillMaxWidth(),
             verticalAlignment = Alignment.CenterVertically,
         ) {
-            Checkbox(
+            EditableCheckbox(
                 checked = isFragile.value,
                 onCheckedChange = {
                     isFragile.value = it
                     onFieldChange(selectedCard, EditFields.IsFragile, it.toString())
-
                 },
-                enabled = isEditable(EditFields.IsFragile),
+                isEditable = isEditable(EditFields.IsFragile),
                 modifier = Modifier
-                    .semantics {
-                        contentDescription = "Fragile Checkbox"
-                    },
+                    .semantics { contentDescription = "Fragile Checkbox" }
             )
             Text(stringResource(R.string.fragile))
             Spacer(modifier = Modifier.weight(1f))
-            BasicTextField(
+            EditableField(
                 value = value.doubleValue.asCurrencyString(),
                 onValueChange = {
                     value.doubleValue = it.parseCurrencyToDouble()
                     onFieldChange(selectedCard, EditFields.Value, it)
                 },
+                isEditable = isEditable(EditFields.Value),
                 textStyle = MaterialTheme.typography.bodySmall,
-                enabled = isEditable(EditFields.Value),
-                modifier = Modifier.semantics { contentDescription = "Value Field" },
+                modifier = Modifier
+                    .semantics { contentDescription = "Value Field" },
                 keyboardOptions = KeyboardOptions.Default.copy(
                     keyboardType = KeyboardType.Number,
                     imeAction = ImeAction.Done
-                ),
+                )
             )
         }
     }
@@ -194,7 +169,7 @@ fun PreviewDataColumn() {
     val selectedCard = remember { mutableStateOf<Item?>(Item(
         id = "1",
         name = "Item 1",
-        description = "Description 1",
+        description = "Description 1 ipsum dolor sit amet ipsum5 lorem5 Description 2 ipsum dolor sit amet ipsum5 lorem5   Description 3 ipsum dolor sit amet ipsum5 lorem5   Description 4 ipsum dolor sit amet ipsum5 lorem5   Description 1 ipsum dolor sit amet ipsum5 lorem5   Description 6 ipsum dolor sit amet ipsum5 lorem5     ",
         value = 10.0,
         isFragile = false
     )) }

@@ -1,30 +1,21 @@
 package com.example.packitupandroid.ui.common.component.card
 
-import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.Label
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ElevatedCard
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
 import com.example.packitupandroid.R
 import com.example.packitupandroid.data.model.BaseCardData
 import com.example.packitupandroid.data.model.Item
@@ -33,11 +24,6 @@ import com.example.packitupandroid.utils.EditFields
 import com.example.packitupandroid.utils.Result
 import com.example.packitupandroid.utils.parseCurrencyToDouble
 
-
-private val columnModifier = Modifier
-    .fillMaxHeight()
-    .size(24.dp)
-    .background(Color.Gray)
 
 /**
  * A composable function to display and edit a card's details.
@@ -61,7 +47,9 @@ private val columnModifier = Modifier
  * @param onUpdate A lambda function that is called when the user wants to update a card's properties.
  *                  It takes a card and updates the card based on the card type's update function
  *
- * @param dropdownOptions A [Result] object representing the state of the dropdown options [DropdownOptions].
+ * @param dropdownOptions An optional [Result] object representing the state of the dropdown options.
+ *                        If provided, a dropdown menu will be displayed, allowing the user to select from the options.
+ *                        If `null`, no dropdown menu will be displayed. * @param D the type of data that the card will display. It must inherit from BaseCardData
  *
  * @throws IllegalStateException if [selectedCard] value is null.
  *
@@ -76,7 +64,7 @@ fun <D: BaseCardData>EditCard(
     selectedCard: MutableState<D?>,
     modifier: Modifier = Modifier,
     editableFields: Set<EditFields> = emptySet(),
-    dropdownOptions: Result<List<DropdownOptions?>>,
+    dropdownOptions: Result<List<DropdownOptions?>>? = null,
 ) {
     ElevatedCard(
         elevation = CardDefaults.cardElevation(defaultElevation = dimensionResource(R.dimen.elevation_small)),
@@ -84,10 +72,7 @@ fun <D: BaseCardData>EditCard(
             .fillMaxWidth()
             .height(dimensionResource(R.dimen.card_height)),
     ) {
-        Row(
-            modifier = Modifier
-                .background(Color.LightGray)
-        ) {
+        Row {
             Column {
                 iconsContent()
             }
@@ -100,16 +85,6 @@ fun <D: BaseCardData>EditCard(
                 dropdownOptions = dropdownOptions,
                 modifier = Modifier.weight(1f),
             )
-            Column(
-                modifier = columnModifier,
-                verticalArrangement = Arrangement.Center
-            ) {
-                Text(
-                    text = selectedCard.value!!.id,
-                    style = MaterialTheme.typography.titleLarge,
-                    modifier = Modifier.padding(bottom = 8.dp)
-                )
-            }
         }
     }
 }
@@ -122,7 +97,7 @@ fun PreviewEditCard() {
         Item(
             id = "1",
             name = "Item 1",
-            description = "Description 1",
+            description = "Description 1 ipsum dolor sit amet ipsum5 lorem5 Description 2 ipsum dolor sit amet ipsum5 lorem5   Description 3 ipsum dolor sit amet ipsum5 lorem5   Description 4 ipsum dolor sit amet ipsum5 lorem5   Description 1 ipsum dolor sit amet ipsum5 lorem5   Description 6 ipsum dolor sit amet ipsum5 lorem5     ",
             value = 10.0,
             isFragile = false
         )
@@ -142,8 +117,6 @@ fun PreviewEditCard() {
             element.value = updatedElement
         }
     }
-    val emptyDropdownOptions: List<DropdownOptions?> = emptyList()
-    val emptyDropdownOptionsResult: Result<List<DropdownOptions?>> = Result.Success(emptyDropdownOptions)
 
     EditCard(
         editableFields = Item.EDIT_FIELDS,
@@ -156,6 +129,6 @@ fun PreviewEditCard() {
                 badgeCount = 0,
             )
         },
-        dropdownOptions = emptyDropdownOptionsResult,
+        dropdownOptions = Result.Success(emptyList())
     )
 }
