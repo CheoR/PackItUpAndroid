@@ -13,10 +13,7 @@ import androidx.camera.view.LifecycleCameraController
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.requiredWidth
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.BasicAlertDialog
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
@@ -27,8 +24,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.dimensionResource
-import androidx.compose.ui.semantics.contentDescription
-import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.unit.Dp
 import androidx.core.content.ContextCompat
 import com.example.packitupandroid.R
@@ -86,44 +81,35 @@ fun <D: BaseCardData>CameraDialog(
             )
         }
     }
-    BasicAlertDialog(
-        onDismissRequest = onCancel,
-        modifier = Modifier.Companion
-            .requiredWidth(dialogWidth)
-            .background(MaterialTheme.colorScheme.background)
-            .testTag("CameraDialog"),
-    ) {
-        ConfirmCancelContainer(
-            modifier = modifier
-                .background(MaterialTheme.colorScheme.inversePrimary)
-                .semantics {
-                    contentDescription = "Camera Preview"
-                },
-            onConfirm = {
-                takePhoto(
-                    context = context,
-                    controller = controller,
-                    onPhotoTaken = {
-                        imageUri?.value = it
-                        onFieldChange(selectedCard, EditFields.ImageUri, it)
-                        onClick()
-                    }
-                )
-            },
-            onCancel = onCancel,
-            content = {
-                Box(
-                    modifier = Modifier
-                        .clip(shape = RoundedCornerShape(dimensionResource(R.dimen.roundness_x_small)))
-                        .background(color = Color.Gray),
-                ) {
-                    CameraPreview(
-                        controller = controller,
-                        modifier = Modifier.fillMaxSize(),
-                    )
+
+    ConfirmCancelContainer(
+        title = "Delete ${selectedCard.value?.name ?: ""} ?",
+        dialogWidth = dialogWidth,
+        onCancel = onCancel,
+        onConfirm = {
+            takePhoto(
+                context = context,
+                controller = controller,
+                onPhotoTaken = {
+                    imageUri?.value = it
+                    onFieldChange(selectedCard, EditFields.ImageUri, it)
+                    onClick()
                 }
-            }
-        )
+            )
+        },
+    ) {
+        Box(
+            modifier = modifier
+                .fillMaxSize()
+                .testTag("DeleteCard")
+                .clip(shape = RoundedCornerShape(dimensionResource(R.dimen.roundness_x_small)))
+                .background(color = Color.Gray),
+        ) {
+            CameraPreview(
+                controller = controller,
+                modifier = Modifier.fillMaxSize(),
+            )
+        }
     }
 }
 

@@ -1,10 +1,6 @@
 package com.example.packitupandroid.ui.common.component
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.ColumnScope
-import androidx.compose.foundation.layout.requiredWidth
-import androidx.compose.material3.BasicAlertDialog
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
 import androidx.compose.ui.Modifier
@@ -39,40 +35,37 @@ import com.example.packitupandroid.utils.Result
  *                     If null no EditCard is displayed.
  * @param D The type of the card data, which must extend `BaseCardData`.
  *
- * @param dropdownOptions A [Result] object representing the state of the dropdown options [DropdownOptions].
+ * @param dropdownOptions An optional [Result] object representing the state of the dropdown options.
+ *                        If provided, a dropdown menu will be displayed, allowing the user to select from the options.
+ *                        If `null`, no dropdown menu will be displayed. * @param D the type of data that the card will display. It must inherit from BaseCardData
  *
  */
 @Composable
-fun <D: BaseCardData> EditDialog(
+fun <D : BaseCardData> EditDialog(
     dialogWidth: Dp,
     onCancel: () -> Unit,
     onConfirm: () -> Unit,
     onFieldChange: (MutableState<D?>, EditFields, String) -> Unit,
     iconsContent: @Composable ColumnScope.() -> Unit,
     selectedCard: MutableState<D?>,
-    dropdownOptions: Result<List<DropdownOptions?>>,
+    dropdownOptions: Result<List<DropdownOptions?>>? = null,
 ) {
-    BasicAlertDialog(
-        onDismissRequest = onCancel,
-        modifier = Modifier.Companion
-            .requiredWidth(dialogWidth)
-            .background(MaterialTheme.colorScheme.background)
-            .testTag("BasicAlertDialog"),
+    ConfirmCancelContainer(
+        title = "Edit ${selectedCard.value?.name ?: ""}",
+        dialogWidth = dialogWidth,
+        onCancel = onCancel,
+        onConfirm = onConfirm,
     ) {
-        ConfirmCancelContainer(
-            onCancel = onCancel,
-            onConfirm = onConfirm,
-        ) {
-            selectedCard.value?.let {
-                EditCard(
-                    selectedCard = selectedCard,
-                    editableFields = it.editFields,
-                    iconsContent = iconsContent,
-                    onFieldChange = onFieldChange,
-                    dropdownOptions = dropdownOptions,
-                    modifier = Modifier.testTag("EditCard"),
-                )
-            }
+        selectedCard.value?.let {
+            EditCard(
+                selectedCard = selectedCard,
+                editableFields = it.editFields,
+                iconsContent = iconsContent,
+                onFieldChange = onFieldChange,
+                dropdownOptions = dropdownOptions,
+                modifier = Modifier
+                    .testTag("EditCard"),
+            )
         }
     }
 }
