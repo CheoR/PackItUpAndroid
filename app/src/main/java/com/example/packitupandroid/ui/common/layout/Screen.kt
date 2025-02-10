@@ -71,10 +71,13 @@ import kotlinx.coroutines.withContext
  * @param onFieldChange A lambda function that is called when the user modifies
  * @param onUpdate A lambda function that is called when the user wants to update a card's properties.
  *                  It takes a card and updates the card based on the card type's update function
- * @param dropdownOptions A [Result] object representing the state of the dropdown options [DropdownOptions].
+ * @param snackbarHostState The [SnackbarHostState] used to display snackbar messages.
+ * @param coroutineScope The [CoroutineScope] used to launch coroutines.
  * @param addElements A callback function that is invoked when the user clicks on the add button. User is
  *  navigated to sub element filtered by data.id e.g. User selects `add` on a Box element, user then
  *  is redirected to ItemsScreen with only items filtered by Box.id that equals the Box user clicked on.
+ * @param emptyListPlaceholder The string to display when the list is empty.
+ * @param defaultDispatcher The default dispatcher used for coroutines.
  * */
 @Composable
 fun <D : BaseCardData> Screen(
@@ -85,16 +88,21 @@ fun <D : BaseCardData> Screen(
     onCreate: (Int) -> Unit,
     onFieldChange: (MutableState<D?>, EditFields, String) -> Unit,
     onUpdate: (D) -> Unit,
-    dropdownOptions: Result<List<DropdownOptions?>> = Result.Success(emptyList()),
+    dropdownOptions: Result<List<DropdownOptions?>>? = null,
+    emptyListPlaceholder: String,
+    snackbarHostState: SnackbarHostState,
+    coroutineScope: CoroutineScope,
     modifier: Modifier = Modifier,
     addElements: (id: String) -> Unit = {},
+    defaultDispatcher: CoroutineDispatcher = Dispatchers.Default
 ) {
     var elements by remember { mutableStateOf(emptyList<D?>()) }
     var filteredElements by remember { mutableStateOf(emptyList<D?>()) }
     var isLoading by remember { mutableStateOf(false) }
 
-    val dialogIsExpanded = remember { mutableStateOf(false) }
     val cameraDialogIsExpanded = remember { mutableStateOf(false) }
+    val editDialogIsExpanded = remember { mutableStateOf(false) }
+    val deleteDialogIsExpanded = remember { mutableStateOf(false) }
     val selectedCard = remember { mutableStateOf<D?>(null) }
 
     val configuration = LocalConfiguration.current
@@ -139,46 +147,6 @@ fun <D : BaseCardData> Screen(
     Column(
         modifier = modifier.fillMaxSize()
     ) {
-        LazyColumn(
-            modifier = Modifier
-                .weight(1f)
-                .testTag("LazyColumn"),
-            verticalArrangement = Arrangement.spacedBy(
-                dimensionResource(R.dimen.space_arrangement_small)
-            )
-        ) {
-            items(
-                items = elements,
-                key = key
-            ) { element ->
-                element?.let {
-                    BaseCard<D>(
-                        data = it,
-                        onAdd = {
-                            selectedCard.value = it
-                            val selection = selectedCard.value
-                            selection?.let { addTo -> addElements(addTo.id) }
-                        },
-                        onCamera = {
-                            selectedCard.value = it
-                            cameraDialogIsExpanded.value = true
-                        },
-                        onDelete = {
-                            selectedCard.value = it
-                            onDelete(listOf(it.id))
-                        },
-                        onUpdate = {
-                            selectedCard.value = it
-                            dialogIsExpanded.value = true
-                        },
-                        iconsContent = generateIconsColumn(it),
-                        dropdownOptions = dropdownOptions,
-                        modifier = Modifier.testTag("BaseCard"),
-                    )
-                }
-            }
-        }
-        Spacer(modifier = Modifier.height(dimensionResource(R.dimen.space_arrangement_small)))
         BasicTextField(
             value = searchQuery,
             onValueChange = {
@@ -240,24 +208,52 @@ fun <D : BaseCardData> Screen(
                                 val selection = selectedCard.value
                                 selection?.let { addTo -> addElements(addTo.id) }
                             },
+                            onCamera = {
+                                selectedCard.value = it
+                                cameraDialogIsExpanded.value = true
+                            },
+                            onDelete = {
+                                selectedCard.value = it
+                                deleteDialogIsExpanded.value = true
+                            },
+                            onUpdate = {
+                                selectedCard.value = it
+                                editDialogIsExpanded.value = true
+                            },
+                            iconsContent = generateIconsColumn(it),
+                            dropdownOptions = dropdownOptions,
+                            modifier = Modifier.testTag("BaseCard"),
+                        )
+                    }
+                }
+            }
+        }
+        Spacer(modifier = Modifier
+            .height(dimensionResource(R.dimen.space_arrangement_small))
+            .fillMaxWidth()
+        )
         Counter(onCreate = onCreate)
 
-        if (dialogIsExpanded.value) {
+        if (editDialogIsExpanded.value) {
             selectedCard.value?.let {
                 EditDialog(
                     selectedCard = selectedCard,
                     onFieldChange = onFieldChange,
                     onCancel = {
                         coroutineScope.launch {
-                            dialogIsExpanded.value = false
+                            editDialogIsExpanded.value = false
                             selectedCard.value = null
                         }
                     },
                     onConfirm = {
+                        val name = selectedCard.value!!.name
                         coroutineScope.launch {
-                            onUpdate(selectedCard.value!!)
-                            dialogIsExpanded.value = false
+                            withContext(Dispatchers.IO) {
+                                onUpdate(selectedCard.value!!)
+                            }
+                            editDialogIsExpanded.value = false
                             selectedCard.value = null
+                            snackbarHostState.showSnackbar("$name Updated")
                         }
                     },
                     dialogWidth = dialogWidth,
@@ -279,12 +275,44 @@ fun <D : BaseCardData> Screen(
                     },
                     onClick = {
                         coroutineScope.launch {
-                            onUpdate(selectedCard.value!!)
+                            withContext(Dispatchers.IO) {
+                                onUpdate(selectedCard.value!!)
+                            }
                             cameraDialogIsExpanded.value = false
                             selectedCard.value = null
+                            snackbarHostState.showSnackbar("Image Updated")
                         }
                     },
                     dialogWidth = dialogWidth,
+                )
+            }
+        }
+
+        if (deleteDialogIsExpanded.value) {
+            selectedCard.value?.let {
+                DeleteDialog(
+                    selectedCard = selectedCard,
+                    onCancel = {
+                        coroutineScope.launch {
+                            deleteDialogIsExpanded.value = false
+                            selectedCard.value = null
+                            snackbarHostState.showSnackbar("Delete Canceled")
+                        }
+                    },
+                    onConfirm = {
+                        coroutineScope.launch {
+                            val name = selectedCard.value!!.name
+                            withContext(Dispatchers.IO) {
+                                onDelete(listOf(selectedCard.value!!.id))
+                            }
+                            deleteDialogIsExpanded.value = false
+                            selectedCard.value = null
+                            snackbarHostState.showSnackbar("$name Deleted")
+                        }
+                    },
+                    dialogWidth = dialogWidth,
+                    iconsContent = generateIconsColumn(it),
+                    dropdownOptions = dropdownOptions,
                 )
             }
         }

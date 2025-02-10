@@ -146,6 +146,8 @@ private fun AppNavHost(
             }
             composable(route = Route.COLLECTIONS) {
                 CollectionsScreen(
+                    snackbarHostState = snackbarHostState,
+                    coroutineScope = scope,
                     addElements = { id ->
                         navController.navigate("${Route.ADD_BOXES}/$id")
                     }
@@ -153,19 +155,30 @@ private fun AppNavHost(
             }
             composable(route = Route.BOXES) {
                 BoxesScreen(
+                    snackbarHostState = snackbarHostState,
+                    coroutineScope = scope,
                     addElements = { id ->
                         navController.navigate("${Route.ADD_ITEMS}/$id")
                     }
                 )
             }
             composable(route = "${Route.ADD_BOXES}/{collectionId}") {
-                BoxesScreen()
+                BoxesScreen(
+                    snackbarHostState = snackbarHostState,
+                    coroutineScope = scope,
+                )
             }
             composable(route = Route.ITEMS) {
-                ItemsScreen()
+                ItemsScreen(
+                    snackbarHostState = snackbarHostState,
+                    coroutineScope = scope,
+                )
             }
             composable(route = "${Route.ADD_ITEMS}/{boxId}") {
-                ItemsScreen()
+                ItemsScreen(
+                    snackbarHostState = snackbarHostState,
+                    coroutineScope = scope,
+                )
             }
         }
     }

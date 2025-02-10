@@ -83,7 +83,7 @@ fun <D: BaseCardData>CameraDialog(
     }
 
     ConfirmCancelContainer(
-        title = "Delete ${selectedCard.value?.name ?: ""} ?",
+        title = "Capture ${selectedCard.value?.name ?: ""} ?",
         dialogWidth = dialogWidth,
         onCancel = onCancel,
         onConfirm = {
@@ -101,7 +101,7 @@ fun <D: BaseCardData>CameraDialog(
         Box(
             modifier = modifier
                 .fillMaxSize()
-                .testTag("DeleteCard")
+                .testTag("CameraCard")
                 .clip(shape = RoundedCornerShape(dimensionResource(R.dimen.roundness_x_small)))
                 .background(color = Color.Gray),
         ) {

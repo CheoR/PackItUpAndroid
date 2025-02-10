@@ -1,11 +1,15 @@
 package com.example.packitupandroid.ui.screens.box
 
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.res.stringResource
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.packitupandroid.R
 import com.example.packitupandroid.ui.ViewModelProvider
 import com.example.packitupandroid.ui.common.layout.Screen
+import kotlinx.coroutines.CoroutineScope
 
 
 /**
@@ -25,12 +29,17 @@ import com.example.packitupandroid.ui.common.layout.Screen
 + * 4. **FieldChange Handler:** Passes the `viewModel::onFieldChange` function to the `Screen` composable to handle changes to edit fields in [EditCard].
 + * 5. **State Observation:**  Reactively updates the UI whenever the `viewModel.elements` StateFlow emits a new list of boxes.
  *
+ * @param addElements A callback function that is invoked when the user clicks on the add button.
+ * @param snackbarHostState The [SnackbarHostState] used to display snackbar messages.
+ * @param coroutineScope The [CoroutineScope] used to launch coroutines.
  * @param viewModel The [BoxesScreenViewModel] used to manage the data and state. Defaults to a ViewModel provided by the [ViewModelProvider].Factory.
-+ * @see Screen
-+ * @see BoxesScreenViewModel
+ * @see Screen
+ * @see BoxesScreenViewModel
  */
 @Composable
 fun BoxesScreen(
+    snackbarHostState: SnackbarHostState,
+    coroutineScope: CoroutineScope,
     viewModel: BoxesScreenViewModel = viewModel(factory = ViewModelProvider.Factory),
     addElements: ((id: String) -> Unit) = {},
 ) {
@@ -53,5 +62,8 @@ fun BoxesScreen(
         onFieldChange = onFieldChange,
         onUpdate = onUpdate,
         dropdownOptions = dropdownOptions,
+        emptyListPlaceholder = stringResource(R.string.boxes),
+        snackbarHostState = snackbarHostState,
+        coroutineScope = coroutineScope,
     )
 }

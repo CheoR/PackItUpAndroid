@@ -1,11 +1,15 @@
 package com.example.packitupandroid.ui.screens.collection
 
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.res.stringResource
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.packitupandroid.R
 import com.example.packitupandroid.ui.ViewModelProvider
 import com.example.packitupandroid.ui.common.layout.Screen
+import kotlinx.coroutines.CoroutineScope
 
 
 /**
@@ -25,13 +29,24 @@ import com.example.packitupandroid.ui.common.layout.Screen
 + * 4. **FieldChange Handler:** Passes the `viewModel::onFieldChange` function to the `Screen` composable to handle changes to edit fields in [EditCard].
 + * 5. **State Observation:**  Reactively updates the UI whenever the `viewModel.elements` StateFlow emits a new list of boxes.
  *
+ * @param snackbarHostState The [SnackbarHostState] used to display snackbar messages.
+ * @param coroutineScope The [CoroutineScope] used to launch coroutines.
  * @param viewModel The [CollectionsScreenViewModel] used to manage the data and state. Defaults to a ViewModel provided by the [ViewModelProvider].Factory.
 + * @see Screen
 + * @see CollectionsScreenViewModel
  * @see Screen
+ *
+ * @param addElements A callback function that is invoked when the user clicks on the add button. User is
+ *  navigated to sub element filtered by data.id e.g. User selects `add` on a Box element, user then
+ *  is redirected to BoxesScreen with only items filtered by Collection.id that equals the Collection user clicked on.
+ *
+ * The `Screen` composable is likely a reusable component that handles the general layout and interactions for a list-based screen.
+ * In this case `Collection` represents the type of element that is being handled by this screen.
  */
 @Composable
 fun CollectionsScreen(
+    snackbarHostState: SnackbarHostState,
+    coroutineScope: CoroutineScope,
     viewModel: CollectionsScreenViewModel = viewModel(factory = ViewModelProvider.Factory),
     addElements: ((id: String) -> Unit) = {},
 ) {
@@ -51,5 +66,8 @@ fun CollectionsScreen(
         onDelete = onDelete,
         onFieldChange = onFieldChange,
         onUpdate = onUpdate,
+        emptyListPlaceholder = stringResource(R.string.collections),
+        snackbarHostState = snackbarHostState,
+        coroutineScope = coroutineScope,
     )
 }
