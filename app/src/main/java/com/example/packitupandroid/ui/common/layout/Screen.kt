@@ -30,9 +30,11 @@ import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.packitupandroid.R
 import com.example.packitupandroid.data.model.BaseCardData
+import com.example.packitupandroid.data.model.Item
 import com.example.packitupandroid.ui.common.component.CameraDialog
 import com.example.packitupandroid.ui.common.component.Counter
 import com.example.packitupandroid.ui.common.component.DeleteDialog
@@ -98,7 +100,6 @@ fun <D : BaseCardData> Screen(
 ) {
     var elements by remember { mutableStateOf(emptyList<D?>()) }
     var filteredElements by remember { mutableStateOf(emptyList<D?>()) }
-    var isLoading by remember { mutableStateOf(false) }
 
     val cameraDialogIsExpanded = remember { mutableStateOf(false) }
     val editDialogIsExpanded = remember { mutableStateOf(false) }
@@ -124,7 +125,6 @@ fun <D : BaseCardData> Screen(
     }
 
     LaunchedEffect(result) {
-        isLoading = true
         when (result) {
             is Result.Success -> {
                 elements = result.data
@@ -141,7 +141,6 @@ fun <D : BaseCardData> Screen(
                 filteredElements = emptyList()
             }
         }
-        isLoading = false
     }
 
     Column(
@@ -172,62 +171,81 @@ fun <D : BaseCardData> Screen(
             }
         )
 
-        if (isLoading) {
-            Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-                Spinner()
+        when(result) {
+            is Result.Loading -> {
+                Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+                    Spinner()
+                }
             }
-        } else if (elements.isEmpty()) {
-            Box(modifier = Modifier
-                .weight(1f)
-                .fillMaxWidth(),
-                contentAlignment = Alignment.Center,
-            ){
-                Text(
-                    text = stringResource(R.string.empty_list, emptyListPlaceholder),
-                    style = MaterialTheme.typography.bodyLarge,
-                )
-            }
-        } else {
-            LazyColumn(
-                modifier = Modifier
+            is Result.Error -> {
+                Box(modifier = Modifier
                     .weight(1f)
-                    .testTag("LazyColumn"),
-                verticalArrangement = Arrangement.spacedBy(
-                    dimensionResource(R.dimen.space_arrangement_small)
-                )
-            ) {
-                items(
-                    items = filteredElements,
-                    key = key
-                ) { element ->
-                    element?.let {
-                        BaseCard(
-                            data = it,
-                            onAdd = {
-                                selectedCard.value = it
-                                val selection = selectedCard.value
-                                selection?.let { addTo -> addElements(addTo.id) }
-                            },
-                            onCamera = {
-                                selectedCard.value = it
-                                cameraDialogIsExpanded.value = true
-                            },
-                            onDelete = {
-                                selectedCard.value = it
-                                deleteDialogIsExpanded.value = true
-                            },
-                            onUpdate = {
-                                selectedCard.value = it
-                                editDialogIsExpanded.value = true
-                            },
-                            iconsContent = generateIconsColumn(it),
-                            dropdownOptions = dropdownOptions,
-                            modifier = Modifier.testTag("BaseCard"),
+                    .fillMaxWidth(),
+                    contentAlignment = Alignment.Center,
+                ){
+                    Text( // TODO: ref
+                        text = "error: " + stringResource(R.string.empty_list, emptyListPlaceholder),
+                        style = MaterialTheme.typography.bodyLarge,
+                    )
+                }
+            }
+            is Result.Success -> {
+                if(filteredElements.isEmpty()) {
+                    Box(modifier = Modifier
+                        .weight(1f)
+                        .fillMaxWidth(),
+                        contentAlignment = Alignment.Center,
+                    ){
+                        Text(
+                            text = stringResource(R.string.empty_list, emptyListPlaceholder),
+                            style = MaterialTheme.typography.bodyLarge,
                         )
+                    }
+                } else {
+
+                    LazyColumn(
+                        modifier = Modifier
+                            .weight(1f)
+                            .testTag("LazyColumn"),
+                        verticalArrangement = Arrangement.spacedBy(
+                            dimensionResource(R.dimen.space_arrangement_small)
+                        )
+                    ) {
+                        items(
+                            items = filteredElements,
+                            key = key
+                        ) { element ->
+                            element?.let {
+                                BaseCard(
+                                    data = it,
+                                    onAdd = {
+                                        selectedCard.value = it
+                                        val selection = selectedCard.value
+                                        selection?.let { addTo -> addElements(addTo.id) }
+                                    },
+                                    onCamera = {
+                                        selectedCard.value = it
+                                        cameraDialogIsExpanded.value = true
+                                    },
+                                    onDelete = {
+                                        selectedCard.value = it
+                                        deleteDialogIsExpanded.value = true
+                                    },
+                                    onUpdate = {
+                                        selectedCard.value = it
+                                        editDialogIsExpanded.value = true
+                                    },
+                                    iconsContent = generateIconsColumn(it),
+                                    dropdownOptions = dropdownOptions,
+                                    modifier = Modifier.testTag("BaseCard"),
+                                )
+                            }
+                        }
                     }
                 }
             }
         }
+
         Spacer(modifier = Modifier
             .height(dimensionResource(R.dimen.space_arrangement_small))
             .fillMaxWidth()
@@ -338,4 +356,62 @@ private class Debounce<T>(private val delayMillis: Long, private val coroutineSc
             onDebounce(value)
         }
     }
+}
+
+
+@Preview(showBackground = true)
+@Composable
+fun ScreenLoadingPreview() {
+    Screen<Item>(
+        result = Result.Loading,
+        key = { it?.id as String },
+        generateIconsColumn = { {} },
+        onDelete = {},
+        onCreate = {},
+        onFieldChange = { _, _, _ -> },
+        onUpdate = {},
+        emptyListPlaceholder = "Items",
+        snackbarHostState = SnackbarHostState(),
+        coroutineScope = CoroutineScope(Dispatchers.Main),
+    )
+}
+
+@Preview(showBackground = true)
+@Composable
+fun ScreenSuccessEmptyListPreview() {
+    Screen<Item>(
+        result = Result.Success(emptyList()),
+        key = { it?.id as String },
+        generateIconsColumn = { {} },
+        onDelete = {},
+        onCreate = {},
+        onFieldChange = { _, _, _ -> },
+        onUpdate = {},
+        emptyListPlaceholder = "Items",
+        snackbarHostState = SnackbarHostState(),
+        coroutineScope = CoroutineScope(Dispatchers.Main),
+    )
+}
+
+@Preview(showBackground = true)
+@Composable
+fun ScreenSuccessNonEmptyListPreview() {
+    val item = Item(
+        id = "moo",
+        name = "cow",
+        value = 100.25,
+    )
+    val items = listOf(item)
+    Screen(
+        result = Result.Success(items),
+        key = { it?.id as String },
+        generateIconsColumn = { {} },
+        onDelete = {},
+        onCreate = {},
+        onFieldChange = { _, _, _ -> },
+        onUpdate = {},
+        emptyListPlaceholder = "Items",
+        snackbarHostState = SnackbarHostState(),
+        coroutineScope = CoroutineScope(Dispatchers.Main),
+    )
 }
