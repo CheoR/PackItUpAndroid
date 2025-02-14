@@ -1,15 +1,18 @@
 package com.example.packitupandroid.ui.navigation
 
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.BottomSheetScaffold
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
+import androidx.compose.material3.rememberBottomSheetScaffoldState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
@@ -86,6 +89,7 @@ private fun AppNavHost(
     val snackbarHostState = remember { SnackbarHostState() }
     val scope = rememberCoroutineScope()
     val backStackEntry = navController.currentBackStackEntry
+    val scaffoldState = rememberBottomSheetScaffoldState()
 
     // TODO: ref - pretty ugly :(
     when {
@@ -104,7 +108,8 @@ private fun AppNavHost(
         else -> setTitle(selectedDestination, false, null)
     }
 
-    Scaffold(
+    BottomSheetScaffold(
+        scaffoldState = scaffoldState,
         modifier = modifier,
         topBar = {
             AppBar(
@@ -113,7 +118,10 @@ private fun AppNavHost(
                 navigateUp = { navController.navigateUp() },
             )
         },
-        bottomBar = {
+        snackbarHost = {
+            SnackbarHost(hostState = snackbarHostState)
+        },
+        sheetContent = {
             BottomNavigationBar(
                 navHostState = navHostState,
                 selectedDestination = selectedDestination,
@@ -129,9 +137,7 @@ private fun AppNavHost(
                 toggleScreenSnackbar = toggleScreenSnackbar,
             )
         },
-        snackbarHost = {
-            SnackbarHost(hostState = snackbarHostState)
-        },
+        sheetPeekHeight = 50.dp,
     ) { innerPadding ->
         NavHost(
             modifier = modifier
