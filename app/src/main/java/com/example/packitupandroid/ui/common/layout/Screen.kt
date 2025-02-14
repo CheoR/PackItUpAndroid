@@ -1,21 +1,32 @@
 package com.example.packitupandroid.ui.common.layout
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.gestures.detectVerticalDragGestures
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ColumnScope
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.text.BasicTextField
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Backup
+import androidx.compose.material.icons.filled.LocalShipping
+import androidx.compose.material.icons.filled.Summarize
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
+import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.MutableState
@@ -26,10 +37,13 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.packitupandroid.R
@@ -112,6 +126,9 @@ fun <D : BaseCardData> Screen(
 
     var searchQuery by remember { mutableStateOf("") }
 
+    val sheetState = rememberModalBottomSheetState()
+    var showBottomSheet by remember { mutableStateOf(false) }
+
     val debounce = remember {
         Debounce<String>(300L, coroutineScope) { query ->
             filteredElements = if (query.isBlank()) {
@@ -143,8 +160,27 @@ fun <D : BaseCardData> Screen(
         }
     }
 
-    Column(
-        modifier = modifier.fillMaxSize()
+    Column(modifier = modifier
+        .fillMaxSize()
+        .pointerInput(Unit) {
+            detectVerticalDragGestures(
+                onDragEnd = {
+                    if (!showBottomSheet) {
+                        showBottomSheet = true
+                    }
+                },
+                onVerticalDrag = { change, dragAmount ->
+                    change.consume()
+                    if (dragAmount < 0) {
+                        // Dragging up
+                        showBottomSheet = true
+                    } else {
+                        // Dragging down
+                        showBottomSheet = false
+                    }
+                }
+            )
+        }
     ) {
         BasicTextField(
             value = searchQuery,
@@ -252,6 +288,55 @@ fun <D : BaseCardData> Screen(
         )
         Counter(onCreate = onCreate)
 
+        if (showBottomSheet) {
+            ModalBottomSheet(
+                onDismissRequest = {
+                    showBottomSheet = false
+                },
+                sheetState = sheetState
+            ) {
+                Row(
+                    modifier = modifier.padding(16.dp),
+                    horizontalArrangement = Arrangement.SpaceAround,
+                ) {
+                    DeliveryOptionButton(
+                        icon = Icons.Filled.LocalShipping,
+                        text = "Shipping",
+                        onClick = {
+                            // TODO: move actions to viewModel and pass through screens, e.g. ItemsScreen
+                            // that way each type can ahve specific actions and/or hw to process data on current screen
+                            coroutineScope.launch { sheetState.hide() }.invokeOnCompletion {
+                                if (!sheetState.isVisible) {
+                                    showBottomSheet = false
+                                }
+                            }
+                        }
+                    )
+                    DeliveryOptionButton(
+                        icon = Icons.Filled.Summarize,
+                        text = "Summarize",
+                        onClick = {
+                            coroutineScope.launch { sheetState.hide() }.invokeOnCompletion {
+                                if (!sheetState.isVisible) {
+                                    showBottomSheet = false
+                                }
+                            }
+                        }                    )
+                    DeliveryOptionButton(
+                        icon = Icons.Filled.Backup,
+                        text = "Backup",
+                        onClick = {
+                            coroutineScope.launch { sheetState.hide() }.invokeOnCompletion {
+                                if (!sheetState.isVisible) {
+                                    showBottomSheet = false
+                                }
+                            }
+                        }
+                    )
+                }
+            }
+        }
+
         if (editDialogIsExpanded.value) {
             selectedCard.value?.let {
                 EditDialog(
@@ -334,6 +419,53 @@ fun <D : BaseCardData> Screen(
                 )
             }
         }
+    }
+}
+
+/**
+ * A composable button representing a delivery option.
+ *
+ * This button displays an icon and text label, centered vertically and horizontally.
+ * It's typically used to represent different delivery choices in a UI.
+ *
+ * @param icon The [ImageVector] to display as the icon.
+ * @param text The text label to display below the icon.
+ * @param onClick The callback to be invoked when the button is clicked.
+ * @param modifier The [Modifier] to apply to the button's layout.
+ *
+ * @sample
+ * ```kotlin
+ * DeliveryOptionButton(
+ *     icon = Icons.Filled.LocalShipping,
+ *     text = "Standard Delivery",
+ *     onClick = { println("Standard Delivery clicked") }
+ * )
+ * ```
+ */
+@Composable
+fun DeliveryOptionButton(
+    icon: ImageVector,
+    text: String,
+    onClick: () -> Unit,
+    modifier: Modifier = Modifier
+) {
+    Column(
+        modifier = modifier,
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Center
+    ) {
+        IconButton(onClick = onClick) {
+            Icon(
+                imageVector = icon,
+                contentDescription = text,
+                modifier = Modifier.size(48.dp)
+            )
+        }
+        Text(
+            text = text,
+            style = MaterialTheme.typography.labelSmall,
+            textAlign = TextAlign.Center
+        )
     }
 }
 
