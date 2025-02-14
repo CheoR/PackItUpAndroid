@@ -21,6 +21,7 @@ import com.example.packitupandroid.ui.ViewModelProvider
 import com.example.packitupandroid.ui.screens.box.BoxesScreen
 import com.example.packitupandroid.ui.screens.collection.CollectionsScreen
 import com.example.packitupandroid.ui.screens.item.ItemsScreen
+import com.example.packitupandroid.ui.screens.settings.SettingsScreen
 import com.example.packitupandroid.ui.screens.summary.SummaryScreen
 import com.example.packitupandroid.utils.ContentType
 import com.example.packitupandroid.utils.NavigationType
@@ -185,6 +186,9 @@ private fun AppNavHost(
                     snackbarHostState = snackbarHostState,
                     coroutineScope = scope,
                 )
+            }
+            composable(route = Route.SETTINGS) {
+                SettingsScreen()
             }
         }
     }

@@ -4,6 +4,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Category
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Label
+import androidx.compose.material.icons.filled.Settings
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
 import com.example.packitupandroid.R
@@ -42,6 +43,11 @@ object Route {
      * Route for adding Boxes to Collection, screen.
      */
     const val ADD_BOXES = "AddBoxes"
+
+    /**
+     * Route for the settings screen.
+     */
+    const val SETTINGS = "Settings"
 }
 
 /**
@@ -102,7 +108,13 @@ val TOP_LEVEL_DESTINATIONS = listOf(
         selectedIcon = Icons.Default.Label,
         unselectedIcon = Icons.Default.Label,
         iconTextId = R.string.items
-    )
+    ),
+    TopLevelDestination(
+        route = Route.SETTINGS,
+        selectedIcon = Icons.Filled.Settings,
+        unselectedIcon = Icons.Filled.Settings,
+        iconTextId = R.string.settings,
+    ),
 )
 
 
