@@ -26,9 +26,9 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.packitupandroid.R
 import com.example.packitupandroid.data.model.Summary
 import com.example.packitupandroid.ui.ViewModelProvider
-import com.example.packitupandroid.ui.common.component.card.IconBadge
-import com.example.packitupandroid.ui.common.component.card.ImageContent
-import com.example.packitupandroid.ui.common.component.card.SummaryCard
+import com.example.packitupandroid.ui.common.card.IconBadge
+import com.example.packitupandroid.ui.common.card.ImageContent
+import com.example.packitupandroid.ui.common.card.SummaryCard
 import com.example.packitupandroid.ui.navigation.Route
 import com.example.packitupandroid.ui.navigation.TOP_LEVEL_DESTINATIONS
 import com.example.packitupandroid.ui.navigation.TopLevelDestination

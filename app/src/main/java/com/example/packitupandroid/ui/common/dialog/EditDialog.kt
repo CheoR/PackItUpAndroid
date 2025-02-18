@@ -8,7 +8,7 @@ import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.unit.Dp
 import com.example.packitupandroid.data.model.BaseCardData
 import com.example.packitupandroid.ui.common.component.ConfirmCancelContainer
-import com.example.packitupandroid.ui.common.component.card.EditCard
+import com.example.packitupandroid.ui.common.card.EditCard
 import com.example.packitupandroid.utils.DropdownOptions
 import com.example.packitupandroid.utils.EditFields
 import com.example.packitupandroid.utils.Result

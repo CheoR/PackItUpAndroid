@@ -54,7 +54,7 @@ import com.example.packitupandroid.ui.common.component.Counter
 import com.example.packitupandroid.ui.common.dialog.DeleteDialog
 import com.example.packitupandroid.ui.common.dialog.EditDialog
 import com.example.packitupandroid.ui.common.component.Spinner
-import com.example.packitupandroid.ui.common.component.card.BaseCard
+import com.example.packitupandroid.ui.common.card.BaseCard
 import com.example.packitupandroid.utils.DropdownOptions
 import com.example.packitupandroid.utils.EditFields
 import com.example.packitupandroid.utils.Result

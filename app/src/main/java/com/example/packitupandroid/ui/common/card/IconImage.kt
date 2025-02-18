@@ -1,4 +1,4 @@
-package com.example.packitupandroid.ui.common.component.card
+package com.example.packitupandroid.ui.common.card
 
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
