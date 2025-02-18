@@ -49,10 +49,10 @@ import androidx.compose.ui.unit.dp
 import com.example.packitupandroid.R
 import com.example.packitupandroid.data.model.BaseCardData
 import com.example.packitupandroid.data.model.Item
-import com.example.packitupandroid.ui.common.component.dialog.CameraDialog
+import com.example.packitupandroid.ui.common.dialog.CameraDialog
 import com.example.packitupandroid.ui.common.component.Counter
-import com.example.packitupandroid.ui.common.component.dialog.DeleteDialog
-import com.example.packitupandroid.ui.common.component.dialog.EditDialog
+import com.example.packitupandroid.ui.common.dialog.DeleteDialog
+import com.example.packitupandroid.ui.common.dialog.EditDialog
 import com.example.packitupandroid.ui.common.component.Spinner
 import com.example.packitupandroid.ui.common.component.card.BaseCard
 import com.example.packitupandroid.utils.DropdownOptions

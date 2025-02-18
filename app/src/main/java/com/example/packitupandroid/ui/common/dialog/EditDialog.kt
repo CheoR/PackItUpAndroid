@@ -1,4 +1,4 @@
-package com.example.packitupandroid.ui.common.component.dialog
+package com.example.packitupandroid.ui.common.dialog
 
 import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.runtime.Composable

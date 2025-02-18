@@ -1,4 +1,4 @@
-package com.example.packitupandroid.ui.common.component.dialog
+package com.example.packitupandroid.ui.common.dialog
 
 import android.content.Context
 import android.graphics.Bitmap
