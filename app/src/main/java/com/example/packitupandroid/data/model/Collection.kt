@@ -7,38 +7,6 @@ import java.util.UUID
 
 
 /**
- * Represents a collection of queries, encapsulating metadata and state information.
- *
- * This data class holds information about a collection of queries, including its unique identifier,
- * name, optional description, associated value, fragility status, last modification date,
- * and counts of items and boxes associated with it.
- *
- * @property id A unique identifier for the query collection. Defaults to a randomly generated UUID.
- * @property name The name of the query collection. This field is mandatory and should provide a
- *                 human-readable identifier for the collection.
- * @property description An optional description of the query collection, providing further context
- *                      or details about its purpose. Can be null.
- * @property value A numerical value associated with the query collection. Defaults to 0.0.
- * @property is_fragile Indicates whether the query collection is considered fragile. A fragile
- *                     collection might require special handling or be more susceptible to errors.
- *                     Defaults to false.
- * @property last_modified The date and time when the query collection was last modified. This is
- *                         used for tracking changes and updates to the collection.
- * @property item_count The number of items associated with this query collection. Defaults to 0.
- * @property box_count The number of boxes associated with this query collection. Defaults to 0.
- */
-data class QueryCollection(
-    val id: String = UUID.randomUUID().toString(),
-    val name: String,
-    val description: String? = null,
-    val value: Double = 0.0,
-    val is_fragile: Boolean = false,
-    val last_modified: Date,
-    val item_count: Int = 0,
-    val box_count: Int = 0,
-)
-
-/**
  * Represents a collection of items, often used for organizing and managing data.
  *
  * This data class holds information about a collection, including its unique identifier, name,
