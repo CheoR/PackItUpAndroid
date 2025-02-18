@@ -1,9 +1,13 @@
 package com.example.packitupandroid.data.source.local
 
+import com.example.packitupandroid.data.database.entities.BoxEntity
+import com.example.packitupandroid.data.database.entities.CollectionEntity
+import com.example.packitupandroid.data.database.entities.ItemEntity
 import com.example.packitupandroid.data.model.Box
 import com.example.packitupandroid.data.model.Item
 import com.example.packitupandroid.data.model.Collection
 import java.util.Date
+
 
 class LocalDataSource() {
     fun loadItems(): List<Item> {
@@ -242,6 +246,119 @@ class LocalDataSource() {
                 name = "4L not sure yet",
                 lastModified = Date(1994179200000L),
             ),
+        )
+    }
+}
+
+
+/**
+ * Object that provides mock data for [ItemEntity].
+ */
+object LocalData {
+
+    /**
+     * Returns a list of mock `ItemEntity` objects.
+     *
+     * @return A list of `ItemEntity` objects containing mock data.
+     */
+    fun itemData(): List<ItemEntity> {
+        return listOf(
+            ItemEntity("item21", "Mock Moo Item One", "Description One", 12.34, true, 1617185300, "box1", null),
+            ItemEntity("item22", "Mock Moo Item Two", "Description Two", 56.78, false, 1617185400, "box1", null),
+            ItemEntity("item23", "Mock Moo Item Three", "Description Three", 34.56, true, 1617185500, "box2", null),
+            ItemEntity("item24", "Mock Moo Item Four", "Description Four", 78.90, false, 1617185600, "box2", null),
+            ItemEntity("item25", "Mock Moo Item Five", "Description Five", 90.12, true, 1617185700, "box3", null),
+            ItemEntity("item26", "Mock Moo Item Six", "Description Six", 23.45, false, 1617185800, "box3", null),
+            ItemEntity("item27", "Mock Moo Item Seven", "Description Seven", 67.89, true, 1617185900, "box4", null),
+            ItemEntity("item28", "Mock Moo Item Eight", "Description Eight", 45.67, false, 1617186000, "box4", null),
+            ItemEntity("item29", "Mock Moo Item Nine", "Description Nine", 89.01, true, 1617186100, "box5", null),
+            ItemEntity("item210", "Mock Moo Item Ten", "Description Ten", 12.34, false, 1617186200, "box5", null),
+            ItemEntity("item211", "Mock Moo Item Eleven", "Description Eleven", 34.56, true, 1617186300, "box1", null),
+            ItemEntity("item212", "Mock Moo Item Twelve", "Description Twelve", 78.90, false, 1617186400, "box2", null),
+        )
+    }
+
+    /**
+     * Returns a list of mock `BoxEntity` objects.
+     *
+     * @return A list of `BoxEntity` objects containing mock data.
+     */
+    fun boxData(): List<BoxEntity> {
+        return listOf(
+            BoxEntity(
+                id = "e99a99f8-748d-427a-a305-14bda19d71a0",
+                name = "kitchen",
+                description = "don't open until i get home",
+                collectionId = "748c0084-4f2b-4957-ae2f-4892670c85f3",
+                lastModified = 1641187200000L
+            ),
+            BoxEntity(
+                id = "5a1b8a9d-2e57-4f7c-bfd7-988bb9653f1d",
+                name = "bedroom1",
+                collectionId = "748c0084-4f2b-4957-ae2f-4892670c85f3",
+                lastModified = 1676486400000L
+            ),
+            BoxEntity(
+                id = "c4b6d417-e077-4a20-8d6e-f21f72885cdd",
+                name = "bedroom2",
+                collectionId = "cc92160b-b6f1-41f2-bac5-8cd5f868e645",
+                lastModified = 1711785600000L
+            ),
+            BoxEntity(
+                id = "2d6c2c8c-56fe-4f7e-9483-e6f9511f9fc5",
+                name = "garage",
+                collectionId = "cc92160b-b6f1-41f2-bac5-8cd5f868e645",
+                lastModified = 1747084800000L
+            ),
+            BoxEntity(
+                id = "1cb842ee-9636-4394-a49f-f56c922ef0d1",
+                name = "garage",
+                collectionId = "cc92160b-b6f1-41f2-bac5-8cd5f868e645",
+                lastModified = 1782384000000L
+            ),
+            BoxEntity(
+                id = "37d40996-393b-4a3c-bed8-e67382d56d19",
+                name = "garage",
+                collectionId = "0d394337-0886-48b2-b788-5a706cda52e6",
+                lastModified = 1817683200000L
+            )
+        )
+    }
+
+    /**
+     * Returns a list of mock `CollectionEntity` objects.
+     *
+     * @return A list of `CollectionEntity` objects containing mock data.
+     */
+    fun collectionData(): List<CollectionEntity> {
+        return listOf(
+            CollectionEntity(
+                id = "748c0084-4f2b-4957-ae2f-4892670c85f3",
+                name = "for home",
+                description = "junk and stuff",
+                lastModified = 1852982400000L
+            ),
+            CollectionEntity(
+                id = "cc92160b-b6f1-41f2-bac5-8cd5f868e645",
+                name = "for donation",
+                lastModified = 1888281600000L
+            ),
+            CollectionEntity(
+                id = "0d394337-0886-48b2-b788-5a706cda52e6",
+                name = "not sure yet",
+                description = "more junk",
+                lastModified = 1923580800000L
+            ),
+            CollectionEntity(
+                id = "ffd69d63-8bb1-4f15-856e-316777c36f3e",
+                name = "3L",
+                lastModified = 1958880000000L
+            ),
+            CollectionEntity(
+                id = "bc71bf4b-4771-4508-917d-b615211bc786",
+                name = "4L not sure yet",
+                lastModified = 1994179200000L
+            )
         )
     }
 }
