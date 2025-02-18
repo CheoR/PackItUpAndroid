@@ -75,7 +75,7 @@ class BoxesScreenViewModel(
 
     // TODO: refactor into BaseViewModel
     override fun create(count: Int) {
-        val data = List(count) { index -> Box(name = "Box ${index + 1}") }
+        val data = List(count) { index -> Box(name = "Box ${index + 1}", collectionId = collectionId) }
         insert(data)
     }
 
