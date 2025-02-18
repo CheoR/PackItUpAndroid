@@ -1,4 +1,4 @@
-package com.example.packitupandroid.ui.common.component
+package com.example.packitupandroid.ui.common.component.dialog
 
 import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.runtime.Composable
@@ -7,6 +7,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.unit.Dp
 import com.example.packitupandroid.data.model.BaseCardData
+import com.example.packitupandroid.ui.common.component.ConfirmCancelContainer
 import com.example.packitupandroid.ui.common.component.card.EditCard
 import com.example.packitupandroid.utils.DropdownOptions
 import com.example.packitupandroid.utils.EditFields
