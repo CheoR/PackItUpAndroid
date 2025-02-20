@@ -1,71 +1,56 @@
 package com.example.packitupandroid.ui.test
 
 import com.example.packitupandroid.data.database.entities.CollectionEntity
-import com.example.packitupandroid.data.database.entities.toCollection
-import com.example.packitupandroid.data.model.QueryCollection
-import com.example.packitupandroid.data.model.QueryDropdownOptions
-import com.example.packitupandroid.data.model.toQueryCollection
+import com.example.packitupandroid.data.model.Collection
 import com.example.packitupandroid.data.repository.CollectionsRepository
+import com.example.packitupandroid.data.repository.toCollection
+import com.example.packitupandroid.data.repository.toEntity
+import com.example.packitupandroid.utils.Result
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.map
+
 
 class MockCollectionsRepository : CollectionsRepository {
     private val collections = mutableListOf<CollectionEntity>()
     private val collectionFlow = MutableStateFlow<List<CollectionEntity>>(emptyList())
 
-    override suspend fun getCollection(id: String): CollectionEntity? {
-        return this.collections.find { it.id == id }
+    override suspend fun get(id: String): Result<Collection?> {
+        return Result.Success(collections.find { it.id == id }?.toCollection())
     }
 
-    override suspend fun getQueryCollection(id: String): QueryCollection? {
-        return this.getCollection(id)?.toCollection()?.toQueryCollection()
+    override fun observeAll(): Flow<Result<List<Collection?>>> {
+        return collectionFlow.map { listOfCollectionEntities -> Result.Success(listOfCollectionEntities.map { it.toCollection() }) }
     }
 
-    override fun getAllCollectionsStream(): Flow<List<QueryCollection>> {
-        return flowOf(this.collections.map { it.toCollection().toQueryCollection() })
+    override fun observe(id: String): Flow<Result<Collection?>> {
+        TODO("Not yet implemented")
     }
 
-    override fun getCollectionStream(id: String): Flow<CollectionEntity?> {
-        return collectionFlow.map { it.find { collection -> collection.id == id } }
-    }
-
-    override suspend fun getDropdownSelections(): Flow<List<QueryDropdownOptions>> {
-        return flowOf(collections.map { it -> QueryDropdownOptions(it.id, it.name) })
-    }
-
-    override suspend fun insertCollection(collection: CollectionEntity) {
-        this.collections.add(collection)
-        collectionFlow.value = this.collections.toList()
-    }
-
-    override suspend fun insertAll(collections: List<CollectionEntity>) {
-        this.collections.addAll(collections)
+    override suspend fun insert(data: List<Collection>): Result<Unit> {
+        this.collections.addAll(data.map { it.toEntity() })
         collectionFlow.value = this.collections
+        return Result.Success(Unit)
     }
 
-    override suspend fun updateCollection(collection: CollectionEntity) {
-        val index = collections.indexOfFirst { it.id == collection.id }
+    override suspend fun update(data: Collection): Result<Unit> {
+        val index = collections.indexOfFirst { it.id == data.id }
         if (index != -1) {
-            this.collections[index] = collection
+            this.collections[index] = data.toEntity()
             collectionFlow.value = this.collections
         }
+        return Result.Success(Unit)
     }
 
-    override suspend fun deleteCollection(collection: CollectionEntity) {
-        this.collections.removeAll { it.id == collection.id}
+    override suspend fun delete(data: List<String>): Result<Unit> {
+        this.collections.removeAll { data.contains(it.id) }
         collectionFlow.value = this.collections
+        return Result.Success(Unit)
     }
 
-    override suspend fun deleteAll(collections: List<CollectionEntity>) {
-        this.collections.removeAll(collections)
-        collectionFlow.value = this.collections.toList()
-    }
-
-    override suspend fun clearAllCollections() {
+    override suspend fun clear(): Result<Unit> {
         this.collections.clear()
         collectionFlow.value = this.collections
-
+        return Result.Success(Unit)
     }
 }
