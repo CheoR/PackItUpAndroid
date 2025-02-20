@@ -14,10 +14,10 @@
       <SelectionState runConfigName="CollectionDaoTest">
         <option name="selectionMode" value="DROPDOWN" />
       </SelectionState>
-      <SelectionState runConfigName="collectionDao_DeleteItem_CollectionItemCountUpdated()">
+      <SelectionState runConfigName="CollectionsScreenUiTests">
         <option name="selectionMode" value="DROPDOWN" />
       </SelectionState>
-      <SelectionState runConfigName="collectionDao_DeleteCollection_AssociatedBoxesDeleted()">
+      <SelectionState runConfigName="BoxesScreenUiTests">
         <option name="selectionMode" value="DROPDOWN" />
       </SelectionState>
     </selectionStates>
