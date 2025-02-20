@@ -1,5 +1,6 @@
 package com.example.packitupandroid
 
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.ui.semantics.SemanticsProperties
 import androidx.compose.ui.semantics.getOrNull
 import androidx.compose.ui.test.SemanticsMatcher
@@ -23,27 +24,29 @@ import androidx.compose.ui.test.performScrollToIndex
 import androidx.compose.ui.test.performTextReplacement
 import androidx.lifecycle.SavedStateHandle
 import androidx.test.espresso.IdlingRegistry
-import com.example.packitupandroid.data.model.QueryDropdownOptions
+import com.example.packitupandroid.data.model.BoxIdAndName
 import com.example.packitupandroid.ui.screens.item.ItemsScreen
 import com.example.packitupandroid.ui.screens.item.ItemsScreenViewModel
 import com.example.packitupandroid.ui.theme.PackItUpAndroidTheme
 import com.example.packitupandroid.utils.asCurrencyString
 import junit.framework.TestCase.assertEquals
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 
+
 private const val initialValue = 0
 private const val incrementCountByFive = 5
 private const val decrementCountByFour = 4
 
-private fun getBoxList(): List<QueryDropdownOptions> {
+private fun getBoxList(): List<BoxIdAndName> {
     return listOf(
-        QueryDropdownOptions("1", "Box 1"),
-        QueryDropdownOptions("2", "Box 2"),
-        QueryDropdownOptions("3", "Box 3"),
-        QueryDropdownOptions("4", "Box 4")
+        BoxIdAndName("1", "Box 1"),
+        BoxIdAndName("2", "Box 2"),
+        BoxIdAndName("3", "Box 3"),
+        BoxIdAndName("4", "Box 4")
     )
 }
 
@@ -57,6 +60,8 @@ class ItemsScreenUiTests {
     val coroutineRule = MainCoroutineRule()
 
     private lateinit var viewModel: ItemsScreenViewModel
+    private lateinit var snackbarHostState: SnackbarHostState
+    private lateinit var coroutineScope: CoroutineScope
 
     private fun assertFieldIsEditable(semanticText: String, isEnabled: Boolean = true) {
         composeTestRule
@@ -110,7 +115,7 @@ class ItemsScreenUiTests {
     private fun initializeViewModel() {
         viewModel = ItemsScreenViewModel(
             savedStateHandle = SavedStateHandle(),
-            itemsRepository = MockItemsRepository2(),
+            repository = MockItemsRepository2(),
             defaultDispatcher = coroutineRule.testDispatcher,
         )
         viewModel.create(initialValue)
@@ -119,7 +124,11 @@ class ItemsScreenUiTests {
     private fun setupComposeSetContent() {
         composeTestRule.setContent {
             PackItUpAndroidTheme {
-                ItemsScreen(getDropdownOptions = { getBoxList() }, viewModel = viewModel)
+                ItemsScreen(
+                    viewModel = viewModel,
+                    coroutineScope = coroutineScope,
+                    snackbarHostState = snackbarHostState,
+                )
             }
         }
     }

@@ -1,5 +1,6 @@
 package com.example.packitupandroid
 
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.ui.semantics.SemanticsProperties
 import androidx.compose.ui.semantics.getOrNull
 import androidx.compose.ui.test.SemanticsMatcher
@@ -22,27 +23,30 @@ import androidx.compose.ui.test.performTextReplacement
 import androidx.compose.ui.test.printToLog
 import androidx.lifecycle.SavedStateHandle
 import androidx.test.espresso.IdlingRegistry
-import com.example.packitupandroid.data.model.QueryDropdownOptions
+import com.example.packitupandroid.data.model.CollectionIdAndName
 import com.example.packitupandroid.ui.screens.box.BoxesScreen
 import com.example.packitupandroid.ui.screens.box.BoxesScreenViewModel
 import com.example.packitupandroid.ui.screens.item.ItemsScreenViewModel
 import com.example.packitupandroid.ui.theme.PackItUpAndroidTheme
+import com.example.packitupandroid.utils.Result
 import junit.framework.TestCase.assertEquals
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 
+
 private const val initialValue = 0
 private const val incrementCountByFive = 5
 private const val decrementCountByFour = 4
 
-private fun getBoxList(): List<QueryDropdownOptions> {
+private fun getBoxList(): List<CollectionIdAndName> {
     return listOf(
-        QueryDropdownOptions("1", "Collection 1"),
-        QueryDropdownOptions("2", "Collection 2"),
-        QueryDropdownOptions("3", "Collection 3"),
-        QueryDropdownOptions("4", "Collection 4")
+        CollectionIdAndName("1", "Collection 1"),
+        CollectionIdAndName("2", "Collection 2"),
+        CollectionIdAndName("3", "Collection 3"),
+        CollectionIdAndName("4", "Collection 4")
     )
 }
 
@@ -55,6 +59,8 @@ class BoxesScreenUiTests {
     val coroutineRule = MainCoroutineRule()
 
     private lateinit var viewModel: BoxesScreenViewModel
+    private lateinit var snackbarHostState: SnackbarHostState
+    private lateinit var coroutineScope: CoroutineScope
 
     private fun assertFieldIsEditable(semanticText: String, isEnabled: Boolean = true) {
         composeTestRule
@@ -99,7 +105,7 @@ class BoxesScreenUiTests {
     private fun initializeViewModel() {
         viewModel = BoxesScreenViewModel(
             savedStateHandle = SavedStateHandle(),
-            boxesRepository = MockBoxesRepository2(),
+            repository = MockBoxesRepository2(),
             defaultDispatcher = coroutineRule.testDispatcher,
         )
         viewModel.create(initialValue)
@@ -108,7 +114,12 @@ class BoxesScreenUiTests {
     private fun setupComposeSetContent() {
         composeTestRule.setContent {
             PackItUpAndroidTheme {
-                BoxesScreen(getDropdownOptions = { getBoxList() }, viewModel = viewModel)
+                BoxesScreen(
+                    viewModel = viewModel,
+                    coroutineScope = coroutineScope,
+                    snackbarHostState = snackbarHostState,
+                    addElements = { _ -> Unit }, // TODO: create test for this
+                )
             }
         }
     }
@@ -402,7 +413,7 @@ class BoxesScreenUiTests {
 
         val itemsViewModel = ItemsScreenViewModel(
             savedStateHandle = SavedStateHandle(),
-            itemsRepository = MockItemsRepository2(),
+            repository = MockItemsRepository2(),
             defaultDispatcher = coroutineRule.testDispatcher,
         )
 
@@ -428,14 +439,26 @@ class BoxesScreenUiTests {
         println("badge1CountValue: $badge1CountValue.")
 
         itemsViewModel.create(COUNT)
-        val items = itemsViewModel.getAllElements()
+//        val result = itemsViewModel.elements.value
+//        val items = Result.Success(result).data // Result(itemsViewModel.elements.value) as List<Item?>
+
+//        val result: Result<Item?>>? = itemsViewModel.elements.value
+//        val items: List<Item?>? = (result as? Result.Success)?.data
+
+        val items = when(val result = itemsViewModel.elements.value) {
+            is Result.Success -> result.data
+            else -> emptyList()
+        }
+
 
         for (item in items) {
-            itemsViewModel.update(
-                item.copy(
-                    boxId = id,
+            item?.copy(
+                boxId = id,
+            )?.let {
+                itemsViewModel.update(
+                    it
                 )
-            )
+            }
         }
         composeTestRule.mainClock.advanceTimeBy(DELAY)
 
