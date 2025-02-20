@@ -3,7 +3,8 @@ package com.example.packitupandroid.fake.data
 import com.example.packitupandroid.data.model.Box
 import com.example.packitupandroid.data.model.Collection
 import com.example.packitupandroid.data.model.Item
-import com.example.packitupandroid.data.model.toEntity
+import com.example.packitupandroid.data.repository.toEntity
+
 
 val collections = listOf(
     Collection("1", "collections1").toEntity(),
