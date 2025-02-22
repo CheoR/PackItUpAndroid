@@ -91,6 +91,9 @@ dependencies {
     implementation(libs.androidx.room.ktx)
     implementation(libs.androidx.room.runtime)
 
+    // DataStore
+    implementation(libs.androidx.datastore.preferences)
+
     // Testing
     testImplementation(libs.junit)
     testImplementation(libs.org.jetbrains.kotlinx.coroutines.test)
