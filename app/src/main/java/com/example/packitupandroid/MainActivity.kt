@@ -14,6 +14,7 @@ import androidx.compose.material3.windowsizeclass.WindowSizeClass
 import androidx.compose.material3.windowsizeclass.calculateWindowSizeClass
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.DpSize
 import androidx.compose.ui.unit.dp
@@ -22,6 +23,7 @@ import androidx.core.content.ContextCompat
 import com.example.packitupandroid.data.source.local.LocalDataSource
 import com.example.packitupandroid.ui.PackItUpApp
 import com.example.packitupandroid.ui.theme.PackItUpAndroidTheme
+import com.example.packitupandroid.ui.theme.rememberThemeManager
 
 
 class MainActivity : ComponentActivity() {
@@ -38,7 +40,10 @@ class MainActivity : ComponentActivity() {
         }
 
         setContent {
-            PackItUpAndroidTheme {
+            val context = LocalContext.current
+            val themeManager = rememberThemeManager(context)
+
+            PackItUpAndroidTheme(themeManager) {
                 val windowSize = calculateWindowSizeClass(this)
                 // A surface container using the 'background' color from the theme
                 Surface(
@@ -99,7 +104,9 @@ class MainActivity : ComponentActivity() {
 fun PreviewPackItUp(
     localDataSource: LocalDataSource = LocalDataSource(),
 ) {
-    PackItUpAndroidTheme {
+    val context = LocalContext.current
+    val themeManager = rememberThemeManager(context)
+    PackItUpAndroidTheme(themeManager) {
         Surface {
             PackItUpApp(
                 windowSize = WindowSizeClass.calculateFromSize(DpSize(412.dp, 732.dp)),

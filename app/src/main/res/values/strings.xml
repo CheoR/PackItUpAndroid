@@ -54,4 +54,6 @@
     <string name="increment">increment</string>
     <string name="empty_list">no %s</string>
     <string name="settings">settings</string>
+    <string name="set_setting">%s setting</string>
+    <string name="dark_theme">dark theme</string>"
 </resources>
