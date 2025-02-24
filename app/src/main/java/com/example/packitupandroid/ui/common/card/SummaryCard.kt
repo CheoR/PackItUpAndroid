@@ -1,5 +1,6 @@
 package com.example.packitupandroid.ui.common.card
 
+import androidx.annotation.StringRes
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -21,6 +22,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.dimensionResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.example.packitupandroid.R
 import com.example.packitupandroid.utils.ActionColumnIcon
@@ -36,7 +38,7 @@ import com.example.packitupandroid.utils.ActionColumnIcon
  */
 @Composable
 fun SummaryCard(
-    name: String,
+    @StringRes name: Int,
     actionIcon: ActionColumnIcon,
     canNavigateToScreen: Boolean,
     description: String,
@@ -44,6 +46,8 @@ fun SummaryCard(
     navigateToTopLevelDestination: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
+    val iconButtonContentDescription = stringResource(R.string.icon_button_content_description)
+
     ElevatedCard(
         elevation = CardDefaults.cardElevation(defaultElevation = dimensionResource(R.dimen.elevation_small)),
         modifier = modifier
@@ -65,7 +69,7 @@ fun SummaryCard(
                 // TODO: combine with [EditCard] to remove duplication and use flag to
                 // display [DataColumn] in edit mode or not
                 BasicTextField(
-                    value = name,
+                    value = stringResource(name),
                     onValueChange = {},
                     textStyle = MaterialTheme.typography.titleLarge,
                     maxLines = 1,
@@ -98,7 +102,7 @@ fun SummaryCard(
                         content = {
                             Icon(
                                 imageVector = actionIcon.icon,
-                                contentDescription = "Icon Button",
+                                contentDescription = iconButtonContentDescription,
                                 modifier = Modifier
                                     .size(24.dp),
                             )

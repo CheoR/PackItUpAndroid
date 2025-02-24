@@ -104,6 +104,8 @@ private fun SummaryScreen(
     navigateToTopLevelDestination: (TopLevelDestination) -> Unit,
 ) {
     val actionIcon : ActionColumnIcon = ActionColumnIcon.RightArrow
+    val fragileContentDescription = stringResource(R.string.fragile_checkbox)
+    val valueFieldContentDescription = stringResource(R.string.value)
 
     Column(
         modifier = Modifier.fillMaxSize(),
@@ -114,13 +116,13 @@ private fun SummaryScreen(
     ) {
 
         SummaryCard(
-            name = "Collections",
-            description = "Number of Collections",
+            name = R.string.collections,
+            description = stringResource(R.string.badgeContentDescription, stringResource(R.string.collections)),
             iconsContent = {
                 Column {
                     IconBadge(
                         image = ImageContent.VectorImage(Icons.Default.Category),
-                        badgeContentDescription = "Number of Collections",
+                        badgeContentDescription = stringResource(R.string.badgeContentDescription, stringResource(R.string.collections)),
                         badgeCount = result?.collectionCount ?: 0,
                     )
                 }
@@ -130,13 +132,13 @@ private fun SummaryScreen(
             navigateToTopLevelDestination = { navigateToTopLevelDestination(getTopLevelDestination(Route.COLLECTIONS)) },
         )
         SummaryCard(
-            name = "Boxes",
-            description = "Number of Boxes",
+            name = R.string.boxes,
+            description = stringResource(R.string.badgeContentDescription, stringResource(R.string.boxes)),
             iconsContent = {
                 Column {
                     IconBadge(
                         image = ImageContent.DrawableImage(R.drawable.ic_launcher_foreground),
-                        badgeContentDescription = "Number of Boxes",
+                        badgeContentDescription = stringResource(R.string.badgeContentDescription, stringResource(R.string.boxes)),
                         badgeCount = result?.boxCount ?: 0,
                     )
                 }
@@ -146,13 +148,13 @@ private fun SummaryScreen(
             navigateToTopLevelDestination = { navigateToTopLevelDestination(getTopLevelDestination(Route.BOXES)) },
         )
         SummaryCard(
-            name = "Items",
-            description = "Number of Items",
+            name = R.string.items,
+            description = stringResource(R.string.badgeContentDescription, stringResource(R.string.items)),
             iconsContent = {
                 Column {
                     IconBadge(
                         image = ImageContent.VectorImage(Icons.AutoMirrored.Filled.Label),
-                        badgeContentDescription = "Number of Items",
+                        badgeContentDescription = stringResource(R.string.badgeContentDescription, stringResource(R.string.items)),
                         badgeCount = result?.itemCount ?: 0,
                     )
                 }
@@ -172,7 +174,7 @@ private fun SummaryScreen(
                 enabled = false,
                 modifier = Modifier
                     .semantics {
-                        contentDescription = "Fragile Checkbox"
+                        contentDescription = fragileContentDescription
                     },
             )
             Text(stringResource(R.string.fragile))
@@ -182,7 +184,7 @@ private fun SummaryScreen(
                 onValueChange = {},
                 textStyle = MaterialTheme.typography.bodySmall,
                 enabled = false,
-                modifier = Modifier.semantics { contentDescription = "Value Field" },
+                modifier = Modifier.semantics { contentDescription = valueFieldContentDescription },
             )
         }
     }
