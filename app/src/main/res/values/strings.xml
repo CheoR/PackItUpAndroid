@@ -55,8 +55,11 @@
     <string name="empty_list">no %s</string>
     <string name="settings">settings</string>
     <string name="set_setting">%s setting</string>
-    <string name="dark_theme">dark theme</string>"
+    <string name="dark_theme">dark theme</string>
     <string name="badgeContentDescription">Number of %s</string>
-    <string name="fragile_checkbox">fragile checkbox</string>"
-    <string name="icon_button_content_description">icon button</string>""
+    <string name="fragile_checkbox">fragile checkbox</string>
+    <string name="icon_button_content_description">icon button</string>
+    <string name="edit_dialog_title">edit %s</string>
+    <string name="delete_dialog_title">delete %s</string>
+    <string name="camera_dialog_title">capture %s</string>
 </resources>

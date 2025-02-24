@@ -5,7 +5,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.Dp
+import com.example.packitupandroid.R
 import com.example.packitupandroid.data.model.BaseCardData
 import com.example.packitupandroid.ui.common.component.ConfirmCancelContainer
 import com.example.packitupandroid.ui.common.card.BaseCard
@@ -40,7 +42,7 @@ fun <D: BaseCardData> DeleteDialog(
     dropdownOptions: Result<List<DropdownOptions?>>? = null,
 ) {
     ConfirmCancelContainer(
-        title = "Delete ${selectedCard.value?.name ?: ""} ?",
+        title = stringResource(R.string.delete_dialog_title, selectedCard.value?.name ?: ""),
         dialogWidth = dialogWidth,
         onCancel = onCancel,
         onConfirm = onConfirm,

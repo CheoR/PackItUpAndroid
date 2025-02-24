@@ -17,8 +17,10 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.Dp
 import androidx.core.content.ContextCompat
+import com.example.packitupandroid.R
 import com.example.packitupandroid.data.model.BaseCardData
 import com.example.packitupandroid.data.model.Item
 import com.example.packitupandroid.ui.common.card.CameraPreview
@@ -77,7 +79,7 @@ fun <D: BaseCardData>CameraDialog(
     }
 
     ConfirmCancelContainer(
-        title = "Capture ${selectedCard.value?.name ?: ""} ?",
+        title = stringResource(R.string.camera_dialog_title, selectedCard.value?.name ?: ""),
         dialogWidth = dialogWidth,
         onCancel = onCancel,
         onConfirm = {

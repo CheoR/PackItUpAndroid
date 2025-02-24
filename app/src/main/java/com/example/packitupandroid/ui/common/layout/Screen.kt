@@ -200,7 +200,7 @@ fun <D : BaseCardData> Screen(
                         .padding(8.dp)
                 ) {
                     if (searchQuery.isEmpty()) {
-                        Text("Search", color = Color.Gray)
+                        Text(stringResource(R.string.search), color = Color.Gray)
                     }
                     innerTextField()
                 }
@@ -299,6 +299,7 @@ fun <D : BaseCardData> Screen(
                     modifier = modifier.padding(16.dp),
                     horizontalArrangement = Arrangement.SpaceAround,
                 ) {
+                    // TODO: DETERMINE TEXT FOR DELIVERY OPTIONS
                     DeliveryOptionButton(
                         icon = Icons.Filled.LocalShipping,
                         text = "Shipping",
