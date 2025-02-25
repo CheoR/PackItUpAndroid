@@ -110,6 +110,14 @@ fun <D: BaseCardData>BaseCard(
     modifier: Modifier = Modifier,
     onAdd: () -> Unit = {},
 ) {
+    val fragileCheckboxContentDescription = stringResource(R.string.fragile_checkbox)
+    val valueFieldContentDescription = stringResource(R.string.value)
+    val editButtonContentDescription = stringResource(R.string.edit)
+    val deleteButtonContentDescription = stringResource(R.string.delete)
+    val addButtonContentDescription = stringResource(R.string.add)
+    val cameraButtonContentDescription = stringResource(R.string.camera)
+    val favoriteButtonContentDescription = stringResource(R.string.favorite)
+
     val dropdownOptionsList = if(dropdownOptions != null) {
         when (dropdownOptions) {
             is Result.Success -> dropdownOptions.data
@@ -218,7 +226,7 @@ fun <D: BaseCardData>BaseCard(
                         enabled = false,
                         modifier = Modifier
                             .semantics {
-                                contentDescription = "Fragile Checkbox"
+                                contentDescription = fragileCheckboxContentDescription
                             },
                     )
                     Text(stringResource(R.string.fragile))
@@ -232,7 +240,7 @@ fun <D: BaseCardData>BaseCard(
                         ),
 //                        textStyle = MaterialTheme.typography.bodySmall,
                         enabled = false,
-                        modifier = Modifier.semantics { contentDescription = "Value Field" },
+                        modifier = Modifier.semantics { contentDescription = valueFieldContentDescription },
                     )
                 }
             }
@@ -257,7 +265,7 @@ fun <D: BaseCardData>BaseCard(
                         IconButton(onClick = {} ) {
                             Icon(
                                 Icons.Default.ArrowBackIosNew,
-                                contentDescription = "Favorite",
+                                contentDescription = favoriteButtonContentDescription,
                                 tint = MaterialTheme.colorScheme.tertiary,
                             )
                         }
@@ -269,7 +277,7 @@ fun <D: BaseCardData>BaseCard(
                                     onCamera()
                                     state.animateTo(HorizontalDragValue.START)
                                 } }) {
-                                Icon(Icons.Default.CameraAlt, contentDescription = "Camera", tint = Color.White)
+                                Icon(Icons.Default.CameraAlt, contentDescription = cameraButtonContentDescription, tint = Color.White)
                             }
                         } else {
                             IconButton(onClick = {
@@ -277,7 +285,7 @@ fun <D: BaseCardData>BaseCard(
                                     onAdd()
                                     state.animateTo(HorizontalDragValue.START)
                                 } }) {
-                                Icon(Icons.Default.Add, contentDescription = "Add", tint = Color.White)
+                                Icon(Icons.Default.Add, contentDescription = addButtonContentDescription, tint = Color.White)
                             }
                         }
                         IconButton(onClick = {
@@ -285,7 +293,7 @@ fun <D: BaseCardData>BaseCard(
                                 onUpdate()
                                 state.animateTo(HorizontalDragValue.START)
                             } }) {
-                            Icon(Icons.Default.Edit, contentDescription = "Edit", tint = Color.White)
+                            Icon(Icons.Default.Edit, contentDescription = editButtonContentDescription, tint = Color.White)
                         }
                         IconButton(
                             onClick = {
@@ -294,7 +302,7 @@ fun <D: BaseCardData>BaseCard(
                                     state.animateTo(HorizontalDragValue.START)
                                 }
                             }) {
-                            Icon(Icons.Default.Delete, contentDescription = "Delete", tint = Color.White)
+                            Icon(Icons.Default.Delete, contentDescription = deleteButtonContentDescription, tint = Color.White)
                         }
                     }
                 }

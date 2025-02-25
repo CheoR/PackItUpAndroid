@@ -62,4 +62,5 @@
     <string name="edit_dialog_title">edit %s</string>
     <string name="delete_dialog_title">delete %s</string>
     <string name="camera_dialog_title">capture %s</string>
+    <string name="favorite">favorite</string>
 </resources>

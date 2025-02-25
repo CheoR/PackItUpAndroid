@@ -61,6 +61,8 @@ fun <D: BaseCardData>DataColumn(
     dropdownOptions: Result<List<DropdownOptions?>>? = null,
 ) {
     fun isEditable(field: EditFields) = editableFields.contains(field)
+    val fragileCheckboxContentDescription = stringResource(R.string.fragile_checkbox)
+    val valueFieldContentDescription = stringResource(R.string.value)
 
     val dropdownOptionsList = if(dropdownOptions != null) {
         when (dropdownOptions) {
@@ -139,7 +141,7 @@ fun <D: BaseCardData>DataColumn(
                 },
                 isEditable = isEditable(EditFields.IsFragile),
                 modifier = Modifier
-                    .semantics { contentDescription = "Fragile Checkbox" }
+                    .semantics { contentDescription = fragileCheckboxContentDescription }
             )
             Text(stringResource(R.string.fragile))
             Spacer(modifier = Modifier.weight(1f))
@@ -152,7 +154,7 @@ fun <D: BaseCardData>DataColumn(
                 isEditable = isEditable(EditFields.Value),
                 textStyle = MaterialTheme.typography.bodySmall,
                 modifier = Modifier
-                    .semantics { contentDescription = "Value Field" },
+                    .semantics { contentDescription = valueFieldContentDescription },
                 keyboardOptions = KeyboardOptions.Default.copy(
                     keyboardType = KeyboardType.Number,
                     imeAction = ImeAction.Done
