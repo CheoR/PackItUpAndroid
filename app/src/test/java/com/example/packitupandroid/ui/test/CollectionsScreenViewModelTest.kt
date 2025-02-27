@@ -1,7 +1,10 @@
 package com.example.packitupandroid.ui.test
 
+import androidx.lifecycle.SavedStateHandle
 import com.example.packitupandroid.assertSameExcept
+import com.example.packitupandroid.data.model.Collection
 import com.example.packitupandroid.ui.screens.collection.CollectionsScreenViewModel
+import com.example.packitupandroid.utils.Result
 import junit.framework.TestCase.assertEquals
 import junit.framework.TestCase.assertNull
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -10,9 +13,10 @@ import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 
+
 class CollectionsScreenViewModelTest {
     private lateinit var viewModel: CollectionsScreenViewModel
-    private val mockRepository = MockCollectionsRepository()
+    private val repository = MockCollectionsRepository()
 
     @OptIn(ExperimentalCoroutinesApi::class)
     @get:Rule
@@ -21,9 +25,12 @@ class CollectionsScreenViewModelTest {
     @OptIn(ExperimentalCoroutinesApi::class)
     @Before
     fun setUp() {
+        val savedStateHandle = SavedStateHandle()
+
         viewModel = CollectionsScreenViewModel(
-            collectionsRepository = mockRepository,
+            repository = repository,
             defaultDispatcher = coroutineRule.testDispatcher,
+            savedStateHandle = savedStateHandle,
         )
 
         viewModel.create(COUNT)
@@ -31,44 +38,49 @@ class CollectionsScreenViewModelTest {
 
     @Test
     fun testgetAllElements() = runTest {
-        val result = viewModel.getAllElements()
+        val result = Result.Success(viewModel.elements.value as List<Collection>).data
         assertEquals(COUNT, result.size)
     }
 
     @Test
-    fun testCreateCollection() = runTest {
-        val initialSize = viewModel.getAllElements().size
+    fun testCreateCollections() = runTest {
+        val initialSize = Result.Success(viewModel.elements.value as List<Collection>).data.size
 
         viewModel.create(COUNT)
-        val result = viewModel.getAllElements()
 
+        val result = Result.Success(viewModel.elements.value as List<Collection>).data
         assertEquals(initialSize + COUNT, result.size)
     }
 
     @Test
     fun testUpdateCollection() = runTest {
-        val collection = viewModel.getAllElements().first()
-        val updatedCollection = collection.copy(name = "Updated Collection 1")
+        val result1 = Result.Success(viewModel.elements.value as List<Collection>).data
+        val item1 = result1.first()
+        val updatedCollection = item1.copy(name = "Updated Collection 1")
 
         viewModel.update(updatedCollection)
 
-        val result = viewModel.getAllElements().first()
+        val result2 = Result.Success(viewModel.elements.value as List<Collection>).data
+        val item2 = result2.first()
 
-        assertEquals(updatedCollection.name, result.name)
-        assertSameExcept(updatedCollection, result, "name", "lastModified")
+
+        assertEquals(updatedCollection.name, item2.name)
+        assertSameExcept(updatedCollection, result2, "name", "lastModified")
     }
 
     @Test
     fun testDestroyCollection() = runTest {
-        val initialSize = viewModel.getAllElements().size
-        val collection = viewModel.getAllElements().first()
+        val initialSize = Result.Success(viewModel.elements.value as List<Collection>).data.size
 
-        viewModel.destroy(collection)
+        val result1 = Result.Success(viewModel.elements.value as List<Collection>).data
+        val item1 = result1.first()
 
-        val result = viewModel.getAllElements()
-        val deleted = result.find { it.id == collection.id }
+        viewModel.delete(listOf(item1.id))
 
-        assertEquals(initialSize - 1, result.size)
+        val result2 = Result.Success(viewModel.elements.value as List<Collection>).data
+        val deleted = result2.find { it.id == item1.id }
+
+        assertEquals(initialSize - 1, result2.size)
         assertNull(deleted)
     }
 

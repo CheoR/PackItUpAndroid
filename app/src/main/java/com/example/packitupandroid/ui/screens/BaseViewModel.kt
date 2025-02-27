@@ -47,6 +47,12 @@ abstract class BaseViewModel<D: BaseCardData>(
         }
     }
 
+//fun loadData(){
+//    viewModelScope.launch(defaultDispatcher) {
+//        initialize()
+//    }
+//}
+
 
     /**
      * Initializes the data stream from the repository and updates the _elements LiveData.
