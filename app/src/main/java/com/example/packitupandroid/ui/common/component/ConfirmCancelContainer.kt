@@ -4,9 +4,12 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.ime
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.BasicAlertDialog
 import androidx.compose.material3.CenterAlignedTopAppBar
@@ -56,6 +59,7 @@ fun ConfirmCancelContainer(
         onDismissRequest = onCancel,
         modifier = modifier
 //            .requiredWidth(dialogWidth)
+            .windowInsetsPadding(WindowInsets.ime)
             .clip(shape = RoundedCornerShape(dimensionResource(R.dimen.roundness_x_small)))
             .background(MaterialTheme.colorScheme.background)
             .testTag("DialogContainer"),
