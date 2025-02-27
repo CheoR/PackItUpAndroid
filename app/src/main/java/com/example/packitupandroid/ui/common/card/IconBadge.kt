@@ -72,8 +72,9 @@ fun IconBadge(
         },
     ) {
         IconImage(
-            image = image,
+            selectedIcon = image,
             modifier = imageDimens,
+            tintIcon = true,
         )
     }
 }

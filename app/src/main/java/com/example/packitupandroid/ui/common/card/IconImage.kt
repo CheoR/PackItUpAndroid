@@ -4,13 +4,17 @@ import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.util.Base64
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.layout.size
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.graphics.painter.BitmapPainter
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.graphics.vector.rememberVectorPainter
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.unit.dp
 import com.example.packitupandroid.R
 
 
@@ -57,16 +61,19 @@ private fun base64ToBitmap(base64Image: String): Bitmap? {
  * @param contentDescription Text used by accessibility services to describe what this image represents */
 @Composable
 fun IconImage(
-    image: ImageContent,
+    selectedIcon: ImageContent,
     modifier: Modifier = Modifier,
-    contentDescription: String? = null
+    contentDescription: String? = null,
+    tintIcon: Boolean = false,
 ) {
-    val painter = when (image) {
-        is ImageContent.BitmapImage -> BitmapPainter(image.bitmap.asImageBitmap())
-        is ImageContent.DrawableImage -> painterResource(id = image.drawableResId)
-        is ImageContent.VectorImage -> rememberVectorPainter(image = image.imageVector)
+    val color = if (tintIcon) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurfaceVariant
+
+    val painter = when (selectedIcon) {
+        is ImageContent.BitmapImage -> BitmapPainter(selectedIcon.bitmap.asImageBitmap())
+        is ImageContent.DrawableImage -> painterResource(id = selectedIcon.drawableResId)
+        is ImageContent.VectorImage -> rememberVectorPainter(image = selectedIcon.imageVector)
         is ImageContent.BitmapStringImage -> {
-            val bitmap = base64ToBitmap(image.bitmapString)
+            val bitmap = base64ToBitmap(selectedIcon.bitmapString)
             if (bitmap != null) {
                 BitmapPainter(bitmap.asImageBitmap())
             } else {
@@ -77,8 +84,9 @@ fun IconImage(
     }
 
     return Image(
-        modifier = modifier,
+        modifier = modifier.size(40.dp),
         painter = painter,
-        contentDescription = contentDescription
+        contentDescription = contentDescription,
+        colorFilter = ColorFilter.tint(color),
     )
 }

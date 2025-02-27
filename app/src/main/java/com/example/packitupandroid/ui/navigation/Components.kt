@@ -1,6 +1,5 @@
 package com.example.packitupandroid.ui.navigation
 
-import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.CenterAlignedTopAppBar
@@ -13,12 +12,9 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarScrollBehavior
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.res.vectorResource
-import androidx.compose.ui.unit.dp
 import com.example.packitupandroid.R
-
+import com.example.packitupandroid.ui.common.card.IconImage
 
 /**
  * Composable function that creates a bottom navigation bar for the application.
@@ -48,10 +44,12 @@ fun BottomNavigationBar(
         contentColor = MaterialTheme.colorScheme.onPrimaryContainer,
     ) {
         TOP_LEVEL_DESTINATIONS.forEach { Destination ->
-            val selectedIcon = when (Destination.selectedIcon) {
-                is ImageVector -> Destination.selectedIcon
-                else -> ImageVector.vectorResource(id = Destination.selectedIcon as Int)
-            }
+
+            val selectedIcon = if (selectedDestination == Destination.route) Destination.selectedIcon else Destination.unselectedIcon
+            val contentDescription = stringResource(Destination.iconTextId)
+            val tintIcon = selectedDestination == Destination.route
+            val destinationRoute = Destination.route
+            val color = if (selectedDestination == destinationRoute) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurfaceVariant
 
             val isEnabled = when(Destination.route) { // TODO: fix this
                 Route.BOXES -> navHostState.showBoxesScreenSnackBar || navHostState.canNavigateToBoxesScreen
@@ -61,15 +59,15 @@ fun BottomNavigationBar(
 
             NavigationBarItem(
                 modifier = Modifier,
-                selected = selectedDestination == Destination.route,
+                selected = selectedDestination == destinationRoute,
                 enabled = isEnabled,
                 onClick = {
-                    when(Destination.route) {
+                    when(destinationRoute) {
                         Route.BOXES -> {
                             if(navHostState.canNavigateToBoxesScreen) {
                                 navigateToTopLevelDestination(Destination)
                             } else {
-                                toggleScreenSnackbar(Destination.route)
+                                toggleScreenSnackbar(destinationRoute)
                                 // TODO - fix with stringResource
                                 launchSnackBar("Collection")
                             }
@@ -78,7 +76,7 @@ fun BottomNavigationBar(
                             if(navHostState.canNavigateToItemsScreen) {
                                 navigateToTopLevelDestination(Destination)
                             } else {
-                                toggleScreenSnackbar(Destination.route)
+                                toggleScreenSnackbar(destinationRoute)
                                 // TODO - fix with stringResource
                                 launchSnackBar("Box")
                             }
@@ -87,25 +85,16 @@ fun BottomNavigationBar(
                     }
                 },
                 icon = {
-                    Icon(
-                        imageVector = selectedIcon,
-                        contentDescription = stringResource(Destination.iconTextId),
-                        modifier = Modifier.size(40.dp),
-                        tint = if (selectedDestination == Destination.route) {
-                            MaterialTheme.colorScheme.primary
-                        } else {
-                            MaterialTheme.colorScheme.onSurfaceVariant
-                        }
+                    IconImage(
+                        selectedIcon = selectedIcon,
+                        contentDescription = contentDescription,
+                        tintIcon = tintIcon,
                     )
                 },
                 label = {
                     Text(
-                        text = Destination.route,
-                        color = if (selectedDestination == Destination.route) {
-                            MaterialTheme.colorScheme.primary
-                        } else {
-                            MaterialTheme.colorScheme.onSurfaceVariant
-                        },
+                        text = destinationRoute,
+                        color = color,
                         style = MaterialTheme.typography.bodySmall,
                     )
                 }
