@@ -56,7 +56,9 @@ fun EditableDropdown(
 
     ExposedDropdownMenuBox(
         expanded = expanded.value,
-        onExpandedChange = { expanded.value = it },
+        onExpandedChange = {
+            if (isEditable) expanded.value = it
+        },
         modifier = modifier
             .fillMaxWidth()
             .background(backgroundColor)

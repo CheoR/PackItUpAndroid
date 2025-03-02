@@ -11,8 +11,11 @@ import com.example.packitupandroid.R
 import com.example.packitupandroid.data.model.BaseCardData
 import com.example.packitupandroid.ui.common.component.ConfirmCancelContainer
 import com.example.packitupandroid.ui.common.card.BaseCard
+import com.example.packitupandroid.ui.common.card.EditCard
 import com.example.packitupandroid.utils.DropdownOptions
+import com.example.packitupandroid.utils.EditFields
 import com.example.packitupandroid.utils.Result
+import com.example.packitupandroid.utils.parseCurrencyToDouble
 
 
 /**
@@ -48,14 +51,11 @@ fun <D: BaseCardData> DeleteDialog(
         onConfirm = onConfirm,
     ) {
         selectedCard.value?.let {
-            BaseCard(
-                data = selectedCard.value!!,
-                iconsContent = iconsContent,
+            EditCard(
+                selectedCard = selectedCard,
                 dropdownOptions = dropdownOptions,
-                onCamera = {},
-                onDelete = {},
-                onUpdate = {},
-                onAdd = {},
+                iconsContent = iconsContent,
+                onFieldChange =  { _, _, _ -> Unit},
                 modifier = Modifier
                     .testTag("DeleteCard"),
             )
