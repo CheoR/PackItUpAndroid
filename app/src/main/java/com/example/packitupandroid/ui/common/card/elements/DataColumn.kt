@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
@@ -16,6 +17,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
@@ -25,12 +27,17 @@ import androidx.compose.ui.tooling.preview.Preview
 import com.example.packitupandroid.R
 import com.example.packitupandroid.data.model.BaseCardData
 import com.example.packitupandroid.data.model.Box
+import com.example.packitupandroid.data.model.BoxIdAndName
+import com.example.packitupandroid.data.model.CollectionIdAndName
 import com.example.packitupandroid.data.model.Item
+import com.example.packitupandroid.ui.theme.PackItUpAndroidTheme
+import com.example.packitupandroid.ui.theme.rememberThemeManager
 import com.example.packitupandroid.utils.DropdownOptions
 import com.example.packitupandroid.utils.EditFields
 import com.example.packitupandroid.utils.Result
 import com.example.packitupandroid.utils.asCurrencyString
 import com.example.packitupandroid.utils.parseCurrencyToDouble
+import com.example.packitupandroid.data.model.Collection
 
 
 /**
@@ -167,13 +174,13 @@ fun <D: BaseCardData>DataColumn(
 
 @Preview(showBackground = true)
 @Composable
-fun PreviewDataColumn() {
+fun PreviewDataColumnItem() {
     val selectedCard = remember { mutableStateOf<Item?>(Item(
         id = "1",
         name = "Item 1",
         description = "Description 1 ipsum dolor sit amet ipsum5 lorem5 Description 2 ipsum dolor sit amet ipsum5 lorem5   Description 3 ipsum dolor sit amet ipsum5 lorem5   Description 4 ipsum dolor sit amet ipsum5 lorem5   Description 1 ipsum dolor sit amet ipsum5 lorem5   Description 6 ipsum dolor sit amet ipsum5 lorem5     ",
         value = 10.0,
-        isFragile = false
+        isFragile = false,
     )) }
 
     val onFieldChange = fun (element: MutableState<Item?>, field: EditFields, value: String) {
@@ -190,11 +197,106 @@ fun PreviewDataColumn() {
             element.value = updatedElement
         }
     }
-
-    DataColumn<Item>(
-        editableFields = Item.EDIT_FIELDS,
-        onFieldChange = onFieldChange,
-        selectedCard = selectedCard,
-        dropdownOptions = Result.Success(emptyList())
-    )
+    val dropdownOptions = Result.Success(
+        listOf(
+            BoxIdAndName(id = "1", name = "Option 1"),
+            BoxIdAndName(id = "2", name = "Option 2"),
+            BoxIdAndName(id = "3", name = "Option 3"),
+        ))
+    val context = LocalContext.current
+    val themeManager = rememberThemeManager(context)
+    PackItUpAndroidTheme(themeManager) {
+        Surface {
+            DataColumn(
+                editableFields = Item.EDIT_FIELDS,
+                onFieldChange = onFieldChange,
+                selectedCard = selectedCard,
+                dropdownOptions = dropdownOptions,
+            )
+        }
+    }
 }
+
+@Preview(showBackground = true)
+@Composable
+fun PreviewDataColumnBox() {
+    val selectedCard = remember { mutableStateOf<Box?>(Box(
+        id = "1",
+        name = "Box 1",
+        description = "Description 1 ipsum dolor sit amet ipsum5 lorem5 Description 2 ipsum dolor sit amet ipsum5 lorem5   Description 3 ipsum dolor sit amet ipsum5 lorem5   Description 4 ipsum dolor sit amet ipsum5 lorem5   Description 1 ipsum dolor sit amet ipsum5 lorem5   Description 6 ipsum dolor sit amet ipsum5 lorem5     ",
+        value = 10.0,
+        isFragile = true,
+    )) }
+
+    val onFieldChange = fun (element: MutableState<Box?>, field: EditFields, value: String) {
+        val editableFields = element.value?.editFields ?: emptyList<EditFields>()
+        element.value?.let { currentBox ->
+            val updatedElement = when(field) {
+                EditFields.Description -> if(editableFields.contains(field)) currentBox.copy(description = value) else currentBox
+                EditFields.Dropdown -> currentBox //  if(editableFields.contains(field))  currentBox.copy(dropdown = value) else currentBox
+                EditFields.ImageUri -> currentBox
+                EditFields.IsFragile -> if(editableFields.contains(field))  currentBox.copy(isFragile = value.toBoolean()) else currentBox
+                EditFields.Name -> if(editableFields.contains(field))  currentBox.copy(name = value) else currentBox
+                EditFields.Value -> if(editableFields.contains(field))  currentBox.copy(value = value.parseCurrencyToDouble()) else currentBox
+            }
+            element.value = updatedElement
+        }
+    }
+    val context = LocalContext.current
+    val themeManager = rememberThemeManager(context)
+    val dropdownOptions = Result.Success(
+    listOf(
+        CollectionIdAndName(id = "1", name = "Option 1"),
+        CollectionIdAndName(id = "2", name = "Option 2"),
+        CollectionIdAndName(id = "3", name = "Option 3"),
+    ))
+    PackItUpAndroidTheme(themeManager) {
+        Surface {
+            DataColumn(
+                editableFields = Box.EDIT_FIELDS,
+                onFieldChange = onFieldChange,
+                selectedCard = selectedCard,
+                dropdownOptions = dropdownOptions,
+            )
+        }
+    }
+}
+
+
+@Preview(showBackground = true)
+@Composable
+fun PreviewDataColumnCollection() {
+    val selectedCard = remember { mutableStateOf<Collection?>(Collection(
+        id = "1",
+        name = "Collection 1",
+        description = "Description 1 ipsum dolor sit amet ipsum5 lorem5 Description 2 ipsum dolor sit amet ipsum5 lorem5   Description 3 ipsum dolor sit amet ipsum5 lorem5   Description 4 ipsum dolor sit amet ipsum5 lorem5   Description 1 ipsum dolor sit amet ipsum5 lorem5   Description 6 ipsum dolor sit amet ipsum5 lorem5     ",
+        value = 10.0,
+    )) }
+
+    val onFieldChange = fun (element: MutableState<Collection?>, field: EditFields, value: String) {
+        val editableFields = element.value?.editFields ?: emptyList()
+        element.value?.let { currentCollection ->
+            val updatedElement = when(field) {
+                EditFields.Description -> if(editableFields.contains(field)) currentCollection.copy(description = value) else currentCollection
+                EditFields.Dropdown -> currentCollection //  if(editableFields.contains(field))  currentCollection.copy(dropdown = value) else currentCollection
+                EditFields.ImageUri -> currentCollection
+                EditFields.IsFragile -> if(editableFields.contains(field))  currentCollection.copy(isFragile = value.toBoolean()) else currentCollection
+                EditFields.Name -> if(editableFields.contains(field))  currentCollection.copy(name = value) else currentCollection
+                EditFields.Value -> if(editableFields.contains(field))  currentCollection.copy(value = value.parseCurrencyToDouble()) else currentCollection
+            }
+            element.value = updatedElement
+        }
+    }
+    val context = LocalContext.current
+    val themeManager = rememberThemeManager(context)
+    PackItUpAndroidTheme(themeManager) {
+        Surface {
+            DataColumn(
+                editableFields = Collection.EDIT_FIELDS,
+                onFieldChange = onFieldChange,
+                selectedCard = selectedCard,
+            )
+        }
+    }
+}
+

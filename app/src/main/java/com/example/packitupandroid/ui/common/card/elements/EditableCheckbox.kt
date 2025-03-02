@@ -5,13 +5,16 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.tooling.preview.Preview
+import com.example.packitupandroid.ui.theme.PackItUpAndroidTheme
+import com.example.packitupandroid.ui.theme.rememberThemeManager
 
 
 /**
@@ -50,5 +53,27 @@ fun EditableCheckbox(
             },
             enabled = isEditable,
         )
+    }
+}
+
+
+@Preview(showBackground = true)
+@Composable
+fun EditableCheckboxPreview() {
+    val checked = remember { mutableStateOf(false) }
+    val onCheckedChange = { newValue: Boolean  ->
+        checked.value = newValue
+    }
+    val context = LocalContext.current
+    val themeManager = rememberThemeManager(context)
+    PackItUpAndroidTheme(themeManager) {
+        Surface {
+            EditableCheckbox(
+                checked = checked.value,
+                onCheckedChange = onCheckedChange,
+                isEditable = true,
+                modifier = Modifier,
+            )
+        }
     }
 }

@@ -7,6 +7,7 @@ import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExposedDropdownMenuBox
 import androidx.compose.material3.ExposedDropdownMenuDefaults
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
@@ -16,7 +17,12 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.example.packitupandroid.data.model.BoxIdAndName
+import com.example.packitupandroid.ui.theme.PackItUpAndroidTheme
+import com.example.packitupandroid.ui.theme.rememberThemeManager
 import com.example.packitupandroid.utils.DropdownOptions
 
 
@@ -82,6 +88,33 @@ fun EditableDropdown(
                     },
                 )
             }
+        }
+    }
+}
+
+
+@Preview(showBackground = true)
+@Composable
+fun EditableDropdownPreview() {
+    val selectedOption = remember { mutableStateOf<DropdownOptions?>(null) }
+    val onOptionSelected: (DropdownOptions?) -> Unit = { option ->
+        selectedOption.value = option
+    }
+    val options = listOf(
+        BoxIdAndName(id="1", "Option 1"),
+        BoxIdAndName(id="2", "Option 2"),
+        BoxIdAndName(id="3", "Option 3"),
+    )
+    val context = LocalContext.current
+    val themeManager = rememberThemeManager(context)
+    PackItUpAndroidTheme(themeManager) {
+        Surface {
+            EditableDropdown(
+                options = options,
+                selectedOption = selectedOption.value,
+                onOptionSelected = onOptionSelected,
+                isEditable = true,
+            )
         }
     }
 }

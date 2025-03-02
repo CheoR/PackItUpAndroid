@@ -5,14 +5,17 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.tooling.preview.Preview
+import com.example.packitupandroid.ui.theme.PackItUpAndroidTheme
+import com.example.packitupandroid.ui.theme.rememberThemeManager
 
 
 /**
@@ -60,4 +63,23 @@ fun EditableField(
             .background(if (hasInteracted) Color.Transparent else backgroundColor)
             .clickable(onClick = { hasInteracted = true }, enabled = isEditable)
     )
+}
+
+@Preview(showBackground = true)
+@Composable
+fun EditableFieldPreview() {
+    val text = remember { mutableStateOf("Sample Text") }
+    val onValueChange: (String) -> Unit = { text.value = it}
+    val context = LocalContext.current
+    val themeManager = rememberThemeManager(context)
+    PackItUpAndroidTheme(themeManager) {
+        Surface {
+            EditableField(
+                value = text.value,
+                onValueChange = onValueChange,
+                isEditable = true,
+                textStyle = MaterialTheme.typography.bodyLarge
+            )
+        }
+    }
 }
