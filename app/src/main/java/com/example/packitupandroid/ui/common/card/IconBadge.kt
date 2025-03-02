@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Badge
 import androidx.compose.material3.BadgedBox
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -57,15 +58,19 @@ fun IconBadge(
     return BadgedBox(
         modifier = modifier,
         badge = {
-            if(badgeCount > 0) {
+            if (badgeCount > 0) {
                 Badge(
                     modifier = badgeOffsets,
+                    containerColor = MaterialTheme.colorScheme.primary,
+                    contentColor = MaterialTheme.colorScheme.onPrimary
                 ) {
                     Text(
-                        badgeCount.toString(),
+                        text = badgeCount.toString(),
+                        style = MaterialTheme.typography.labelSmall,
                         modifier = modifier.semantics {
                             contentDescription = badgeContentDescription
-                        }
+                        },
+                        color = MaterialTheme.colorScheme.onPrimary
                     )
                 }
             }

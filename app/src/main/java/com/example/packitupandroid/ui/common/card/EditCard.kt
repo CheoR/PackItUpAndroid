@@ -76,8 +76,6 @@ fun <D: BaseCardData>EditCard(
             Column {
                 iconsContent()
             }
-            // TODO: combine with [BaseCard] to remove duplication and use flag to
-            // display [DataColumn] in edit mode or not
             DataColumn(
                 editableFields = editableFields,
                 onFieldChange = onFieldChange,

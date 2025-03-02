@@ -70,7 +70,7 @@ fun ConfirmCancelContainer(
                     title = {
                         Text(
                             text = title,
-                            style = MaterialTheme.typography.titleLarge,
+                            style = MaterialTheme.typography.displayMedium, // Updated style
                             maxLines = 1,
                             overflow = TextOverflow.Ellipsis
                         )
@@ -91,8 +91,19 @@ fun ConfirmCancelContainer(
                     content()
                 }
                 Spacer(modifier = Modifier.height(4.dp))
-                ActionButton(action = ButtonAction.Confirm, onClick = onConfirm, enabled = confirmButtonEnabled)
-                ActionButton(action = ButtonAction.Cancel, onClick = onCancel, enabled = cancelButtonEnabled)
+                ActionButton(
+                    action = ButtonAction.Confirm,
+                    onClick = onConfirm,
+                    enabled = confirmButtonEnabled,
+                    modifier = Modifier.fillMaxWidth()
+                )
+                Spacer(modifier = Modifier.height(8.dp))
+                ActionButton(
+                    action = ButtonAction.Cancel,
+                    onClick = onCancel,
+                    enabled = cancelButtonEnabled,
+                    modifier = Modifier.fillMaxWidth()
+                )
             }
         }
     }

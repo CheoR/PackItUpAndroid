@@ -16,6 +16,7 @@ import androidx.compose.ui.res.stringResource
 import com.example.packitupandroid.R
 import com.example.packitupandroid.ui.common.card.IconImage
 
+
 /**
  * Composable function that creates a bottom navigation bar for the application.
  *
@@ -68,7 +69,6 @@ fun BottomNavigationBar(
                                 navigateToTopLevelDestination(Destination)
                             } else {
                                 toggleScreenSnackbar(destinationRoute)
-                                // TODO - fix with stringResource
                                 launchSnackBar("Collection")
                             }
                         }
@@ -77,7 +77,6 @@ fun BottomNavigationBar(
                                 navigateToTopLevelDestination(Destination)
                             } else {
                                 toggleScreenSnackbar(destinationRoute)
-                                // TODO - fix with stringResource
                                 launchSnackBar("Box")
                             }
                         }
@@ -122,7 +121,7 @@ fun AppBar(
     navigateUp: () -> Unit = {},
 ) {
     CenterAlignedTopAppBar(
-        title = { Text(text = title) },
+        title = { Text(text = title, style = MaterialTheme.typography.titleLarge) },
         modifier = modifier,
         scrollBehavior = scrollBehavior,
         navigationIcon = {
@@ -130,7 +129,8 @@ fun AppBar(
                 IconButton(onClick = navigateUp) {
                     Icon(
                         imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                        contentDescription = stringResource(R.string.back_button)
+                        contentDescription = stringResource(R.string.back_button),
+                        tint = MaterialTheme.colorScheme.onPrimaryContainer,
                     )
                 }
             }

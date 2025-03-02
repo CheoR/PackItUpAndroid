@@ -50,9 +50,10 @@ fun Counter(
     initialCount: Int = 0,
     buttonSize: Dp = 40.dp,
     buttonShape: RoundedCornerShape = RoundedCornerShape(dimensionResource(R.dimen.roundness_small)),
-    buttonColor: Color = Color.Gray,
+    buttonColor: Color = MaterialTheme.colorScheme.primary,
 ) {
-    var count by remember { mutableIntStateOf(initialCount  ) }
+    val counterValue = stringResource(R.string.counter_value, initialCount)
+    var count by remember { mutableIntStateOf(initialCount) }
     val buttonModifier = Modifier
         .size(buttonSize)
         .clip(buttonShape)
@@ -72,12 +73,16 @@ fun Counter(
                 modifier = buttonModifier,
                 onClick = { count = maxOf(0, count - 1) }
             ) {
-                Icon(imageVector = Icons.Default.Remove, contentDescription = stringResource(R.string.decrement))
+                Icon(
+                    imageVector = Icons.Default.Remove,
+                    contentDescription = stringResource(R.string.decrement),
+                    tint = MaterialTheme.colorScheme.onPrimary
+                )
             }
             TextButton(
                 modifier = buttonModifier
                     .semantics {
-                        contentDescription = R.string.counter_value.toString()
+                        contentDescription = counterValue
                     },
                 onClick = {},
                 enabled = false,
@@ -85,13 +90,18 @@ fun Counter(
                 Text(
                     text = count.toString(),
                     style = MaterialTheme.typography.titleLarge,
+                    color = MaterialTheme.colorScheme.onPrimary
                 )
             }
             IconButton(
                 modifier = buttonModifier,
                 onClick = { count++ },
             ) {
-                Icon(imageVector = Icons.Default.Add, contentDescription = stringResource(R.string.increment))
+                Icon(
+                    imageVector = Icons.Default.Add,
+                    contentDescription = stringResource(R.string.increment),
+                    tint = MaterialTheme.colorScheme.onPrimary
+                )
             }
         }
         ActionButton(

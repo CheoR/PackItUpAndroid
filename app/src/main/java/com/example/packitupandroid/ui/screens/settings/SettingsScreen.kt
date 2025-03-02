@@ -10,7 +10,9 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.DarkMode
 import androidx.compose.material.icons.filled.LightMode
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Switch
+import androidx.compose.material3.SwitchDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -89,12 +91,18 @@ private fun SettingsRow(
         Icon(
             imageVector = setting.icon,
             contentDescription = stringResource(R.string.set_setting, setting.text),
+            tint = MaterialTheme.colorScheme.primary,
         )
-        Text(text = stringResource(setting.text))
+        Text(
+            text = stringResource(setting.text),
+            style = MaterialTheme.typography.bodyMedium,
+            color = MaterialTheme.colorScheme.onSurface,
+        )
         Spacer(modifier = Modifier.weight(1f))
         Switch(
             checked = setting.isChecked,
             onCheckedChange = setting.onCheckedChange,
+            colors = SwitchDefaults.colors(checkedThumbColor = MaterialTheme.colorScheme.primary),
         )
     }
 }

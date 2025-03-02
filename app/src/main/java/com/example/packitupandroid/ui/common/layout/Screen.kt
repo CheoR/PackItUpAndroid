@@ -36,7 +36,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalConfiguration
@@ -49,12 +48,12 @@ import androidx.compose.ui.unit.dp
 import com.example.packitupandroid.R
 import com.example.packitupandroid.data.model.BaseCardData
 import com.example.packitupandroid.data.model.Item
-import com.example.packitupandroid.ui.common.dialog.CameraDialog
+import com.example.packitupandroid.ui.common.card.BaseCard
 import com.example.packitupandroid.ui.common.component.Counter
+import com.example.packitupandroid.ui.common.component.Spinner
+import com.example.packitupandroid.ui.common.dialog.CameraDialog
 import com.example.packitupandroid.ui.common.dialog.DeleteDialog
 import com.example.packitupandroid.ui.common.dialog.EditDialog
-import com.example.packitupandroid.ui.common.component.Spinner
-import com.example.packitupandroid.ui.common.card.BaseCard
 import com.example.packitupandroid.utils.DropdownOptions
 import com.example.packitupandroid.utils.EditFields
 import com.example.packitupandroid.utils.Result
@@ -119,7 +118,6 @@ fun <D : BaseCardData> Screen(
     val editDialogIsExpanded = remember { mutableStateOf(false) }
     val deleteDialogIsExpanded = remember { mutableStateOf(false) }
     val selectedCard = remember { mutableStateOf<D?>(null) }
-
     val configuration = LocalConfiguration.current
     val screenWidth = configuration.screenWidthDp.dp
     val dialogWidth = screenWidth * 0.95f
@@ -192,21 +190,21 @@ fun <D : BaseCardData> Screen(
                 .fillMaxWidth()
                 .padding(8.dp)
                 .testTag("SearchTextField"),
+            textStyle = MaterialTheme.typography.bodyLarge,
             decorationBox = { innerTextField ->
                 Box(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .background(Color.Gray.copy(alpha = 0.1f))
+                        .background(MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.1f))
                         .padding(8.dp)
                 ) {
                     if (searchQuery.isEmpty()) {
-                        Text(stringResource(R.string.search), color = Color.Gray)
+                        Text(stringResource(R.string.search), color = MaterialTheme.colorScheme.onSurfaceVariant)
                     }
                     innerTextField()
                 }
             }
         )
-
         when(result) {
             is Result.Loading -> {
                 Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
@@ -218,10 +216,11 @@ fun <D : BaseCardData> Screen(
                     .weight(1f)
                     .fillMaxWidth(),
                     contentAlignment = Alignment.Center,
-                ){
-                    Text( // TODO: ref
+                ) {
+                    Text(
                         text = "error: " + stringResource(R.string.empty_list, emptyListPlaceholder),
                         style = MaterialTheme.typography.bodyLarge,
+                        color = MaterialTheme.colorScheme.error,
                     )
                 }
             }
@@ -231,7 +230,7 @@ fun <D : BaseCardData> Screen(
                         .weight(1f)
                         .fillMaxWidth(),
                         contentAlignment = Alignment.Center,
-                    ){
+                    ) {
                         Text(
                             text = stringResource(R.string.empty_list, emptyListPlaceholder),
                             style = MaterialTheme.typography.bodyLarge,
@@ -243,9 +242,7 @@ fun <D : BaseCardData> Screen(
                         modifier = Modifier
                             .weight(1f)
                             .testTag("LazyColumn"),
-                        verticalArrangement = Arrangement.spacedBy(
-                            dimensionResource(R.dimen.space_arrangement_small)
-                        )
+                        verticalArrangement = Arrangement.spacedBy(dimensionResource(R.dimen.space_arrangement_small))
                     ) {
                         items(
                             items = filteredElements,
@@ -299,13 +296,12 @@ fun <D : BaseCardData> Screen(
                     modifier = modifier.padding(16.dp),
                     horizontalArrangement = Arrangement.SpaceAround,
                 ) {
-                    // TODO: DETERMINE TEXT FOR DELIVERY OPTIONS
                     DeliveryOptionButton(
                         icon = Icons.Filled.LocalShipping,
                         text = "Shipping",
                         onClick = {
                             // TODO: move actions to viewModel and pass through screens, e.g. ItemsScreen
-                            // that way each type can ahve specific actions and/or hw to process data on current screen
+                            // that way each type can have specific actions and/or how to process data on current screen
                             coroutineScope.launch { sheetState.hide() }.invokeOnCompletion {
                                 if (!sheetState.isVisible) {
                                     showBottomSheet = false
@@ -322,7 +318,8 @@ fun <D : BaseCardData> Screen(
                                     showBottomSheet = false
                                 }
                             }
-                        }                    )
+                        }
+                    )
                     DeliveryOptionButton(
                         icon = Icons.Filled.Backup,
                         text = "Backup",
@@ -459,13 +456,15 @@ fun DeliveryOptionButton(
             Icon(
                 imageVector = icon,
                 contentDescription = text,
-                modifier = Modifier.size(48.dp)
+                modifier = Modifier.size(48.dp),
+                tint = MaterialTheme.colorScheme.primary,
             )
         }
         Text(
             text = text,
             style = MaterialTheme.typography.labelSmall,
-            textAlign = TextAlign.Center
+            textAlign = TextAlign.Center,
+            color = MaterialTheme.colorScheme.onSurface,
         )
     }
 }

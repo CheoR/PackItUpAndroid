@@ -33,7 +33,6 @@ import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.ExposedDropdownMenuBox
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.LocalTextStyle
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
@@ -118,7 +117,7 @@ fun <D: BaseCardData>BaseCard(
     val cameraButtonContentDescription = stringResource(R.string.camera)
     val favoriteButtonContentDescription = stringResource(R.string.favorite)
 
-    val dropdownOptionsList = if(dropdownOptions != null) {
+    val dropdownOptionsList = if (dropdownOptions != null) {
         when (dropdownOptions) {
             is Result.Success -> dropdownOptions.data
             is Result.Error -> emptyList()
@@ -127,7 +126,7 @@ fun <D: BaseCardData>BaseCard(
     } else { emptyList() }
 
     val selectedBox: DropdownOptions? = if (dropdownOptions != null) {
-        // TODO: try to clean this up so don't nee to do checks against model data class
+        // TODO: try to clean this up so don't need to do checks against model data class
         when (data) {
             is Item -> dropdownOptionsList.find { it?.id == data.boxId }
             is Box -> dropdownOptionsList.find { it?.id == data.collectionId }
@@ -141,7 +140,7 @@ fun <D: BaseCardData>BaseCard(
 
     val anchors = DraggableAnchors {
         HorizontalDragValue.START at 0f
-        HorizontalDragValue.END at -boxSize /100
+        HorizontalDragValue.END at -boxSize / 100
     }
 
     val state = remember {
@@ -156,7 +155,7 @@ fun <D: BaseCardData>BaseCard(
 
     val iconsBackgroundColor by animateColorAsState(
         when (state.targetValue) {
-            HorizontalDragValue.START -> MaterialTheme.colorScheme.surfaceBright
+            HorizontalDragValue.START -> MaterialTheme.colorScheme.surface
             HorizontalDragValue.END -> MaterialTheme.colorScheme.tertiary
         },
         label = "change color"
@@ -186,13 +185,14 @@ fun <D: BaseCardData>BaseCard(
                 BasicTextField(
                     value = data.name,
                     onValueChange = {},
-                    textStyle = MaterialTheme.typography.titleLarge,
                     maxLines = 1,
                     enabled = false,
                     modifier = Modifier
-                        .fillMaxWidth(),
+                        .fillMaxWidth()
+                        .background(MaterialTheme.colorScheme.surfaceVariant),
+                    textStyle = MaterialTheme.typography.displayMedium.copy(color = MaterialTheme.colorScheme.onSurfaceVariant),
                 )
-                if(dropdownOptions != null) {
+                if (dropdownOptions != null) {
                     ExposedDropdownMenuBox(
                         expanded = false,
                         onExpandedChange = {},
@@ -202,13 +202,14 @@ fun <D: BaseCardData>BaseCard(
                             value = selectedBox?.name ?: "",
                             onValueChange = {},
                             modifier = Modifier.fillMaxWidth(),
+                            textStyle = MaterialTheme.typography.bodySmall.copy(color = MaterialTheme.colorScheme.onSurfaceVariant),
                         )
                     }
                 }
                 BasicTextField(
                     value = data.description ?: "",
                     onValueChange = {},
-                    textStyle = MaterialTheme.typography.bodyMedium,
+                    textStyle = MaterialTheme.typography.bodyMedium.copy(color = MaterialTheme.colorScheme.onSurfaceVariant),
                     minLines = 3,
                     maxLines = 3,
                     enabled = false,
@@ -234,11 +235,7 @@ fun <D: BaseCardData>BaseCard(
                     BasicTextField(
                         value = data.value.asCurrencyString(),
                         onValueChange = {},
-                        // TODO: merge MaterialTheme.typeograph and TextAlign.Right
-                        textStyle = LocalTextStyle.current.copy(
-                            textAlign = TextAlign.Right,
-                        ),
-//                        textStyle = MaterialTheme.typography.bodySmall,
+                        textStyle = MaterialTheme.typography.bodySmall.copy(textAlign = TextAlign.Right, color = MaterialTheme.colorScheme.onSurfaceVariant),
                         enabled = false,
                         modifier = Modifier.semantics { contentDescription = valueFieldContentDescription },
                     )
@@ -250,9 +247,7 @@ fun <D: BaseCardData>BaseCard(
                     .graphicsLayer { boxSize = size.width }
                     .offset {
                         IntOffset(
-                            x = state
-                                .requireOffset()
-                                .roundToInt(),
+                            x = state.requireOffset().roundToInt(),
                             y = 0,
                         )
                     }
@@ -260,7 +255,7 @@ fun <D: BaseCardData>BaseCard(
                     .background(iconsBackgroundColor),
                 verticalArrangement = Arrangement.Center,
             ) {
-                when(state.targetValue) {
+                when (state.targetValue) {
                     HorizontalDragValue.START -> {
                         IconButton(onClick = {} ) {
                             Icon(
@@ -271,7 +266,7 @@ fun <D: BaseCardData>BaseCard(
                         }
                     }
                     HorizontalDragValue.END -> {
-                        if(data is Item) {
+                        if (data is Item) {
                             IconButton(onClick = {
                                 scope.launch {
                                     onCamera()

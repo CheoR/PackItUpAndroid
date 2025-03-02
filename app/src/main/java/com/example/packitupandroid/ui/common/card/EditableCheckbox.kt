@@ -4,6 +4,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.material3.Checkbox
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -34,12 +35,11 @@ fun EditableCheckbox(
     modifier: Modifier = Modifier
 ) {
     var hasInteracted by remember { mutableStateOf(false) }
-    val backgroundColor = if (isEditable && !hasInteracted) Color(0xFF5587D9) else Color.Transparent
+    val backgroundColor = if (isEditable && !hasInteracted) MaterialTheme.colorScheme.primary else Color.Transparent
 
     Box(
         modifier = modifier
             .background(backgroundColor)
-//            .then(modifier)
             .clickable(enabled = isEditable) { hasInteracted = true }
     ) {
         Checkbox(

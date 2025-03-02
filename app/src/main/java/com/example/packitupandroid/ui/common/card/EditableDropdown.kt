@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExposedDropdownMenuBox
 import androidx.compose.material3.ExposedDropdownMenuDefaults
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
@@ -39,8 +40,7 @@ fun EditableDropdown(
 ) {
     var expanded by remember { mutableStateOf(false) }
     var hasInteracted by remember { mutableStateOf(false) }
-    val backgroundColor = if (isEditable && !hasInteracted) Color(0xFF5587D9) else Color.Transparent
-//    val interactionSource = remember { MutableInteractionSource() }
+    val backgroundColor = if (isEditable && !hasInteracted) MaterialTheme.colorScheme.primary else Color.Transparent
 
     ExposedDropdownMenuBox(
         expanded = expanded,
@@ -49,31 +49,6 @@ fun EditableDropdown(
             .fillMaxWidth()
             .clickable(enabled = isEditable) { hasInteracted = true },
     ) {
-//        BasicTextField(
-//            readOnly = true,
-//            value = selectedOption?.name ?: "Select Options",
-//            onValueChange = {},
-//            modifier = Modifier.fillMaxWidth(),
-//            interactionSource = interactionSource,
-//            textStyle = LocalTextStyle.current.copy(fontSize = MaterialTheme.typography.bodyMedium.fontSize),
-//        ) { innerTextField ->
-//            TextFieldDefaults.DecorationBox(
-//                value = selectedOption?.name ?: "Select Options",
-//                innerTextField = innerTextField,
-//                interactionSource = interactionSource,
-//                contentPadding = PaddingValues(0.dp), // to remove padding
-//                enabled = true,
-//                singleLine = true,
-//                colors = TextFieldDefaults.colors(
-//                    unfocusedContainerColor = backgroundColor,
-//                    focusedContainerColor = backgroundColor,
-//                ),
-//                visualTransformation = VisualTransformation.None,
-//                trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded) },
-//            )
-//        }
-//
-
         TextField(
             readOnly = true,
             value = selectedOption?.name ?: "Select Options",

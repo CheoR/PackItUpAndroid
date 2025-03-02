@@ -57,7 +57,7 @@ fun Spinner(
     imageShape: Shape = CircleShape,
     contentScale: ContentScale = ContentScale.Crop,
     contentDescription: String = "Loading Content",
-    backgroundColor: Color = MaterialTheme.colorScheme.background,
+    backgroundColor: Color = MaterialTheme.colorScheme.primary
 //    imageTint: Color = MaterialTheme.colorScheme.primary,
 ) {
     val infiniteTransition = rememberInfiniteTransition(label = "infiniteTransition")

@@ -95,7 +95,7 @@ fun <D: BaseCardData>DataColumn(
                 onFieldChange(selectedCard, EditFields.Name, it)
             },
             isEditable = isEditable(EditFields.Name),
-            textStyle = MaterialTheme.typography.titleLarge,
+            textStyle = MaterialTheme.typography.displayMedium,
             modifier = Modifier.fillMaxWidth(),
         )
 

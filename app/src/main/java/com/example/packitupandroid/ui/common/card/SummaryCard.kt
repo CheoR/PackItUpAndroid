@@ -65,12 +65,10 @@ fun SummaryCard(
                     .fillMaxHeight()
                     .weight(2f),
             ) {
-                // TODO: combine with [EditCard] to remove duplication and use flag to
-                // display [DataColumn] in edit mode or not
                 BasicTextField(
                     value = stringResource(name),
                     onValueChange = {},
-                    textStyle = MaterialTheme.typography.titleLarge,
+                    textStyle = MaterialTheme.typography.displayMedium,
                     maxLines = 1,
                     enabled = false,
                     modifier = Modifier
@@ -91,7 +89,7 @@ fun SummaryCard(
                     .fillMaxHeight(),
                 horizontalAlignment = Alignment.CenterHorizontally,
             ) {
-                if(canNavigateToScreen) {
+                if (canNavigateToScreen) {
                     IconButton(
                         onClick = {
                             navigateToTopLevelDestination()

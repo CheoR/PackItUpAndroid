@@ -4,6 +4,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -41,7 +42,7 @@ fun EditableField(
     maxLines: Int = 1,
     keyboardOptions: KeyboardOptions = KeyboardOptions.Default
 ) {
-    val backgroundColor = if (isEditable) Color(0xFF5587D9) else Color.Transparent
+    val backgroundColor = if (isEditable) MaterialTheme.colorScheme.primary else Color.Transparent
     var hasInteracted by remember { mutableStateOf(false) }
 
     BasicTextField(
