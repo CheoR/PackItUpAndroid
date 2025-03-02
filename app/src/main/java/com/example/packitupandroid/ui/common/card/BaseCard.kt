@@ -173,14 +173,17 @@ fun <D: BaseCardData>BaseCard(
             .fillMaxWidth()
             .height(dimensionResource(R.dimen.card_height)),
     ) {
-        Row {
+        Row(
+            modifier = Modifier
+                .background(MaterialTheme.colorScheme.inversePrimary),
+        ) {
             Column {
                 iconsContent()
             }
             Column(
                 modifier = Modifier
-                    .weight(1f)
-                    .fillMaxHeight(),
+                    .fillMaxHeight()
+                    .weight(1f),
             ) {
                 // TODO: combine with [EditCard] to remove duplication and use flag to
                 // display [DataColumn] in edit mode or not

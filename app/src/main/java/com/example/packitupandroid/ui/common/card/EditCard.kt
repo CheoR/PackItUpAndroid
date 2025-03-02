@@ -1,14 +1,17 @@
 package com.example.packitupandroid.ui.common.card
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.Label
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ElevatedCard
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
@@ -75,7 +78,10 @@ fun <D: BaseCardData>EditCard(
             .fillMaxWidth()
             .height(dimensionResource(R.dimen.card_height)),
     ) {
-        Row {
+        Row(
+            modifier = Modifier
+                .background(MaterialTheme.colorScheme.inversePrimary),
+        ) {
             Column {
                 iconsContent()
             }
@@ -84,7 +90,9 @@ fun <D: BaseCardData>EditCard(
                 onFieldChange = onFieldChange,
                 selectedCard = selectedCard,
                 dropdownOptions = dropdownOptions,
-                modifier = Modifier.weight(1f),
+                modifier = Modifier
+                    .fillMaxHeight()
+                    .weight(2f),
             )
         }
     }
