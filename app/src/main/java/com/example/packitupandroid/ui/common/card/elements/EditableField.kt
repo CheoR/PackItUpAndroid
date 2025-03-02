@@ -45,14 +45,20 @@ fun EditableField(
     maxLines: Int = 1,
     keyboardOptions: KeyboardOptions = KeyboardOptions.Default
 ) {
-    val backgroundColor = if (isEditable) MaterialTheme.colorScheme.primary else Color.Transparent
-    var hasInteracted by remember { mutableStateOf(false) }
+    val hasInteracted = remember { mutableStateOf(false) }
+    val highlightColor = MaterialTheme.colorScheme.primary.copy(alpha = 0.5f)
+    val defaultColor = Color.Transparent
+
+    val backgroundColor = when {
+        isEditable && !hasInteracted.value -> highlightColor
+        else -> defaultColor
+    }
 
     BasicTextField(
         value = value,
         onValueChange = {
             onValueChange(it)
-            hasInteracted = true
+            hasInteracted.value = true
         },
         textStyle = textStyle,
         maxLines = maxLines,
@@ -60,9 +66,9 @@ fun EditableField(
         enabled = isEditable,
         keyboardOptions = keyboardOptions,
         modifier = modifier
-            .background(if (hasInteracted) Color.Transparent else backgroundColor)
-            .clickable(onClick = { hasInteracted = true }, enabled = isEditable)
-    )
+            .background(backgroundColor)
+            .clickable(onClick = { hasInteracted.value = true }, enabled = isEditable),
+        )
 }
 
 @Preview(showBackground = true)

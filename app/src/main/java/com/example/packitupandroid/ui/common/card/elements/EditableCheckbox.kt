@@ -37,19 +37,25 @@ fun EditableCheckbox(
     isEditable: Boolean,
     modifier: Modifier = Modifier
 ) {
-    var hasInteracted by remember { mutableStateOf(false) }
-    val backgroundColor = if (isEditable && !hasInteracted) MaterialTheme.colorScheme.primary else Color.Transparent
+    val hasInteracted = remember { mutableStateOf(false) }
+    val highlightColor = MaterialTheme.colorScheme.primary.copy(alpha = 0.5f)
+    val defaultColor = Color.Transparent
+
+    val backgroundColor = when {
+        isEditable && !hasInteracted.value -> highlightColor
+        else -> defaultColor
+    }
 
     Box(
         modifier = modifier
             .background(backgroundColor)
-            .clickable(enabled = isEditable) { hasInteracted = true }
+            .clickable(enabled = isEditable) { hasInteracted.value = true }
     ) {
         Checkbox(
             checked = checked,
             onCheckedChange = {
                 onCheckedChange(it)
-                hasInteracted = true
+                hasInteracted.value = true
             },
             enabled = isEditable,
         )

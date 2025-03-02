@@ -1,5 +1,6 @@
 package com.example.packitupandroid.ui.common.card.elements
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -7,14 +8,13 @@ import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExposedDropdownMenuBox
 import androidx.compose.material3.ExposedDropdownMenuDefaults
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.MenuAnchorType
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
@@ -44,22 +44,29 @@ fun EditableDropdown(
     isEditable: Boolean,
     modifier: Modifier = Modifier
 ) {
-    var expanded by remember { mutableStateOf(false) }
-    var hasInteracted by remember { mutableStateOf(false) }
-    val backgroundColor = if (isEditable && !hasInteracted) MaterialTheme.colorScheme.primary else Color.Transparent
+    val expanded = remember { mutableStateOf(false) }
+    val hasInteracted = remember { mutableStateOf(false) }
+    val highlightColor = MaterialTheme.colorScheme.primary.copy(alpha = 0.5f)
+    val defaultColor = Color.Transparent
+
+    val backgroundColor = when {
+        isEditable && !hasInteracted.value -> highlightColor
+        else -> defaultColor
+    }
 
     ExposedDropdownMenuBox(
-        expanded = expanded,
-        onExpandedChange = { expanded = !expanded },
+        expanded = expanded.value,
+        onExpandedChange = { expanded.value = it },
         modifier = modifier
             .fillMaxWidth()
-            .clickable(enabled = isEditable) { hasInteracted = true },
+            .background(backgroundColor)
+            .clickable(enabled = isEditable) { hasInteracted.value = true },
     ) {
         TextField(
             readOnly = true,
             value = selectedOption?.name ?: "Select Options",
             onValueChange = {},
-            trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded) },
+            trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded.value) },
             colors = ExposedDropdownMenuDefaults.textFieldColors(
                 unfocusedContainerColor = backgroundColor,
                 focusedContainerColor = backgroundColor,
@@ -67,12 +74,12 @@ fun EditableDropdown(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(0.dp)
-                .menuAnchor()
+                .menuAnchor(MenuAnchorType.PrimaryNotEditable)
         )
 
         ExposedDropdownMenu(
-            expanded = expanded,
-            onDismissRequest = { expanded = false },
+            expanded = expanded.value,
+            onDismissRequest = { expanded.value = false },
         ) {
             options.forEach { option ->
                 DropdownMenuItem(
@@ -83,8 +90,8 @@ fun EditableDropdown(
                     },
                     onClick = {
                         onOptionSelected(option)
-                        expanded = false
-                        hasInteracted = true
+                        expanded.value = false
+                        hasInteracted.value = true
                     },
                 )
             }

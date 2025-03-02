@@ -157,8 +157,8 @@ fun <D: BaseCardData>BaseCard(
 
     val iconsBackgroundColor by animateColorAsState(
         when (state.targetValue) {
-            HorizontalDragValue.START -> MaterialTheme.colorScheme.surface
-            HorizontalDragValue.END -> MaterialTheme.colorScheme.tertiary
+            HorizontalDragValue.START -> Color.Transparent
+            HorizontalDragValue.END -> MaterialTheme.colorScheme.primary
         },
         label = "change color"
     )
@@ -178,8 +178,8 @@ fun <D: BaseCardData>BaseCard(
                 .background(MaterialTheme.colorScheme.inversePrimary),
         ) {
             Column {
-                iconsContent()
-            }
+               iconsContent()
+             }
             Column(
                 modifier = Modifier
                     .fillMaxHeight()
@@ -193,9 +193,8 @@ fun <D: BaseCardData>BaseCard(
                     maxLines = 1,
                     enabled = false,
                     modifier = Modifier
-                        .fillMaxWidth()
-                        .background(MaterialTheme.colorScheme.surfaceVariant),
-                    textStyle = MaterialTheme.typography.displayMedium.copy(color = MaterialTheme.colorScheme.onSurfaceVariant),
+                        .fillMaxWidth(),
+                    textStyle = MaterialTheme.typography.displayMedium,
                 )
                 if (dropdownOptions != null) {
                     ExposedDropdownMenuBox(
@@ -207,14 +206,14 @@ fun <D: BaseCardData>BaseCard(
                             value = selectedBox?.name ?: "",
                             onValueChange = {},
                             modifier = Modifier.fillMaxWidth(),
-                            textStyle = MaterialTheme.typography.bodySmall.copy(color = MaterialTheme.colorScheme.onSurfaceVariant),
+                            textStyle = MaterialTheme.typography.bodySmall,
                         )
                     }
                 }
                 BasicTextField(
                     value = data.description ?: "",
                     onValueChange = {},
-                    textStyle = MaterialTheme.typography.bodyMedium.copy(color = MaterialTheme.colorScheme.onSurfaceVariant),
+                    textStyle = MaterialTheme.typography.bodyMedium,
                     minLines = 3,
                     maxLines = 3,
                     enabled = false,
