@@ -10,8 +10,8 @@ import androidx.lifecycle.SavedStateHandle
 import com.example.packitupandroid.R
 import com.example.packitupandroid.data.model.Collection
 import com.example.packitupandroid.data.repository.CollectionsRepository
-import com.example.packitupandroid.ui.common.card.IconBadge
-import com.example.packitupandroid.ui.common.card.ImageContent
+import com.example.packitupandroid.ui.common.card.elements.IconBadge
+import com.example.packitupandroid.ui.common.card.elements.ImageContent
 import com.example.packitupandroid.ui.screens.BaseViewModel
 import com.example.packitupandroid.utils.EditFields
 import com.example.packitupandroid.utils.parseCurrencyToDouble

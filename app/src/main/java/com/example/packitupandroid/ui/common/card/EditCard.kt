@@ -19,6 +19,9 @@ import androidx.compose.ui.tooling.preview.Preview
 import com.example.packitupandroid.R
 import com.example.packitupandroid.data.model.BaseCardData
 import com.example.packitupandroid.data.model.Item
+import com.example.packitupandroid.ui.common.card.elements.DataColumn
+import com.example.packitupandroid.ui.common.card.elements.IconBadge
+import com.example.packitupandroid.ui.common.card.elements.ImageContent
 import com.example.packitupandroid.utils.DropdownOptions
 import com.example.packitupandroid.utils.EditFields
 import com.example.packitupandroid.utils.Result

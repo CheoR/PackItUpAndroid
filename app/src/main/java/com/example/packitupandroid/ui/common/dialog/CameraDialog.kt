@@ -23,7 +23,7 @@ import androidx.core.content.ContextCompat
 import com.example.packitupandroid.R
 import com.example.packitupandroid.data.model.BaseCardData
 import com.example.packitupandroid.data.model.Item
-import com.example.packitupandroid.ui.common.card.CameraPreview
+import com.example.packitupandroid.ui.common.card.elements.CameraPreview
 import com.example.packitupandroid.ui.common.component.ConfirmCancelContainer
 import com.example.packitupandroid.utils.EditFields
 import java.io.ByteArrayOutputStream

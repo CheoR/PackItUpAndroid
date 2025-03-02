@@ -14,7 +14,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import com.example.packitupandroid.R
-import com.example.packitupandroid.ui.common.card.IconImage
+import com.example.packitupandroid.ui.common.card.elements.IconImage
 
 
 /**

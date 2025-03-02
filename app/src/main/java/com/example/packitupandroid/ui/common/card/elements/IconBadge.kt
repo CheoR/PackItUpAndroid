@@ -1,4 +1,4 @@
-package com.example.packitupandroid.ui.common.card
+package com.example.packitupandroid.ui.common.card.elements
 
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.size

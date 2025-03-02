@@ -8,7 +8,7 @@ import androidx.compose.material.icons.filled.Settings
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
 import com.example.packitupandroid.R
-import com.example.packitupandroid.ui.common.card.ImageContent
+import com.example.packitupandroid.ui.common.card.elements.ImageContent
 
 
 /**

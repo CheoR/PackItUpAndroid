@@ -1,4 +1,4 @@
-package com.example.packitupandroid.ui.common.card
+package com.example.packitupandroid.ui.common.card.elements
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable

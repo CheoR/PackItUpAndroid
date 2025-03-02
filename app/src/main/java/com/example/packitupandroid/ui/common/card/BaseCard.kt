@@ -60,6 +60,8 @@ import com.example.packitupandroid.R
 import com.example.packitupandroid.data.model.BaseCardData
 import com.example.packitupandroid.data.model.Box
 import com.example.packitupandroid.data.model.Item
+import com.example.packitupandroid.ui.common.card.elements.IconBadge
+import com.example.packitupandroid.ui.common.card.elements.ImageContent
 import com.example.packitupandroid.utils.DropdownOptions
 import com.example.packitupandroid.utils.Result
 import com.example.packitupandroid.utils.asCurrencyString
