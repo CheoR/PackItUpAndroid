@@ -1,4 +1,4 @@
-package com.example.packitupandroid
+package com.example.packitupandroid.ui
 
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.ui.platform.LocalContext
@@ -25,6 +25,8 @@ import androidx.compose.ui.test.performScrollToIndex
 import androidx.compose.ui.test.performTextReplacement
 import androidx.lifecycle.SavedStateHandle
 import androidx.test.espresso.IdlingRegistry
+import com.example.packitupandroid.MainCoroutineRule
+import com.example.packitupandroid.MockItemsRepository2
 import com.example.packitupandroid.data.model.BoxIdAndName
 import com.example.packitupandroid.ui.screens.item.ItemsScreen
 import com.example.packitupandroid.ui.screens.item.ItemsScreenViewModel

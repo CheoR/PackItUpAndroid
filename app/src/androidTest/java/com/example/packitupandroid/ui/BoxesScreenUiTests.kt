@@ -1,4 +1,4 @@
-package com.example.packitupandroid
+package com.example.packitupandroid.ui
 
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.ui.platform.LocalContext
@@ -24,6 +24,9 @@ import androidx.compose.ui.test.performTextReplacement
 import androidx.compose.ui.test.printToLog
 import androidx.lifecycle.SavedStateHandle
 import androidx.test.espresso.IdlingRegistry
+import com.example.packitupandroid.MainCoroutineRule
+import com.example.packitupandroid.MockBoxesRepository2
+import com.example.packitupandroid.MockItemsRepository2
 import com.example.packitupandroid.data.model.CollectionIdAndName
 import com.example.packitupandroid.ui.screens.box.BoxesScreen
 import com.example.packitupandroid.ui.screens.box.BoxesScreenViewModel
@@ -117,7 +120,7 @@ class BoxesScreenUiTests {
         composeTestRule.setContent {
             val context = LocalContext.current
             val themeManager = rememberThemeManager(context)
-            
+
             PackItUpAndroidTheme(themeManager) {
                 BoxesScreen(
                     viewModel = viewModel,

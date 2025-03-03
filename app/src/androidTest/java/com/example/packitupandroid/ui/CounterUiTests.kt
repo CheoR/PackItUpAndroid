@@ -1,4 +1,4 @@
-package com.example.packitupandroid
+package com.example.packitupandroid.ui
 
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.test.assertIsEnabled
