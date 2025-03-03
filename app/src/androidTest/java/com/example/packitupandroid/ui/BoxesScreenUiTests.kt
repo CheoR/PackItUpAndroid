@@ -25,8 +25,8 @@ import androidx.compose.ui.test.printToLog
 import androidx.lifecycle.SavedStateHandle
 import androidx.test.espresso.IdlingRegistry
 import com.example.packitupandroid.MainCoroutineRule
-import com.example.packitupandroid.MockBoxesRepository2
-import com.example.packitupandroid.MockItemsRepository2
+import com.example.packitupandroid.repository.MockBoxesRepository2
+import com.example.packitupandroid.repository.MockItemsRepository2
 import com.example.packitupandroid.data.model.CollectionIdAndName
 import com.example.packitupandroid.ui.screens.box.BoxesScreen
 import com.example.packitupandroid.ui.screens.box.BoxesScreenViewModel

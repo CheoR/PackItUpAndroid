@@ -1,4 +1,4 @@
-package com.example.packitupandroid
+package com.example.packitupandroid.repository
 
 import com.example.packitupandroid.data.database.entities.CollectionEntity
 import com.example.packitupandroid.data.model.Collection

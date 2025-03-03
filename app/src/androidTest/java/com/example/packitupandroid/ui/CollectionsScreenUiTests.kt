@@ -22,7 +22,7 @@ import androidx.compose.ui.test.performTextReplacement
 import androidx.lifecycle.SavedStateHandle
 import androidx.test.espresso.IdlingRegistry
 import com.example.packitupandroid.MainCoroutineRule
-import com.example.packitupandroid.MockCollectionsRepository2
+import com.example.packitupandroid.repository.MockCollectionsRepository2
 import com.example.packitupandroid.ui.screens.collection.CollectionsScreen
 import com.example.packitupandroid.ui.screens.collection.CollectionsScreenViewModel
 import com.example.packitupandroid.ui.theme.PackItUpAndroidTheme
