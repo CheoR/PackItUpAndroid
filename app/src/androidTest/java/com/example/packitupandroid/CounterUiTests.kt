@@ -1,5 +1,6 @@
 package com.example.packitupandroid
 
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.test.assertIsEnabled
 import androidx.compose.ui.test.assertIsNotEnabled
 import androidx.compose.ui.test.assertTextEquals
@@ -8,6 +9,7 @@ import androidx.compose.ui.test.onNodeWithContentDescription
 import androidx.compose.ui.test.performClick
 import com.example.packitupandroid.ui.common.component.Counter
 import com.example.packitupandroid.ui.theme.PackItUpAndroidTheme
+import com.example.packitupandroid.ui.theme.rememberThemeManager
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
@@ -41,7 +43,10 @@ class CounterTest {
     @Before
     fun setUp() {
         composeTestRule.setContent {
-            PackItUpAndroidTheme {
+            val context = LocalContext.current
+            val themeManager = rememberThemeManager(context)
+
+            PackItUpAndroidTheme(themeManager) {
                 Counter (onCreate = onCreate)
             }
         }

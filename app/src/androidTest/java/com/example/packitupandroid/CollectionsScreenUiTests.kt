@@ -1,6 +1,7 @@
 package com.example.packitupandroid
 
 import androidx.compose.material3.SnackbarHostState
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.semantics.SemanticsProperties
 import androidx.compose.ui.semantics.getOrNull
 import androidx.compose.ui.test.SemanticsMatcher
@@ -8,7 +9,6 @@ import androidx.compose.ui.test.SemanticsNodeInteraction
 import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.assertIsEnabled
 import androidx.compose.ui.test.assertIsNotEnabled
-import androidx.compose.ui.test.assertTextEquals
 import androidx.compose.ui.test.filterToOne
 import androidx.compose.ui.test.hasContentDescription
 import androidx.compose.ui.test.junit4.createComposeRule
@@ -23,6 +23,8 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.test.espresso.IdlingRegistry
 import com.example.packitupandroid.ui.screens.collection.CollectionsScreen
 import com.example.packitupandroid.ui.screens.collection.CollectionsScreenViewModel
+import com.example.packitupandroid.ui.theme.PackItUpAndroidTheme
+import com.example.packitupandroid.ui.theme.rememberThemeManager
 import junit.framework.TestCase.assertEquals
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -102,12 +104,16 @@ class CollectionsScreenUiTests {
 
     private fun setupComposeSetContent() {
         composeTestRule.setContent {
-            CollectionsScreen(
-                viewModel = viewModel,
-                coroutineScope = coroutineScope,
-                snackbarHostState = snackbarHostState,
-                addElements = { _ -> Unit }, // TODO: create test for this
-            )
+            val context = LocalContext.current
+            val themeManager = rememberThemeManager(context)
+            PackItUpAndroidTheme(themeManager) {
+                CollectionsScreen(
+                    viewModel = viewModel,
+                    coroutineScope = coroutineScope,
+                    snackbarHostState = snackbarHostState,
+                    addElements = { _ -> Unit }, // TODO: create test for this
+                )
+            }
         }
     }
 

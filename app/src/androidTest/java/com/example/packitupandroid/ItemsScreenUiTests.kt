@@ -1,6 +1,7 @@
 package com.example.packitupandroid
 
 import androidx.compose.material3.SnackbarHostState
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.semantics.SemanticsProperties
 import androidx.compose.ui.semantics.getOrNull
 import androidx.compose.ui.test.SemanticsMatcher
@@ -28,6 +29,7 @@ import com.example.packitupandroid.data.model.BoxIdAndName
 import com.example.packitupandroid.ui.screens.item.ItemsScreen
 import com.example.packitupandroid.ui.screens.item.ItemsScreenViewModel
 import com.example.packitupandroid.ui.theme.PackItUpAndroidTheme
+import com.example.packitupandroid.ui.theme.rememberThemeManager
 import com.example.packitupandroid.utils.asCurrencyString
 import junit.framework.TestCase.assertEquals
 import kotlinx.coroutines.CoroutineScope
@@ -123,7 +125,10 @@ class ItemsScreenUiTests {
 
     private fun setupComposeSetContent() {
         composeTestRule.setContent {
-            PackItUpAndroidTheme {
+            val context = LocalContext.current
+            val themeManager = rememberThemeManager(context)
+
+            PackItUpAndroidTheme(themeManager) {
                 ItemsScreen(
                     viewModel = viewModel,
                     coroutineScope = coroutineScope,
