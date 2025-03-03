@@ -50,7 +50,7 @@
     <string name="username">username</string>
     <string name="value">$ %f</string>
     <string name="decrement">decrement</string>
-    <string name="counter_value">counter value</string>
+    <string name="counter_value">counter value %d</string>
     <string name="increment">increment</string>
     <string name="empty_list">no %s</string>
     <string name="settings">settings</string>

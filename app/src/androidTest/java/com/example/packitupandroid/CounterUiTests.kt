@@ -36,7 +36,10 @@ class CounterTest {
     }
 
     private fun assertCounterValue(expectedValue: Int) {
-        composeTestRule.onNodeWithContentDescription("Counter Value")
+        composeTestRule.onNodeWithContentDescription(
+            label = "Counter Value $expectedValue",
+            ignoreCase = true,
+        )
             .assertTextEquals(expectedValue.toString())
     }
 

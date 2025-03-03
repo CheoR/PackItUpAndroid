@@ -52,8 +52,8 @@ fun Counter(
     buttonShape: RoundedCornerShape = RoundedCornerShape(dimensionResource(R.dimen.roundness_small)),
     buttonColor: Color = MaterialTheme.colorScheme.primary,
 ) {
-    val counterValue = stringResource(R.string.counter_value, initialCount)
     var count by remember { mutableIntStateOf(initialCount) }
+    val counterValue = stringResource(R.string.counter_value, count)
     val buttonModifier = Modifier
         .size(buttonSize)
         .clip(buttonShape)
