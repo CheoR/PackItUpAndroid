@@ -1,4 +1,4 @@
-package com.example.packitupandroid
+package com.example.packitupandroid.dao
 
 import android.content.Context
 import androidx.room.Room
