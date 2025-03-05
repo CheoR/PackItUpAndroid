@@ -13,19 +13,19 @@
         </DropdownSelection>
         <DialogSelection />
       </SelectionState>
-      <SelectionState runConfigName="OfflineItemsRepositoryTest">
+      <SelectionState runConfigName="OfflineBoxesRepositoryTest">
         <option name="selectionMode" value="DROPDOWN" />
       </SelectionState>
-      <SelectionState runConfigName="testObserve()">
+      <SelectionState runConfigName="OfflineCollectionsRepositoryTest">
         <option name="selectionMode" value="DROPDOWN" />
       </SelectionState>
-      <SelectionState runConfigName="testGet()">
+      <SelectionState runConfigName="test_ItemUpdatesValue_AssociatedCollectionValueUpdates()">
         <option name="selectionMode" value="DROPDOWN" />
       </SelectionState>
-      <SelectionState runConfigName="test_observeAll()">
+      <SelectionState runConfigName="test_ItemUpdateIsFragile_AssociatedCollectionIsFragileUpdates()">
         <option name="selectionMode" value="DROPDOWN" />
       </SelectionState>
-      <SelectionState runConfigName="testObserveAll()">
+      <SelectionState runConfigName="test_DeleteItem_AssociatedCollectionValueUpdates()">
         <option name="selectionMode" value="DROPDOWN" />
       </SelectionState>
     </selectionStates>
