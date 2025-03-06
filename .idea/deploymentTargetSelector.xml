@@ -13,19 +13,19 @@
         </DropdownSelection>
         <DialogSelection />
       </SelectionState>
-      <SelectionState runConfigName="OfflineBoxesRepositoryTest">
+      <SelectionState runConfigName="boxDao_DeleteSelectedBoxes_SelectedBoxesDeleted()">
         <option name="selectionMode" value="DROPDOWN" />
       </SelectionState>
-      <SelectionState runConfigName="OfflineCollectionsRepositoryTest">
+      <SelectionState runConfigName="CollectionDaoTest">
         <option name="selectionMode" value="DROPDOWN" />
       </SelectionState>
-      <SelectionState runConfigName="test_ItemUpdatesValue_AssociatedCollectionValueUpdates()">
+      <SelectionState runConfigName="collectionDao_DeleteCollection_AssociatedBoxesDeleted()">
         <option name="selectionMode" value="DROPDOWN" />
       </SelectionState>
-      <SelectionState runConfigName="test_ItemUpdateIsFragile_AssociatedCollectionIsFragileUpdates()">
+      <SelectionState runConfigName="collectionDao_DeleteCollection_AssociatedItemsDeleted()">
         <option name="selectionMode" value="DROPDOWN" />
       </SelectionState>
-      <SelectionState runConfigName="test_DeleteItem_AssociatedCollectionValueUpdates()">
+      <SelectionState runConfigName="Tests in 'com.example.packitupandroid.dao'">
         <option name="selectionMode" value="DROPDOWN" />
       </SelectionState>
     </selectionStates>
