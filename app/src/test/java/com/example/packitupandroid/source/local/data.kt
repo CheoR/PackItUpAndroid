@@ -1,4 +1,4 @@
-package com.example.packitupandroid.data
+package com.example.packitupandroid.source.local
 
 import com.example.packitupandroid.data.model.Box
 import com.example.packitupandroid.data.model.Item

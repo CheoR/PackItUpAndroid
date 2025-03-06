@@ -1,4 +1,4 @@
-package com.example.packitupandroid.ui.test.dao
+package com.example.packitupandroid.data.database.dao
 
 import com.example.packitupandroid.utils.EditFields
 import java.util.Date

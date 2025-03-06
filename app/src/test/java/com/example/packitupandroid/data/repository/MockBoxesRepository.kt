@@ -1,17 +1,13 @@
-package com.example.packitupandroid.ui.test
+package com.example.packitupandroid.data.repository
 
 import com.example.packitupandroid.data.database.entities.BoxEntity
 import com.example.packitupandroid.data.model.Box
 import com.example.packitupandroid.data.model.CollectionIdAndName
-import com.example.packitupandroid.data.repository.BoxesRepository
-import com.example.packitupandroid.data.repository.toBox
-import com.example.packitupandroid.data.repository.toEntity
 import com.example.packitupandroid.utils.Result
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.map
-
 
 private val collectionsOptions = listOf(
     CollectionIdAndName("1", "Collection 1"),

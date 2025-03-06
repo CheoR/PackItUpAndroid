@@ -1,17 +1,11 @@
-package com.example.packitupandroid.ui.test
+package com.example.packitupandroid.ui.screens
 
 
-import android.util.Log
-import androidx.compose.foundation.layout.size
-import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.SavedStateHandle
-import com.example.packitupandroid.assertSameExcept
-import com.example.packitupandroid.data.model.Box
-import com.example.packitupandroid.data.model.Item
+import com.example.packitupandroid.data.repository.MockItemsRepository
 import com.example.packitupandroid.ui.screens.item.ItemsScreenViewModel
-import com.example.packitupandroid.utils.EditFields
+import com.example.packitupandroid.MainCoroutineRule
 import junit.framework.TestCase.assertEquals
-import junit.framework.TestCase.assertNull
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
 import org.junit.Before
@@ -19,28 +13,12 @@ import org.junit.Rule
 import org.junit.Test
 import com.example.packitupandroid.utils.Result
 import junit.framework.TestCase.assertTrue
-import junit.framework.TestCase.fail
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.drop
 import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.flow.flowOf
-import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.take
 import kotlinx.coroutines.flow.toList
 import kotlinx.coroutines.test.StandardTestDispatcher
 import kotlinx.coroutines.test.TestDispatcher
-import kotlinx.coroutines.test.advanceUntilIdle
-import kotlinx.coroutines.withContext
-import kotlin.collections.addAll
-import kotlin.collections.find
-import kotlin.collections.firstOrNull
-import kotlin.collections.indexOfFirst
-import kotlin.collections.removeAll
-import kotlin.jvm.optionals.getOrNull
-import kotlin.time.Duration.Companion.seconds
 
 private const val COUNT: Int = 5
 

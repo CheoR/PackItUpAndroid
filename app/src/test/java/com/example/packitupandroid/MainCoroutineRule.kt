@@ -1,4 +1,4 @@
-package com.example.packitupandroid.ui.test
+package com.example.packitupandroid
 
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -10,7 +10,7 @@ import org.junit.rules.TestWatcher
 import org.junit.runner.Description
 
 /**
- * Sets the main coroutines dispatcher to a [TestDispatcher] for unit testing.
+ * Sets the main coroutines dispatcher to a [kotlinx.coroutines.test.TestDispatcher] for unit testing.
  *
  * Declare it as a JUnit Rule:
  *

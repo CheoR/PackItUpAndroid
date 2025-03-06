@@ -1,6 +1,6 @@
-package com.example.packitupandroid.ui.test.dao
+package com.example.packitupandroid.data.database.dao
 
-import com.example.packitupandroid.ui.test.MainCoroutineRule
+import com.example.packitupandroid.MainCoroutineRule
 import junit.framework.TestCase.assertEquals
 import junit.framework.TestCase.assertNull
 import kotlinx.coroutines.ExperimentalCoroutinesApi

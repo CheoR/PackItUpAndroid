@@ -1,15 +1,11 @@
-package com.example.packitupandroid.ui.test
+package com.example.packitupandroid.data.repository
 
 import com.example.packitupandroid.data.database.entities.CollectionEntity
 import com.example.packitupandroid.data.model.Collection
-import com.example.packitupandroid.data.repository.CollectionsRepository
-import com.example.packitupandroid.data.repository.toCollection
-import com.example.packitupandroid.data.repository.toEntity
 import com.example.packitupandroid.utils.Result
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.map
-
 
 class MockCollectionsRepository : CollectionsRepository {
     private val collections = mutableListOf<CollectionEntity>()

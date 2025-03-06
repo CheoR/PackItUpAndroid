@@ -1,9 +1,11 @@
-package com.example.packitupandroid.ui.test
+package com.example.packitupandroid.ui.screens
 
 import androidx.lifecycle.SavedStateHandle
 import com.example.packitupandroid.assertSameExcept
 import com.example.packitupandroid.data.model.Collection
+import com.example.packitupandroid.data.repository.MockCollectionsRepository
 import com.example.packitupandroid.ui.screens.collection.CollectionsScreenViewModel
+import com.example.packitupandroid.MainCoroutineRule
 import com.example.packitupandroid.utils.Result
 import junit.framework.TestCase.assertEquals
 import junit.framework.TestCase.assertNull
