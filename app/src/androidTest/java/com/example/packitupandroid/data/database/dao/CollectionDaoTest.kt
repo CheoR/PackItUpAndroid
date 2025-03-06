@@ -1,19 +1,16 @@
-package com.example.packitupandroid.dao
+package com.example.packitupandroid.data.database.dao
 
 import android.content.Context
 import androidx.room.Room
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.example.packitupandroid.data.database.AppDatabase
-import com.example.packitupandroid.data.database.dao.BoxDao
-import com.example.packitupandroid.data.database.dao.CollectionDao
-import com.example.packitupandroid.data.database.dao.ItemDao
 import com.example.packitupandroid.data.model.Box
 import com.example.packitupandroid.data.model.Collection
 import com.example.packitupandroid.data.repository.toEntity
-import com.example.packitupandroid.fake.data.boxes
-import com.example.packitupandroid.fake.data.collections
-import com.example.packitupandroid.fake.data.items
+import com.example.packitupandroid.source.local.boxes
+import com.example.packitupandroid.source.local.collections
+import com.example.packitupandroid.source.local.items
 import junit.framework.TestCase.assertEquals
 import junit.framework.TestCase.assertNull
 import junit.framework.TestCase.assertTrue
