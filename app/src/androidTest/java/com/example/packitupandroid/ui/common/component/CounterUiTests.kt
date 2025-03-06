@@ -1,4 +1,4 @@
-package com.example.packitupandroid.ui
+package com.example.packitupandroid.ui.common.component
 
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.test.assertIsEnabled
@@ -7,7 +7,6 @@ import androidx.compose.ui.test.assertTextEquals
 import androidx.compose.ui.test.junit4.createComposeRule
 import androidx.compose.ui.test.onNodeWithContentDescription
 import androidx.compose.ui.test.performClick
-import com.example.packitupandroid.ui.common.component.Counter
 import com.example.packitupandroid.ui.theme.PackItUpAndroidTheme
 import com.example.packitupandroid.ui.theme.rememberThemeManager
 import org.junit.Before

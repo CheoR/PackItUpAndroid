@@ -1,4 +1,4 @@
-package com.example.packitupandroid.ui
+package com.example.packitupandroid.ui.screens
 
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.ui.platform.LocalContext
@@ -25,22 +25,21 @@ import androidx.compose.ui.test.printToLog
 import androidx.lifecycle.SavedStateHandle
 import androidx.test.espresso.IdlingRegistry
 import com.example.packitupandroid.MainCoroutineRule
+import com.example.packitupandroid.data.model.CollectionIdAndName
 import com.example.packitupandroid.repository.MockBoxesRepository2
 import com.example.packitupandroid.repository.MockItemsRepository2
-import com.example.packitupandroid.data.model.CollectionIdAndName
 import com.example.packitupandroid.ui.screens.box.BoxesScreen
 import com.example.packitupandroid.ui.screens.box.BoxesScreenViewModel
 import com.example.packitupandroid.ui.screens.item.ItemsScreenViewModel
 import com.example.packitupandroid.ui.theme.PackItUpAndroidTheme
 import com.example.packitupandroid.ui.theme.rememberThemeManager
 import com.example.packitupandroid.utils.Result
-import junit.framework.TestCase.assertEquals
+import junit.framework.TestCase
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
-
 
 private const val initialValue = 0
 private const val incrementCountByFive = 5
@@ -97,7 +96,7 @@ class BoxesScreenUiTests {
                 .fetchSemanticsNodes()
                 .size
         }
-        assertEquals(expectedCount, childrenCount)
+        TestCase.assertEquals(expectedCount, childrenCount)
     }
 
     private fun unregisterComposeEspressoIdlingResource() {
@@ -487,7 +486,7 @@ class BoxesScreenUiTests {
         badge1CountNode.printToLog("badge1CountNode2: ")
         println("badge1CountValue: $badge1CountValue2.")
 
-        assertEquals(initialValue + COUNT, badge1CountValue2)
+        TestCase.assertEquals(initialValue + COUNT, badge1CountValue2)
 
 //        val count = card
 ////            .fetchSemanticsNode()

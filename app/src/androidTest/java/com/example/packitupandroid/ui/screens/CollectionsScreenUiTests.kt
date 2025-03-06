@@ -1,4 +1,4 @@
-package com.example.packitupandroid.ui
+package com.example.packitupandroid.ui.screens
 
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.ui.platform.LocalContext
@@ -27,13 +27,12 @@ import com.example.packitupandroid.ui.screens.collection.CollectionsScreen
 import com.example.packitupandroid.ui.screens.collection.CollectionsScreenViewModel
 import com.example.packitupandroid.ui.theme.PackItUpAndroidTheme
 import com.example.packitupandroid.ui.theme.rememberThemeManager
-import junit.framework.TestCase.assertEquals
+import junit.framework.TestCase
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
-
 
 private const val initialValue = 0
 private const val incrementCountByFive = 5
@@ -84,7 +83,7 @@ class CollectionsScreenUiTests {
                 .fetchSemanticsNodes()
                 .size
         }
-        assertEquals(expectedCount, childrenCount)
+        TestCase.assertEquals(expectedCount, childrenCount)
     }
 
     private fun unregisterComposeEspressoIdlingResource() {
@@ -227,7 +226,7 @@ class CollectionsScreenUiTests {
 
     @Test
     fun collectionsScreen_initialValues() {
-        assertEquals(1,1)
+        TestCase.assertEquals(1, 1)
 
 //        composeTestRule
 //            .onNodeWithContentDescription("Counter Value")
