@@ -20,9 +20,9 @@ val boxes = listOf(
 val items = listOf(
     Item(id = "1", name = "Item 1", boxId = boxes.first().id),
     Item(id = "2", name = "Item 2", boxId = boxes.first().id),
-    Item(id = "3", name = "Item 3", boxId = boxes[2].id),
-    Item(id = "4", name = "Item 4", boxId = boxes[2].id),
-    Item(id = "5", name = "Item 5", boxId = boxes[2].id),
-    Item(id = "6", name = "Item 6", boxId = boxes[3].id),
-    Item(id = "7", name = "Item 7", boxId = boxes[3].id),
+    Item(id = "3", name = "Item 3", boxId = boxes[1].id),
+    Item(id = "4", name = "Item 4", boxId = boxes[1].id),
+    Item(id = "5", name = "Item 5", boxId = boxes[1].id),
+    Item(id = "6", name = "Item 6", boxId = boxes[2].id),
+    Item(id = "7", name = "Item 7", boxId = boxes[2].id),
 )
