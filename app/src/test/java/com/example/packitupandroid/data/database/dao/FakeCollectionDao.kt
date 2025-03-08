@@ -2,22 +2,24 @@ package com.example.packitupandroid.data.database.dao
 
 import com.example.packitupandroid.data.database.entities.CollectionEntity
 import com.example.packitupandroid.data.model.Collection
-import com.example.packitupandroid.data.model.CollectionIdAndName
-import com.example.packitupandroid.source.local.LocalDataSource
+import com.example.packitupandroid.data.repository.toCollection
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
-import com.example.packitupandroid.data.repository.toCollection
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.update
 
 
-class FakeCollectionDao : CollectionDao {
+class FakeCollectionDao(
+    private val boxDao: FakeBoxDao,
+    private val itemDao: FakeItemDao
+) : CollectionDao {
     private val _elements = MutableStateFlow<List<CollectionEntity>>(emptyList())
     private val elements: Flow<List<CollectionEntity>> = _elements
-    private var shouldReturnError = false
+//    private var shouldReturnError = false
 //    private var collectionToReturn: Collection? = null
-    private val dataSource = LocalDataSource()
-    private var collectionIdsAndNamesToReturn: List<CollectionIdAndName?>? = dataSource.loadCollections().map { CollectionIdAndName(it.id, it.name) }
+//    private val dataSource = LocalDataSource()
+//    private var collectionIdsAndNamesToReturn: List<CollectionIdAndName?>? = dataSource.loadCollections().map { CollectionIdAndName(it.id, it.name) }
 
 //
 //    fun setShouldReturnError(value: Boolean) {
@@ -49,6 +51,7 @@ class FakeCollectionDao : CollectionDao {
         _elements.update { elements ->
             elements.filterNot { it.id in ids }
         }
+        cascadeDelete(ids)
     }
 
     override suspend fun insert(entities: List<CollectionEntity>) {
@@ -66,5 +69,16 @@ class FakeCollectionDao : CollectionDao {
                 updated
             }
         }
+    }
+
+    suspend fun cascadeDelete(ids: List<String>) {
+        val currBoxes = boxDao.observeAll().first()
+        val boxesToDelete = currBoxes.filter { it?.collectionId in ids }.map { it?.id }
+
+        val currItems = itemDao.observeAll().first()
+        val itemsToDelete = currItems.filter { it?.boxId in boxesToDelete }.map { it?.id }
+
+        itemDao.delete(itemsToDelete.filterNotNull())
+        boxDao.delete(boxesToDelete.filterNotNull())
     }
 }

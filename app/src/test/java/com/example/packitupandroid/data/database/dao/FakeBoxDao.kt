@@ -7,12 +7,15 @@ import com.example.packitupandroid.data.repository.toBox
 import com.example.packitupandroid.source.local.LocalDataSource
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.update
 
 
-class FakeBoxDao : BoxDao {
+class FakeBoxDao(
+    private val itemDao: FakeItemDao
+) : BoxDao {
     private val _elements = MutableStateFlow<List<BoxEntity>>(emptyList())
     private val elements: Flow<List<BoxEntity>> = _elements
     private var shouldReturnError = false
@@ -76,5 +79,12 @@ class FakeBoxDao : BoxDao {
                 updated
             }
         }
+    }
+
+    suspend fun cascadeDelete(ids: List<String>) {
+        val currItems = itemDao.observeAll().first()
+        val itemsToDelete = currItems.filter { it?.boxId in ids }.map { it?.id }
+
+        itemDao.delete(itemsToDelete.filterNotNull())
     }
 }
