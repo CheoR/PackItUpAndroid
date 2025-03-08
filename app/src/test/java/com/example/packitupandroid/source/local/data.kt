@@ -7,8 +7,9 @@ import java.util.Date
 
 
 class TestDataSource() {
-    private val items = LocalDataSource().loadItems()
-    private val boxes = LocalDataSource().loadBoxes()
+    val items = LocalDataSource().loadItems()
+    val boxes = LocalDataSource().loadBoxes()
+    val collections = LocalDataSource().loadCollections()
 }
 
 class LocalDataSource() {
@@ -189,8 +190,8 @@ class LocalDataSource() {
             Box(
                 id = "5a1b8a9d-2e57-4f7c-bfd7-988bb9653f1d",
                 name = "bedroom1",
-                lastModified = Date(1676486400000L),
                 collectionId = "748c0084-4f2b-4957-ae2f-4892670c85f3",
+                lastModified = Date(1676486400000L),
             ),
             Box(
                 id = "c4b6d417-e077-4a20-8d6e-f21f72885cdd",
