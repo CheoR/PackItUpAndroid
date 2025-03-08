@@ -207,7 +207,7 @@ class CollectionDaoTest {
 
     @Test
     @Throws(Exception::class)
-    fun itemDao_UpdateItemValue_CollectionValueUpdated() = runTest {
+    fun collectionDao_UpdateItemValue_CollectionValueUpdated() = runTest {
         // TODO: update CollectionDao to automatically trigger when associated Item instance updates its value or isFragile
 
         val itemNewValue = 500.0
@@ -232,7 +232,7 @@ class CollectionDaoTest {
 
     @Test
     @Throws(Exception::class)
-    fun itemDao_UpdateItemIsFragileProperty_CollectionIsFragilePropertyUpdated() = runTest {
+    fun collectionDao_UpdateItemIsFragileProperty_CollectionIsFragilePropertyUpdated() = runTest {
         // TODO: update BoxDao to automatically trigger when associated Item instance updates its value or isFragile
 
         val collection = getFirstCollection()
