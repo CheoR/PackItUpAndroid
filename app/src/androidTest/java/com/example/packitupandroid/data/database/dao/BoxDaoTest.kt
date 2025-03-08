@@ -98,6 +98,14 @@ class BoxDaoTest{
 
     @Test
     @Throws(Exception::class)
+    fun boxDao_getById_BoxReturned() = runTest {
+        val box = boxDao.get(boxes[3].id)
+
+        assertSameProperties(listOf(boxes[3]), listOfNotNull(box))
+    }
+
+    @Test
+    @Throws(Exception::class)
     fun boxDao_observeWithNonExistingId_NullReturned() = runTest {
         val box = boxDao.observe("doesNotExist").first()
         assertNull(box)
