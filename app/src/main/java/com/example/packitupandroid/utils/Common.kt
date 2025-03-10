@@ -7,6 +7,7 @@ import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.core.net.ParseException
 import java.text.NumberFormat
+import java.util.Locale
 
 
 /**
@@ -32,8 +33,13 @@ fun Double.asCurrencyString(): String {
  * @return The parsed `Double` value, or 0.0 if parsing fails.
  */
 fun String.parseCurrencyToDouble(): Double {
+    val nf: NumberFormat = NumberFormat.getInstance();
+    nf.maximumFractionDigits = 2;
+    nf.currency = java.util.Currency.getInstance(Locale.getDefault());
+
     try {
-        val parsedValue = NumberFormat.getCurrencyInstance().parse(this)
+        val parsedValue = nf.parse(this.replace("$", "").trim())
+//        val parsedValue = NumberFormat.getCurrencyInstance().parse(this)
         return parsedValue?.toDouble() ?: 0.0
     } catch (e: ParseException) {
         e.printStackTrace()
