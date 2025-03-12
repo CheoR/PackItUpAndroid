@@ -9,26 +9,25 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.flowOf
 
-private val boxesOptions = listOf(
-    BoxIdAndName("1", "Collection 1"),
-    BoxIdAndName("2", "Collection 2"),
-    BoxIdAndName("3", "Collection 3"),
-    BoxIdAndName("4", "Collection 4")
-)
 
-class MockItemsRepository : ItemsRepository {
+class MockItemsRepository() : ItemsRepository {
     private val _elements = MutableStateFlow<Result<List<Item?>>>(Result.Loading)
     val elements: StateFlow<Result<List<Item?>>> = _elements.asStateFlow()
+    val dropdownOptions = mutableListOf<BoxIdAndName?>()
+//    private var currentBoxId: String? = null
 
-
-//    init {
-        // Set the initial state to Success with an empty list
-//        _elements.value = Result.Success(emptyList())
-//    }
+    suspend fun load(data: List<Item>) : Result<Unit> {
+        insert(data)
+        return Result.Success(Unit)
+    }
+//
+//    fun setDropdownOptions(options: List<BoxIdAndName?>) { dropdownOptions.addAll(options) }
+//    fun unsetDropdownOptions() { dropdownOptions.clear() }
 
     override fun listOfBoxIdsAndNames(): Flow<Result<List<BoxIdAndName?>>> {
-        return flowOf(Result.Success(boxesOptions))
+        return flowOf(Result.Success(dropdownOptions))
     }
+
     override suspend fun get(id: String): Result<Item?> {
         return when (val result = _elements.value) {
             is Result.Success -> {
@@ -45,22 +44,6 @@ class MockItemsRepository : ItemsRepository {
     }
 
     override fun observeAll(): Flow<Result<List<Item?>>> {
-//        _elements.value = Result.Success(
-
-//        )
-//        return elements
-//        return _elements.map { result ->
-//        val result = _elements.value
-//        return when (result) {
-//                is Result.Success -> Result.Success(result.data)
-//                is Result.Error -> Result.Error(result.exception)
-//                is Result.Loading -> Result.Loading
-//            }
-//        }
-//        _elements.value = Result.Success(
-//            emptyList()
-//        )
-//        return _elements
         return elements
     }
 
