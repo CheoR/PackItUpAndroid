@@ -1,6 +1,7 @@
 package com.example.packitupandroid.source.local
 
 import com.example.packitupandroid.data.model.Box
+import com.example.packitupandroid.data.model.BoxIdAndName
 import com.example.packitupandroid.data.model.Item
 import com.example.packitupandroid.data.model.Collection
 import java.util.Date
@@ -10,6 +11,8 @@ class TestDataSource() {
     val items = LocalDataSource().loadItems()
     val boxes = LocalDataSource().loadBoxes()
     val collections = LocalDataSource().loadCollections()
+    val boxIdAndNames = boxes.map { BoxIdAndName(it.id, it.name) }
+    val collectionIdAndNames = collections.map { BoxIdAndName(it.id, it.name) }
 }
 
 class LocalDataSource() {
