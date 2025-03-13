@@ -6,6 +6,7 @@ import com.example.packitupandroid.data.model.Box
 import com.example.packitupandroid.data.repository.MockBoxesRepository
 import com.example.packitupandroid.ui.screens.box.BoxesScreenViewModel
 import com.example.packitupandroid.MainCoroutineRule
+import com.example.packitupandroid.data.repository.MockItemsRepository
 import com.example.packitupandroid.utils.Result
 import junit.framework.TestCase.assertEquals
 import junit.framework.TestCase.assertNull
@@ -17,8 +18,11 @@ import org.junit.Test
 
 
 class BoxScreenViewModelTest {
+    private lateinit var itemsRepository: MockItemsRepository
     private lateinit var viewModel: BoxesScreenViewModel
-    private val repository = MockBoxesRepository()
+    private val repository = MockBoxesRepository(
+        itemsRepository = itemsRepository,
+    )
 
     @OptIn(ExperimentalCoroutinesApi::class)
     @get:Rule

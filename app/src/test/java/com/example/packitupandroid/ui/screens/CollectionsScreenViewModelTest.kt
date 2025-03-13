@@ -6,6 +6,8 @@ import com.example.packitupandroid.data.model.Collection
 import com.example.packitupandroid.data.repository.MockCollectionsRepository
 import com.example.packitupandroid.ui.screens.collection.CollectionsScreenViewModel
 import com.example.packitupandroid.MainCoroutineRule
+import com.example.packitupandroid.data.repository.MockBoxesRepository
+import com.example.packitupandroid.data.repository.MockItemsRepository
 import com.example.packitupandroid.utils.Result
 import junit.framework.TestCase.assertEquals
 import junit.framework.TestCase.assertNull
@@ -17,8 +19,13 @@ import org.junit.Test
 
 
 class CollectionsScreenViewModelTest {
+    private lateinit var itemsRepository: MockItemsRepository
+    private lateinit var boxesRepository: MockBoxesRepository
     private lateinit var viewModel: CollectionsScreenViewModel
-    private val repository = MockCollectionsRepository()
+    private val repository = MockCollectionsRepository(
+        boxesRepository = boxesRepository,
+        itemsRepository = itemsRepository,
+    )
 
     @OptIn(ExperimentalCoroutinesApi::class)
     @get:Rule
