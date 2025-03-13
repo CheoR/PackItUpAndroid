@@ -39,7 +39,6 @@ class MockItemsRepository() : ItemsRepository {
                 }
             }
             else -> Result.Success(null)
-
         }
     }
 
