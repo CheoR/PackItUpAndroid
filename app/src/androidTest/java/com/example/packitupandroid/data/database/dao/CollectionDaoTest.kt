@@ -8,9 +8,7 @@ import com.example.packitupandroid.data.database.AppDatabase
 import com.example.packitupandroid.data.model.Box
 import com.example.packitupandroid.data.model.Collection
 import com.example.packitupandroid.data.repository.toEntity
-import com.example.packitupandroid.source.local.boxes
-import com.example.packitupandroid.source.local.collections
-import com.example.packitupandroid.source.local.items
+import com.example.packitupandroid.source.local.TestDataSource
 import junit.framework.TestCase.assertEquals
 import junit.framework.TestCase.assertNull
 import junit.framework.TestCase.assertTrue
@@ -26,6 +24,9 @@ import java.io.IOException
 
 @RunWith(AndroidJUnit4::class)
 class CollectionDaoTest {
+    private val collections = TestDataSource().collections
+    private val boxes = TestDataSource().boxes
+    private val items = TestDataSource().items
 
     private lateinit var collectionDao: CollectionDao
     private lateinit var boxDao: BoxDao

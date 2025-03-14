@@ -12,9 +12,7 @@ import com.example.packitupandroid.data.model.BoxIdAndName
 import com.example.packitupandroid.data.repository.OfflineBoxesRepository
 import com.example.packitupandroid.data.repository.OfflineCollectionsRepository
 import com.example.packitupandroid.data.repository.OfflineItemsRepository
-import com.example.packitupandroid.source.local.boxes
-import com.example.packitupandroid.source.local.collections
-import com.example.packitupandroid.source.local.items
+import com.example.packitupandroid.source.local.TestDataSource
 import com.example.packitupandroid.utils.Result
 import junit.framework.TestCase.assertEquals
 import junit.framework.TestCase.assertNull
@@ -31,6 +29,10 @@ import java.io.IOException
 
 @RunWith(AndroidJUnit4::class)
 class OfflineItemsRepositoryTest {
+    private val collections = TestDataSource().collections
+    private val boxes = TestDataSource().boxes
+    private val items = TestDataSource().items
+
     private lateinit var db: AppDatabase
     private lateinit var itemDao: ItemDao
     private lateinit var boxDao: BoxDao
