@@ -91,7 +91,7 @@ class ItemDaoTest {
     @Test
     @Throws(Exception::class)
     fun itemDao_getById_ItemReturnedFromDB() = runTest {
-        val item = itemDao.get("4")
+        val item = itemDao.get("ebaba247-330d-47be-8cd1-ec40db5c6ae7")
 
         assertSameProperties(listOf(item!!), listOf(items[3]))
     }

@@ -15,6 +15,7 @@ import com.example.packitupandroid.source.local.TestDataSource
 import com.example.packitupandroid.utils.Result
 import junit.framework.TestCase.assertEquals
 import junit.framework.TestCase.assertFalse
+import junit.framework.TestCase.assertNotNull
 import junit.framework.TestCase.assertNull
 import junit.framework.TestCase.assertTrue
 import kotlinx.coroutines.flow.first
@@ -105,21 +106,25 @@ class OfflineBoxesRepositoryTest {
 
     @Test
     fun offlineBoxesRepository_UpdateBox_UpdatesInDb() = runTest {
-        val updatedBox = boxes.first().copy(
+        val box = boxes.first()
+
+        assertNotNull(box.description)
+
+        val updatedBox = box.copy(
             name = "Updated Box 1",
             description = "Updated description",
         )
         boxesRepository.update(updatedBox)
 
-        val result = boxesRepository.observe(boxes.first().id).first()
+        val result = boxesRepository.observe(box.id).first()
 
         assertTrue(result is Result.Success)
 
-        assertEquals(updatedBox.name, (result as Result.Success).data?.name)
-        assertEquals(boxes.first().description, null)
-
-        assertNotEquals(boxes.first().name, result.data?.name)
-        assertNotEquals(boxes.first().description, result.data?.description)
+        assertEquals(updatedBox, (result as Result.Success).data)
+        assertEquals(updatedBox.name, result.data?.name)
+        assertEquals(updatedBox.description, result.data?.description)
+        assertNotEquals(box.name, result.data?.name)
+        assertNotEquals(box.description, result.data?.description)
     }
 
     @Test
@@ -167,41 +172,51 @@ class OfflineBoxesRepositoryTest {
 
     @Test
     fun offlineBoxesRepository_ItemUpdatesValue_BoxValueUpdates() = runTest {
-        val itemResult = itemsRepository.observe(items.first().id).first()
+        val itemResult = itemsRepository.observeAll().first()
         val boxResult = boxesRepository.observe(boxes.first().id).first()
-        val item = (itemResult as Result.Success).data
+        val associatedItems = (itemResult as Result.Success).data
+        val associatedItemsValue = associatedItems
+            .filter { it?.boxId == boxes.first().id }
+            .sumOf { it?.value ?: 0.00 }
         val box = (boxResult as Result.Success).data
         val initialBoxValue = box?.value ?: 0.00
 
-        val updatedItem = item!!.copy(
-            value = 100.0,
+        assertEquals(associatedItemsValue, initialBoxValue)
+        val initialItemValue = associatedItems.firstOrNull()?.value ?: 0.00
+        val updatedItem = associatedItems.firstOrNull()?.copy(
+            value = 100.0
         )
-        itemsRepository.update(updatedItem)
+        itemsRepository.update(updatedItem!!)
 
-        val updatedBoxResult = boxesRepository.observe(boxes.first().id).first()
+        val updatedBoxResult = boxesRepository.observe(box?.id ?: "").first()
         val updatedBox = (updatedBoxResult as Result.Success).data
 
-        assertEquals(initialBoxValue + updatedItem.value, updatedBox?.value)
+        assertEquals(initialBoxValue + updatedItem.value - initialItemValue, updatedBox?.value)
     }
 
     @Test
     fun offlineBoxesRepository_ItemUpdatesIsFragile_BoxIsFragileUpdates() = runTest {
-        val itemResult = itemsRepository.observe(items.first().id).first()
-        val boxResult = boxesRepository.observe(boxes.first().id).first()
-        val item = (itemResult as Result.Success).data
+        val boxResult = boxesRepository.get(boxes.first().id)
         val box = (boxResult as Result.Success).data
         val initialBoxIsFragile = box?.isFragile
+        val itemsResult = itemsRepository.observeAll().first()
+        val associatedItems = (itemsResult as Result.Success).data.filter { it?.boxId == box?.id }
 
-        assertFalse(initialBoxIsFragile!!)
-        val updatedItem = item!!.copy(
-            isFragile = true,
-        )
-        itemsRepository.update(updatedItem)
+        assertTrue (associatedItems.any { it?.isFragile == true })
+        assertTrue(initialBoxIsFragile!!)
 
-        val updatedBoxResult = boxesRepository.observe(boxes.first().id).first()
-        val updatedBox = (updatedBoxResult as Result.Success).data
+        val updatedItems = associatedItems.mapNotNull {
+            it?.copy(
+                isFragile = false,
+            )
+        }
 
-        assertTrue(updatedBox!!.isFragile)
+        updatedItems.forEach { itemsRepository.update(it) }
+
+        val updatedBoxResult = boxesRepository.get(box.id)
+        val updatedBoxIsFragile = (updatedBoxResult as Result.Success).data?.isFragile
+
+        assertFalse(updatedBoxIsFragile!!)
     }
 
     @Test
@@ -218,20 +233,23 @@ class OfflineBoxesRepositoryTest {
     }
 
     @Test
-    fun offlineBoxesRepository_DeleteBox_AssociatedBoxIsFragileUpdates() = runTest {
+    fun offlineBoxesRepository_DeleteItem_AssociatedBoxIsFragileUpdates() = runTest {
         val boxResult = boxesRepository.get(boxes.first().id)
-        val initialBoxIsFragile = (boxResult as Result.Success).data?.isFragile
+        val box = (boxResult as Result.Success).data
+        val initialBoxIsFragile = box?.isFragile
+        val itemsResult = itemsRepository.observeAll().first()
+        val associatedItems = (itemsResult as Result.Success).data.filter { it?.boxId == box?.id }
+        val associatedItemsIds = associatedItems.mapNotNull { it?.id }
 
-        assertFalse(initialBoxIsFragile!!)
+        assertTrue (associatedItems.any { it?.isFragile == true })
+        assertTrue(initialBoxIsFragile!!)
 
-        itemsRepository.update(items.first().copy(
-            isFragile = true,
-        ))
+        itemsRepository.delete(associatedItemsIds)
 
-        val updatedBoxResult = boxesRepository.get(boxes.first().id)
+        val updatedBoxResult = boxesRepository.get(box.id)
         val updatedBoxIsFragile = (updatedBoxResult as Result.Success).data?.isFragile
 
-        assertTrue(updatedBoxIsFragile!!)
+        assertFalse(updatedBoxIsFragile!!)
     }
 
     @Test
