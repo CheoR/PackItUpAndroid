@@ -118,6 +118,7 @@ fun <D: BaseCardData>BaseCard(
     val addButtonContentDescription = stringResource(R.string.add)
     val cameraButtonContentDescription = stringResource(R.string.camera)
     val favoriteButtonContentDescription = stringResource(R.string.favorite)
+    val bseCardContentDescription = stringResource(R.string.base_card)
 
     val dropdownOptionsList = if (dropdownOptions != null) {
         when (dropdownOptions) {
@@ -171,7 +172,8 @@ fun <D: BaseCardData>BaseCard(
         elevation = CardDefaults.cardElevation(defaultElevation = dimensionResource(R.dimen.elevation_small)),
         modifier = modifier
             .fillMaxWidth()
-            .height(dimensionResource(R.dimen.card_height)),
+            .height(dimensionResource(R.dimen.card_height))
+            .semantics { contentDescription = bseCardContentDescription },
     ) {
         Row(
             modifier = Modifier

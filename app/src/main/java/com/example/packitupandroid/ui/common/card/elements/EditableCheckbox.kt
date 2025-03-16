@@ -12,6 +12,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.tooling.preview.Preview
 import com.example.packitupandroid.ui.theme.PackItUpAndroidTheme
 import com.example.packitupandroid.ui.theme.rememberThemeManager
@@ -35,7 +36,8 @@ fun EditableCheckbox(
     checked: Boolean,
     onCheckedChange: (Boolean) -> Unit,
     isEditable: Boolean,
-    modifier: Modifier = Modifier
+    contentDescription: String,
+    modifier: Modifier = Modifier,
 ) {
     val hasInteracted = remember { mutableStateOf(false) }
     val highlightColor = MaterialTheme.colorScheme.primary.copy(alpha = 0.5f)
@@ -49,6 +51,7 @@ fun EditableCheckbox(
     Box(
         modifier = modifier
             .background(backgroundColor)
+            .semantics { contentDescription }
             .clickable(enabled = isEditable) { hasInteracted.value = true }
     ) {
         Checkbox(
@@ -79,6 +82,7 @@ fun EditableCheckboxPreview() {
                 onCheckedChange = onCheckedChange,
                 isEditable = true,
                 modifier = Modifier,
+                contentDescription = "Checkbox",
             )
         }
     }

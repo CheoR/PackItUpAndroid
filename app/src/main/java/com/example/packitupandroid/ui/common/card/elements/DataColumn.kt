@@ -19,8 +19,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.semantics.contentDescription
-import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
@@ -28,6 +26,7 @@ import com.example.packitupandroid.R
 import com.example.packitupandroid.data.model.BaseCardData
 import com.example.packitupandroid.data.model.Box
 import com.example.packitupandroid.data.model.BoxIdAndName
+import com.example.packitupandroid.data.model.Collection
 import com.example.packitupandroid.data.model.CollectionIdAndName
 import com.example.packitupandroid.data.model.Item
 import com.example.packitupandroid.ui.theme.PackItUpAndroidTheme
@@ -37,7 +36,6 @@ import com.example.packitupandroid.utils.EditFields
 import com.example.packitupandroid.utils.Result
 import com.example.packitupandroid.utils.asCurrencyString
 import com.example.packitupandroid.utils.parseCurrencyToDouble
-import com.example.packitupandroid.data.model.Collection
 
 
 /**
@@ -68,8 +66,6 @@ fun <D: BaseCardData>DataColumn(
     dropdownOptions: Result<List<DropdownOptions?>>? = null,
 ) {
     fun isEditable(field: EditFields) = editableFields.contains(field)
-    val fragileCheckboxContentDescription = stringResource(R.string.fragile_checkbox)
-    val valueFieldContentDescription = stringResource(R.string.value)
 
     val dropdownOptionsList = if(dropdownOptions != null) {
         when (dropdownOptions) {
@@ -104,6 +100,7 @@ fun <D: BaseCardData>DataColumn(
             isEditable = isEditable(EditFields.Name),
             textStyle = MaterialTheme.typography.displayMedium,
             modifier = Modifier.fillMaxWidth(),
+            contentDescription = stringResource(R.string.value) + " field",
         )
 
         if (dropdownOptions != null) {
@@ -133,6 +130,7 @@ fun <D: BaseCardData>DataColumn(
                 .weight(1f),
             minLines = 3,
             maxLines = 3,
+            contentDescription = stringResource(R.string.description) + " field",
         )
 
         Row(
@@ -147,8 +145,8 @@ fun <D: BaseCardData>DataColumn(
                     onFieldChange(selectedCard, EditFields.IsFragile, it.toString())
                 },
                 isEditable = isEditable(EditFields.IsFragile),
-                modifier = Modifier
-                    .semantics { contentDescription = fragileCheckboxContentDescription }
+                modifier = Modifier,
+                contentDescription = stringResource(R.string.fragile_checkbox),
             )
             Text(stringResource(R.string.fragile))
             Spacer(modifier = Modifier.weight(1f))
@@ -160,8 +158,8 @@ fun <D: BaseCardData>DataColumn(
                 },
                 isEditable = isEditable(EditFields.Value),
                 textStyle = MaterialTheme.typography.bodySmall,
-                modifier = Modifier
-                    .semantics { contentDescription = valueFieldContentDescription },
+                modifier = Modifier,
+                contentDescription = stringResource(R.string.value),
                 keyboardOptions = KeyboardOptions.Default.copy(
                     keyboardType = KeyboardType.Number,
                     imeAction = ImeAction.Done
