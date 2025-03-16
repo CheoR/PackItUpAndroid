@@ -13,19 +13,19 @@
         </DropdownSelection>
         <DialogSelection />
       </SelectionState>
-      <SelectionState runConfigName="OfflineItemsRepositoryTest">
+      <SelectionState runConfigName="testItemsScreen_initialValues()">
         <option name="selectionMode" value="DROPDOWN" />
       </SelectionState>
-      <SelectionState runConfigName="offlineItemsRepository_UpdateItem_ItemUpdatesInDb()">
+      <SelectionState runConfigName="testItemsScreen_incrementByFive_fiveItemsInserted()">
         <option name="selectionMode" value="DROPDOWN" />
       </SelectionState>
-      <SelectionState runConfigName="OfflineBoxesRepositoryTest">
+      <SelectionState runConfigName="ItemsScreenUiTests">
         <option name="selectionMode" value="DROPDOWN" />
       </SelectionState>
-      <SelectionState runConfigName="offlineBoxesRepository_UpdateBox_UpdatesInDb()">
+      <SelectionState runConfigName="testItemsScreen_incrementByTwentyFive_twentyFiveItemsInserted()">
         <option name="selectionMode" value="DROPDOWN" />
       </SelectionState>
-      <SelectionState runConfigName="Tests in 'com.example.packitupandroid.repository'">
+      <SelectionState runConfigName="BoxesScreenUiTests">
         <option name="selectionMode" value="DROPDOWN" />
       </SelectionState>
     </selectionStates>
