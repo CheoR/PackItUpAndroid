@@ -9,8 +9,44 @@ import java.util.Date
 
 class TestDataSource() {
     val items = LocalDataSource().loadItems()
-    val boxes = LocalDataSource().loadBoxes()
-    val collections = LocalDataSource().loadCollections()
+    val boxes = LocalDataSource().loadBoxes().map {
+        val (updatedValue, updatedItemCount, updatedIsFragile) = items
+            .filter { item -> item.boxId == it.id }
+            .let { filteredItems ->
+                Triple(
+                    filteredItems.sumOf { item -> item.value },
+                    filteredItems.size,
+                    filteredItems.any { item -> item.isFragile == true }
+                )
+            }
+
+        it.copy(
+            value = updatedValue,
+            itemCount = updatedItemCount,
+            isFragile = updatedIsFragile,
+        )
+    }
+    val collections = LocalDataSource().loadCollections().map { collection ->
+        val (totalValue, anyIsFragile, counts) = boxes
+            .filter { box -> box.collectionId == collection.id }
+            .let { filteredBoxes ->
+                Triple(
+                    filteredBoxes.sumOf { box -> box.value },
+                    filteredBoxes.any { box -> box.isFragile },
+                    Pair<Int, Int>(
+                        filteredBoxes.sumOf{box -> box.itemCount},
+                        filteredBoxes.size,
+                    )
+                )
+            }
+
+        collection.copy(
+            value = totalValue,
+            boxCount = counts.second,
+            itemCount = counts.first,
+            isFragile = anyIsFragile,
+        )
+    }
     val boxIdAndNames = boxes.map { BoxIdAndName(it.id, it.name) }
     val collectionIdAndNames = collections.map { BoxIdAndName(it.id, it.name) }
 }

@@ -8,9 +8,7 @@ import com.example.packitupandroid.data.database.AppDatabase
 import com.example.packitupandroid.data.model.Box
 import com.example.packitupandroid.data.model.Collection
 import com.example.packitupandroid.data.repository.toEntity
-import com.example.packitupandroid.source.local.boxes
-import com.example.packitupandroid.source.local.collections
-import com.example.packitupandroid.source.local.items
+import com.example.packitupandroid.source.local.TestDataSource
 import junit.framework.TestCase.assertEquals
 import junit.framework.TestCase.assertNull
 import junit.framework.TestCase.assertTrue
@@ -26,6 +24,9 @@ import java.io.IOException
 
 @RunWith(AndroidJUnit4::class)
 class CollectionDaoTest {
+    private val collections = TestDataSource().collections
+    private val boxes = TestDataSource().boxes
+    private val items = TestDataSource().items
 
     private lateinit var collectionDao: CollectionDao
     private lateinit var boxDao: BoxDao
@@ -36,7 +37,7 @@ class CollectionDaoTest {
     private suspend fun getAllBoxes() = boxDao.observeAll().first()
     private suspend fun getAllItems() = itemDao.observeAll().first()
     private suspend fun getFirstCollection() = collectionDao.observeAll().first().first()
-    private suspend fun getAllFirstCollectionBoxes() = boxDao.observeAll().first().filter { it?.collectionId == collections.first().id }
+    private suspend fun getAllFirstCollectionBoxes() = getAllBoxes().filter { it?.collectionId == collections.first().id }
 
     private fun assertSameProperties(list1: List<Collection>, list2: List<Collection>) {
         for (i in list1.indices) {
@@ -60,6 +61,10 @@ class CollectionDaoTest {
         itemDao = db.itemDao()
 
         runBlocking {
+            itemDao.clear()
+            boxDao.clear()
+            collectionDao.clear()
+
             val collectionEntities = collections.map { it.toEntity() }
             val boxEntities = boxes.map { it.toEntity() }
             val itemEntities = items.map { it.toEntity() }
@@ -236,15 +241,23 @@ class CollectionDaoTest {
         // TODO: update BoxDao to automatically trigger when associated Item instance updates its value or isFragile
 
         val collection = getFirstCollection()
-        assertEquals(collection?.isFragile, false)
+        val associatedBoxes = getAllFirstCollectionBoxes()
+        val associatedBoxIds = associatedBoxes.map { it?.id }
+        val items = getAllItems().filter { associatedBoxIds.contains(it?.boxId) }
 
-        val updatedItem = items.first().copy(isFragile = true)
-        val updatedItemEntity = updatedItem.toEntity()
+        assertTrue(items.any { it?.isFragile == true })
+        assertEquals(true, collection?.isFragile)
 
-        itemDao.update(updatedItemEntity)
+        val updatedItemEntities = items
+            .mapNotNull { item -> item?.copy(isFragile = false) }
+            .map { it.toEntity() }
+        updatedItemEntities.forEach { itemDao.update(it) }
 
         val collection2 = getFirstCollection()
-        assertEquals(collection2?.isFragile, true)
+        val items2 = getAllItems().filter { associatedBoxIds.contains(it?.boxId) }
+
+        assertTrue(items2.none { it?.isFragile == true })
+        assertEquals(false, collection2?.isFragile)
     }
 
     @Test

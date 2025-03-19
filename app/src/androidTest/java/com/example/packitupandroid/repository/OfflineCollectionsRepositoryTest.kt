@@ -11,9 +11,7 @@ import com.example.packitupandroid.data.database.dao.ItemDao
 import com.example.packitupandroid.data.repository.OfflineBoxesRepository
 import com.example.packitupandroid.data.repository.OfflineCollectionsRepository
 import com.example.packitupandroid.data.repository.OfflineItemsRepository
-import com.example.packitupandroid.source.local.boxes
-import com.example.packitupandroid.source.local.collections
-import com.example.packitupandroid.source.local.items
+import com.example.packitupandroid.source.local.TestDataSource
 import com.example.packitupandroid.utils.Result
 import junit.framework.TestCase.assertEquals
 import junit.framework.TestCase.assertFalse
@@ -23,7 +21,6 @@ import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.test.runTest
 import org.junit.After
-import org.junit.Assert.assertNotEquals
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -32,6 +29,10 @@ import java.io.IOException
 
 @RunWith(AndroidJUnit4::class)
 class OfflineCollectionsRepositoryTest {
+    private val collections = TestDataSource().collections
+    private val boxes = TestDataSource().boxes
+    private val items = TestDataSource().items
+
     private lateinit var db: AppDatabase
     private lateinit var boxDao: BoxDao
     private lateinit var itemDao: ItemDao
@@ -102,22 +103,20 @@ class OfflineCollectionsRepositoryTest {
     }
 
     @Test
-    fun offlineCollectionssRepository_UpdateCollection_UpdatesInDb() = runTest {
-        val updatedCollection = collections.first().copy(
+    fun offlineCollectionsRepository_UpdateCollection_UpdatesInDb() = runTest {
+        val result = collectionsRepository.get(collections.first().id)
+        val collection = (result as Result.Success).data
+        val updatedCollection = collection?.copy(
             name = "Updated Collection 1",
             description = "Updated description",
         )
-        collectionsRepository.update(updatedCollection)
+        collectionsRepository.update(updatedCollection!!)
 
-        val result = collectionsRepository.observe(collections.first().id).first()
+        val result2 = collectionsRepository.observe(collection.id).first()
+        val collection2 = (result2 as Result.Success).data
 
-        assertTrue(result is Result.Success)
-
-        assertEquals(updatedCollection.name, (result as Result.Success).data?.name)
-        assertEquals(collections.first().description, null)
-
-        assertNotEquals(collections.first().name, result.data?.name)
-        assertNotEquals(collections.first().description, result.data?.description)
+        assertEquals(updatedCollection.name, collection2?.name)
+        assertEquals(updatedCollection.description, collection2?.description)
     }
 
     @Test
@@ -183,40 +182,50 @@ class OfflineCollectionsRepositoryTest {
     }
 
     @Test
-    fun offlineCollectionssRepository_ItemUpdateIsFragile_AssociatedCollectionIsFragileUpdates() = runTest {
-        val currCollection = collectionsRepository.get(collections.first().id)
-        val initialCollectionIsFragile = (currCollection as Result.Success).data?.isFragile
-        val currItem = itemsRepository.get(items.first().id)
-        val initialItemValue = (currItem as Result.Success).data?.isFragile
+    fun offlineCollectionsRepository_ItemUpdateIsFragile_AssociatedCollectionIsFragileUpdates() = runTest {
+        val collectionResult = collectionsRepository.get(collections.first().id)
+        val boxResult = boxesRepository.observeAll().first()
+        val itemResult = itemsRepository.observeAll().first()
+        val collection = (collectionResult as Result.Success).data
+        val associatedBoxes = (boxResult as Result.Success).data.filter { it?.collectionId == collection?.id }
+        val associatedBoxesIds = associatedBoxes.mapNotNull { it?.id }
+        val associatedItems = (itemResult as Result.Success).data.filter { associatedBoxesIds.contains(it?.boxId) }
+        val initialCollectionIsFragile = collection?.isFragile
 
-        assertFalse(initialCollectionIsFragile!!)
+        assertTrue(associatedItems.any { it?.isFragile == true })
+        assertTrue(initialCollectionIsFragile!!)
 
-        itemsRepository.update(items.first().copy(
-            isFragile = !initialItemValue!!,
-        ))
+        val updatedItems = associatedItems.mapNotNull {
+            it?.copy(
+                isFragile = false,
+            )
+        }
 
-        val updatedCollectionResult = collectionsRepository.get(collections.first().id)
+        updatedItems.forEach { itemsRepository.update(it) }
+
+        val updatedCollectionResult = collectionsRepository.get(collection.id)
         val updatedCollectionIsFragile = (updatedCollectionResult as Result.Success).data?.isFragile
 
-        assertEquals(!initialCollectionIsFragile, updatedCollectionIsFragile)
+        assertFalse(updatedCollectionIsFragile!!)
     }
 
     @Test
-    fun offlineCollectionssRepository_DeleteItem_AssociatedCollectionValueUpdates() = runTest {
-        val currCollection = collectionsRepository.get(collections.first().id)
-        val currCollectionValue = (currCollection as Result.Success).data?.value ?: 0.00
-        val currItem = itemsRepository.get(items.first().id)
-        val currItemValue = (currItem as Result.Success).data?.value ?: 0.00
+    fun offlineCollectionsRepository_DeleteItem_AssociatedCollectionValueUpdates() = runTest {
+        val collectionResult = collectionsRepository.get(collections.first().id)
+        val currCollection = (collectionResult as Result.Success).data
+        val currCollectionValue = currCollection?.value ?: 0.00
+        val itemResult = itemsRepository.get(items.first().id)
+        val currItem = (itemResult as Result.Success).data
+        val currItemValue = currItem?.value ?: 0.00
 
-        val itemsToDelete = listOf(
-            items.first().id,
-        )
-        itemsRepository.delete(itemsToDelete)
+        itemsRepository.delete(listOfNotNull(currItem?.id))
 
-        val updatedCollectionResult = collectionsRepository.get(collections.first().id)
+        val updatedCollectionResult = collectionsRepository.get(currCollection?.id!!)
         val updatedCollectionItemValue = (updatedCollectionResult as Result.Success).data?.value
 
-        assertEquals(currCollectionValue - currItemValue, updatedCollectionItemValue)
+        val res = (currCollectionValue - currItemValue)
+        val rounded = String.format("%.2f", res).toDouble()
+        assertEquals(rounded, updatedCollectionItemValue)
     }
 
     @Test

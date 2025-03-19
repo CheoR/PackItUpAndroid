@@ -18,6 +18,9 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.dimensionResource
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.tooling.preview.Preview
 import com.example.packitupandroid.R
 import com.example.packitupandroid.data.model.BaseCardData
@@ -72,11 +75,14 @@ fun <D: BaseCardData>EditCard(
     editableFields: Set<EditFields> = emptySet(),
     dropdownOptions: Result<List<DropdownOptions?>>? = null,
 ) {
+    val editCardContentDescription = stringResource(R.string.edit_card)
+
     ElevatedCard(
         elevation = CardDefaults.cardElevation(defaultElevation = dimensionResource(R.dimen.elevation_small)),
         modifier = modifier
             .fillMaxWidth()
-            .height(dimensionResource(R.dimen.card_height)),
+            .height(dimensionResource(R.dimen.card_height))
+            .semantics { contentDescription = editCardContentDescription },
     ) {
         Row(
             modifier = Modifier

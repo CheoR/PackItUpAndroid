@@ -63,4 +63,7 @@
     <string name="delete_dialog_title">delete %s</string>
     <string name="camera_dialog_title">capture %s</string>
     <string name="favorite">favorite</string>
+    <string name="base_card">base card</string>
+    <string name="edit_card">edit card</string>
+    <string name="description">description</string>
 </resources>

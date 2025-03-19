@@ -4,7 +4,8 @@ package com.example.packitupandroid.ui.screens
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.SavedStateHandle
 import com.example.packitupandroid.MainCoroutineRule
-import com.example.packitupandroid.data.model.Item
+import com.example.packitupandroid.data.repository.MockBoxesRepository
+import com.example.packitupandroid.data.repository.MockCollectionsRepository
 import com.example.packitupandroid.data.repository.MockItemsRepository
 import com.example.packitupandroid.source.local.TestDataSource
 import com.example.packitupandroid.ui.screens.item.ItemsScreenViewModel
@@ -15,7 +16,6 @@ import junit.framework.TestCase.assertTrue
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.async
 import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.test.StandardTestDispatcher
 import kotlinx.coroutines.test.TestDispatcher
@@ -25,7 +25,6 @@ import org.junit.After
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
-import java.lang.annotation.Repeatable
 
 
 private const val COUNT: Int = 5
@@ -35,10 +34,15 @@ class ItemsScreenViewModelTest {
     val dataSource = TestDataSource()
     val items = dataSource.items
     val boxes = dataSource.boxes
+    val collections = dataSource.collections
     val boxIdAndNames = dataSource.boxIdAndNames
 
     private lateinit var viewModel: ItemsScreenViewModel
+
+    private lateinit var collectionsRepository: MockCollectionsRepository
+    private lateinit var boxRepository: MockBoxesRepository
     private lateinit var repository: MockItemsRepository
+
     private val testDispatcher: TestDispatcher = StandardTestDispatcher()
 
     @get:Rule
@@ -47,6 +51,14 @@ class ItemsScreenViewModelTest {
     @Before
     fun setup() {
         repository = MockItemsRepository()
+        boxRepository = MockBoxesRepository(
+            itemsRepository = repository
+        )
+        collectionsRepository = MockCollectionsRepository(
+            boxesRepository = boxRepository,
+            itemsRepository = repository,
+        )
+
         viewModel = ItemsScreenViewModel(
             savedStateHandle = SavedStateHandle(),
             repository = repository,
@@ -65,6 +77,7 @@ class ItemsScreenViewModelTest {
     @After
     fun tearDown() {
         runBlocking {
+            boxRepository.clear()
             repository.clear()
         }
     }
@@ -77,7 +90,6 @@ class ItemsScreenViewModelTest {
 
     @Test
     fun testItemsViewModel_loadEmptyList_stateIsSuccess() = runTest {
-//        async { repository.load(emptyList()) }.await()
         repository.load(emptyList())
         advanceUntilIdle()
 
@@ -87,7 +99,6 @@ class ItemsScreenViewModelTest {
 
     @Test
     fun testItemsViewModel_load_stateIsSuccess() = runTest {
-//        async { repository.load(items) }.await()
         repository.load(items)
         advanceUntilIdle()
 
@@ -111,8 +122,6 @@ class ItemsScreenViewModelTest {
         repository.load(items)
         advanceUntilIdle()
 
-//        val result = viewModel.elements.first() // .value
-//        val data = (result as Result.Success).data
         val data = when(val result = viewModel.elements.value) {
             is Result.Success -> result.data
             else -> emptyList()
@@ -125,25 +134,27 @@ class ItemsScreenViewModelTest {
     fun testItemsViewModel_createCountItems_CountItemsCreated() = runTest {
         repository.load(emptyList())
 
-        val result1 = viewModel.elements.value
+        val result1 = viewModel.elements.first()
         val data1 = when(result1) {
             is Result.Success -> result1.data
             else -> emptyList()
         }
 
-        assertEquals(data1.size, 0)
+        assertEquals(0, data1.size)
 
         viewModel.create(COUNT)
+        advanceUntilIdle()
 
-        val result2 = viewModel.elements.value
+        val result2 = viewModel.elements.first()
         val data2 = (result2 as Result.Success).data
 
-        assertEquals(data2.size, COUNT)
+        assertEquals(COUNT, data2.size)
     }
 
     @Test
     fun testItemsViewModel_createCountItemsWithBoxId_CountItemsCreated() = runTest {
         repository.load(emptyList())
+
         val boxId = boxes.first().id
         val savedStateHandle = SavedStateHandle(mapOf("boxId" to boxId))
         val viewModel = ItemsScreenViewModel(
@@ -152,21 +163,22 @@ class ItemsScreenViewModelTest {
             defaultDispatcher = testDispatcher,
         )
 
-        val result1 = viewModel.elements.value
+        val result1 = viewModel.elements.first()
         val data1 = when(result1) {
             is Result.Success -> result1.data
             else -> emptyList()
         }
 
-        assertEquals(data1.size, 0)
+        assertEquals(0, data1.size)
 
         viewModel.create(COUNT)
+        advanceUntilIdle()
 
-        val result2 = viewModel.elements.value
+        val result2 = viewModel.elements.first()
         val data2 = when(result2) {
             is Result.Success -> result2.data
             else -> emptyList()
-        }
+        }.filterNotNull().filter { it.boxId == boxId }
 
         assertEquals(COUNT, data2.size)
     }
@@ -176,7 +188,7 @@ class ItemsScreenViewModelTest {
         repository.load(items)
         advanceUntilIdle()
 
-        val result = viewModel.elements.value // .first()
+        val result = viewModel.elements.first()
         val item = when(result) {
             is Result.Success -> result.data.first()
             else -> null
@@ -184,15 +196,13 @@ class ItemsScreenViewModelTest {
         val mutableItem =  mutableStateOf(item)
 
         val newName = "New Name"
-
-        viewModel.onFieldChange(mutableItem, EditFields.Name, newName)
+        async {
+            viewModel.onFieldChange(mutableItem, EditFields.Name, newName)
+            viewModel.update(mutableItem.value!!)
+        }.await()
 //        advanceUntilIdle()
 
-        viewModel.update(mutableItem.value!!)
-
-//        advanceUntilIdle()
-
-        val result2 = viewModel.elements.value
+        val result2 = viewModel.elements.first()
         val item2 = when(result2) {
             is Result.Success -> result2.data.first()
             else -> null
@@ -207,7 +217,7 @@ class ItemsScreenViewModelTest {
         repository.load(items)
         advanceUntilIdle()
 
-        val result = viewModel.elements.value // .first()
+        val result = viewModel.elements.first()
         val item = when(result) {
             is Result.Success -> result.data.first()
             else -> null
@@ -216,11 +226,13 @@ class ItemsScreenViewModelTest {
 
         val newDescription = "New Description"
 
-        viewModel.onFieldChange(mutableItem, EditFields.Description, newDescription)
-        viewModel.update(mutableItem.value!!)
+        async {
+            viewModel.onFieldChange(mutableItem, EditFields.Description, newDescription)
+            viewModel.update(mutableItem.value!!)
+        }.await()
 
 
-        val result2 = viewModel.elements.value
+        val result2 = viewModel.elements.first()
         val item2 = when(result2) {
             is Result.Success -> result2.data.first()
             else -> null
@@ -234,27 +246,23 @@ class ItemsScreenViewModelTest {
     fun testItemsViewModel_onFieldChange_isFragileUpdated() = runTest {
         repository.load(items)
 
-        var result: Result<List<Item?>>? = null
-        val job = launch {
-            viewModel.elements.collect {
-                result = it
-            }
+        val result = viewModel.elements.first()
+        val item = when(result) {
+            is Result.Success -> result.data.first()
+            else -> null
         }
 
-        advanceUntilIdle()
-        assertTrue(result is Result.Success)
-
-        val item = (result as Result.Success).data.first()
+        assertEquals(item?.isFragile, true)
         val mutableItem =  mutableStateOf(item)
 
-        val newIsFragile = "true"
+        val newIsFragile = item?.isFragile?.not().toString()
 
-        viewModel.onFieldChange(mutableItem, EditFields.IsFragile, newIsFragile)
-        viewModel.update(mutableItem.value!!)
+        async {
+            viewModel.onFieldChange(mutableItem, EditFields.IsFragile, newIsFragile)
+            viewModel.update(mutableItem.value!!)
+        }.await()
 
-        advanceUntilIdle()
-
-        val result2 = viewModel.elements.value
+        val result2 = viewModel.elements.first()
         val item2 = when(result2) {
             is Result.Success -> result2.data.first()
             else -> null
@@ -262,31 +270,6 @@ class ItemsScreenViewModelTest {
 
         assertEquals(mutableItem.value?.id, item2?.id)
         assertEquals(newIsFragile.toBoolean(), item2?.isFragile)
-
-        job.cancel() // cancel/clean up the coroutine
-
-//        advanceUntilIdle()
-//
-//        val result = viewModel.elements.value // .first()
-//        val item = when(result) {
-//            is Result.Success -> result.data.first()
-//            else -> null
-//        }
-//        val mutableItem =  mutableStateOf(item)
-//
-//        val newIsFragile = "true"
-//
-//        viewModel.onFieldChange(mutableItem, EditFields.IsFragile, newIsFragile)
-//        viewModel.update(mutableItem.value!!)
-//
-//        val result2 = viewModel.elements.value // .first()
-//        val item2 = when(result2) {
-//            is Result.Success -> result2.data.first()
-//            else -> null
-//        }
-//
-//        assertEquals(mutableItem.value?.id, item2?.id)
-//        assertEquals(newIsFragile.toBoolean(), item2?.isFragile)
     }
 
     @Test
@@ -303,12 +286,14 @@ class ItemsScreenViewModelTest {
 
         val newValue = "5000.12"
 
-        viewModel.onFieldChange(mutableItem, EditFields.Value, newValue)
-        viewModel.update(mutableItem.value!!)
+        async {
+            viewModel.onFieldChange(mutableItem, EditFields.Value, newValue)
+            viewModel.update(mutableItem.value!!)
+        }.await()
 
         advanceUntilIdle()
 
-        val result2 = viewModel.elements.value // .first()
+        val result2 = viewModel.elements.first()
         val item2 = when(result2) {
             is Result.Success -> result2.data.first()
             else -> null
@@ -325,6 +310,7 @@ class ItemsScreenViewModelTest {
 
         val currBoxId = boxes.first().id // "e99a99f8-748d-427a-a305-14bda19d71a0" // first box in data.kt
         val result = viewModel.elements.first()
+
         val item = when(result) {
             is Result.Success -> result.data.first()
             else -> null
@@ -335,11 +321,10 @@ class ItemsScreenViewModelTest {
 
         val newBoxId = boxIdAndNames.last().id
 
-        viewModel.onFieldChange(mutableItem, EditFields.Dropdown, newBoxId)
-
-        advanceUntilIdle()
-
-        async { viewModel.update(mutableItem.value!!) }.await()
+        async {
+            viewModel.onFieldChange(mutableItem, EditFields.Dropdown, newBoxId)
+            viewModel.update(mutableItem.value!!)
+        }.await()
 
         advanceUntilIdle()
 
@@ -351,5 +336,62 @@ class ItemsScreenViewModelTest {
 
         assertEquals(mutableItem.value?.id, item2?.id)
         assertEquals(newBoxId, item2?.boxId)
+    }
+
+    @Test
+    fun testItemsViewModel_DeleteBox_AssociatedItemsDeletedFromDB() = runTest {
+        boxRepository.load(boxes)
+        repository.load(items)
+
+        val boxResult = boxRepository.elements.first()
+        val boxData = (boxResult as Result.Success).data.filterNotNull()
+        val boxId = boxData.first().id
+
+        val itemResult = repository.elements.first()
+        val itemData = (itemResult as Result.Success).data.filterNotNull()
+        val itemIds = itemData.filter { it.boxId == boxId }
+
+        assertEquals(items.size, itemData.size)
+
+        boxRepository.delete(listOf(boxId))
+        boxRepository.cascadeDelete(listOf(boxId))
+
+        val itemResult2 = repository.elements.first()
+        val itemData2 = (itemResult2 as Result.Success).data.filterNotNull()
+        val itemIds2 = itemData2.filter { it.boxId == boxId }
+
+        assertEquals(0, itemIds2.size)
+        assertEquals(items.size - itemIds.size, itemData2.size)
+    }
+
+    @Test
+    fun testItemsViewModel_DeleteCollection_AssociatedItemsDeletedFromDB() = runTest {
+        collectionsRepository.load(collections)
+        boxRepository.load(boxes)
+        repository.load(items)
+
+        val collectionResult = collectionsRepository.elements.first()
+        val collectionData = (collectionResult as Result.Success).data.filterNotNull()
+        val collectionId = collectionData.first().id
+
+        val boxResult = boxRepository.elements.first()
+        val boxData = (boxResult as Result.Success).data.filterNotNull()
+        val boxIds = boxData.filter { it.collectionId == collectionId }
+
+        val itemResult = repository.elements.first()
+        val itemData = (itemResult as Result.Success).data.filterNotNull()
+        val itemIds = itemData.filter { it.boxId in boxIds.map { it.id } }
+
+        assertEquals(items.size, itemData.size)
+
+        collectionsRepository.delete(listOf(collectionId))
+        collectionsRepository.cascadeDelete(listOf(collectionId))
+
+        val itemResult2 = repository.elements.first()
+        val itemData2 = (itemResult2 as Result.Success).data.filterNotNull()
+        val itemIds2 = itemData2.filter { it.boxId in boxIds.map { it.id } }
+
+        assertEquals(0, itemIds2.size)
+        assertEquals(items.size - itemIds.size, itemData2.size)
     }
 }

@@ -8,9 +8,7 @@ import com.example.packitupandroid.data.database.AppDatabase
 import com.example.packitupandroid.data.database.entities.ItemEntity
 import com.example.packitupandroid.data.model.Item
 import com.example.packitupandroid.data.repository.toEntity
-import com.example.packitupandroid.source.local.boxes
-import com.example.packitupandroid.source.local.collections
-import com.example.packitupandroid.source.local.items
+import com.example.packitupandroid.source.local.TestDataSource
 import junit.framework.TestCase.assertEquals
 import junit.framework.TestCase.assertNotSame
 import junit.framework.TestCase.assertNull
@@ -27,6 +25,10 @@ import java.io.IOException
 
 @RunWith(AndroidJUnit4::class)
 class ItemDaoTest {
+    private val collections = TestDataSource().collections
+    private val boxes = TestDataSource().boxes
+    private val items = TestDataSource().items
+
     private lateinit var collectionDao: CollectionDao
     private lateinit var boxDao: BoxDao
     private lateinit var itemDao: ItemDao
@@ -89,7 +91,7 @@ class ItemDaoTest {
     @Test
     @Throws(Exception::class)
     fun itemDao_getById_ItemReturnedFromDB() = runTest {
-        val item = itemDao.get("4")
+        val item = itemDao.get("ebaba247-330d-47be-8cd1-ec40db5c6ae7")
 
         assertSameProperties(listOf(item!!), listOf(items[3]))
     }
