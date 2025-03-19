@@ -20,7 +20,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
@@ -61,8 +60,7 @@ fun ConfirmCancelContainer(
 //            .requiredWidth(dialogWidth)
             .windowInsetsPadding(WindowInsets.ime)
             .clip(shape = RoundedCornerShape(dimensionResource(R.dimen.roundness_x_small)))
-            .background(MaterialTheme.colorScheme.background)
-            .testTag("DialogContainer"),
+            .background(MaterialTheme.colorScheme.background),
     ) {
         Scaffold(
             topBar = {

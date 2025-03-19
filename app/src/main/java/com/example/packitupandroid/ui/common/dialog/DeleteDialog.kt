@@ -4,18 +4,14 @@ import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.Dp
 import com.example.packitupandroid.R
 import com.example.packitupandroid.data.model.BaseCardData
-import com.example.packitupandroid.ui.common.component.ConfirmCancelContainer
-import com.example.packitupandroid.ui.common.card.BaseCard
 import com.example.packitupandroid.ui.common.card.EditCard
+import com.example.packitupandroid.ui.common.component.ConfirmCancelContainer
 import com.example.packitupandroid.utils.DropdownOptions
-import com.example.packitupandroid.utils.EditFields
 import com.example.packitupandroid.utils.Result
-import com.example.packitupandroid.utils.parseCurrencyToDouble
 
 
 /**
@@ -56,8 +52,7 @@ fun <D: BaseCardData> DeleteDialog(
                 dropdownOptions = dropdownOptions,
                 iconsContent = iconsContent,
                 onFieldChange =  { _, _, _ -> Unit},
-                modifier = Modifier
-                    .testTag("DeleteCard"),
+                modifier = Modifier,
             )
         }
     }

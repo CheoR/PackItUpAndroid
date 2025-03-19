@@ -39,7 +39,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalConfiguration
-import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.contentDescription
@@ -191,7 +190,6 @@ fun <D : BaseCardData> Screen(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(8.dp)
-                .testTag("SearchTextField")
                 .semantics { contentDescription = "Search" },
             textStyle = MaterialTheme.typography.bodyLarge,
             decorationBox = { innerTextField ->
@@ -244,7 +242,6 @@ fun <D : BaseCardData> Screen(
                     LazyColumn(
                         modifier = Modifier
                             .weight(1f)
-                            .testTag("LazyColumn")
                             .semantics { contentDescription = "$emptyListPlaceholder list" },
                         verticalArrangement = Arrangement.spacedBy(dimensionResource(R.dimen.space_arrangement_small))
                     ) {
@@ -274,7 +271,7 @@ fun <D : BaseCardData> Screen(
                                     },
                                     iconsContent = generateIconsColumn(it),
                                     dropdownOptions = dropdownOptions,
-                                    modifier = Modifier.testTag("BaseCard"),
+                                    modifier = Modifier,
                                 )
                             }
                         }
