@@ -45,7 +45,7 @@ fun SummaryCard(
     navigateToTopLevelDestination: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    val iconButtonContentDescription = stringResource(R.string.icon_button_content_description)
+    val iconButtonContentDescription = stringResource(R.string.icon_navigateTo_button) + " " + stringResource(name)
 
     ElevatedCard(
         elevation = CardDefaults.cardElevation(defaultElevation = dimensionResource(R.dimen.elevation_small)),

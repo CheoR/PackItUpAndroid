@@ -19,6 +19,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.dimensionResource
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.packitupandroid.R
@@ -45,7 +47,7 @@ fun ActionButton(
     val (label, icon, color) = when(action) {
         is ButtonAction.Add -> Triple("add", Icons.Default.Add, MaterialTheme.colorScheme.onPrimaryContainer)
         is ButtonAction.Confirm ->  Triple("confirm", Icons.Default.Check, MaterialTheme.colorScheme.onSecondaryContainer)
-        else ->  Triple("cancel", Icons.Default.Cancel, MaterialTheme.colorScheme.error) // is ButtonAction.Cancel
+        else ->  Triple("cancel", Icons.Default.Cancel, MaterialTheme.colorScheme.error)
     }
 
     Row(
@@ -55,7 +57,8 @@ fun ActionButton(
     ) {
         Button(
             modifier = Modifier
-                .fillMaxWidth(),
+                .fillMaxWidth()
+                .semantics { contentDescription = label },
             enabled = enabled,
             onClick = onClick,
             shape = RoundedCornerShape(dimensionResource(R.dimen.roundness_x_small)),
@@ -68,7 +71,7 @@ fun ActionButton(
             content = {
                 Icon(
                     imageVector = icon,
-                    contentDescription = label,
+                    contentDescription = null,
                     tint = if (enabled) MaterialTheme.colorScheme.onPrimary else MaterialTheme.colorScheme.onSurfaceVariant,
                 )
                 Spacer(modifier = Modifier.width(8.dp)) // .width(    contentPadding) instead?

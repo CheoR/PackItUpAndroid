@@ -18,8 +18,12 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.example.packitupandroid.R
 import com.example.packitupandroid.data.model.BoxIdAndName
 import com.example.packitupandroid.ui.theme.PackItUpAndroidTheme
 import com.example.packitupandroid.ui.theme.rememberThemeManager
@@ -48,6 +52,7 @@ fun EditableDropdown(
     val hasInteracted = remember { mutableStateOf(false) }
     val highlightColor = MaterialTheme.colorScheme.primary.copy(alpha = 0.5f)
     val defaultColor = Color.Transparent
+    val dropdownMenuBoxContentDescription = stringResource(R.string.dropdown_select_box)
 
     val backgroundColor = when {
         isEditable && !hasInteracted.value -> highlightColor
@@ -62,7 +67,8 @@ fun EditableDropdown(
         modifier = modifier
             .fillMaxWidth()
             .background(backgroundColor)
-            .clickable(enabled = isEditable) { hasInteracted.value = true },
+            .clickable(enabled = isEditable) { hasInteracted.value = true }
+            .semantics { contentDescription = dropdownMenuBoxContentDescription },
     ) {
         TextField(
             readOnly = true,

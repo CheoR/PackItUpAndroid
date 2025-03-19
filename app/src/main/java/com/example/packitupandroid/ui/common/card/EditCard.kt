@@ -75,7 +75,7 @@ fun <D: BaseCardData>EditCard(
     editableFields: Set<EditFields> = emptySet(),
     dropdownOptions: Result<List<DropdownOptions?>>? = null,
 ) {
-    val editCardContentDescription = stringResource(R.string.edit_card)
+    val editCardContentDescription = stringResource(R.string.edit_dialog_title, selectedCard.value?.name ?: "")
 
     ElevatedCard(
         elevation = CardDefaults.cardElevation(defaultElevation = dimensionResource(R.dimen.elevation_small)),

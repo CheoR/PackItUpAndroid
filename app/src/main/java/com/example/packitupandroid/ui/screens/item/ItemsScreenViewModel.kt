@@ -6,8 +6,10 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.Label
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
+import androidx.compose.ui.res.stringResource
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
+import com.example.packitupandroid.R
 import com.example.packitupandroid.data.model.BoxIdAndName
 import com.example.packitupandroid.data.model.Item
 import com.example.packitupandroid.data.repository.ItemsRepository
@@ -169,12 +171,11 @@ class ItemsScreenViewModel(
      */
     override fun generateIconsColumn(element: Item): @Composable (ColumnScope.() -> Unit) {
         val image = if(element.imageUri != null) ImageContent.BitmapStringImage(element.imageUri) else ImageContent.VectorImage(Icons.AutoMirrored.Filled.Label)
-
         return {
             Column {
                 IconBadge(
                     image = image,
-                    badgeContentDescription = "Default Item Badge",
+                    badgeContentDescription = if(element.imageUri != null) element.name else stringResource(R.string.default_item_badge),
                     badgeCount = 0,
                 )
             }

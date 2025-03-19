@@ -90,6 +90,7 @@ private fun SettingsRow(
     ) {
         Icon(
             imageVector = setting.icon,
+            // TODO: UPDATE STRING XML RESOURCE TO DISPLAY SOMETHING LIKE "CURRENT SETTING: __, SET TO NEW_SETTING"
             contentDescription = stringResource(R.string.set_setting, setting.text),
             tint = MaterialTheme.colorScheme.primary,
         )

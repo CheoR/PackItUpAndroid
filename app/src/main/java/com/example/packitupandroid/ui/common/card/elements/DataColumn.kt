@@ -100,7 +100,7 @@ fun <D: BaseCardData>DataColumn(
             isEditable = isEditable(EditFields.Name),
             textStyle = MaterialTheme.typography.displayMedium,
             modifier = Modifier.fillMaxWidth(),
-            contentDescription = stringResource(R.string.value) + " field",
+            contentDescription = stringResource(R.string.name) + " field",
         )
 
         if (dropdownOptions != null) {

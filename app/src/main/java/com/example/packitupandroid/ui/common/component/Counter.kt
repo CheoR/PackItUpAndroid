@@ -14,7 +14,6 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
@@ -79,20 +78,13 @@ fun Counter(
                     tint = MaterialTheme.colorScheme.onPrimary
                 )
             }
-            TextButton(
+            Text(
                 modifier = buttonModifier
-                    .semantics {
-                        contentDescription = counterValue
-                    },
-                onClick = {},
-                enabled = false,
-            ) {
-                Text(
-                    text = count.toString(),
-                    style = MaterialTheme.typography.titleLarge,
-                    color = MaterialTheme.colorScheme.onPrimary
-                )
-            }
+                    .semantics { contentDescription = counterValue },
+                text = count.toString(),
+                style = MaterialTheme.typography.titleLarge,
+                color = MaterialTheme.colorScheme.onPrimary
+            )
             IconButton(
                 modifier = buttonModifier,
                 onClick = { count++ },

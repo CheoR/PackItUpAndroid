@@ -107,8 +107,8 @@ fun <D: BaseCardData>BaseCard(
     onCamera: () -> Unit,
     onDelete: () -> Unit,
     onUpdate: () -> Unit,
-    dropdownOptions: Result<List<DropdownOptions?>>? = null,
     modifier: Modifier = Modifier,
+    dropdownOptions: Result<List<DropdownOptions?>>? = null,
     onAdd: () -> Unit = {},
 ) {
     val fragileCheckboxContentDescription = stringResource(R.string.fragile_checkbox)
@@ -118,7 +118,7 @@ fun <D: BaseCardData>BaseCard(
     val addButtonContentDescription = stringResource(R.string.add)
     val cameraButtonContentDescription = stringResource(R.string.camera)
     val favoriteButtonContentDescription = stringResource(R.string.favorite)
-    val bseCardContentDescription = stringResource(R.string.base_card)
+    val baseCardContentDescription = stringResource(R.string.base_card)
 
     val dropdownOptionsList = if (dropdownOptions != null) {
         when (dropdownOptions) {
@@ -173,7 +173,7 @@ fun <D: BaseCardData>BaseCard(
         modifier = modifier
             .fillMaxWidth()
             .height(dimensionResource(R.dimen.card_height))
-            .semantics { contentDescription = bseCardContentDescription },
+            .semantics { contentDescription = baseCardContentDescription },
     ) {
         Row(
             modifier = Modifier

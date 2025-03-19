@@ -58,7 +58,7 @@
     <string name="dark_theme">dark theme</string>
     <string name="badgeContentDescription">Number of %s</string>
     <string name="fragile_checkbox">fragile checkbox</string>
-    <string name="icon_button_content_description">icon button</string>
+    <string name="icon_navigateTo_button">navigate to"</string>
     <string name="edit_dialog_title">edit %s</string>
     <string name="delete_dialog_title">delete %s</string>
     <string name="camera_dialog_title">capture %s</string>
@@ -66,4 +66,7 @@
     <string name="base_card">base card</string>
     <string name="edit_card">edit card</string>
     <string name="description">description</string>
+    <string name="name">name</string>
+    <string name="dropdown_select_box">dropdown select box</string>
+    <string name="default_item_badge">image badge</string>
 </resources>

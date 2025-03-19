@@ -42,6 +42,8 @@ import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -103,11 +105,11 @@ fun <D : BaseCardData> Screen(
     onCreate: (Int) -> Unit,
     onFieldChange: (MutableState<D?>, EditFields, String) -> Unit,
     onUpdate: (D) -> Unit,
-    dropdownOptions: Result<List<DropdownOptions?>>? = null,
     emptyListPlaceholder: String,
     snackbarHostState: SnackbarHostState,
     coroutineScope: CoroutineScope,
     modifier: Modifier = Modifier,
+    dropdownOptions: Result<List<DropdownOptions?>>? = null,
     addElements: (id: String) -> Unit = {},
     defaultDispatcher: CoroutineDispatcher = Dispatchers.Default
 ) {
@@ -189,7 +191,8 @@ fun <D : BaseCardData> Screen(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(8.dp)
-                .testTag("SearchTextField"),
+                .testTag("SearchTextField")
+                .semantics { contentDescription = "Search" },
             textStyle = MaterialTheme.typography.bodyLarge,
             decorationBox = { innerTextField ->
                 Box(
@@ -208,7 +211,7 @@ fun <D : BaseCardData> Screen(
         when(result) {
             is Result.Loading -> {
                 Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-                    Spinner()
+                    Spinner(modifier = Modifier.semantics { contentDescription = "Loading..." })
                 }
             }
             is Result.Error -> {
@@ -241,7 +244,8 @@ fun <D : BaseCardData> Screen(
                     LazyColumn(
                         modifier = Modifier
                             .weight(1f)
-                            .testTag("LazyColumn"),
+                            .testTag("LazyColumn")
+                            .semantics { contentDescription = "$emptyListPlaceholder list" },
                         verticalArrangement = Arrangement.spacedBy(dimensionResource(R.dimen.space_arrangement_small))
                     ) {
                         items(
