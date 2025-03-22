@@ -3,12 +3,12 @@ package com.example.packitupandroid.ui.common.component
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.test.assertIsEnabled
 import androidx.compose.ui.test.assertIsNotEnabled
-import androidx.compose.ui.test.assertTextEquals
 import androidx.compose.ui.test.junit4.createComposeRule
 import androidx.compose.ui.test.onNodeWithContentDescription
 import androidx.compose.ui.test.performClick
 import com.example.packitupandroid.ui.theme.PackItUpAndroidTheme
 import com.example.packitupandroid.ui.theme.rememberThemeManager
+import com.example.packitupandroid.utils.assertCounterValue
 import com.example.packitupandroid.utils.decrementCountByFour
 import com.example.packitupandroid.utils.decrementCounter
 import com.example.packitupandroid.utils.incrementCountByFive
@@ -25,14 +25,6 @@ class CounterTest {
     @get:Rule
     val composeTestRule = createComposeRule()
 
-    private fun assertCounterValue(expectedValue: Int) {
-        composeTestRule.onNodeWithContentDescription(
-            label = "Counter Value $expectedValue",
-            ignoreCase = true,
-        )
-            .assertTextEquals(expectedValue.toString())
-    }
-
     @Before
     fun setUp() {
         composeTestRule.setContent {
@@ -47,26 +39,26 @@ class CounterTest {
 
     @Test
     fun counter_InitialState_InitialValueIsZero() {
-        assertCounterValue(initialValue)
+        composeTestRule.assertCounterValue(initialValue)
     }
 
     @Test
     fun incrementCounterFive() {
         composeTestRule.incrementCounter(incrementCountByFive)
-        assertCounterValue(incrementCountByFive)
+        composeTestRule.assertCounterValue(incrementCountByFive)
     }
 
     @Test
     fun incrementAndDecrementCounter_ResultIsOne() {
         composeTestRule.incrementCounter(incrementCountByFive)
         composeTestRule.decrementCounter(decrementCountByFour)
-        assertCounterValue(incrementCountByFive - decrementCountByFour)
+        composeTestRule.assertCounterValue(incrementCountByFive - decrementCountByFour)
     }
 
     @Test
     fun decrementCounterByFour_ResultIsZero() {
         composeTestRule.decrementCounter(decrementCountByFour)
-        assertCounterValue(initialValue)
+        composeTestRule.assertCounterValue(initialValue)
     }
 
     @Test
@@ -85,6 +77,6 @@ class CounterTest {
     fun addButtonClick_ResetsValueToZero() {
         composeTestRule.incrementCounter(incrementCountByFive)
         composeTestRule.onNodeWithContentDescription("add").performClick()
-        assertCounterValue(initialValue)
+        composeTestRule.assertCounterValue(initialValue)
     }
 }
