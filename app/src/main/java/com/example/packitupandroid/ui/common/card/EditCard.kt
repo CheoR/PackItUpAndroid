@@ -142,6 +142,7 @@ fun PreviewEditCard() {
                 image = ImageContent.VectorImage(Icons.AutoMirrored.Filled.Label),
                 badgeContentDescription = "Default Item Badge",
                 badgeCount = 0,
+                type = "items",
             )
         },
         dropdownOptions = Result.Success(emptyList())

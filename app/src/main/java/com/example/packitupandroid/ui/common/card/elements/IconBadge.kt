@@ -11,6 +11,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.dimensionResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
 import com.example.packitupandroid.R
@@ -43,9 +44,11 @@ import com.example.packitupandroid.R
 fun IconBadge(
     image: ImageContent,
     badgeContentDescription: String,
+    type: String,
     modifier: Modifier = Modifier,
     badgeCount: Int = 0,
 ) {
+    val badgeCountContentDescription = stringResource(R.string.badgeContentDescription, type, badgeCount)
     val badgeOffsets = Modifier
         .offset(
             dimensionResource(R.dimen.badge_x_offset),
@@ -68,7 +71,7 @@ fun IconBadge(
                         text = badgeCount.toString(),
                         style = MaterialTheme.typography.labelSmall,
                         modifier = modifier.semantics {
-                            contentDescription = badgeContentDescription
+                            contentDescription = badgeCountContentDescription
                         },
                         color = MaterialTheme.colorScheme.onPrimary
                     )
@@ -80,6 +83,7 @@ fun IconBadge(
             selectedIcon = image,
             modifier = imageDimens,
             tintIcon = true,
+            contentDescription = if (badgeCount == 0) badgeContentDescription else null
         )
     }
 }

@@ -134,6 +134,7 @@ class BoxesScreenViewModel(
                     image = ImageContent.VectorImage(Icons.AutoMirrored.Filled.Label),
                     badgeContentDescription = "${element.itemCount} Items",
                     badgeCount = element.itemCount,
+                    type = "items",
                 )
             }
         }

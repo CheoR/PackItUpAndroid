@@ -111,14 +111,18 @@ fun <D: BaseCardData>BaseCard(
     dropdownOptions: Result<List<DropdownOptions?>>? = null,
     onAdd: () -> Unit = {},
 ) {
+    val nameFieldContentDescription = stringResource(R.string.name) + " field"
+    val descriptionFieldContentDescription = stringResource(R.string.description) + " field"
+
     val fragileCheckboxContentDescription = stringResource(R.string.fragile_checkbox)
-    val valueFieldContentDescription = stringResource(R.string.value)
+    val valueFieldContentDescription = stringResource(R.string.value) + " field"
     val editButtonContentDescription = stringResource(R.string.edit)
     val deleteButtonContentDescription = stringResource(R.string.delete)
     val addButtonContentDescription = stringResource(R.string.add)
     val cameraButtonContentDescription = stringResource(R.string.camera)
-    val favoriteButtonContentDescription = stringResource(R.string.favorite)
-    val baseCardContentDescription = stringResource(R.string.base_card)
+    val arrowBackButtonContentDescription = stringResource(R.string.favorite)
+    val baseCardContentDescription = stringResource(R.string.base_card) // TODO: refactor to include card name or id ( todo: not id ) or some way to uniquely identify and update tests
+    val swipeToOpenMenuContentDescription = stringResource(R.string.open_menu)
 
     val dropdownOptionsList = if (dropdownOptions != null) {
         when (dropdownOptions) {
@@ -136,6 +140,8 @@ fun <D: BaseCardData>BaseCard(
             else -> null
         }
     } else { null }
+
+    val dropdownSelectionContentDescription = if (selectedBox != null) stringResource(R.string.dropdown_option_selected, selectedBox.name) else stringResource(R.string.dropdown_no_option_unselected)
 
     val scope = rememberCoroutineScope()
     var boxSize by remember { mutableFloatStateOf(0F) }
@@ -195,7 +201,8 @@ fun <D: BaseCardData>BaseCard(
                     maxLines = 1,
                     enabled = false,
                     modifier = Modifier
-                        .fillMaxWidth(),
+                        .fillMaxWidth()
+                        .semantics { contentDescription = nameFieldContentDescription },
                     textStyle = MaterialTheme.typography.displayMedium,
                 )
                 if (dropdownOptions != null) {
@@ -205,9 +212,11 @@ fun <D: BaseCardData>BaseCard(
                     ) {
                         TextField(
                             readOnly = true,
+                            enabled = false,
                             value = selectedBox?.name ?: "",
                             onValueChange = {},
-                            modifier = Modifier.fillMaxWidth(),
+                            modifier = Modifier.fillMaxWidth()
+                                .semantics { contentDescription = dropdownSelectionContentDescription },
                             textStyle = MaterialTheme.typography.bodySmall,
                         )
                     }
@@ -221,7 +230,8 @@ fun <D: BaseCardData>BaseCard(
                     enabled = false,
                     modifier = Modifier
                         .fillMaxWidth()
-                        .weight(1f),
+                        .weight(1f)
+                        .semantics { contentDescription = descriptionFieldContentDescription },
                 )
                 Row(
                     modifier = Modifier,
@@ -258,7 +268,10 @@ fun <D: BaseCardData>BaseCard(
                         )
                     }
                     .anchoredDraggable(state, Orientation.Horizontal)
-                    .background(iconsBackgroundColor),
+                    .background(iconsBackgroundColor)
+                    .semantics {
+                        contentDescription = swipeToOpenMenuContentDescription
+                    },
                 verticalArrangement = Arrangement.Center,
             ) {
                 when (state.targetValue) {
@@ -266,7 +279,7 @@ fun <D: BaseCardData>BaseCard(
                         IconButton(onClick = {} ) {
                             Icon(
                                 Icons.Default.ArrowBackIosNew,
-                                contentDescription = favoriteButtonContentDescription,
+                                contentDescription = arrowBackButtonContentDescription,
                                 tint = MaterialTheme.colorScheme.tertiary,
                             )
                         }
@@ -331,6 +344,7 @@ fun PreviewBaseCard() {
                 image = ImageContent.VectorImage(Icons.AutoMirrored.Filled.Label),
                 badgeContentDescription = "Default Item Badge",
                 badgeCount = 0,
+                type = "items",
             )
         },
         onCamera = {},

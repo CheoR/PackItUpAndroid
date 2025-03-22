@@ -124,6 +124,7 @@ private fun SummaryScreen(
                         image = ImageContent.VectorImage(Icons.Default.Category),
                         badgeContentDescription = stringResource(R.string.badgeContentDescription, stringResource(R.string.collections)),
                         badgeCount = result?.collectionCount ?: 0,
+                        type = "collections",
                     )
                 }
             },
@@ -140,6 +141,7 @@ private fun SummaryScreen(
                         image = ImageContent.DrawableImage(R.drawable.ic_launcher_foreground),
                         badgeContentDescription = stringResource(R.string.badgeContentDescription, stringResource(R.string.boxes)),
                         badgeCount = result?.boxCount ?: 0,
+                        type = "boxes",
                     )
                 }
             },
@@ -156,6 +158,7 @@ private fun SummaryScreen(
                         image = ImageContent.VectorImage(Icons.AutoMirrored.Filled.Label),
                         badgeContentDescription = stringResource(R.string.badgeContentDescription, stringResource(R.string.items)),
                         badgeCount = result?.itemCount ?: 0,
+                        type = "items",
                     )
                 }
             },

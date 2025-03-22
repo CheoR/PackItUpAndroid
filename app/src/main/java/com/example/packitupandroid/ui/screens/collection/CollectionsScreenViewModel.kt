@@ -118,11 +118,13 @@ class CollectionsScreenViewModel(
                     image = ImageContent.DrawableImage(R.drawable.ic_launcher_foreground),
                     badgeContentDescription = "${element.boxCount} Boxes",
                     badgeCount = element.boxCount,
+                    type = "boxes",
                 )
                 IconBadge(
                     image = ImageContent.VectorImage(Icons.AutoMirrored.Filled.Label),
                     badgeContentDescription = "${element.itemCount} Items",
                     badgeCount = element.itemCount,
+                    type = "items",
                 )
             }
         }

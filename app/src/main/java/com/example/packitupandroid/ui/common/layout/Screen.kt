@@ -122,6 +122,7 @@ fun <D : BaseCardData> Screen(
     val configuration = LocalConfiguration.current
     val screenWidth = configuration.screenWidthDp.dp
     val dialogWidth = screenWidth * 0.95f
+    val emptyListContentDescription = stringResource(R.string.empty_list)
 
     var searchQuery by remember { mutableStateOf("") }
 
@@ -229,11 +230,12 @@ fun <D : BaseCardData> Screen(
                 if(filteredElements.isEmpty()) {
                     Box(modifier = Modifier
                         .weight(1f)
-                        .fillMaxWidth(),
+                        .fillMaxWidth()
+                        .semantics { contentDescription = emptyListContentDescription },
                         contentAlignment = Alignment.Center,
                     ) {
                         Text(
-                            text = stringResource(R.string.empty_list, emptyListPlaceholder),
+                            text = stringResource(R.string.no_element_found, emptyListPlaceholder),
                             style = MaterialTheme.typography.bodyLarge,
                         )
                     }

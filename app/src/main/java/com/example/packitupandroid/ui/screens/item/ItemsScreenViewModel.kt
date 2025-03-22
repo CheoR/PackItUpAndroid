@@ -175,8 +175,9 @@ class ItemsScreenViewModel(
             Column {
                 IconBadge(
                     image = image,
-                    badgeContentDescription = if(element.imageUri != null) element.name else stringResource(R.string.default_item_badge),
+                    badgeContentDescription = if(element.imageUri != null) stringResource(R.string.image_description, element.name) else stringResource(R.string.default_item_badge),
                     badgeCount = 0,
+                    type = "items",
                 )
             }
         }
