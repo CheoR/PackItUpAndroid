@@ -22,6 +22,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.unit.dp
 import com.example.packitupandroid.R
 import com.example.packitupandroid.utils.ActionColumnIcon
@@ -45,6 +47,8 @@ fun SummaryCard(
     navigateToTopLevelDestination: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
+    val nameFieldContentDescription = "$name " + stringResource(R.string.name) + " field"
+    val descriptionFieldContentDescription = "$name " + stringResource(R.string.description) + " field"
     val iconButtonContentDescription = stringResource(R.string.icon_navigateTo_button) + " " + stringResource(name)
 
     ElevatedCard(
@@ -73,6 +77,7 @@ fun SummaryCard(
                     enabled = false,
                     modifier = Modifier
                         .fillMaxWidth()
+                        .semantics { contentDescription = nameFieldContentDescription },
                 )
                 BasicTextField(
                     value = description,
@@ -82,6 +87,7 @@ fun SummaryCard(
                     maxLines = 3,
                     enabled = false,
                     modifier = modifier
+                        .semantics { contentDescription = descriptionFieldContentDescription },
                 )
             }
             Column(
