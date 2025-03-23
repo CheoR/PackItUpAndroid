@@ -13,19 +13,19 @@
         </DropdownSelection>
         <DialogSelection />
       </SelectionState>
-      <SelectionState runConfigName="BaseCardUiTestsBox">
+      <SelectionState runConfigName="SummaryCardUiTests">
         <option name="selectionMode" value="DROPDOWN" />
       </SelectionState>
-      <SelectionState runConfigName="BaseCardUiTestsCollection">
+      <SelectionState runConfigName="test_SummaryCard_init_nameFieldIsDisplayed()">
         <option name="selectionMode" value="DROPDOWN" />
       </SelectionState>
-      <SelectionState runConfigName="test_BaseCard_init_dropdownSelectionFieldDoesNotExist()">
+      <SelectionState runConfigName="test_SummaryCard_init_descriptionFieldExists()">
         <option name="selectionMode" value="DROPDOWN" />
       </SelectionState>
-      <SelectionState runConfigName="test_BaseCard_init_dropdownSelectionFieldIsDisplayed()">
+      <SelectionState runConfigName="test_SummaryCard_init_iconExists()">
         <option name="selectionMode" value="DROPDOWN" />
       </SelectionState>
-      <SelectionState runConfigName="test_BaseCard_init_valueIsDisplayed()">
+      <SelectionState runConfigName="test_IconBadge_iconIsDisplayed()">
         <option name="selectionMode" value="DROPDOWN" />
       </SelectionState>
     </selectionStates>
