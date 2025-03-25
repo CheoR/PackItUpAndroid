@@ -2,6 +2,7 @@ package com.example.packitupandroid.ui.common.component
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -19,6 +20,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
@@ -78,13 +80,18 @@ fun Counter(
                     tint = MaterialTheme.colorScheme.onPrimary
                 )
             }
-            Text(
+            Box(
                 modifier = buttonModifier
+                    .size(buttonSize)
                     .semantics { contentDescription = counterValue },
-                text = count.toString(),
-                style = MaterialTheme.typography.titleLarge,
-                color = MaterialTheme.colorScheme.onPrimary
-            )
+                contentAlignment = Alignment.Center
+            ) {
+                Text(
+                    text = count.toString(),
+                    style = MaterialTheme.typography.titleLarge,
+                    color = MaterialTheme.colorScheme.onPrimary,
+                )
+            }
             IconButton(
                 modifier = buttonModifier,
                 onClick = { count++ },
