@@ -70,4 +70,7 @@
     <string name="dropdown_select_box">dropdown select box</string>
     <string name="default_item_badge">image badge</string>
     <string name="loading">loading . . .</string>
+    <string name="delivery_option_shipping">shipping</string>
+    <string name="delivery_option_summarize">summarize</string>
+    <string name="delivery_option_backup">backup</string>
 </resources>
