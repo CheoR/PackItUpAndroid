@@ -181,35 +181,18 @@ fun <D : BaseCardData> Screen(
             )
         }
     ) {
-        BasicTextField(
-            value = searchQuery,
+        SearchField(
+            searchQuery = searchQuery,
             onValueChange = {
                 searchQuery = it
                 debounce.invoke(it)
             },
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(8.dp)
-                .semantics { contentDescription = "Search" },
-            textStyle = MaterialTheme.typography.bodyLarge,
-            decorationBox = { innerTextField ->
-                Box(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .background(MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.1f))
-                        .padding(8.dp)
-                ) {
-                    if (searchQuery.isEmpty()) {
-                        Text(stringResource(R.string.search), color = MaterialTheme.colorScheme.onSurfaceVariant)
-                    }
-                    innerTextField()
-                }
-            }
         )
         when(result) {
             is Result.Loading -> {
+                val loadingContentDescription = stringResource(R.string.loading)
                 Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-                    Spinner(modifier = Modifier.semantics { contentDescription = "Loading..." })
+                    Spinner(modifier = Modifier.semantics { contentDescription = loadingContentDescription })
                 }
             }
             is Result.Error -> {
@@ -468,6 +451,51 @@ fun DeliveryOptionButton(
             color = MaterialTheme.colorScheme.onSurface,
         )
     }
+}
+
+/**
+ * SearchField composable function creates search field for text input to filter element list.
+ *
+ * This composable provides a styled text field for users to input search queries.
+ * It displays a placeholder "Search" text when the input is empty and updates
+ * the provided [searchQuery] state with every change. It also sets a content description
+ * for accessibility purposes.
+ *
+ * @param searchQuery The current text value in the search field.
+ * @param onValueChange A lambda function invoked when the text in the search field changes.
+ *                      It receives the new text value as a parameter.
+ * @param modifier Modifier to be applied to the search field.
+ */
+@Composable
+fun SearchField(
+    searchQuery: String,
+    onValueChange: (String) -> Unit,
+    modifier: Modifier = Modifier,
+) {
+    val searchContentDescription = stringResource(R.string.search)
+
+    BasicTextField(
+        value = searchQuery,
+        onValueChange = onValueChange,
+        modifier = modifier
+            .fillMaxWidth()
+            .padding(dimensionResource(R.dimen.space_arrangement_small))
+            .semantics { contentDescription = searchContentDescription },
+        textStyle = MaterialTheme.typography.bodyLarge,
+        decorationBox = { innerTextField ->
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .background(MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.1f))
+                    .padding(8.dp)
+            ) {
+                if (searchQuery.isEmpty()) {
+                    Text(stringResource(R.string.search), color = MaterialTheme.colorScheme.onSurfaceVariant)
+                }
+                innerTextField()
+            }
+        }
+    )
 }
 
 /**

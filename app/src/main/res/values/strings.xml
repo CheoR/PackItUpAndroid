@@ -69,4 +69,5 @@
     <string name="name">name</string>
     <string name="dropdown_select_box">dropdown select box</string>
     <string name="default_item_badge">image badge</string>
+    <string name="loading">loading . . .</string>
 </resources>
