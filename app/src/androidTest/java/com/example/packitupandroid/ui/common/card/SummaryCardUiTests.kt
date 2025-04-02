@@ -180,6 +180,12 @@ class SummaryCardUiTests(
                     .onNode(hasContentDescription(badgeContentDescription))
                     .assertIsDisplayed()
             }
+
+            is ImageContent.FileImage -> {
+                composeTestRule
+                    .onNode(hasContentDescription(badgeContentDescription))
+                    .assertIsDisplayed()
+            }
         }
     }
 
