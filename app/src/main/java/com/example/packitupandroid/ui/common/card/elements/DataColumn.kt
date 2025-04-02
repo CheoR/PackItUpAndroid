@@ -100,7 +100,7 @@ fun <D: BaseCardData>DataColumn(
             isEditable = isEditable(EditFields.Name),
             textStyle = MaterialTheme.typography.displayMedium,
             modifier = Modifier.fillMaxWidth(),
-            contentDescription = stringResource(R.string.name) + " field",
+            fieldContentDescription = stringResource(R.string.name) + " field",
         )
 
         if (dropdownOptions != null) {
@@ -130,7 +130,7 @@ fun <D: BaseCardData>DataColumn(
                 .weight(1f),
             minLines = 3,
             maxLines = 3,
-            contentDescription = stringResource(R.string.description) + " field",
+            fieldContentDescription = stringResource(R.string.description) + " field",
         )
 
         Row(
@@ -159,7 +159,7 @@ fun <D: BaseCardData>DataColumn(
                 isEditable = isEditable(EditFields.Value),
                 textStyle = MaterialTheme.typography.bodySmall,
                 modifier = Modifier,
-                contentDescription = stringResource(R.string.value),
+                fieldContentDescription = stringResource(R.string.value),
                 keyboardOptions = KeyboardOptions.Default.copy(
                     keyboardType = KeyboardType.Number,
                     imeAction = ImeAction.Done
