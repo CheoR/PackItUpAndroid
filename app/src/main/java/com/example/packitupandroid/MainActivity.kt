@@ -33,11 +33,7 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         super.onCreate(savedInstanceState)
 
-        if (!hasRequiredPermissions()) {
-            ActivityCompat.requestPermissions(
-                this, CAMERAX_PERMISSIONS, 0
-            )
-        }
+        requestPermissionsIfNeeded()
 
         setContent {
             val context = LocalContext.current
@@ -58,25 +54,27 @@ class MainActivity : ComponentActivity() {
         }
     }
 
+
     /**
-     * Checks if the application has all the required permissions defined in [CAMERAX_PERMISSIONS].
+     * Requests necessary permissions if they are not already granted.
      *
-     * This function iterates through each permission in the [CAMERAX_PERMISSIONS] array and checks if it's
-     * granted using [ContextCompat.checkSelfPermission]. It returns true only if all permissions are granted;
-     * otherwise, it returns false.
+     * Currently requests the `CAMERA` permission.  If any of the required permissions
+     * are not granted, it will trigger a permission request dialog to the user.  The
+     * result of the permission request will be handled in the `onRequestPermissionsResult`
+     * callback of the activity.
      *
-     * @return `true` if all required permissions are granted, `false` otherwise.
-     *
-     * @see CAMERAX_PERMISSIONS
-     * @see ContextCompat.checkSelfPermission
-     * @see PackageManager.PERMISSION_GRANTED
+     * **Note:** This function should be called within an Activity context, as it uses
+     * `ActivityCompat.requestPermissions` which requires an Activity.  It also assumes
+     * that the calling Activity has overridden `onRequestPermissionsResult` to handle the
+     * permission grant/denial.
      */
-    private fun hasRequiredPermissions(): Boolean {
-        return CAMERAX_PERMISSIONS.all {
-            ContextCompat.checkSelfPermission(
-                applicationContext,
-                it
-            ) == PackageManager.PERMISSION_GRANTED
+    private fun requestPermissionsIfNeeded() {
+        if (CAMERAX_PERMISSIONS.any {
+                ContextCompat.checkSelfPermission(this, it) != PackageManager.PERMISSION_GRANTED
+            }) {
+            ActivityCompat.requestPermissions(
+                this, CAMERAX_PERMISSIONS, PERMISSION_REQUEST_CODE
+            )
         }
     }
 
@@ -93,7 +91,13 @@ class MainActivity : ComponentActivity() {
          */
         private val CAMERAX_PERMISSIONS = arrayOf(
             Manifest.permission.CAMERA,
+            Manifest.permission.WRITE_EXTERNAL_STORAGE,
         )
+
+        /**
+         * The request code used for permission requests.
+         */
+        private const val PERMISSION_REQUEST_CODE = 1001
     }
 }
 
