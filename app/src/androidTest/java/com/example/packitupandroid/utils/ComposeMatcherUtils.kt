@@ -50,6 +50,14 @@ fun ComposeTestRule.incrementCounter(times: Int) =
 fun ComposeTestRule.decrementCounter(times: Int) =
     performActionOnNode("decrement", times) { performClick() }
 
+fun ComposeTestRule.assertCounterValue(expectedValue: Int) {
+    onNodeWithContentDescription(
+        label = "counter value $expectedValue",
+        ignoreCase = true,
+    )
+        .assert(hasAnyChild(hasText(expectedValue.toString())))
+}
+
 fun ComposeTestRule.clickAdd() =
     performActionOnNode("add", 1) { performClick() }
 
