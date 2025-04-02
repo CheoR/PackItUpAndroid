@@ -3,6 +3,7 @@ package com.example.packitupandroid.ui.common.dialog
 import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
+import android.os.Environment
 import android.util.Base64
 import android.util.Log
 import androidx.camera.core.ImageCapture
@@ -27,6 +28,7 @@ import com.example.packitupandroid.ui.common.card.elements.CameraPreview
 import com.example.packitupandroid.ui.common.component.ConfirmCancelContainer
 import com.example.packitupandroid.utils.EditFields
 import java.io.ByteArrayOutputStream
+import java.io.File
 
 
 /**
@@ -128,22 +130,21 @@ private fun takePhoto(
     controller: LifecycleCameraController,
     onPhotoTaken: (String) -> Unit,
 ) {
-    controller.takePicture(
-        ContextCompat.getMainExecutor(context),
-        object : ImageCapture.OnImageCapturedCallback() {
-            override fun onCaptureSuccess(image: ImageProxy) {
-                super.onCaptureSuccess(image)
-                val bitmap = imageProxyToBitmap(image)
-                val base64Image = bitmap?.let { bitmapToBase64(it) }
-                onPhotoTaken(base64Image.toString())
-            }
+    val file = File(context.getExternalFilesDir(Environment.DIRECTORY_PICTURES), "IMG_${System.currentTimeMillis()}.jpg")
+    val outputOptions = ImageCapture.OutputFileOptions.Builder(file).build()
 
-            override fun onError(exception: ImageCaptureException) {
-                super.onError(exception)
-                Log.e("Camera", "Camera Error: ", exception)
-            }
+    controller.takePicture(
+        outputOptions,
+        ContextCompat.getMainExecutor(context),
+        object : ImageCapture.OnImageSavedCallback {
+        override fun onImageSaved(outputFileResults: ImageCapture.OutputFileResults) {
+                onPhotoTaken(file.absolutePath)
         }
-    )
+
+        override fun onError(exception: ImageCaptureException) {
+            Log.e("Camera", "Camera Error: ", exception)
+        }
+    })
 }
 
 /**

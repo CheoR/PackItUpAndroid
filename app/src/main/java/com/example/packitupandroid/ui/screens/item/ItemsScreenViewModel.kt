@@ -17,14 +17,14 @@ import com.example.packitupandroid.ui.common.card.elements.IconBadge
 import com.example.packitupandroid.ui.common.card.elements.ImageContent
 import com.example.packitupandroid.ui.screens.BaseViewModel
 import com.example.packitupandroid.utils.EditFields
+import com.example.packitupandroid.utils.Result
 import com.example.packitupandroid.utils.parseCurrencyToDouble
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import com.example.packitupandroid.utils.Result
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.launch
 
 
 /**
@@ -170,7 +170,12 @@ class ItemsScreenViewModel(
      * @return A composable lambda that, when invoked, displays the icons column. The lambda uses a [ColumnScope] to allow for column-based layout of the icons.
      */
     override fun generateIconsColumn(element: Item): @Composable (ColumnScope.() -> Unit) {
-        val image = if(element.imageUri != null) ImageContent.BitmapStringImage(element.imageUri) else ImageContent.VectorImage(Icons.AutoMirrored.Filled.Label)
+        val image = if (element.imageUri?.startsWith("/") == true) {
+            ImageContent.FileImage(element.imageUri)
+        } else {
+            ImageContent.VectorImage(Icons.AutoMirrored.Filled.Label)
+        }
+
         return {
             Column {
                 IconBadge(

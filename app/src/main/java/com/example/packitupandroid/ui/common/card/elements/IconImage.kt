@@ -3,10 +3,12 @@ package com.example.packitupandroid.ui.common.card.elements
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.util.Base64
+import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.graphics.asImageBitmap
@@ -16,6 +18,7 @@ import androidx.compose.ui.graphics.vector.rememberVectorPainter
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import com.example.packitupandroid.R
+import java.io.File
 
 
 /**
@@ -30,6 +33,7 @@ sealed class ImageContent {
     data class BitmapStringImage(val bitmapString: String) : ImageContent()
     data class DrawableImage(val drawableResId: Int) : ImageContent()
     data class VectorImage(val imageVector: ImageVector) : ImageContent()
+    data class FileImage(val filePath: String) : ImageContent()
 }
 
 /**
@@ -68,6 +72,13 @@ fun IconImage(
 ) {
     val color = if (tintIcon) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurfaceVariant
 
+    // colorFilter masks image if left as colorFilter = ColorFilter.tint(color) below
+    val colorFilter = if (selectedIcon is ImageContent.FileImage && File(selectedIcon.filePath).exists()) {
+        null
+    } else {
+        ColorFilter.tint(color)
+    }
+
     val painter = when (selectedIcon) {
         is ImageContent.BitmapImage -> BitmapPainter(selectedIcon.bitmap.asImageBitmap())
         is ImageContent.DrawableImage -> painterResource(id = selectedIcon.drawableResId)
@@ -81,12 +92,34 @@ fun IconImage(
                 painterResource(id = R.drawable.baseline_label_24)
             }
         }
+        is ImageContent.FileImage -> {
+            val bitmap = remember(selectedIcon.filePath) {
+                try {
+                    val file = File(selectedIcon.filePath)
+
+                    if (file.exists()) {
+                        BitmapFactory.decodeFile(file.absolutePath)?.asImageBitmap()
+                    } else {
+                        null
+                    }
+                } catch (e: Exception) {
+                    Log.e("MOO", "Error decoding file: ${e.message}")
+                    null // decoding fails
+                }
+            }
+
+            if (bitmap != null) {
+                BitmapPainter(bitmap)
+            } else {
+                painterResource(id = R.drawable.baseline_label_24)
+            }
+        }
     }
 
     return Image(
         modifier = modifier.size(40.dp),
         painter = painter,
         contentDescription = contentDescription,
-        colorFilter = ColorFilter.tint(color),
+        colorFilter = colorFilter,
     )
 }

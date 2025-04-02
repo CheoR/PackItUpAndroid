@@ -24,6 +24,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalBottomSheet
+import androidx.compose.material3.SheetState
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.material3.rememberModalBottomSheetState
@@ -182,35 +183,18 @@ fun <D : BaseCardData> Screen(
             )
         }
     ) {
-        BasicTextField(
-            value = searchQuery,
+        SearchField(
+            searchQuery = searchQuery,
             onValueChange = {
                 searchQuery = it
                 debounce.invoke(it)
             },
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(8.dp)
-                .semantics { contentDescription = "Search" },
-            textStyle = MaterialTheme.typography.bodyLarge,
-            decorationBox = { innerTextField ->
-                Box(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .background(MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.1f))
-                        .padding(8.dp)
-                ) {
-                    if (searchQuery.isEmpty()) {
-                        Text(stringResource(R.string.search), color = MaterialTheme.colorScheme.onSurfaceVariant)
-                    }
-                    innerTextField()
-                }
-            }
         )
         when(result) {
             is Result.Loading -> {
+                val loadingContentDescription = stringResource(R.string.loading)
                 Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-                    Spinner(modifier = Modifier.semantics { contentDescription = "Loading..." })
+                    Spinner(modifier = Modifier.semantics { contentDescription = loadingContentDescription })
                 }
             }
             is Result.Error -> {
@@ -289,53 +273,13 @@ fun <D : BaseCardData> Screen(
         Counter(onCreate = onCreate)
 
         if (showBottomSheet) {
-            ModalBottomSheet(
+            DeliveryOptionsModalBottomSheet(
+                sheetState = sheetState,
+                coroutineScope = coroutineScope,
                 onDismissRequest = {
                     showBottomSheet = false
-                },
-                sheetState = sheetState
-            ) {
-                Row(
-                    modifier = modifier.padding(16.dp),
-                    horizontalArrangement = Arrangement.SpaceAround,
-                ) {
-                    DeliveryOptionButton(
-                        icon = Icons.Filled.LocalShipping,
-                        text = "Shipping",
-                        onClick = {
-                            // TODO: move actions to viewModel and pass through screens, e.g. ItemsScreen
-                            // that way each type can have specific actions and/or how to process data on current screen
-                            coroutineScope.launch { sheetState.hide() }.invokeOnCompletion {
-                                if (!sheetState.isVisible) {
-                                    showBottomSheet = false
-                                }
-                            }
-                        }
-                    )
-                    DeliveryOptionButton(
-                        icon = Icons.Filled.Summarize,
-                        text = "Summarize",
-                        onClick = {
-                            coroutineScope.launch { sheetState.hide() }.invokeOnCompletion {
-                                if (!sheetState.isVisible) {
-                                    showBottomSheet = false
-                                }
-                            }
-                        }
-                    )
-                    DeliveryOptionButton(
-                        icon = Icons.Filled.Backup,
-                        text = "Backup",
-                        onClick = {
-                            coroutineScope.launch { sheetState.hide() }.invokeOnCompletion {
-                                if (!sheetState.isVisible) {
-                                    showBottomSheet = false
-                                }
-                            }
-                        }
-                    )
                 }
-            }
+            )
         }
 
         if (editDialogIsExpanded.value) {
@@ -423,6 +367,74 @@ fun <D : BaseCardData> Screen(
     }
 }
 
+
+/**
+ * Displays a modal bottom sheet with various delivery options.
+ *
+ * This composable presents a sheet containing buttons for different delivery options,
+ * such as shipping, summarize, and backup. Each button, when clicked, hides the sheet
+ * and then invokes the provided `onDismissRequest` callback.
+ *
+ * @param sheetState The state of the bottom sheet. This controls whether the sheet is
+ *                   visible or hidden.
+ * @param coroutineScope The coroutine scope used to launch coroutines for hiding the sheet.
+ * @param onDismissRequest A callback invoked when the sheet is dismissed, either by
+ *                         clicking outside of the sheet or by clicking a delivery option button.
+ * @param modifier Modifier to be applied to the bottom sheet.
+ */
+@Composable
+fun DeliveryOptionsModalBottomSheet(
+    sheetState: SheetState,
+    coroutineScope: CoroutineScope,
+    onDismissRequest: () -> Unit,
+    modifier: Modifier = Modifier
+) {
+    ModalBottomSheet(
+        onDismissRequest = onDismissRequest,
+        sheetState = sheetState,
+        modifier = modifier
+    ) {
+        Row(
+            modifier = Modifier.padding(dimensionResource(R.dimen.padding_medium)),
+            horizontalArrangement = Arrangement.SpaceAround,
+        ) {
+            DeliveryOptionButton(
+                icon = Icons.Filled.LocalShipping,
+                text = stringResource(R.string.delivery_option_shipping),
+                onClick = {
+                    coroutineScope.launch { sheetState.hide() }.invokeOnCompletion {
+                        if (!sheetState.isVisible) {
+                            onDismissRequest()
+                        }
+                    }
+                }
+            )
+            DeliveryOptionButton(
+                icon = Icons.Filled.Summarize,
+                text = stringResource(R.string.delivery_option_summarize),
+                onClick = {
+                    coroutineScope.launch { sheetState.hide() }.invokeOnCompletion {
+                        if (!sheetState.isVisible) {
+                            onDismissRequest()
+                        }
+                    }
+                }
+            )
+            DeliveryOptionButton(
+                icon = Icons.Filled.Backup,
+                text = stringResource(R.string.delivery_option_backup),
+                onClick = {
+                    coroutineScope.launch { sheetState.hide() }.invokeOnCompletion {
+                        if (!sheetState.isVisible) {
+                            onDismissRequest()
+                        }
+                    }
+                }
+            )
+        }
+    }
+}
+
 /**
  * A composable button representing a delivery option.
  *
@@ -470,6 +482,51 @@ fun DeliveryOptionButton(
             color = MaterialTheme.colorScheme.onSurface,
         )
     }
+}
+
+/**
+ * SearchField composable function creates search field for text input to filter element list.
+ *
+ * This composable provides a styled text field for users to input search queries.
+ * It displays a placeholder "Search" text when the input is empty and updates
+ * the provided [searchQuery] state with every change. It also sets a content description
+ * for accessibility purposes.
+ *
+ * @param searchQuery The current text value in the search field.
+ * @param onValueChange A lambda function invoked when the text in the search field changes.
+ *                      It receives the new text value as a parameter.
+ * @param modifier Modifier to be applied to the search field.
+ */
+@Composable
+fun SearchField(
+    searchQuery: String,
+    onValueChange: (String) -> Unit,
+    modifier: Modifier = Modifier,
+) {
+    val searchContentDescription = stringResource(R.string.search)
+
+    BasicTextField(
+        value = searchQuery,
+        onValueChange = onValueChange,
+        modifier = modifier
+            .fillMaxWidth()
+            .padding(dimensionResource(R.dimen.space_arrangement_small))
+            .semantics { contentDescription = searchContentDescription },
+        textStyle = MaterialTheme.typography.bodyLarge,
+        decorationBox = { innerTextField ->
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .background(MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.1f))
+                    .padding(8.dp)
+            ) {
+                if (searchQuery.isEmpty()) {
+                    Text(stringResource(R.string.search), color = MaterialTheme.colorScheme.onSurfaceVariant)
+                }
+                innerTextField()
+            }
+        }
+    )
 }
 
 /**
