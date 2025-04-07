@@ -146,7 +146,7 @@ fun <D: BaseCardData>DataColumn(
                 },
                 isEditable = isEditable(EditFields.IsFragile),
                 modifier = Modifier,
-                contentDescription = stringResource(R.string.fragile_checkbox),
+                fieldContentDescription = stringResource(R.string.fragile_checkbox),
             )
             Text(stringResource(R.string.fragile))
             Spacer(modifier = Modifier.weight(1f))

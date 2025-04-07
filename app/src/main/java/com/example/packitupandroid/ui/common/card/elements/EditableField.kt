@@ -12,6 +12,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.tooling.preview.Preview
@@ -41,7 +42,7 @@ fun EditableField(
     onValueChange: (String) -> Unit,
     isEditable: Boolean,
     textStyle: TextStyle,
-    contentDescription: String,
+    fieldContentDescription: String,
     modifier: Modifier = Modifier,
     minLines: Int = 1,
     maxLines: Int = 1,
@@ -69,7 +70,7 @@ fun EditableField(
         keyboardOptions = keyboardOptions,
         modifier = modifier
             .background(backgroundColor)
-            .semantics { contentDescription }
+            .semantics { contentDescription = fieldContentDescription }
             .clickable(onClick = { hasInteracted.value = true }, enabled = isEditable),
         )
 }
@@ -88,7 +89,7 @@ fun EditableFieldPreview() {
                 onValueChange = onValueChange,
                 isEditable = true,
                 textStyle = MaterialTheme.typography.bodyLarge,
-                contentDescription = "Editable Field"
+                fieldContentDescription = "Editable Field"
             )
         }
     }
