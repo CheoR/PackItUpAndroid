@@ -13,19 +13,19 @@
         </DropdownSelection>
         <DialogSelection />
       </SelectionState>
-      <SelectionState runConfigName="SummaryCardUiTests">
+      <SelectionState runConfigName="editCard_dropdown_dropdownHasCorrectTextSelection()">
         <option name="selectionMode" value="DROPDOWN" />
       </SelectionState>
-      <SelectionState runConfigName="test_SummaryCard_init_nameFieldIsDisplayed()">
+      <SelectionState runConfigName="updatedEditableDropdownIdEqualsNewSelectedId()">
         <option name="selectionMode" value="DROPDOWN" />
       </SelectionState>
-      <SelectionState runConfigName="test_SummaryCard_init_descriptionFieldExists()">
+      <SelectionState runConfigName="editCard_editableDropdownSelectionIsNull_dropdownNotDisplayed()">
         <option name="selectionMode" value="DROPDOWN" />
       </SelectionState>
-      <SelectionState runConfigName="test_SummaryCard_init_iconExists()">
+      <SelectionState runConfigName="editCard_updatedEditableDropdown_selectionIsUpdated()">
         <option name="selectionMode" value="DROPDOWN" />
       </SelectionState>
-      <SelectionState runConfigName="test_IconBadge_iconIsDisplayed()">
+      <SelectionState runConfigName="editCard_editableDropdownSelectionIsNull_dropdownNotDisplayed() (1)">
         <option name="selectionMode" value="DROPDOWN" />
       </SelectionState>
     </selectionStates>
