@@ -13,19 +13,19 @@
         </DropdownSelection>
         <DialogSelection />
       </SelectionState>
-      <SelectionState runConfigName="editCard_dropdown_dropdownHasCorrectTextSelection()">
+      <SelectionState runConfigName="editCard_badgeCountGreaterThanZero_badgeCountExists()">
         <option name="selectionMode" value="DROPDOWN" />
       </SelectionState>
-      <SelectionState runConfigName="updatedEditableDropdownIdEqualsNewSelectedId()">
+      <SelectionState runConfigName="editCard_badgeCountIsnZero_badgeCountDoesNotExists()">
         <option name="selectionMode" value="DROPDOWN" />
       </SelectionState>
-      <SelectionState runConfigName="editCard_editableDropdownSelectionIsNull_dropdownNotDisplayed()">
+      <SelectionState runConfigName="editCard_editableDropdownSelectionIsNull_dropdownDisplayed()">
         <option name="selectionMode" value="DROPDOWN" />
       </SelectionState>
-      <SelectionState runConfigName="editCard_updatedEditableDropdown_selectionIsUpdated()">
+      <SelectionState runConfigName="editCard_badgeCountIsnZero_badgeCountDoesNotExists() (1)">
         <option name="selectionMode" value="DROPDOWN" />
       </SelectionState>
-      <SelectionState runConfigName="editCard_editableDropdownSelectionIsNull_dropdownNotDisplayed() (1)">
+      <SelectionState runConfigName="editCard_badgeCountIsnZero_badgeCountIsNotDisplayed()">
         <option name="selectionMode" value="DROPDOWN" />
       </SelectionState>
     </selectionStates>
