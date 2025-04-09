@@ -99,7 +99,6 @@ class BoxesScreenViewModel(
      */
     override fun onFieldChange(element: MutableState<Box?>, field: EditFields, value: String) {
         val editableFields = element.value?.editFields ?: emptyList()
-        println("field: $field, value: $value editableFields: $editableFields isEditable: ${editableFields.contains(field)}")
         element.value?.let { currentBox ->
             val updatedElement = when(field) {
                 EditFields.Description -> if(editableFields.contains(field)) currentBox.copy(description = value) else currentBox
