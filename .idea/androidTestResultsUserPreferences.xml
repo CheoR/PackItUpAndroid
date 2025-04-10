@@ -809,6 +809,19 @@
             </AndroidTestResultsTableState>
           </value>
         </entry>
+        <entry key="-1171214932">
+          <value>
+            <AndroidTestResultsTableState>
+              <option name="preferredColumnWidths">
+                <map>
+                  <entry key="Duration" value="90" />
+                  <entry key="Pixel_2_API_34" value="120" />
+                  <entry key="Tests" value="360" />
+                </map>
+              </option>
+            </AndroidTestResultsTableState>
+          </value>
+        </entry>
         <entry key="-1169973124">
           <value>
             <AndroidTestResultsTableState>
@@ -875,6 +888,19 @@
           </value>
         </entry>
         <entry key="-1029089730">
+          <value>
+            <AndroidTestResultsTableState>
+              <option name="preferredColumnWidths">
+                <map>
+                  <entry key="Duration" value="90" />
+                  <entry key="Pixel_2_API_34" value="120" />
+                  <entry key="Tests" value="360" />
+                </map>
+              </option>
+            </AndroidTestResultsTableState>
+          </value>
+        </entry>
+        <entry key="-1028238532">
           <value>
             <AndroidTestResultsTableState>
               <option name="preferredColumnWidths">
@@ -2773,6 +2799,19 @@
           </value>
         </entry>
         <entry key="1287964424">
+          <value>
+            <AndroidTestResultsTableState>
+              <option name="preferredColumnWidths">
+                <map>
+                  <entry key="Duration" value="90" />
+                  <entry key="Pixel_2_API_34" value="120" />
+                  <entry key="Tests" value="360" />
+                </map>
+              </option>
+            </AndroidTestResultsTableState>
+          </value>
+        </entry>
+        <entry key="1301541822">
           <value>
             <AndroidTestResultsTableState>
               <option name="preferredColumnWidths">
