@@ -70,6 +70,7 @@
     <string name="name">name</string>
     <string name="dropdown_select_box">dropdown select box</string>
     <string name="default_item_badge">default item badge</string>
+    <string name="default_box_badge">default box badge</string>
     <string name="open_menu">swipe left to open menu</string>
     <string name="badge_count">badge count %d elements</string>
     <string name="image_description">image of %s</string>
