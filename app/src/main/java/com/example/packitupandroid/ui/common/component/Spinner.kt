@@ -25,6 +25,7 @@ import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
@@ -55,7 +56,7 @@ fun Spinner(
     imageSize: Dp = 200.dp,
     imageShape: Shape = CircleShape,
     contentScale: ContentScale = ContentScale.Crop,
-    contentDescription: String = "Loading Content",
+    contentDescription: String = stringResource(R.string.spinner_content_description),
     backgroundColor: Color = MaterialTheme.colorScheme.primary
 //    imageTint: Color = MaterialTheme.colorScheme.primary,
 ) {
