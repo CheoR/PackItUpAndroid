@@ -13,19 +13,19 @@
         </DropdownSelection>
         <DialogSelection />
       </SelectionState>
-      <SelectionState runConfigName="editCard_badgeCountGreaterThanZero_badgeCountExists()">
+      <SelectionState runConfigName="EditCardUiTestsCollection">
         <option name="selectionMode" value="DROPDOWN" />
       </SelectionState>
-      <SelectionState runConfigName="editCard_badgeCountIsnZero_badgeCountDoesNotExists()">
+      <SelectionState runConfigName="EditCardUiTestsCollection2">
         <option name="selectionMode" value="DROPDOWN" />
       </SelectionState>
-      <SelectionState runConfigName="editCard_editableDropdownSelectionIsNull_dropdownDisplayed()">
+      <SelectionState runConfigName="EditCardUiTestsItem">
         <option name="selectionMode" value="DROPDOWN" />
       </SelectionState>
-      <SelectionState runConfigName="editCard_badgeCountIsnZero_badgeCountDoesNotExists() (1)">
+      <SelectionState runConfigName="editCard_isFragileField_isFragileFieldHasCorrectValue()">
         <option name="selectionMode" value="DROPDOWN" />
       </SelectionState>
-      <SelectionState runConfigName="editCard_badgeCountIsnZero_badgeCountIsNotDisplayed()">
+      <SelectionState runConfigName="EditCardUiTestsItem2">
         <option name="selectionMode" value="DROPDOWN" />
       </SelectionState>
     </selectionStates>
