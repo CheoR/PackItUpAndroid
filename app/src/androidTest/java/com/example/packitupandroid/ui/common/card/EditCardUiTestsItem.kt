@@ -23,8 +23,8 @@ import androidx.compose.ui.test.performClick
 import androidx.compose.ui.test.performTextReplacement
 import androidx.compose.ui.test.printToLog
 import com.example.packitupandroid.R
-import com.example.packitupandroid.data.model.BoxIdAndName
 import com.example.packitupandroid.data.model.Item
+import com.example.packitupandroid.source.local.TestDataSource
 import com.example.packitupandroid.ui.common.card.elements.IconBadge
 import com.example.packitupandroid.ui.common.card.elements.ImageContent
 import com.example.packitupandroid.ui.theme.PackItUpAndroidTheme
@@ -52,21 +52,13 @@ class EditCardUiTestsItem {
     private lateinit var dropdownContentDescription: String
     private lateinit var selectedCard: MutableState<Item?>
 
-    val boxDropdownOptions = listOf(
-        BoxIdAndName(id = "1", name="box1"),
-        BoxIdAndName(id = "2", name="box2"),
-        BoxIdAndName(id = "3", name="box3"),
-        BoxIdAndName(id = "4", name="box4"),
-    )
+    val testData = TestDataSource()
+    val items = testData.items
+    val boxDropdownOptions = testData.boxIdAndNames
 
     val boxDropdownOptionsResult = Result.Success(boxDropdownOptions)
 
     private var imageUri: String? = null
-    val itemName = "cleaning rags"
-    val itemDescription = "because too lazy to get new ones"
-    val itemValue = 12.50
-    val itemIsFragile = false
-    val itemCurrentBoxId = "1"
     val defaultItemIcon = ImageContent.VectorImage(Icons.AutoMirrored.Filled.Label)
 
     val onFieldChange = fun (element: MutableState<Item?>, field: EditFields, value: String) {
@@ -114,17 +106,7 @@ class EditCardUiTestsItem {
 
             imageUri = null
 
-            selectedCard = remember { mutableStateOf<Item?>(
-                Item(
-                    id = "1",
-                    name = itemName,
-                    description = itemDescription,
-                    value = itemValue,
-                    isFragile = itemIsFragile,
-                    boxId = itemCurrentBoxId,
-                    imageUri = imageUri,
-                )
-            ) }
+            selectedCard = remember { mutableStateOf<Item?>(items[0]) }
 
             val context = LocalContext.current
             val themeManager = rememberThemeManager(context)
@@ -174,7 +156,7 @@ class EditCardUiTestsItem {
     fun editCard_nameField_nameFieldHasCorrectText() {
         composeTestRule
             .onNodeWithContentDescription(nameFieldContentDescription)
-            .assertTextEquals(itemName)
+            .assertTextEquals(items[0].name)
     }
 
     @Test
@@ -207,13 +189,13 @@ class EditCardUiTestsItem {
     fun editCard_descriptionField_descriptionFieldHasCorrectText() {
         composeTestRule
             .onNodeWithContentDescription(descriptionContentDescription)
-            .assertTextEquals(itemDescription)
+            .assertTextEquals(items[0].description.toString())
     }
 
     @Test
     fun editCard_updateDescriptionField_descriptionFieldHasCorrectText() {
         val newDescription = "oink oink oink oink oink oink oink oink"
-        val descriptionBefore = selectedCard.value!!.description ?: "oink oink"
+        val descriptionBefore = selectedCard.value!!.description ?: ""
 
         val node = composeTestRule.onNodeWithContentDescription(descriptionContentDescription)
 
@@ -240,7 +222,7 @@ class EditCardUiTestsItem {
     fun editCard_valueField_valueFieldHasCorrectValue() {
         composeTestRule
             .onNodeWithContentDescription(valueContentDescription)
-            .assertTextContains(itemValue.toString(), substring = true)
+            .assertTextContains(items[0].value.toString(), substring = true)
     }
 
     @Test
@@ -275,8 +257,8 @@ class EditCardUiTestsItem {
     fun editCard_isFragileField_isFragileFieldHasCorrectValue() {
         composeTestRule
             .onNodeWithContentDescription(isFragileContentDescription)
-            .assertTextEquals(itemIsFragile.toString())
-            .assertIsDisplayed()
+            .onChild()
+            .assertIsOn()
     }
 
     @Test
@@ -331,7 +313,7 @@ class EditCardUiTestsItem {
     @Test
     fun editCard_updatedEditableDropdown_selectionIsUpdated() {
 //        val beforeBox = boxDropdownOptions.find { it.id == selectedCard.value!!.boxId }
-        val newBox = boxDropdownOptions.find { it.id == "2" }
+        val newBox = boxDropdownOptions.find { it.id == boxDropdownOptions[1].id }
 
         val node = composeTestRule
             .onNodeWithContentDescription(dropdownContentDescription)
