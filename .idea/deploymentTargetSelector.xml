@@ -19,13 +19,13 @@
       <SelectionState runConfigName="EditCardUiTestsItem">
         <option name="selectionMode" value="DROPDOWN" />
       </SelectionState>
-      <SelectionState runConfigName="EditCardUiTestsItem2">
-        <option name="selectionMode" value="DROPDOWN" />
-      </SelectionState>
       <SelectionState runConfigName="testSpinnerExists()">
         <option name="selectionMode" value="DROPDOWN" />
       </SelectionState>
       <SelectionState runConfigName="spinner_spinnerRotationAnimation()">
+        <option name="selectionMode" value="DROPDOWN" />
+      </SelectionState>
+      <SelectionState runConfigName="SpinnerUiTests">
         <option name="selectionMode" value="DROPDOWN" />
       </SelectionState>
     </selectionStates>
