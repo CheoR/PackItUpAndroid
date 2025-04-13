@@ -192,9 +192,8 @@ fun <D : BaseCardData> Screen(
         )
         when(result) {
             is Result.Loading -> {
-                val loadingContentDescription = stringResource(R.string.spinner_content_description)
                 Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-                    Spinner(modifier = Modifier.semantics { contentDescription = loadingContentDescription })
+                    Spinner()
                 }
             }
             is Result.Error -> {
