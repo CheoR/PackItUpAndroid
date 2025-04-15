@@ -13,19 +13,19 @@
         </DropdownSelection>
         <DialogSelection />
       </SelectionState>
-      <SelectionState runConfigName="SpinnerUiTests">
+      <SelectionState runConfigName="testSearchField_initialState()">
         <option name="selectionMode" value="DROPDOWN" />
       </SelectionState>
-      <SelectionState runConfigName="screen_init_loadingIconDisplay()">
+      <SelectionState runConfigName="testSearchField_initialState_viaHierarchy()">
         <option name="selectionMode" value="DROPDOWN" />
       </SelectionState>
-      <SelectionState runConfigName="ScreenUITests">
+      <SelectionState runConfigName="searchField_initialState_placeHolderIsDisplayed()">
         <option name="selectionMode" value="DROPDOWN" />
       </SelectionState>
-      <SelectionState runConfigName="ItemsScreenUITests">
+      <SelectionState runConfigName="searchField_inputText_searchQueryIsUpdated()">
         <option name="selectionMode" value="DROPDOWN" />
       </SelectionState>
-      <SelectionState runConfigName="ItemsScreenUiTests">
+      <SelectionState runConfigName="searchField_inputText_placeholderDisappearsOnInput()">
         <option name="selectionMode" value="DROPDOWN" />
       </SelectionState>
     </selectionStates>
