@@ -5,24 +5,13 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ColumnScope
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Backup
-import androidx.compose.material.icons.filled.LocalShipping
-import androidx.compose.material.icons.filled.Summarize
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.ModalBottomSheet
-import androidx.compose.material3.SheetState
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.material3.rememberModalBottomSheetState
@@ -35,14 +24,12 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.packitupandroid.R
@@ -364,122 +351,6 @@ fun <D : BaseCardData> Screen(
     }
 }
 
-
-/**
- * Displays a modal bottom sheet with various delivery options.
- *
- * This composable presents a sheet containing buttons for different delivery options,
- * such as shipping, summarize, and backup. Each button, when clicked, hides the sheet
- * and then invokes the provided `onDismissRequest` callback.
- *
- * @param sheetState The state of the bottom sheet. This controls whether the sheet is
- *                   visible or hidden.
- * @param coroutineScope The coroutine scope used to launch coroutines for hiding the sheet.
- * @param onDismissRequest A callback invoked when the sheet is dismissed, either by
- *                         clicking outside of the sheet or by clicking a delivery option button.
- * @param modifier Modifier to be applied to the bottom sheet.
- */
-@Composable
-fun DeliveryOptionsModalBottomSheet(
-    sheetState: SheetState,
-    coroutineScope: CoroutineScope,
-    onDismissRequest: () -> Unit,
-    modifier: Modifier = Modifier
-) {
-    ModalBottomSheet(
-        onDismissRequest = onDismissRequest,
-        sheetState = sheetState,
-        modifier = modifier
-    ) {
-        Row(
-            modifier = Modifier.padding(dimensionResource(R.dimen.padding_medium)),
-            horizontalArrangement = Arrangement.SpaceAround,
-        ) {
-            DeliveryOptionButton(
-                icon = Icons.Filled.LocalShipping,
-                text = stringResource(R.string.delivery_option_shipping),
-                onClick = {
-                    coroutineScope.launch { sheetState.hide() }.invokeOnCompletion {
-                        if (!sheetState.isVisible) {
-                            onDismissRequest()
-                        }
-                    }
-                }
-            )
-            DeliveryOptionButton(
-                icon = Icons.Filled.Summarize,
-                text = stringResource(R.string.delivery_option_summarize),
-                onClick = {
-                    coroutineScope.launch { sheetState.hide() }.invokeOnCompletion {
-                        if (!sheetState.isVisible) {
-                            onDismissRequest()
-                        }
-                    }
-                }
-            )
-            DeliveryOptionButton(
-                icon = Icons.Filled.Backup,
-                text = stringResource(R.string.delivery_option_backup),
-                onClick = {
-                    coroutineScope.launch { sheetState.hide() }.invokeOnCompletion {
-                        if (!sheetState.isVisible) {
-                            onDismissRequest()
-                        }
-                    }
-                }
-            )
-        }
-    }
-}
-
-/**
- * A composable button representing a delivery option.
- *
- * This button displays an icon and text label, centered vertically and horizontally.
- * It's typically used to represent different delivery choices in a UI.
- *
- * @param icon The [ImageVector] to display as the icon.
- * @param text The text label to display below the icon.
- * @param onClick The callback to be invoked when the button is clicked.
- * @param modifier The [Modifier] to apply to the button's layout.
- *
- * @sample
- * ```kotlin
- * DeliveryOptionButton(
- *     icon = Icons.Filled.LocalShipping,
- *     text = "Standard Delivery",
- *     onClick = { println("Standard Delivery clicked") }
- * )
- * ```
- */
-@Composable
-fun DeliveryOptionButton(
-    icon: ImageVector,
-    text: String,
-    onClick: () -> Unit,
-    modifier: Modifier = Modifier
-) {
-    Column(
-        modifier = modifier,
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Center
-    ) {
-        IconButton(onClick = onClick) {
-            Icon(
-                imageVector = icon,
-                contentDescription = text,
-                modifier = Modifier.size(48.dp),
-                tint = MaterialTheme.colorScheme.primary,
-            )
-        }
-        Text(
-            text = text,
-            style = MaterialTheme.typography.labelSmall,
-            textAlign = TextAlign.Center,
-            color = MaterialTheme.colorScheme.onSurface,
-        )
-    }
-}
 
 /**
  * Debounce class allows you to delay the execution of a given action until a certain amount of time has passed since the last invocation.
