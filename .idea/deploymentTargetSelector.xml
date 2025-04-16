@@ -13,19 +13,19 @@
         </DropdownSelection>
         <DialogSelection />
       </SelectionState>
-      <SelectionState runConfigName="searchField_initialState_placeHolderIsDisplayed()">
-        <option name="selectionMode" value="DROPDOWN" />
-      </SelectionState>
-      <SelectionState runConfigName="searchField_inputText_searchQueryIsUpdated()">
-        <option name="selectionMode" value="DROPDOWN" />
-      </SelectionState>
-      <SelectionState runConfigName="searchField_inputText_placeholderDisappearsOnInput()">
-        <option name="selectionMode" value="DROPDOWN" />
-      </SelectionState>
       <SelectionState runConfigName="DeliveryOptionButtonTests">
         <option name="selectionMode" value="DROPDOWN" />
       </SelectionState>
-      <SelectionState runConfigName="DeliveryOptionsModalBottomSheetTests">
+      <SelectionState runConfigName="deliveryOptionsModalBottomSheet_init_sheetIsNotDisplayed()">
+        <option name="selectionMode" value="DROPDOWN" />
+      </SelectionState>
+      <SelectionState runConfigName="deliveryOptionsModalBottomSheet_init_deliveryOptionsAreNotDisplayed()">
+        <option name="selectionMode" value="DROPDOWN" />
+      </SelectionState>
+      <SelectionState runConfigName="deliveryOptionsModalBottomSheet_clickModalSheet_buttonsAreDisplayed()">
+        <option name="selectionMode" value="DROPDOWN" />
+      </SelectionState>
+      <SelectionState runConfigName="deliveryOptionsModalBottomSheet_optionClicked_StateSheetHidden()">
         <option name="selectionMode" value="DROPDOWN" />
       </SelectionState>
     </selectionStates>
