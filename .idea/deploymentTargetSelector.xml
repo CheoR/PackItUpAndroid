@@ -13,19 +13,19 @@
         </DropdownSelection>
         <DialogSelection />
       </SelectionState>
-      <SelectionState runConfigName="deliveryOptionsModalBottomSheet_init_sheetIsNotDisplayed()">
+      <SelectionState runConfigName="SearchFieldTests">
         <option name="selectionMode" value="DROPDOWN" />
       </SelectionState>
-      <SelectionState runConfigName="deliveryOptionsModalBottomSheet_init_deliveryOptionsAreNotDisplayed()">
+      <SelectionState runConfigName="searchField_inputText_placeholderDisappearsOnInput()">
         <option name="selectionMode" value="DROPDOWN" />
       </SelectionState>
-      <SelectionState runConfigName="deliveryOptionsModalBottomSheet_clickModalSheet_buttonsAreDisplayed()">
+      <SelectionState runConfigName="screen_init_loadingSpinnerExists()">
         <option name="selectionMode" value="DROPDOWN" />
       </SelectionState>
-      <SelectionState runConfigName="deliveryOptionsModalBottomSheet_optionClicked_StateSheetHidden()">
+      <SelectionState runConfigName="screen_createFiveItems_fiveItemsFound()">
         <option name="selectionMode" value="DROPDOWN" />
       </SelectionState>
-      <SelectionState runConfigName="DeliveryOptionsModalBottomSheetTests">
+      <SelectionState runConfigName="screen_init_noItemsFound()">
         <option name="selectionMode" value="DROPDOWN" />
       </SelectionState>
     </selectionStates>
