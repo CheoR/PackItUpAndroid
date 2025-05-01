@@ -117,12 +117,12 @@ private fun SummaryScreen(
 
         SummaryCard(
             name = R.string.collections,
-            description = stringResource(R.string.badgeContentDescription, stringResource(R.string.collections)),
+            description = stringResource(R.string.badgeContentDescription, stringResource(R.string.collections), result?.collectionCount ?: 0),
             iconsContent = {
                 Column {
                     IconBadge(
                         image = ImageContent.VectorImage(Icons.Default.Category),
-                        badgeContentDescription = stringResource(R.string.badgeContentDescription, stringResource(R.string.collections)),
+                        badgeContentDescription = stringResource(R.string.badgeContentDescription, stringResource(R.string.collections), result?.collectionCount ?: 0),
                         badgeCount = result?.collectionCount ?: 0,
                         type = "collections",
                     )
@@ -134,12 +134,12 @@ private fun SummaryScreen(
         )
         SummaryCard(
             name = R.string.boxes,
-            description = stringResource(R.string.badgeContentDescription, stringResource(R.string.boxes)),
+            description = stringResource(R.string.badgeContentDescription, stringResource(R.string.boxes), result?.boxCount ?: 0),
             iconsContent = {
                 Column {
                     IconBadge(
                         image = ImageContent.DrawableImage(R.drawable.ic_launcher_foreground),
-                        badgeContentDescription = stringResource(R.string.badgeContentDescription, stringResource(R.string.boxes)),
+                        badgeContentDescription = stringResource(R.string.badgeContentDescription, stringResource(R.string.boxes), result?.boxCount ?: 0),
                         badgeCount = result?.boxCount ?: 0,
                         type = "boxes",
                     )
@@ -151,12 +151,12 @@ private fun SummaryScreen(
         )
         SummaryCard(
             name = R.string.items,
-            description = stringResource(R.string.badgeContentDescription, stringResource(R.string.items)),
+            description = stringResource(R.string.badgeContentDescription, stringResource(R.string.items), result?.itemCount ?: 0),
             iconsContent = {
                 Column {
                     IconBadge(
                         image = ImageContent.VectorImage(Icons.AutoMirrored.Filled.Label),
-                        badgeContentDescription = stringResource(R.string.badgeContentDescription, stringResource(R.string.items)),
+                        badgeContentDescription = stringResource(R.string.badgeContentDescription, stringResource(R.string.items), result?.itemCount ?: 0),
                         badgeCount = result?.itemCount ?: 0,
                         type = "items",
                     )
