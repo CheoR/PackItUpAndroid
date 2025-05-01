@@ -10,7 +10,9 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
@@ -96,7 +98,8 @@ fun <D : BaseCardData> Screen(
     modifier: Modifier = Modifier,
     dropdownOptions: Result<List<DropdownOptions?>>? = null,
     addElements: (id: String) -> Unit = {},
-    defaultDispatcher: CoroutineDispatcher = Dispatchers.Default
+    defaultDispatcher: CoroutineDispatcher = Dispatchers.Default,
+    lazyListState: LazyListState = rememberLazyListState()
 ) {
     var elements by remember { mutableStateOf(emptyList<D?>()) }
     var filteredElements by remember { mutableStateOf(emptyList<D?>()) }
@@ -213,7 +216,8 @@ fun <D : BaseCardData> Screen(
                         modifier = Modifier
                             .weight(1f)
                             .semantics { contentDescription = "$emptyListPlaceholder list" },
-                        verticalArrangement = Arrangement.spacedBy(dimensionResource(R.dimen.space_arrangement_small))
+                        verticalArrangement = Arrangement.spacedBy(dimensionResource(R.dimen.space_arrangement_small)),
+                        state = lazyListState,
                     ) {
                         items(
                             items = filteredElements,
