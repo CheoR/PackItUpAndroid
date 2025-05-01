@@ -6,7 +6,6 @@ import android.graphics.BitmapFactory
 import android.os.Environment
 import android.util.Base64
 import android.util.Log
-import androidx.camera.core.CameraState
 import androidx.camera.core.ImageCapture
 import androidx.camera.core.ImageCaptureException
 import androidx.camera.core.ImageProxy
@@ -14,7 +13,6 @@ import androidx.camera.view.CameraController
 import androidx.camera.view.LifecycleCameraController
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -53,7 +51,7 @@ import java.io.File
  * @param D The type of the card data, which must inherit from [BaseCardData].
  * */
 @Composable
-fun <D : BaseCardData> CameraDialog(
+fun <D: BaseCardData>CameraDialog(
     dialogWidth: Dp,
     onClick: () -> Unit,
     onCancel: () -> Unit,
@@ -63,6 +61,10 @@ fun <D : BaseCardData> CameraDialog(
 ) {
     val cameraPreviewContentDescription = stringResource(R.string.camera_preview)
     val imageUri = remember(selectedCard.value) {
+        // to avoid error: Smart cast to '{D & Any & Item}' is impossible, because 'selectedCard. value'
+        // is a mutable property that could have been changed by this time
+        // use currentCard to tempoarily store value. This creates a read-only copy of value, ensuring
+        // that it wont' change during execution of the remember {} block
         val currentCard = selectedCard.value
 
         if (currentCard is Item) {
@@ -75,27 +77,16 @@ fun <D : BaseCardData> CameraDialog(
     val context = LocalContext.current
     val controller = remember {
         LifecycleCameraController(context).apply {
-            setEnabledUseCases(CameraController.IMAGE_CAPTURE)
+            setEnabledUseCases(
+                CameraController.IMAGE_CAPTURE
+            )
         }
-    }
-
-    val cameraState = remember { mutableStateOf<CameraState?>(null) }
-    val isCameraReady = remember { mutableStateOf(false) }
-
-    LaunchedEffect(controller) {
-        controller.cameraInfo?.cameraState?.value?.let {
-            cameraState.value = it
-        }
-
-        isCameraReady.value = cameraState.value?.type == CameraState.Type.OPEN &&
-                cameraState.value?.error == null
     }
 
     ConfirmCancelContainer(
         title = stringResource(R.string.camera_dialog_title, selectedCard.value?.name ?: ""),
         dialogWidth = dialogWidth,
         onCancel = onCancel,
-        confirmButtonEnabled = isCameraReady.value,
         onConfirm = {
             takePhoto(
                 context = context,
@@ -118,67 +109,6 @@ fun <D : BaseCardData> CameraDialog(
     }
 }
 
-//@Composable
-//fun <D: BaseCardData>CameraDialog(
-//    dialogWidth: Dp,
-//    onClick: () -> Unit,
-//    onCancel: () -> Unit,
-//    onFieldChange: (MutableState<D?>, EditFields, String) -> Unit,
-//    selectedCard: MutableState<D?>,
-//    modifier: Modifier = Modifier,
-//) {
-//    val cameraPreviewContentDescription = stringResource(R.string.camera_preview)
-//    val imageUri = remember(selectedCard.value) {
-//        // to avoid error: Smart cast to '{D & Any & Item}' is impossible, because 'selectedCard. value'
-//        // is a mutable property that could have been changed by this time
-//        // use currentCard to tempoarily store value. This creates a read-only copy of value, ensuring
-//        // that it wont' change during execution of the remember {} block
-//        val currentCard = selectedCard.value
-//
-//        if (currentCard is Item) {
-//            mutableStateOf(currentCard.imageUri)
-//        } else {
-//            null
-//        }
-//    }
-//
-//    val context = LocalContext.current
-//    val controller = remember {
-//        LifecycleCameraController(context).apply {
-//            setEnabledUseCases(
-//                CameraController.IMAGE_CAPTURE
-//            )
-//        }
-//    }
-//
-//    ConfirmCancelContainer(
-//        title = stringResource(R.string.camera_dialog_title, selectedCard.value?.name ?: ""),
-//        dialogWidth = dialogWidth,
-//        onCancel = onCancel,
-//        confirmButtonEnabled = // ,
-//        onConfirm = {
-//            takePhoto(
-//                context = context,
-//                controller = controller,
-//                onPhotoTaken = {
-//
-//                    println("\n\n\nIMAGE CAPTURE: ${it.length}")
-//                    imageUri?.value = it
-//                    onFieldChange(selectedCard, EditFields.ImageUri, it)
-//                    onClick()
-//                }
-//            )
-//        },
-//        modifier = modifier,
-//    ) {
-//        CameraPreview(
-//            controller = controller,
-//            modifier = Modifier
-//                .fillMaxSize()
-//                .semantics { contentDescription = cameraPreviewContentDescription },
-//        )
-//    }
-//}
 
 /**
  * Takes a photo using the camera and returns the base64 encoded image data.
