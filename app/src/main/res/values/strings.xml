@@ -13,6 +13,7 @@
     <string name="button_cancel">cancel</string>
     <string name="button_confirm">confirm</string>
     <string name="camera">camera</string>
+    <string name="camera_preview">Camera preview showing live feed</string>
     <string name="card_description">%s</string>
     <string name="card_dropdown_title">%s</string>
     <string name="card_title">%s</string>
