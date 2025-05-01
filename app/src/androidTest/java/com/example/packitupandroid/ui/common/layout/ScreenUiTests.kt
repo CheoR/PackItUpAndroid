@@ -32,26 +32,8 @@ import com.example.packitupandroid.source.local.TestDataSource
 import com.example.packitupandroid.ui.screens.item.ItemsScreenViewModel
 import com.example.packitupandroid.ui.theme.PackItUpAndroidTheme
 import com.example.packitupandroid.ui.theme.rememberThemeManager
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.ExperimentalCoroutinesApi
-import org.junit.Before
-import org.junit.Rule
-import org.junit.Test
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.ui.test.onAllNodesWithContentDescription
-import androidx.compose.ui.test.onAllNodesWithText
-import androidx.compose.ui.test.onNodeWithText
-import androidx.compose.ui.test.onRoot
-import androidx.compose.ui.test.performClick
-import androidx.compose.ui.test.printToLog
-import androidx.compose.ui.test.printToString
-import com.example.packitupandroid.source.local.LocalDataSource
-import com.example.packitupandroid.source.local.TestDataSource
 import com.example.packitupandroid.utils.EditFields
 import com.example.packitupandroid.utils.Result
-import com.example.packitupandroid.utils.incrementCountByFive
 import com.example.packitupandroid.utils.incrementCounter
 import com.example.packitupandroid.utils.parseCurrencyToDouble
 import junit.framework.TestCase.assertEquals
@@ -60,8 +42,6 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.toList
-import kotlinx.coroutines.test.advanceUntilIdle
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
@@ -99,9 +79,6 @@ class ScreenUiItemTests {
     val title = items.first().name
     val COUNT = 5
 
-    private val _elements = MutableStateFlow<Result<List<Item?>>>(Result.Loading)
-
-    val elements: StateFlow<Result<List<Item?>>> = _elements.asStateFlow()
 //    private val _elements = MutableStateFlow<Result<List<Item?>>>(
 //        Result.Loading)
 //
@@ -137,10 +114,6 @@ class ScreenUiItemTests {
         return data
     }
 
-//    private fun setupComposeSetContent() {
-//        composeTestRule.setContent {
-//            val context = LocalContext.current
-//            val themeManager = rememberThemeManager(context)
     private fun onFieldChange (element: MutableState<Item?>, field: EditFields, value: String) {
         val editableFields = element.value?.editFields ?: emptyList()
         element.value?.let { currentItem ->
@@ -179,7 +152,6 @@ class ScreenUiItemTests {
             val elements: StateFlow<Result<List<Item?>>> = _elements.asStateFlow()
             val result by elements.collectAsState()
 //            val result by viewModel.elements.collectAsState()
-
 //
 //            val result: Result<List<Item?>> = Result.Success(listOf(
 //                Item(
@@ -192,26 +164,6 @@ class ScreenUiItemTests {
 //                )
 //            ))
 //var value = elements.value
-//            PackItUpAndroidTheme(themeManager) {
-//                Screen<Item>(
-//                    result = value, // Result.Success(elements.asList()),
-//                    key = { it?.id ?: "" },
-//                    generateIconsColumn = generateIconsColumn,
-//                    onDelete = {},
-//                    onCreate = {
-//                        println("\n\n\tonCreate called, crating $it items\n\n")
-////                        viewModel.create(it)
-//                        _elements.value = Result.Success(emptyList())
-//                    }, // viewModel::create,
-//                    onFieldChange = onFieldChange,
-//                    onUpdate = {},
-//                    emptyListPlaceholder = "items",
-//                    snackbarHostState = snackbarHostState,
-//                    coroutineScope = coroutineScope,
-//                )
-//            }
-//        }
-//    }
             PackItUpAndroidTheme(themeManager) {
                 Screen<Item>(
                     result = result, // value, // Result.Success(elements.asList()),
@@ -242,9 +194,7 @@ class ScreenUiItemTests {
     @OptIn(ExperimentalCoroutinesApi::class)
     @Before
     fun setup() {
-//        coroutineScope = CoroutineScope(coroutineRule.testDispatcher)
         unregisterComposeEspressoIdlingResource()
-//        snackbarHostState = SnackbarHostState()
 
         initializeSnackbar()
         initializeCoroutineScope()
@@ -284,7 +234,6 @@ class ScreenUiItemTests {
     }
 
     @Test
-    fun screen_init_noItemsFound() {
     fun screen_initSuccessEmptyList_noItemsFound() {
         composeTestRule.setContent {
             val context = LocalContext.current
@@ -358,10 +307,6 @@ class ScreenUiItemTests {
     fun screen_createFiveItems_fiveItemsFound() {
         val testLazyListState = LazyListState()
 
-
-        TODO: UPDATE THIS TO ALL TESTS
-        BASIC IDEA WORKS, JUST NEEDS TO DO TESTS NOW
-        IT CREATES A CARD INT TIMES
         composeTestRule.setContent {
             val context = LocalContext.current
             val themeManager = rememberThemeManager(context)
@@ -377,12 +322,10 @@ class ScreenUiItemTests {
                     generateIconsColumn = generateIconsColumn,
                     onDelete = {},
                     onCreate = {
-                        println("\n\n\tonCreate called, crating $it items\n\n")
                         _elements.value = Result.Success(create(it))
                     },
                     onFieldChange = onFieldChange,
                     onUpdate = {},
-                    emptyListPlaceholder = "items",
                     emptyListPlaceholder = placeholder,
                     snackbarHostState = snackbarHostState,
                     coroutineScope = coroutineScope,
@@ -392,7 +335,6 @@ class ScreenUiItemTests {
         }
 
         composeTestRule
-            .incrementCounter(1)
             .incrementCounter(COUNT)
 
         composeTestRule
@@ -400,7 +342,6 @@ class ScreenUiItemTests {
             .performClick()
 
         composeTestRule
-            .waitUntil(timeoutMillis = 25000) {
             .waitUntil(timeoutMillis = 35000) {
                 COUNT == testLazyListState.layoutInfo.totalItemsCount
             }
@@ -681,11 +622,118 @@ class ScreenUiItemTests {
     }
 
     @Test
-                composeTestRule
-                    .onAllNodesWithText("Peggy PUg")
-                    .fetchSemanticsNodes().size == 1
+    fun screen_captureImage_imageCaptured() {
+        val testLazyListState = LazyListState()
+        val numberToTake = 1
+        val nameBefore = items.first().name
+
+        composeTestRule.setContent {
+            val context = LocalContext.current
+            val themeManager = rememberThemeManager(context)
+            val _elements = MutableStateFlow<Result<List<Item?>>>(Result.Success(items.take(numberToTake)))
+            val elements: StateFlow<Result<List<Item?>>> = _elements.asStateFlow()
+            val result by elements.collectAsStateWithLifecycle()
+
+            baseCardContentDescription = stringResource(R.string.base_card)
+            swipeToOpenMenuContentDescription = stringResource(R.string.open_menu)
+            deleteButtonContentDescription = stringResource(R.string.delete)
+            dialogTitle = stringResource(R.string.camera_dialog_title, title)
+            confirmContentDescription = stringResource(R.string.button_confirm)
+            nameFieldContentDescription = stringResource(R.string.name) + " field"
+            editButtonContentDescription = stringResource(R.string.edit)
+            editCardContentDescription = stringResource(R.string.edit_dialog_title, title)
+            cameraButtonContentDescription = stringResource(R.string.camera)
+            cameraPreviewContentDescription = stringResource(R.string.camera_preview)
+            defaultIconContentDescription = stringResource(R.string.default_item_badge)
+
+            PackItUpAndroidTheme(themeManager) {
+                Screen<Item>(
+                    result = result,
+                    key = { it?.id ?: "" },
+                    generateIconsColumn = generateIconsColumn,
+                    onDelete = {},
+                    onCreate = {},
+                    onFieldChange = onFieldChange,
+                    onUpdate = { updatedItem ->
+                        println("\n\nUpdating item: $updatedItem")
+                        val currentItems = (_elements.value as Result.Success).data.toMutableList()
+                        val index = currentItems.indexOfFirst { it?.id == updatedItem.id }
+                        if (index != -1) {
+                            currentItems[index] = updatedItem
+                            _elements.value = Result.Success(currentItems.toList())
+                            println("\n\n\tupdated _elements.value: ${(_elements.value as Result.Success).data}")
+                        }
+                    },
+                    emptyListPlaceholder = placeholder,
+                    snackbarHostState = snackbarHostState,
+                    coroutineScope = coroutineScope,
+                    lazyListState = testLazyListState,
+                )
             }
+        }
+
+        composeTestRule.waitUntil(timeoutMillis = 3500) {
+            composeTestRule
+                .onAllNodesWithContentDescription(baseCardContentDescription)
+                .fetchSemanticsNodes().isNotEmpty()
+        }
+
+        composeTestRule
+            .onNodeWithText(items.first().name)
+            .assertExists()
+
+        composeTestRule
+            .onNodeWithContentDescription(swipeToOpenMenuContentDescription)
+            .performTouchInput {
+                swipeLeft()
+            }
+
+        val cameraButton = composeTestRule
+            .onNodeWithContentDescription(cameraButtonContentDescription)
+
+        cameraButton
+            .assertExists()
+
+        cameraButton
+            .performClick()
+
+        composeTestRule.waitUntil(timeoutMillis = 4500) {
+            val count = composeTestRule
+                .onAllNodesWithText(dialogTitle)
+                .fetchSemanticsNodes()
+                .size
+
+            1 == count
+        }
+
+        composeTestRule
+            .waitUntil(timeoutMillis = 1000000) {
+                composeTestRule
+                    .onAllNodesWithContentDescription(cameraPreviewContentDescription)
+                    .fetchSemanticsNodes().isNotEmpty()
+            }
+        composeTestRule.waitForIdle()
+
+        composeTestRule
+            .onNodeWithContentDescription(confirmContentDescription)
+            .performClick()
+
+
+        val node = composeTestRule
+            .onNodeWithText(nameBefore)
+            .onParent()
+
+        node.printToLog("MOO")
+        composeTestRule
+            .waitUntil(timeoutMillis = 65000) {
+                composeTestRule
+                    .onAllNodesWithContentDescription(defaultIconContentDescription)
+                    .fetchSemanticsNodes().isEmpty()
+            }
+        node.assertExists()
+
     }
+
 }
 
 class ScreenUiBoxTests {
