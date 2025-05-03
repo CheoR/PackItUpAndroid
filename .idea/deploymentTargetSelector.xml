@@ -13,19 +13,19 @@
         </DropdownSelection>
         <DialogSelection />
       </SelectionState>
-      <SelectionState runConfigName="screen_swipeToDisplayOptions_optionsDisplayed()">
-        <option name="selectionMode" value="DROPDOWN" />
-      </SelectionState>
       <SelectionState runConfigName="screen_deleteItem_oneItemsDeleted()">
         <option name="selectionMode" value="DROPDOWN" />
       </SelectionState>
       <SelectionState runConfigName="screen_editItem_itemUpdated()">
         <option name="selectionMode" value="DROPDOWN" />
       </SelectionState>
-      <SelectionState runConfigName="editCard_updateNameField_nameFieldHasCorrectText()">
+      <SelectionState runConfigName="screen_captureImage_imageCaptured()">
         <option name="selectionMode" value="DROPDOWN" />
       </SelectionState>
-      <SelectionState runConfigName="screen_captureImage_imageCaptured()">
+      <SelectionState runConfigName="ScreensUIBoxesTests">
+        <option name="selectionMode" value="DROPDOWN" />
+      </SelectionState>
+      <SelectionState runConfigName="screen_swipeToDisplayOptions_optionsDisplayed()">
         <option name="selectionMode" value="DROPDOWN" />
       </SelectionState>
     </selectionStates>
