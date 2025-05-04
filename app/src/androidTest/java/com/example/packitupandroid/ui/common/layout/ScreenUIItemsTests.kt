@@ -735,9 +735,3 @@ class ScreenUiItemTests {
     }
 
 }
-
-class ScreenUiBoxTests {
-}
-
-class ScreenUiCollectionTests {
-}
