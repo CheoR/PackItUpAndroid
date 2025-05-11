@@ -75,6 +75,9 @@ fun SettingsScreen(
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
+        Row {
+            Text("Settings")
+        }
         settings.forEach { setting ->
             SettingsRow(setting = setting)
         }
