@@ -13,19 +13,19 @@
         </DropdownSelection>
         <DialogSelection />
       </SelectionState>
-      <SelectionState runConfigName="navgraph_sideNavigationToCollectionsScreen_navigateToCollectionsScreen()">
-        <option name="selectionMode" value="DROPDOWN" />
-      </SelectionState>
-      <SelectionState runConfigName="navgraph_bottomNavigateToCollectionsScreen_navigateCorrectly()">
-        <option name="selectionMode" value="DROPDOWN" />
-      </SelectionState>
-      <SelectionState runConfigName="navgraph_bottomNavigateToBoxesScreen_navigateCorrectly()">
-        <option name="selectionMode" value="DROPDOWN" />
-      </SelectionState>
       <SelectionState runConfigName="navgraph_bottomNavigateToSummaryScreen_navigateToSummaryScreen()">
         <option name="selectionMode" value="DROPDOWN" />
       </SelectionState>
       <SelectionState runConfigName="navgraph_bottomNavigateToSettingsScreen_navigateToSettingsScreen()">
+        <option name="selectionMode" value="DROPDOWN" />
+      </SelectionState>
+      <SelectionState runConfigName="navgraph_navigateToScreenAndBack_navigateToPreviousScreen()">
+        <option name="selectionMode" value="DROPDOWN" />
+      </SelectionState>
+      <SelectionState runConfigName="navgraph_swipeUp_bottomRowNavigationDisplayed()">
+        <option name="selectionMode" value="DROPDOWN" />
+      </SelectionState>
+      <SelectionState runConfigName="navgraph_init_startDestinationIsSummary()">
         <option name="selectionMode" value="DROPDOWN" />
       </SelectionState>
     </selectionStates>
