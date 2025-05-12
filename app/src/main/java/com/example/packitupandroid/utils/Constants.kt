@@ -15,6 +15,6 @@ const val USE_MOCK_DATA = true
 /**
  * The name of the database file to be used by the application.
  * If `USE_MOCK_DATA` is `true`, the database name will be "app.db".
- * If `USE_MOCK_DATA` is `false`, the database name will be "app.db".
+ * If `USE_MOCK_DATA` is `false`, the database name will be "test.db".
  */
-val DATABASE_NAME = if (USE_MOCK_DATA) "app.db" else "app.db"
+val DATABASE_NAME = if (USE_MOCK_DATA) "app.db" else "test.db"
